@@ -1,0 +1,283 @@
+-- allium: 3
+-- extraccion.allium
+
+-- Scope: extraccion de grafo conceptual desde una transcripcion normalizada
+-- usando un LLM. Modela la propuesta inicial como una unidad inmutable que
+-- luego sera refinada en el flujo de validacion.
+--
+-- Includes:
+--   - Modelado del LLM como agente externo con nivel de confianza
+--   - Ejecucion de prompt versionado contra un proveedor configurado
+--   - Generacion de conceptos, relaciones, sinonimia candidata, bucles
+--   - Identificacion de pasajes de metalenguaje
+--
+-- Excludes:
+--   - Estructura final del grafo (vive en grafo.allium)
+--   - Validacion humana de las propuestas (vive en validacion.allium)
+
+use "./transcripcion.allium" as transcripcion
+
+------------------------------------------------------------
+-- Tipos auxiliares
+------------------------------------------------------------
+
+enum ProveedorLLM {
+    anthropic
+    openai
+    gemini
+    ollama          -- modelos locales via Ollama (sin API key)
+}
+
+enum TipoConcepto {
+    primitivo
+    derivado
+    metalenguaje
+    ambiguo
+}
+
+enum TipoRelacion {
+    fundamenta
+    amplifica
+    especifica
+    contraposicion
+    constituye
+    genera
+    presupone
+}
+
+enum TipoBucle {
+    fundamental
+    contingente
+}
+
+------------------------------------------------------------
+-- Entidades externas
+------------------------------------------------------------
+
+external entity Prompt {
+    id: String                   -- referencia al archivo en prompts/
+    version: String
+    plantilla: String
+}
+
+------------------------------------------------------------
+-- Proveedor LLM
+------------------------------------------------------------
+
+entity ProveedorActivo {
+    proveedor: ProveedorLLM
+    modelo: String                               -- nombre del modelo; para ollama ej. "llama3.2", "mistral"
+    es_local: Boolean                            -- true solo para ollama; no requiere api_key
+    api_key_presente: Boolean                    -- irrelevante si es_local = true
+    endpoint: String?                            -- requerido si es_local = true; ej. "http://localhost:11434"
+}
+
+------------------------------------------------------------
+-- Propuestas crudas del LLM
+------------------------------------------------------------
+
+entity ConceptoPropuesto {
+    id: String                                   -- por ejemplo "c_001"
+    transcripcion: transcripcion/Transcripcion
+    label: String
+    tipo: TipoConcepto
+    descripcion: String
+    sinonimos_candidatos: List<String>
+    menciones: Integer                           -- cuantas veces aparece este concepto en la transcripcion
+    confianza: Decimal                            -- 0.0 a 1.0
+    timestamp_primera_aparicion: Duration?
+    cita_directa: String
+
+    es_dudoso: confianza < config.confianza_minima
+}
+
+entity RelacionPropuesta {
+    id: String                                   -- por ejemplo "r_001"
+    transcripcion: transcripcion/Transcripcion
+    origen: ConceptoPropuesto
+    destino: ConceptoPropuesto
+    tipo: TipoRelacion
+    etiqueta: String                             -- la palabra que el autor usa
+    bidireccional: Boolean
+    confianza: Decimal
+    frase_completa: String
+    matiz: String?
+    contexto: String?                            -- "min 5:20-6:00"
+
+    es_dudosa: confianza < config.confianza_minima
+}
+
+entity FlagMetalenguaje {
+    id: String
+    transcripcion: transcripcion/Transcripcion
+    tipo: definicion_sobre_el_vuelo | refinamiento_de_uso | cita_de_otro_autor
+    contexto: String
+    texto: String
+    conceptos_afectados: List<ConceptoPropuesto>
+    nota: String
+}
+
+entity BucleDetectado {
+    id: String
+    transcripcion: transcripcion/Transcripcion
+    nodos: List<ConceptoPropuesto>
+    descripcion: String
+    tipo: TipoBucle
+
+    es_minimo: nodos.count >= 2
+}
+
+------------------------------------------------------------
+-- Ejecucion de extraccion
+------------------------------------------------------------
+
+entity EjecucionExtraccion {
+    id: String
+    transcripcion: transcripcion/Transcripcion
+    proveedor: ProveedorActivo
+    prompt: Prompt
+    iniciada_en: Timestamp
+    finalizada_en: Timestamp?
+    estado: en_curso | completada | fallida
+    razon_falla: String? when estado = fallida
+
+    conceptos: ConceptoPropuesto with transcripcion = this.transcripcion
+    relaciones: RelacionPropuesta with transcripcion = this.transcripcion
+    bucles: BucleDetectado with transcripcion = this.transcripcion
+    metalenguaje: FlagMetalenguaje with transcripcion = this.transcripcion
+
+    conceptos_dudosos: conceptos where es_dudoso = true
+    relaciones_dudosas: relaciones where es_dudosa = true
+
+    transitions estado {
+        en_curso -> completada
+        en_curso -> fallida
+        terminal: completada, fallida
+    }
+}
+
+------------------------------------------------------------
+-- Reglas
+------------------------------------------------------------
+
+rule IniciarExtraccion {
+    when: InvestigadorSolicitaExtraccion(transcripcion, proveedor_activo, prompt)
+
+    requires: transcripcion.estado = normalizada
+    requires: proveedor_activo.api_key_presente = true or proveedor_activo.es_local = true
+    requires: proveedor_activo.es_local = false or proveedor_activo.endpoint != null
+    requires: length(transcripcion.texto_crudo) <= config.max_chars_por_prompt
+
+    ensures: EjecucionExtraccion.created(
+        transcripcion: transcripcion,
+        proveedor: proveedor_activo,
+        prompt: prompt,
+        iniciada_en: now,
+        estado: en_curso
+    )
+}
+
+rule ExtraccionCompleta {
+    when: ExtraccionLLMRetornaResultado(ejecucion, conceptos, relaciones, bucles, metalenguaje)
+
+    requires: ejecucion.estado = en_curso
+
+    ensures:
+        ejecucion.estado = completada
+        ejecucion.finalizada_en = now
+        for c in conceptos:
+            ConceptoPropuesto.created(
+                id: c.id,
+                transcripcion: ejecucion.transcripcion,
+                label: c.label,
+                tipo: c.tipo,
+                descripcion: c.descripcion,
+                sinonimos_candidatos: c.sinonimos_candidatos,
+                menciones: c.menciones,
+                confianza: c.confianza,
+                timestamp_primera_aparicion: c.timestamp_primera_aparicion,
+                cita_directa: c.cita_directa
+            )
+        for r in relaciones:
+            RelacionPropuesta.created(
+                id: r.id,
+                transcripcion: ejecucion.transcripcion,
+                origen: r.origen,
+                destino: r.destino,
+                tipo: r.tipo,
+                etiqueta: r.etiqueta,
+                bidireccional: r.bidireccional,
+                confianza: r.confianza,
+                frase_completa: r.frase_completa,
+                matiz: r.matiz,
+                contexto: r.contexto
+            )
+        for b in bucles:
+            BucleDetectado.created(
+                id: b.id,
+                transcripcion: ejecucion.transcripcion,
+                nodos: b.nodos,
+                descripcion: b.descripcion,
+                tipo: b.tipo
+            )
+        for m in metalenguaje:
+            FlagMetalenguaje.created(
+                id: m.id,
+                transcripcion: ejecucion.transcripcion,
+                tipo: m.tipo,
+                contexto: m.contexto,
+                texto: m.texto,
+                conceptos_afectados: m.conceptos_afectados,
+                nota: m.nota
+            )
+        ejecucion.transcripcion.estado = extraida
+        ejecucion.transcripcion.fecha_extraccion = now
+        ExtraccionLista(transcripcion: ejecucion.transcripcion, ejecucion: ejecucion)
+}
+
+rule ExtraccionFallida {
+    when: ExtraccionLLMRetornaError(ejecucion, razon)
+
+    requires: ejecucion.estado = en_curso
+
+    ensures:
+        ejecucion.estado = fallida
+        ejecucion.finalizada_en = now
+        ejecucion.razon_falla = razon
+        ExtraccionAbortada(transcripcion: ejecucion.transcripcion, razon: razon)
+
+    @guidance
+        -- Una ejecucion fallida no cambia el estado de la transcripcion. El
+        -- investigador puede reintentar con el mismo o distinto proveedor.
+}
+
+------------------------------------------------------------
+-- Invariantes
+------------------------------------------------------------
+
+invariant ConfianzaEnRango {
+    for c in ConceptoPropuesto:
+        c.confianza >= 0.0 and c.confianza <= 1.0
+}
+
+invariant RelacionConfianzaEnRango {
+    for r in RelacionPropuesta:
+        r.confianza >= 0.0 and r.confianza <= 1.0
+}
+
+invariant BucleMinimoDosNodos {
+    for b in BucleDetectado:
+        b.nodos.count >= 2
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "Si el LLM propone una relacion entre conceptos de transcripciones distintas (porque el investigador mencionara el autor de otra obra), el sistema deberia permitirlo o forzar que toda relacion sea intra-transcripcion?"
+
+open question "El nivel de confianza debe ser auto-reportado por el LLM en su salida JSON o calculado por el sistema desde features del texto?"
+
+open question "Para ollama: el modelo activo se configura por nombre ('llama3.2', 'mistral', etc). Hay un mecanismo de discovery de modelos disponibles en el endpoint local, o el investigador configura el nombre manualmente?"
+
+deferred ExtractorLLM.invocar    -- ver src/llm/extractor.py cuando exista

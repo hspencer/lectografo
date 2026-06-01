@@ -1,0 +1,294 @@
+-- allium: 3
+-- validacion.allium
+
+-- Scope: refinamiento humano de la propuesta del LLM. Cada decision del
+-- investigador queda registrada con su justificacion para preservar la
+-- trazabilidad de la interpretacion.
+--
+-- Includes:
+--   - Modelado de puntos de decision como entidades de primera clase
+--   - Resolucion item-by-item o por lote
+--   - Operaciones de fusion de sinonimos, marcado de bidireccionalidad,
+--     promocion de concepto ambiguo a primitivo o derivado
+--   - Anotaciones libres del investigador
+--
+-- Excludes:
+--   - Persistencia del grafo final (vive en grafo.allium)
+
+use "./transcripcion.allium" as transcripcion
+use "./extraccion.allium" as extraccion
+
+------------------------------------------------------------
+-- Tipos auxiliares
+------------------------------------------------------------
+
+enum TipoDecision {
+    sinonimia                -- fusionar varios conceptos en uno
+    bidireccionalidad        -- decidir si una relacion va en ambas direcciones
+    promocion_de_tipo        -- mover un concepto entre primitivo/derivado/metalenguaje
+    confirmar_bucle          -- aceptar o rechazar un bucle propuesto
+    confianza_baja           -- revisar un item bajo confianza_minima
+    metalenguaje             -- aceptar o rechazar un flag de metalenguaje
+}
+
+enum ResolucionDecision {
+    aceptada
+    rechazada
+    modificada
+    diferida                 -- el investigador la posterga sin cerrarla
+}
+
+------------------------------------------------------------
+-- Punto de decision
+------------------------------------------------------------
+
+entity PuntoDecision {
+    id: String
+    transcripcion: transcripcion/Transcripcion
+    tipo: TipoDecision
+
+    -- Una decision puede involucrar conceptos, relaciones, bucles o flags.
+    conceptos_implicados: List<extraccion/ConceptoPropuesto>
+    relacion_implicada: extraccion/RelacionPropuesta?
+    bucle_implicado: extraccion/BucleDetectado?
+    flag_implicado: extraccion/FlagMetalenguaje?
+
+    pregunta: String
+    recomendacion_llm: String
+    justificacion_llm: String?
+
+    -- Para decisiones de sinonimia: label canonico que el LLM propone como nombre del nodo resultante.
+    label_canonico_propuesto: String?
+    -- Cuando resolucion = modificada: label que el investigador elige en lugar del propuesto.
+    label_resolucion: String?
+
+    estado: pendiente | resuelta | diferida
+    resolucion: ResolucionDecision? when estado = resuelta
+    nota_resolucion: String? when estado = resuelta
+    resuelta_en: Timestamp? when estado = resuelta
+
+    creada_en: Timestamp
+
+    -- Una decision esta estancada si lleva mas que plazo_decision_estancada pendiente.
+    esta_estancada: estado = pendiente and creada_en + config.plazo_decision_estancada <= now
+
+    transitions estado {
+        pendiente -> resuelta
+        pendiente -> diferida
+        diferida -> pendiente
+        diferida -> resuelta
+        terminal: resuelta
+    }
+}
+
+------------------------------------------------------------
+-- Anotaciones del investigador
+------------------------------------------------------------
+
+entity AnotacionInvestigador {
+    id: String
+    transcripcion: transcripcion/Transcripcion
+    objeto_anotado: String                       -- referencia textual al item
+    nota: String
+    creada_en: Timestamp
+}
+
+------------------------------------------------------------
+-- Generacion de puntos de decision
+------------------------------------------------------------
+
+rule GenerarDecisionesDesdeExtraccion {
+    when: ExtraccionLista(transcripcion, ejecucion)
+
+    requires: transcripcion.estado = extraida
+    requires: ejecucion.estado = completada
+
+    ensures:
+        -- Una decision por cada concepto con sinonimos candidatos suficientemente mencionados.
+        for c in ejecucion.conceptos where c.sinonimos_candidatos.count > 0
+                                       and c.menciones >= config.menciones_minimas_para_sinonimia:
+            PuntoDecision.created(
+                id: "d_sin_" + c.id,
+                transcripcion: transcripcion,
+                tipo: sinonimia,
+                conceptos_implicados: [c],
+                pregunta: "Colapsar " + c.label + " con sus sinonimos candidatos?",
+                recomendacion_llm: "El LLM propone '" + c.label + "' como label canonico",
+                label_canonico_propuesto: c.label,
+                estado: pendiente,
+                creada_en: now
+            )
+        -- Una decision por cada relacion marcada como bidireccional.
+        for r in ejecucion.relaciones where r.bidireccional = true:
+            PuntoDecision.created(
+                id: "d_bidir_" + r.id,
+                transcripcion: transcripcion,
+                tipo: bidireccionalidad,
+                relacion_implicada: r,
+                pregunta: "Confirmar que " + r.etiqueta + " es bidireccional?",
+                recomendacion_llm: r.matiz ?? "Sin matiz adicional",
+                estado: pendiente,
+                creada_en: now
+            )
+        -- Una decision por cada bucle detectado.
+        for b in ejecucion.bucles:
+            PuntoDecision.created(
+                id: "d_bucle_" + b.id,
+                transcripcion: transcripcion,
+                tipo: confirmar_bucle,
+                bucle_implicado: b,
+                pregunta: "Aceptar el bucle de retroalimentacion descrito?",
+                recomendacion_llm: b.descripcion,
+                estado: pendiente,
+                creada_en: now
+            )
+        -- Una decision por cada concepto con confianza por debajo del umbral.
+        for c in ejecucion.conceptos_dudosos:
+            PuntoDecision.created(
+                id: "d_conf_" + c.id,
+                transcripcion: transcripcion,
+                tipo: confianza_baja,
+                conceptos_implicados: [c],
+                pregunta: "Confirmar la presencia del concepto " + c.label + " (confianza baja)",
+                recomendacion_llm: "Revisar cita directa: " + c.cita_directa,
+                estado: pendiente,
+                creada_en: now
+            )
+        -- Una decision por cada relacion con confianza por debajo del umbral.
+        for r in ejecucion.relaciones_dudosas:
+            PuntoDecision.created(
+                id: "d_conf_rel_" + r.id,
+                transcripcion: transcripcion,
+                tipo: confianza_baja,
+                relacion_implicada: r,
+                pregunta: "Confirmar la relacion '" + r.etiqueta + "' entre " + r.origen.label + " y " + r.destino.label + " (confianza baja)",
+                recomendacion_llm: "Revisar frase: " + r.frase_completa,
+                estado: pendiente,
+                creada_en: now
+            )
+        -- Una decision por cada concepto ambiguo: el investigador decide su tipo definitivo.
+        for c in ejecucion.conceptos where c.tipo = ambiguo:
+            PuntoDecision.created(
+                id: "d_tipo_" + c.id,
+                transcripcion: transcripcion,
+                tipo: promocion_de_tipo,
+                conceptos_implicados: [c],
+                pregunta: "Clasificar '" + c.label + "': primitivo, derivado o metalenguaje?",
+                recomendacion_llm: "Concepto marcado como ambiguo por el LLM. Revisar: " + c.descripcion,
+                estado: pendiente,
+                creada_en: now
+            )
+        -- Una decision por cada flag de metalenguaje detectado.
+        for m in ejecucion.metalenguaje:
+            PuntoDecision.created(
+                id: "d_meta_" + m.id,
+                transcripcion: transcripcion,
+                tipo: metalenguaje,
+                flag_implicado: m,
+                pregunta: "Confirmar el pasaje de metalenguaje (" + m.tipo + ")?",
+                recomendacion_llm: m.nota,
+                estado: pendiente,
+                creada_en: now
+            )
+}
+
+------------------------------------------------------------
+-- Resolucion de decisiones
+------------------------------------------------------------
+
+rule InvestigadorAceptaDecision {
+    when: InvestigadorResuelve(decision, resolucion, nota?)
+
+    requires: decision.estado in {pendiente, diferida}
+    requires: resolucion in {aceptada, rechazada, modificada}
+
+    ensures:
+        decision.estado = resuelta
+        decision.resolucion = resolucion
+        decision.nota_resolucion = nota
+        decision.resuelta_en = now
+        DecisionResuelta(decision: decision)
+}
+
+rule InvestigadorDifiereDecision {
+    when: InvestigadorResuelve(decision, resolucion, _)
+
+    requires: decision.estado = pendiente
+    requires: resolucion = diferida
+
+    ensures:
+        decision.estado = diferida
+}
+
+rule InvestigadorReanudaDecision {
+    when: InvestigadorReanudaDecision(decision)
+
+    requires: decision.estado = diferida
+
+    ensures:
+        decision.estado = pendiente
+}
+
+rule TranscripcionPasaAValidada {
+    when: TodasLasDecisionesResueltas(transcripcion)
+
+    requires: transcripcion.estado = extraida
+    requires: not exists PuntoDecision{transcripcion: transcripcion, estado: pendiente}
+    requires: not exists PuntoDecision{transcripcion: transcripcion, estado: diferida}
+
+    ensures:
+        transcripcion.estado = validada
+        transcripcion.fecha_validacion = now
+        ValidacionLista(transcripcion: transcripcion)
+}
+
+rule InvestigadorAnota {
+    when: InvestigadorAgregaNota(transcripcion, objeto, nota)
+
+    requires: transcripcion.estado in {extraida, validada, publicada}
+    requires: length(nota) > 0
+
+    ensures: AnotacionInvestigador.created(
+        id: generar_id(),
+        transcripcion: transcripcion,
+        objeto_anotado: objeto,
+        nota: nota,
+        creada_en: now
+    )
+
+    @guidance
+        -- Las anotaciones nunca se borran, ni siquiera al publicar. Son
+        -- parte del registro hermeneutico del grafo.
+}
+
+------------------------------------------------------------
+-- Trigger derivado que emite cuando ya no quedan decisiones abiertas
+------------------------------------------------------------
+
+rule EmitirCierreDeValidacion {
+    when: decision: PuntoDecision.estado transitions_to resuelta
+    requires: not exists PuntoDecision{transcripcion: decision.transcripcion, estado: pendiente}
+    requires: not exists PuntoDecision{transcripcion: decision.transcripcion, estado: diferida}
+
+    ensures: TodasLasDecisionesResueltas(transcripcion: decision.transcripcion)
+}
+
+------------------------------------------------------------
+-- Invariantes
+------------------------------------------------------------
+
+invariant DecisionResueltaTieneResolucion {
+    for d in PuntoDecision:
+        d.estado = resuelta implies d.resolucion != null
+}
+
+invariant DecisionPendienteNoTieneResolucion {
+    for d in PuntoDecision:
+        d.estado = pendiente implies d.resolucion = null
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "Las decisiones diferidas bloquean la transicion a validada. Es correcto, o se deberia permitir publicar un grafo con decisiones explicitamente diferidas?"

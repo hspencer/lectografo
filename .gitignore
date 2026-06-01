@@ -1,0 +1,30 @@
+# Variables de entorno y claves
+.env
+.env.local
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Salidas temporales del pipeline
+*.tmp
+*.cache
+.cache/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Audios descargados (no se versionan; solo los .txt/.vtt resultantes)
+transcripts/*.mp3
+transcripts/*.wav
+transcripts/*.m4a
+transcripts/*.mp4

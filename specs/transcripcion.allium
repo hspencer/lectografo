@@ -1,0 +1,211 @@
+-- allium: 3
+-- transcripcion.allium
+
+-- Scope: ciclo de vida de una transcripcion desde su ingesta hasta que
+-- queda lista para la extraccion de grafo conceptual.
+--
+-- Includes:
+--   - Fuentes de entrada (texto pegado, archivo local, URL de YouTube)
+--   - Normalizacion: limpieza, particion en parrafos, preservacion de timestamps
+--   - Estados desde raw hasta lista para extraccion
+--
+-- Excludes:
+--   - Descarga real de YouTube (black box: YtDlp.descargar)
+--   - Transcripcion de audio a texto (black box: TranscripcionAutomatica.transcribir)
+
+------------------------------------------------------------
+-- Tipos auxiliares
+------------------------------------------------------------
+
+enum FuenteOrigen {
+    texto_pegado
+    archivo_local
+    youtube
+}
+
+enum IdiomaSoportado {
+    es
+    en
+    pt
+    fr
+    otro
+}
+
+value Timestamp_VTT {
+    inicio: Duration
+    fin: Duration
+    duracion: fin - inicio
+}
+
+value Fragmento {
+    indice: Integer
+    texto: String
+    timestamp: Timestamp_VTT?
+}
+
+------------------------------------------------------------
+-- Entidades externas (black box)
+------------------------------------------------------------
+
+external entity YtDlp {
+    binario_disponible: Boolean
+}
+
+external entity TranscripcionAutomatica {
+    motor: String              -- por ejemplo "whisper", "faster-whisper"
+    modelo: String
+}
+
+------------------------------------------------------------
+-- Transcripcion
+------------------------------------------------------------
+
+entity Transcripcion {
+    id: String                                   -- slug derivado del titulo
+    titulo: String
+    fuente_origen: FuenteOrigen
+    url_fuente: String?
+    autor_contenido: String?                     -- quien analiza
+    autor_texto_original: String?                -- el filosofo discutido
+    idioma: IdiomaSoportado
+    fecha_ingesta: Timestamp
+
+    texto_crudo: String
+    fragmentos: List<Fragmento>                  -- texto normalizado por partes
+    tiene_timestamps: Boolean
+
+    estado: raw | normalizada | extraida | validada | publicada
+    fecha_normalizacion: Timestamp? when estado != raw
+    fecha_extraccion: Timestamp? when estado = extraida | validada | publicada
+    fecha_validacion: Timestamp? when estado = validada | publicada
+    fecha_publicacion: Timestamp? when estado = publicada
+
+    transitions estado {
+        raw -> normalizada
+        normalizada -> extraida
+        extraida -> validada
+        validada -> publicada
+        terminal: publicada
+    }
+}
+
+------------------------------------------------------------
+-- Ingesta
+------------------------------------------------------------
+
+rule IngestarTextoPegado {
+    when: InvestigadorIngresaTexto(titulo, texto, idioma, autor_contenido?, autor_texto_original?)
+
+    requires: length(texto) > 0
+    requires: not exists Transcripcion{titulo: titulo}
+
+    ensures: Transcripcion.created(
+        id: slugify(titulo),
+        titulo: titulo,
+        fuente_origen: texto_pegado,
+        autor_contenido: autor_contenido,
+        autor_texto_original: autor_texto_original,
+        idioma: idioma,
+        fecha_ingesta: now,
+        texto_crudo: texto,
+        fragmentos: [],
+        tiene_timestamps: false,
+        estado: raw
+    )
+}
+
+rule IngestarArchivoLocal {
+    when: InvestigadorIngresaArchivo(ruta, titulo, idioma)
+
+    requires: archivo_existe(ruta)
+    requires: extension(ruta) in {"txt", "md", "vtt", "srt"}
+    requires: not exists Transcripcion{titulo: titulo}
+
+    ensures: Transcripcion.created(
+        id: slugify(titulo),
+        titulo: titulo,
+        fuente_origen: archivo_local,
+        url_fuente: ruta,
+        idioma: idioma,
+        fecha_ingesta: now,
+        texto_crudo: leer_archivo(ruta),         -- black box
+        fragmentos: [],
+        tiene_timestamps: extension(ruta) in {"vtt", "srt"},
+        estado: raw
+    )
+}
+
+rule IngestarYoutube {
+    when: InvestigadorIngresaUrl(url, titulo, idioma)
+
+    requires: es_url_https(url)
+    requires: dominio(url) in {"youtube.com", "youtu.be"}
+    requires: not exists Transcripcion{titulo: titulo}
+
+    ensures:
+        let texto = YtDlp.descargar_subtitulos(url) ?? TranscripcionAutomatica.transcribir(YtDlp.descargar_audio(url))
+        Transcripcion.created(
+            id: slugify(titulo),
+            titulo: titulo,
+            fuente_origen: youtube,
+            url_fuente: url,
+            idioma: idioma,
+            fecha_ingesta: now,
+            texto_crudo: texto,
+            fragmentos: [],
+            tiene_timestamps: true,
+            estado: raw
+        )
+
+    @guidance
+        -- Preferir siempre subtitulos oficiales sobre transcripcion automatica.
+        -- La transcripcion automatica solo se invoca si YtDlp.descargar_subtitulos
+        -- retorna null.
+}
+
+------------------------------------------------------------
+-- Normalizacion
+------------------------------------------------------------
+
+rule NormalizarTranscripcion {
+    when: InvestigadorSolicitaNormalizacion(transcripcion)
+
+    requires: transcripcion.estado = raw
+    requires: length(transcripcion.texto_crudo) <= config.max_chars_por_prompt * 10
+
+    let fragmentos_limpios = particionar_y_limpiar(transcripcion.texto_crudo, transcripcion.tiene_timestamps)
+
+    ensures:
+        transcripcion.fragmentos = fragmentos_limpios
+        transcripcion.estado = normalizada
+        transcripcion.fecha_normalizacion = now
+        TranscripcionNormalizada(transcripcion: transcripcion)
+}
+
+@guidance
+    -- particionar_y_limpiar es una funcion caja negra. A nivel de comportamiento
+    -- garantiza: (1) elimina muletillas configuradas, (2) preserva citas directas,
+    -- (3) conserva timestamps si el origen los tenia.
+
+------------------------------------------------------------
+-- Invariantes locales
+------------------------------------------------------------
+
+invariant TimestampsCoherentes {
+    for t in Transcripcion:
+        for f in t.fragmentos:
+            f.timestamp = null or f.timestamp.inicio < f.timestamp.fin
+}
+
+invariant IdiomaCoincideConIdiomaSoportado {
+    for t in Transcripcion:
+        t.idioma in {es, en, pt, fr, otro}
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "Cuando una transcripcion supera diez veces el max_chars_por_prompt el sistema rechaza la ingesta. Es preferible permitir ingesta y obligar a fragmentacion explicita por capitulos?"
+
+open question "Si el investigador ingresa dos veces la misma URL de YouTube con titulos distintos, el sistema deberia detectar la duplicacion por url_fuente?"

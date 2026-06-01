@@ -1,0 +1,270 @@
+-- allium: 3
+-- surfaces.allium
+
+-- Scope: contratos de superficie del sistema. Define las fronteras entre
+-- el sistema y sus actores (investigador y LLM) sin describir interfaz
+-- grafica ni endpoints HTTP concretos.
+--
+-- Includes:
+--   - Actor Investigador (humano) y actor LLM (servicio externo)
+--   - Surface de validacion de decisiones
+--   - Surface de visualizacion del grafo
+--   - Surface de invocacion del LLM
+--   - Contrato Codec para serializar grafos
+--   - Contrato EvaluadorLLM para invocar proveedores
+
+use "./transcripcion.allium" as transcripcion
+use "./extraccion.allium" as extraccion
+use "./validacion.allium" as validacion
+use "./grafo.allium" as grafo
+
+------------------------------------------------------------
+-- Actores
+------------------------------------------------------------
+
+external entity Persona {
+    nombre: String
+    email: String?
+}
+
+external entity ServicioLLM {
+    proveedor: extraccion/ProveedorLLM
+    endpoint: String
+}
+
+actor Investigador {
+    identified_by: Persona where nombre != ""
+}
+
+actor LLM {
+    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, ollama}
+}
+
+------------------------------------------------------------
+-- Contratos
+------------------------------------------------------------
+
+contract Codec {
+    serializar: (g: grafo/Grafo) -> ByteArray
+    deserializar: (bytes: ByteArray) -> grafo/Grafo
+
+    @invariant Roundtrip
+        -- deserializar(serializar(g)) recupera un grafo equivalente
+        -- en todos los campos observables.
+
+    @guidance
+        -- El formato concreto es JSON-LD. El codec no debe perder
+        -- anotaciones del investigador ni notas_usuario.
+}
+
+contract EvaluadorLLM {
+    invocar: (prompt: String, transcripcion: transcripcion/Transcripcion) -> String
+    parsear_respuesta: (texto: String) -> (List<extraccion/ConceptoPropuesto>, List<extraccion/RelacionPropuesta>, List<extraccion/BucleDetectado>, List<extraccion/FlagMetalenguaje>)
+
+    @invariant ParseoEsTotal
+        -- parsear_respuesta nunca lanza excepcion: para input invalido
+        -- retorna listas vacias y la falla se reporta por otro canal.
+
+    @guidance
+        -- Cada proveedor (anthropic, openai, gemini) implementa este
+        -- contrato detras de la misma interfaz.
+}
+
+------------------------------------------------------------
+-- Surface: panel de validacion del investigador
+------------------------------------------------------------
+
+surface PanelValidacion {
+    facing investigador: Investigador
+    context transcripcion: transcripcion/Transcripcion where estado in {extraida, validada}
+
+    let pendientes = validacion/PuntoDecision where transcripcion = transcripcion and estado = pendiente
+    let diferidas = validacion/PuntoDecision where transcripcion = transcripcion and estado = diferida
+    let estancadas = pendientes where esta_estancada = true
+
+    exposes:
+        pendientes
+        diferidas
+        estancadas
+        for d in pendientes:
+            d.pregunta
+            d.recomendacion_llm
+            d.tipo
+            d.conceptos_implicados
+            d.relacion_implicada
+            d.bucle_implicado
+            d.flag_implicado
+
+    provides:
+        InvestigadorResuelve(decision, aceptada, nota)
+            when decision in pendientes
+        InvestigadorResuelve(decision, rechazada, nota)
+            when decision in pendientes
+        InvestigadorResuelve(decision, modificada, nota)
+            when decision in pendientes
+        InvestigadorResuelve(decision, diferida, nota)
+            when decision in pendientes
+        InvestigadorReanudaDecision(decision)
+            when decision in diferidas
+        InvestigadorAgregaNota(transcripcion, objeto, nota)
+
+    @guarantee NingunaDecisionSeCierraAutomaticamente
+        -- El sistema nunca resuelve una decision sin accion explicita
+        -- del investigador. Los timeouts solo marcan decisiones como
+        -- estancadas, no las cierran.
+
+    @guarantee TrazabilidadDeDecisiones
+        -- Toda decision resuelta queda con timestamp y nota; las
+        -- decisiones rechazadas no se borran, persisten para el
+        -- registro hermeneutico.
+
+    timeout:
+        DecisionEstancadaSeDestaca when pendientes.any(d => d.esta_estancada)
+}
+
+------------------------------------------------------------
+-- Surface: visualizacion del grafo
+------------------------------------------------------------
+
+surface VisualizacionGrafo {
+    facing investigador: Investigador
+    context grafo: grafo/Grafo
+
+    exposes:
+        grafo.titulo
+        grafo.version
+        grafo.estado
+        grafo.total_nodos
+        grafo.total_relaciones
+        grafo.densidad
+        for n in grafo.nodos:
+            n.label
+            n.tipos
+            n.descripcion_corta
+            n.sinonimos_consolidados
+            n.notas_usuario
+        for r in grafo.relaciones:
+            r.etiqueta
+            r.frase_completa
+            r.bidireccional
+            r.matiz
+            r.tipo
+        for b in grafo.bucles:
+            b.descripcion
+            b.tipo
+            b.nodos
+
+    provides:
+        InvestigadorMarcaGrafoRevisado(grafo)
+            when grafo.estado = borrador
+        InvestigadorPublicaGrafo(grafo)
+            when grafo.estado = revisado
+        InvestigadorRevierteRevision(grafo)
+            when grafo.estado = revisado
+        InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
+
+    related:
+        PanelValidacion(grafo.transcripcion)
+            when grafo.estado in {borrador, revisado}
+
+    contracts:
+        demands Codec
+
+    @guarantee GrafoPublicadoNoSeMutaPorEstaSurface
+        -- Una vez publicado, esta surface es read-only. Los provides
+        -- no aplican y la implementacion debe rechazar mutaciones.
+
+    @guidance
+        -- La visualizacion usa D3 force-directed por defecto. El
+        -- investigador puede arrastrar nodos para reorganizar.
+}
+
+------------------------------------------------------------
+-- Surface: invocacion del LLM
+------------------------------------------------------------
+
+surface InvocacionLLM {
+    facing servicio: LLM
+    context ejecucion: extraccion/EjecucionExtraccion where estado = en_curso
+
+    exposes:
+        ejecucion.transcripcion.texto_crudo
+        ejecucion.transcripcion.fragmentos
+        ejecucion.prompt.plantilla
+        ejecucion.transcripcion.idioma
+
+    provides:
+        ExtraccionLLMRetornaResultado(ejecucion, conceptos, relaciones, bucles, metalenguaje)
+        ExtraccionLLMRetornaError(ejecucion, razon)
+
+    contracts:
+        demands EvaluadorLLM
+
+    @guarantee SinFugaDeDatos
+        -- La unica informacion que cruza esta surface hacia el servicio
+        -- LLM es la transcripcion y el prompt. No se envian anotaciones
+        -- previas del investigador ni grafos en curso.
+
+    @guarantee RespuestaJSONValida
+        -- La respuesta del LLM debe ser JSON parseable. Si no lo es,
+        -- se emite ExtraccionLLMRetornaError con razon = "json_invalido".
+
+    timeout:
+        ExtraccionLLMTimeout when ejecucion.iniciada_en + 5.minutes <= now
+}
+
+------------------------------------------------------------
+-- Reglas de timeout (deben tener guarda como dice la guidance global)
+------------------------------------------------------------
+
+rule MarcarDecisionEstancada {
+    when: d: validacion/PuntoDecision.creada_en + config.plazo_decision_estancada <= now
+    requires: d.estado = pendiente
+
+    ensures: DecisionEstancadaSeDestaca(decision: d)
+
+    @guidance
+        -- Esta regla no cierra la decision. Solo emite un trigger que
+        -- el panel usa para destacar visualmente la decision como
+        -- estancada.
+}
+
+rule AbortarExtraccionPorTimeout {
+    when: e: extraccion/EjecucionExtraccion.iniciada_en + 5.minutes <= now
+    requires: e.estado = en_curso
+
+    ensures: ExtraccionLLMRetornaError(ejecucion: e, razon: "timeout")
+}
+
+------------------------------------------------------------
+-- Surface: configuracion del proveedor LLM
+------------------------------------------------------------
+
+surface ConfiguracionProveedor {
+    facing investigador: Investigador
+
+    exposes:
+        extraccion/ProveedorActivo where es_local = false: proveedor, modelo, api_key_presente
+        extraccion/ProveedorActivo where es_local = true:  proveedor, modelo, endpoint
+
+    provides:
+        InvestigadorSeleccionaProveedor(proveedor, modelo, api_key?)
+            when proveedor in {anthropic, openai, gemini}
+        InvestigadorSeleccionaProveedorLocal(modelo, endpoint)
+            when proveedor = ollama
+
+    @guarantee ApiKeyNoSeExponeEnOtrasSuperficies
+        -- La api_key de proveedores remotos nunca aparece en otras surfaces
+        -- ni en la serializacion del grafo. Solo es visible en esta surface
+        -- para su configuracion.
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "El timeout de 5 minutos para la invocacion del LLM es razonable para transcripciones largas? Hacerlo proporcional al tamano del input?"
+
+open question "La surface VisualizacionGrafo expone la densidad pero no expone la lista completa de bucles con sus tipos. Es informacion que el investigador quiere ver en el panel principal o solo bajo demanda?"
+
+open question "Para modelos locales via ollama: el investigador selecciona el modelo de una lista de modelos disponibles en el endpoint, o lo escribe manualmente?"

@@ -1,0 +1,364 @@
+-- allium: 3
+-- grafo.allium
+
+-- Scope: estructura final del grafo conceptual, persistencia en disco y
+-- publicacion inmutable. El grafo es la cristalizacion del trabajo
+-- interpretativo del investigador sobre la propuesta del LLM.
+--
+-- Includes:
+--   - Modelado de nodos y relaciones con anotacion semantica
+--   - Persistencia en JSON con versionado
+--   - Publicacion como version inmutable
+--   - Operaciones de fusion y particion derivadas de decisiones validadas
+--
+-- Excludes:
+--   - Visualizacion (vive en surfaces.allium)
+--   - Decisiones de validacion (vive en validacion.allium)
+
+use "./transcripcion.allium" as transcripcion
+use "./extraccion.allium" as extraccion
+use "./validacion.allium" as validacion
+
+------------------------------------------------------------
+-- Nodo
+------------------------------------------------------------
+
+entity Nodo {
+    id: String                                   -- por ejemplo "node_001"
+    grafo: Grafo
+    label: String
+    tipos: Set<extraccion/TipoConcepto>          -- un nodo puede ser primitivo y metalenguaje
+    descripcion_corta: String
+    sinonimos_consolidados: List<String>         -- terminos absorbidos en este nodo
+    contexto_primera_aparicion: String?          -- "min 3:45" o similar
+    etiqueta_usuario: String?                    -- categorizacion libre del investigador
+    notas_usuario: List<String>
+
+    -- Procedencia: que conceptos propuestos del LLM se fusionaron aqui.
+    conceptos_origen: List<extraccion/ConceptoPropuesto>
+
+    creado_en: Timestamp
+}
+
+------------------------------------------------------------
+-- Relacion
+------------------------------------------------------------
+
+entity Relacion {
+    id: String
+    grafo: Grafo
+    origen: Nodo
+    destino: Nodo
+    tipo: extraccion/TipoRelacion
+    etiqueta: String
+    frase_completa: String
+    bidireccional: Boolean
+    matiz: String?
+    contexto: String?
+    notas_usuario: List<String>
+
+    confianza_extraccion: Decimal
+    estado_validacion: pendiente | indefinida | aceptada | modificada
+    -- indefinida: el investigador acepto la existencia de la relacion pero su definicion esta incompleta
+    relacion_origen: extraccion/RelacionPropuesta
+
+    creada_en: Timestamp
+
+    es_terminal: not exists Relacion{origen: this.destino}
+}
+
+------------------------------------------------------------
+-- Bucle
+------------------------------------------------------------
+
+entity Bucle {
+    id: String
+    grafo: Grafo
+    nodos: List<Nodo>
+    descripcion: String
+    tipo: extraccion/TipoBucle
+    bucle_origen: extraccion/BucleDetectado
+
+    es_minimo: nodos.count >= 2
+}
+
+------------------------------------------------------------
+-- Grafo
+------------------------------------------------------------
+
+entity Grafo {
+    id: String                                   -- slug + version corta
+    transcripcion: transcripcion/Transcripcion
+    titulo: String                               -- usualmente igual al de la transcripcion
+    version: String                              -- "1.0-draft", "1.0", "1.1", ...
+    creador: String                              -- nombre del investigador
+    creado_en: Timestamp
+
+    estado: borrador | revisado | publicado
+    fecha_publicacion: Timestamp? when estado = publicado
+    hash_contenido: String? when estado = publicado    -- huella inmutable
+
+    -- Relaciones internas
+    nodos: Nodo with grafo = this
+    relaciones: Relacion with grafo = this
+    bucles: Bucle with grafo = this
+
+    -- Proyecciones utiles
+    nodos_primitivos: nodos where tipos contains primitivo
+    nodos_derivados: nodos where tipos contains derivado
+    relaciones_bidireccionales: relaciones where bidireccional = true
+
+    -- Derivados
+    total_nodos: nodos.count
+    total_relaciones: relaciones.count
+    densidad: if total_nodos < 2 then 0 else total_relaciones / (total_nodos * (total_nodos - 1))    -- aprox dirigida; 0 si hay menos de 2 nodos
+
+    transitions estado {
+        borrador -> revisado
+        revisado -> publicado
+        revisado -> borrador
+        terminal: publicado
+    }
+}
+
+------------------------------------------------------------
+-- Construccion del grafo desde validacion
+------------------------------------------------------------
+
+rule CrearGrafoBorrador {
+    when: ValidacionLista(transcripcion)
+
+    requires: transcripcion.estado = validada
+    requires: not exists Grafo{transcripcion: transcripcion, estado: borrador}
+
+    ensures: Grafo.created(
+        id: transcripcion.id + "-v1",
+        transcripcion: transcripcion,
+        titulo: transcripcion.titulo,
+        version: "1.0-draft",
+        creador: nombre_investigador(),       -- caja negra
+        creado_en: now,
+        estado: borrador
+    )
+
+    @guidance
+        -- En esta etapa el grafo nace vacio. Los nodos y relaciones se
+        -- crean a partir de las decisiones validadas via las reglas
+        -- siguientes.
+}
+
+rule MaterializarNodoDesdeConceptoAceptado {
+    when: DecisionResuelta(decision)
+
+    requires: decision.tipo in {sinonimia, confianza_baja, promocion_de_tipo}
+    requires: decision.resolucion in {aceptada, modificada}
+    requires: decision.conceptos_implicados.count > 0
+
+    let conceptos = decision.conceptos_implicados
+    -- Para sinonimia: el investigador puede haber elegido un label distinto (label_resolucion),
+    -- si no, se usa el smart default propuesto por el LLM (label_canonico_propuesto),
+    -- si no, el label del primer concepto implicado.
+    let label_canonico = decision.label_resolucion
+                      ?? decision.label_canonico_propuesto
+                      ?? conceptos.first.label
+    -- Para promocion_de_tipo: el investigador ha elegido el tipo definitivo via nota_resolucion.
+    let tipo_definitivo = if decision.tipo = promocion_de_tipo
+                          then tipo_desde_nota(decision.nota_resolucion)  -- black box
+                          else conceptos.first.tipo
+
+    ensures:
+        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        Nodo.created(
+            id: "node_" + decision.id,
+            grafo: g,
+            label: label_canonico,
+            tipos: { tipo_definitivo },
+            descripcion_corta: conceptos.first.descripcion,
+            sinonimos_consolidados: conceptos.first.sinonimos_candidatos,
+            contexto_primera_aparicion: contexto_de(conceptos.first),   -- black box
+            notas_usuario: [],
+            conceptos_origen: conceptos,
+            creado_en: now
+        )
+}
+
+rule MaterializarRelacionDesdeDecisionAceptada {
+    when: DecisionResuelta(decision)
+
+    requires: decision.tipo = bidireccionalidad
+    requires: decision.resolucion in {aceptada, modificada}
+    requires: decision.relacion_implicada != null
+
+    let r = decision.relacion_implicada
+    let bidir = decision.resolucion = aceptada
+
+    ensures:
+        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        Relacion.created(
+            id: "rel_" + decision.id,
+            grafo: g,
+            origen: nodo_de_concepto(r.origen, g),
+            destino: nodo_de_concepto(r.destino, g),
+            tipo: r.tipo,
+            etiqueta: r.etiqueta,
+            frase_completa: r.frase_completa,
+            bidireccional: bidir,
+            matiz: r.matiz,
+            contexto: r.contexto,
+            notas_usuario: [],
+            confianza_extraccion: r.confianza,
+            estado_validacion: aceptada,
+            relacion_origen: r,
+            creada_en: now
+        )
+}
+
+rule MaterializarRelacionConfianzaBajaAceptada {
+    when: DecisionResuelta(decision)
+
+    requires: decision.tipo = confianza_baja
+    requires: decision.resolucion in {aceptada, modificada}
+    requires: decision.relacion_implicada != null
+
+    let r = decision.relacion_implicada
+
+    ensures:
+        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        Relacion.created(
+            id: "rel_" + decision.id,
+            grafo: g,
+            origen: nodo_de_concepto(r.origen, g),
+            destino: nodo_de_concepto(r.destino, g),
+            tipo: r.tipo,
+            etiqueta: r.etiqueta,
+            frase_completa: r.frase_completa,
+            bidireccional: r.bidireccional,
+            matiz: r.matiz,
+            contexto: r.contexto,
+            notas_usuario: [],
+            confianza_extraccion: r.confianza,
+            estado_validacion: indefinida,           -- pendiente de definicion completa por el investigador
+            relacion_origen: r,
+            creada_en: now
+        )
+
+    @guidance
+        -- Una relacion indefinida es visible en el grafo pero esta destacada
+        -- como incompleta. El investigador puede enriquecerla o eliminarla
+        -- en la fase de revision antes de publicar.
+}
+
+rule MaterializarBucleAceptado {
+    when: DecisionResuelta(decision)
+
+    requires: decision.tipo = confirmar_bucle
+    requires: decision.resolucion = aceptada
+    requires: decision.bucle_implicado != null
+
+    let b = decision.bucle_implicado
+
+    ensures:
+        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        Bucle.created(
+            id: "loop_" + decision.id,
+            grafo: g,
+            nodos: nodos_de_conceptos(b.nodos, g),
+            descripcion: b.descripcion,
+            tipo: b.tipo,
+            bucle_origen: b
+        )
+}
+
+------------------------------------------------------------
+-- Revision y publicacion
+------------------------------------------------------------
+
+rule MarcarGrafoComoRevisado {
+    when: InvestigadorMarcaGrafoRevisado(grafo)
+
+    requires: grafo.estado = borrador
+    requires: grafo.total_nodos > 0
+    requires: grafo.total_relaciones > 0
+
+    ensures: grafo.estado = revisado
+}
+
+rule PublicarGrafo {
+    when: InvestigadorPublicaGrafo(grafo)
+
+    requires: grafo.estado = revisado
+    requires: grafo.transcripcion.estado = validada
+    requires: not exists validacion/PuntoDecision{transcripcion: grafo.transcripcion, estado: pendiente}
+
+    ensures:
+        grafo.estado = publicado
+        grafo.fecha_publicacion = now
+        grafo.hash_contenido = calcular_hash(grafo)    -- caja negra
+        grafo.transcripcion.estado = publicada
+        grafo.transcripcion.fecha_publicacion = now
+        GrafoPublicado(grafo: grafo)
+
+    @guidance
+        -- Publicar congela el grafo. Para hacer cambios posteriores se
+        -- crea un nuevo Grafo con version incrementada y se vuelve a
+        -- ejecutar el flujo de validacion sobre la transcripcion.
+}
+
+rule RevertirRevisionABorrador {
+    when: InvestigadorRevierteRevision(grafo)
+
+    requires: grafo.estado = revisado
+
+    ensures: grafo.estado = borrador
+}
+
+------------------------------------------------------------
+-- Invariantes
+------------------------------------------------------------
+
+invariant NodoPerteneceASuGrafo {
+    for n in Nodo:
+        n.grafo != null
+}
+
+invariant RelacionConectaNodosDelMismoGrafo {
+    for r in Relacion:
+        r.origen.grafo = r.grafo and r.destino.grafo = r.grafo
+}
+
+invariant BuclePerteneceAUnSoloGrafo {
+    for b in Bucle:
+        for n in b.nodos:
+            n.grafo = b.grafo
+}
+
+invariant GrafoPublicadoTieneHash {
+    for g in Grafo:
+        g.estado = publicado implies g.hash_contenido != null
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "Permitir que un mismo nodo pertenezca a multiples grafos como referencia compartida, o cada grafo debe tener su propia copia del nodo?"
+
+open question "El calculo de densidad asume grafo dirigido sin auto-loops. Como cuenta densidad en presencia de bucles?"
+
+open question "Una relacion en estado indefinida, debe bloquear la transicion borrador -> revisado, o es suficiente con destacarla visualmente?"
+
+-- Funciones auxiliares de lookup usadas en las reglas de materializacion.
+-- Se declaran como deferred porque su logica depende del modelo de datos concreto.
+deferred nodo_de_concepto(concepto: extraccion/ConceptoPropuesto, grafo: Grafo) -> Nodo
+    -- Devuelve el Nodo del grafo que fue creado a partir del concepto dado.
+deferred nodos_de_conceptos(conceptos: List<extraccion/ConceptoPropuesto>, grafo: Grafo) -> List<Nodo>
+    -- Version plural de nodo_de_concepto.
+deferred contexto_de(concepto: extraccion/ConceptoPropuesto) -> String?
+    -- Extrae la referencia de contexto legible (ej. "min 3:45") del concepto.
+deferred tipo_desde_nota(nota: String?) -> extraccion/TipoConcepto
+    -- Interpreta la nota de resolucion del investigador como un TipoConcepto concreto.
+deferred nombre_investigador() -> String
+    -- Devuelve el nombre del investigador activo (sesion local).
+
+deferred PersistenciaGrafo.guardar      -- ver src/persistencia/grafo.py cuando exista
+deferred PersistenciaGrafo.cargar
