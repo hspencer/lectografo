@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Llull</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- ── Topbar ─────────────────────────────────────────── -->
+  <header id="topbar">
+    <div id="topbar-left">
+      <span id="app-name">Llull</span>
+      <span id="transcripcion-titulo" class="muted"></span>
+    </div>
+    <div id="topbar-center">
+      <div id="progreso-barra-wrap">
+        <div id="progreso-barra"></div>
+      </div>
+      <span id="progreso-texto" class="muted"></span>
+    </div>
+    <div id="topbar-right">
+      <div id="filtro-estado">
+        <button class="filtro-btn active" data-filtro="pendiente">Pendientes</button>
+        <button class="filtro-btn" data-filtro="diferida">Diferidas</button>
+        <button class="filtro-btn" data-filtro="resuelta">Resueltas</button>
+        <button class="filtro-btn" data-filtro="todas">Todas</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Layout principal ────────────────────────────────── -->
+  <div id="layout">
+
+    <!-- Sidebar: lista de decisiones -->
+    <aside id="sidebar">
+      <div id="decision-list-wrap">
+        <ul id="decision-list"></ul>
+      </div>
+    </aside>
+
+    <!-- Panel principal: detalle + acciones -->
+    <main id="contenido">
+      <div id="empty-state">
+        <p>Selecciona una decisión para comenzar.</p>
+      </div>
+      <div id="detalle" hidden>
+
+        <div id="detalle-header">
+          <span id="detalle-tipo-badge"></span>
+          <span id="detalle-id" class="muted mono"></span>
+          <span id="detalle-estado-badge"></span>
+        </div>
+
+        <div id="detalle-cuerpo"></div>
+
+        <div id="detalle-recomendacion" hidden>
+          <span class="campo-etiq">Recomendación LLM</span>
+          <p id="detalle-rec-texto" class="cita"></p>
+        </div>
+
+        <!-- Acciones -->
+        <div id="acciones" hidden>
+
+          <!-- Sinonimia: modificar label -->
+          <div id="modificar-label-panel" hidden>
+            <label class="campo-etiq" for="input-label">Nuevo label canónico</label>
+            <div class="input-row">
+              <input id="input-label" type="text" placeholder="Label definitivo…">
+              <button id="btn-confirmar-label" class="btn btn-modificar">Confirmar</button>
+            </div>
+          </div>
+
+          <!-- Tipo ambiguo: selector -->
+          <div id="tipo-selector-panel" hidden>
+            <span class="campo-etiq">Clasificar como</span>
+            <div class="tipo-opciones">
+              <button class="btn btn-tipo" data-tipo="primitivo">Primitivo</button>
+              <button class="btn btn-tipo" data-tipo="derivado">Derivado</button>
+              <button class="btn btn-tipo" data-tipo="metalenguaje">Metalenguaje</button>
+            </div>
+          </div>
+
+          <!-- Botones principales -->
+          <div id="botones-principales">
+            <button id="btn-aceptar"   class="btn btn-aceptar"  >✓ Aceptar</button>
+            <button id="btn-rechazar"  class="btn btn-rechazar" >✗ Rechazar</button>
+            <button id="btn-modificar" class="btn btn-neutro"   >✎ Modificar</button>
+            <button id="btn-diferir"   class="btn btn-diferir"  >⏭ Diferir</button>
+          </div>
+
+          <!-- Nota opcional -->
+          <div id="nota-panel">
+            <textarea id="input-nota" rows="2" placeholder="Nota (opcional)…"></textarea>
+          </div>
+
+          <!-- Atajos de teclado -->
+          <div id="atajos">
+            <kbd>A</kbd> aceptar &ensp;
+            <kbd>R</kbd> rechazar &ensp;
+            <kbd>M</kbd> modificar &ensp;
+            <kbd>D</kbd> diferir &ensp;
+            <kbd>↑↓</kbd> navegar
+          </div>
+        </div>
+
+        <!-- Decisión ya resuelta: solo lectura -->
+        <div id="resuelta-panel" hidden>
+          <div id="resuelta-resolucion"></div>
+          <p id="resuelta-nota" class="cita muted"></p>
+          <button id="btn-deshacer" class="btn btn-neutro small">↩ Reabrir</button>
+        </div>
+
+      </div><!-- /detalle -->
+    </main>
+
+  </div><!-- /layout -->
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

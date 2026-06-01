@@ -292,3 +292,5 @@ invariant DecisionPendienteNoTieneResolucion {
 ------------------------------------------------------------
 
 open question "Las decisiones diferidas bloquean la transicion a validada. Es correcto, o se deberia permitir publicar un grafo con decisiones explicitamente diferidas?"
+
+open question "¿Debe permitirse reabrir una decision ya resuelta (resuelta → pendiente)? El investigador puede cometer errores y necesita corregirlos. Actualmente la implementacion lo permite como override explicito, pero el estado machine declara 'terminal: resuelta'."
