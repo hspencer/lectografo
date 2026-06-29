@@ -20,6 +20,7 @@ def main():
     parser.add_argument("ruta", help="Ruta al archivo de transcripción (.txt, .md, .vtt, .srt)")
     parser.add_argument("--guardar", action="store_true", help="Guarda el resultado en data/grafos/")
     parser.add_argument("--prompt", default="extraccion_v1.md", help="Nombre del prompt en prompts/")
+    parser.add_argument("--debug",  action="store_true", help="Imprime la respuesta cruda del LLM antes de parsear")
     args = parser.parse_args()
 
     # Importar aquí para que los errores de config aparezcan después del --help
@@ -28,11 +29,11 @@ def main():
     from src.pipeline.ingesta import leer_archivo
     from src.pipeline.extraccion import extraer
 
-    print(f"[llull] Proveedor: {settings.provider}")
+    print(f"[lectografo] Proveedor: {settings.provider}")
     if settings.provider == "ollama":
-        print(f"[llull] Modelo:    {settings.ollama_model}")
-        print(f"[llull] Endpoint:  {settings.ollama_endpoint}")
-    print(f"[llull] Prompt:    {args.prompt}")
+        print(f"[lectografo] Modelo:    {settings.ollama_model}")
+        print(f"[lectografo] Endpoint:  {settings.ollama_endpoint}")
+    print(f"[lectografo] Prompt:    {args.prompt}")
     print()
 
     # 1. Leer transcripción
@@ -47,7 +48,17 @@ def main():
     # 2. Invocar LLM
     print("[2/3] Invocando LLM (puede tardar varios minutos)...")
     llm = get_llm()
-    resultado = extraer(transcripcion, llm, args.prompt)
+    if args.debug:
+        # Invocar y mostrar raw antes de parsear
+        from src.pipeline.extraccion import cargar_prompt
+        prompt_sistema = cargar_prompt(args.prompt)
+        respuesta_cruda = llm.invocar(prompt_sistema, transcripcion.texto)
+        print("\n── Respuesta cruda (raw) ─────────────────────────")
+        print(respuesta_cruda[:2000])
+        print("──────────────────────────────────────────────────\n")
+        resultado = llm.parsear_respuesta(respuesta_cruda)
+    else:
+        resultado = extraer(transcripcion, llm, args.prompt)
 
     # 3. Mostrar resumen
     print()
@@ -58,12 +69,20 @@ def main():
     print(f"      Metalenguaje: {len(resultado.metalenguaje)}")
     print()
 
+    if not resultado.conceptos and not resultado.relaciones:
+        print("⚠  Extracción vacía: el LLM no devolvió conceptos ni relaciones.")
+        print("   Causas frecuentes:")
+        print("     · El modelo no siguió el schema JSON esperado.")
+        print("     · El contexto (num_ctx) es demasiado pequeño para el transcript.")
+        print("     · Corre con --debug para ver la respuesta cruda.")
+        print()
+
     if resultado.conceptos:
         print("── Conceptos ──────────────────────────────────")
         for c in resultado.conceptos:
             marca = "?" if c.confianza < settings.confianza_minima_extraccion else " "
             sins = f"  ≈ {', '.join(c.sinonimos_candidatos)}" if c.sinonimos_candidatos else ""
-            print(f"  [{marca}] {c.id}  {c.label:<30} [{c.tipo.value}]  conf={c.confianza:.2f}  ×{c.menciones}{sins}")
+            print(f"  [{marca}] {c.id}  {c.label:<30}  conf={c.confianza:.2f}  ×{c.menciones}{sins}")
         print()
 
     if resultado.relaciones:
@@ -89,17 +108,20 @@ def main():
             print(f"       {m.texto[:120]}...")
         print()
 
-    # 4. Guardar si se pidió
+    # 4. Guardar si se pidió (solo si hay contenido)
     if args.guardar:
-        from src.config import settings as cfg
-        slug = Path(args.ruta).stem.lower().replace(" ", "_")[:50]
-        salida = cfg.grafos_dir / f"{slug}_extraccion.json"
-        salida.parent.mkdir(parents=True, exist_ok=True)
-        salida.write_text(
-            json.dumps(resultado.model_dump(), ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
-        print(f"[llull] Guardado en: {salida}")
+        if not resultado.conceptos and not resultado.relaciones:
+            print("[lectografo] No se guardó: extracción vacía.")
+        else:
+            from src.config import settings as cfg
+            slug = Path(args.ruta).stem.lower().replace(" ", "_")[:50]
+            salida = cfg.grafos_dir / f"{slug}_extraccion.json"
+            salida.parent.mkdir(parents=True, exist_ok=True)
+            salida.write_text(
+                json.dumps(resultado.model_dump(), ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            print(f"[lectografo] Guardado en: {salida}")
 
     return 0
 

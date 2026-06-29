@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     # Comportamiento
     lang_default: str = "es"
     confianza_minima_extraccion: float = 0.6
+    # Máximo de caracteres del transcript enviados en un solo prompt.
+    # Transcripciones más largas se truncan con aviso. Para textos largos
+    # usar extracción incremental (pendiente de implementar).
+    max_chars_prompt: int = 40000
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

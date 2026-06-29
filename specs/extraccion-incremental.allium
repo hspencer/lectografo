@@ -1,0 +1,777 @@
+-- allium: 3
+-- extraccion-incremental.allium
+
+-- Scope: Extracción frase a frase de conceptos y relaciones desde textos
+-- filosóficos densos. Reemplaza la extracción de un solo llamado LLM por
+-- un proceso incremental que respeta la estructura párrafo → frases: cada
+-- párrafo porta una idea central explicitada por sus frases subsidiarias.
+-- El proceso nunca se pausa: las preguntas de consolidación se acumulan
+-- como decisiones pendientes que el investigador puede responder en cualquier
+-- momento, antes, durante o después de que termine la extracción.
+--
+-- Includes:
+--   - División del texto en párrafos y frases (unidad de trabajo)
+--   - SesionExtraccionIncremental con seguimiento de frases restantes
+--   - Micro-extracción por frase dentro del contexto de su párrafo
+--   - Tesauro del grafo: equivalencias automáticas (alta similitud) y
+--     propuestas de consolidación (similitud dudosa)
+--   - Modo automático: el investigador acepta todas las propuestas sin revisión
+--   - Un-merge: deshacer una equivalencia automática cuando se quiere distinguir
+--
+-- Excludes:
+--   - Extracción de documento completo en un solo llamado (vive en extraccion.allium)
+--   - Validación post-extracción de puntos de decisión (vive en validacion.allium)
+--   - Visualización del grafo en construcción (vive en surfaces.allium)
+--
+-- Dependencies:
+--   transcripcion.allium  — Transcripcion, Fragmento (párrafos y frases)
+--   extraccion.allium     — TipoRelacion, TipoConcepto, ProveedorActivo, Prompt
+
+use "./transcripcion.allium" as transcripcion
+use "./extraccion.allium" as extraccion
+use "./grafo.allium" as grafo
+
+
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
+
+-- Un párrafo, descompuesto en su idea central y sus frases constitutivas.
+value Parrafo {
+    indice: Integer
+    texto_completo: String
+    frases: List<Frase>
+    -- La idea central del párrafo se extrae tras procesar todas sus frases.
+}
+
+-- Una frase dentro de un párrafo. Es la unidad mínima de procesamiento.
+value Frase {
+    indice_en_parrafo: Integer
+    texto: String
+    timestamp: String?
+    -- timestamp: marcador textual si la transcripción tiene timestamps ("min 3:45")
+}
+
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+-- La extracción "rápida" (documento completo en un solo llamado LLM) y la
+-- extracción "incremental" (frase a frase) son la misma cosa: ambas usan
+-- SesionExtraccionIncremental. La diferencia es sólo el modo:
+--   - automatico: el proceso corre de principio a fin sin esperar confirmaciones.
+--                 Equivalente a la extracción rápida clásica, pero con la misma
+--                 granularidad frase a frase y el mismo tesauro.
+--   - manual:     las propuestas de consolidación se acumulan para que el
+--                 investigador las revise. El investigador puede cambiar de
+--                 modo en cualquier momento durante la sesión.
+enum ModoExtraccion {
+    manual
+    automatico
+}
+
+enum GradoSimilitud {
+    alta      -- el sistema homologa automáticamente al tesauro
+    dudosa    -- genera PropuestaConsolidacion para el investigador
+    baja      -- conceptos distintos, sin acción
+}
+
+
+------------------------------------------------------------
+-- Entities
+------------------------------------------------------------
+
+-- ─── Sesión de extracción incremental ────────────────────
+
+-- Representa una sesión de extracción frase a frase sobre una transcripción.
+-- Puede coexistir con una EjecucionExtraccion (extracción rápida), pero
+-- produce un resultado más fino. Una transcripción puede tener a lo sumo
+-- una SesionExtraccionIncremental activa a la vez.
+entity SesionExtraccionIncremental {
+    transcripcion: transcripcion/Transcripcion
+    proveedor: extraccion/ProveedorActivo
+    prompt: extraccion/Prompt
+    modo: ModoExtraccion
+    iniciada_en: Timestamp
+    finalizada_en: Timestamp?
+
+    estado: activa | completada | abortada
+
+    -- Estructura del texto dividida antes de iniciar
+    parrafos: List<Parrafo>
+    total_frases: Integer
+    frases_procesadas: Integer
+
+    -- Si ya existe un grafo para esta transcripción, la sesión lo extiende
+    -- en lugar de construir uno nuevo desde cero. null = primera extracción.
+    grafo_preexistente: grafo/Grafo?
+
+    -- Frase que el LLM está procesando en este momento; null entre lotes.
+    frase_en_curso: Frase?
+
+    -- Relationships
+    resultados: ResultadoParcial with sesion = this
+    propuestas: PropuestaConsolidacion with sesion = this
+    tesauro: EntradaTesauro with sesion = this
+
+    -- Derived
+    frases_restantes: total_frases - frases_procesadas
+    porcentaje_avance: if total_frases = 0: 100 else: frases_procesadas * 100 / total_frases
+    completada_extraccion: frases_restantes = 0
+    propuestas_pendientes: propuestas where estado = pendiente
+    en_curso: estado = activa and not completada_extraccion
+
+    transitions estado {
+        activa -> completada
+        activa -> abortada
+        abortada -> activa    -- reanudar: retoma desde la última frase procesada
+        terminal: completada
+    }
+
+    invariant FrasesNoExceden {
+        frases_procesadas <= total_frases
+    }
+    invariant FinalizadaEnCuandoCompletada {
+        estado in {completada, abortada} implies finalizada_en != null
+    }
+}
+
+
+-- ─── Resultado parcial por frase ─────────────────────────
+
+-- Cada vez que el LLM analiza una frase, produce un ResultadoParcial:
+-- los conceptos y relaciones detectados en esa frase, dentro del contexto
+-- de su párrafo. Los conceptos son tentativos hasta que la sesión complete.
+entity ResultadoParcial {
+    sesion: SesionExtraccionIncremental
+    indice_parrafo: Integer
+    indice_frase: Integer
+    frase_texto: String
+    procesada_en: Timestamp
+
+    conceptos_detectados: List<extraccion/ConceptoPropuesto>
+    relaciones_detectadas: List<extraccion/RelacionPropuesta>
+    -- idea_parrafo: sólo se establece cuando la frase es la última del párrafo;
+    -- sintetiza la idea central del párrafo completo
+    idea_parrafo: String?
+}
+
+
+-- ─── Tesauro ─────────────────────────────────────────────
+
+-- Una EntradaTesauro agrupa términos que el sistema considera equivalentes.
+-- Tiene un label canónico y un conjunto de alias. Es mutable: el investigador
+-- puede añadir alias, cambiar el canónico o deshacer la equivalencia (un-merge).
+entity EntradaTesauro {
+    sesion: SesionExtraccionIncremental
+    label_canonico: String
+    alias: List<String>
+    -- alias: términos que el sistema homologó automáticamente como equivalentes
+    creada_en: Timestamp
+    actualizada_en: Timestamp
+
+    -- Derived
+    todos_los_terminos: alias.count + 1
+    -- todos_los_terminos incluye label_canonico + todos los alias
+
+    invariant CanonicoNoEsAlias {
+        not (label_canonico in alias)
+    }
+}
+
+
+-- ─── Propuesta de consolidación ──────────────────────────
+
+-- Cuando el grado de similitud entre dos conceptos es "dudoso", el sistema
+-- no homologa automáticamente sino que genera esta propuesta. No pausa la
+-- extracción: se acumula en la cola. En modo automático se auto-acepta.
+entity PropuestaConsolidacion {
+    sesion: SesionExtraccionIncremental
+    estado: pendiente | aceptada | rechazada
+    concepto_a: extraccion/ConceptoPropuesto
+    concepto_b: extraccion/ConceptoPropuesto
+    similitud: GradoSimilitud
+    -- similitud siempre = dudosa aquí (alta va directo a tesauro)
+    justificacion: String
+    -- justificacion: razón del LLM para proponer la equivalencia
+    label_canonico_propuesto: String
+    -- label_canonico_propuesto: cuál de los dos (o variante nueva) el LLM sugiere como canónico
+    creada_en: Timestamp
+    resuelta_en: Timestamp?
+
+    transitions estado {
+        pendiente -> aceptada
+        pendiente -> rechazada
+        terminal: aceptada, rechazada
+    }
+
+    invariant SimilitudDudosa {
+        similitud = dudosa
+    }
+}
+
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    tamano_lote_llm: Integer = 3
+    -- Número de frases enviadas al LLM en cada llamado.
+    -- Valor 1 = frase por frase pura; valores mayores permiten que el LLM
+    -- tenga contexto de frases vecinas sin perder granularidad.
+    -- El párrafo siempre se envía como contexto adicional, independientemente del lote.
+
+    umbral_similitud_automatica: Decimal = 0.90
+    -- Por encima de este umbral de similitud semántica, el sistema homologa
+    -- automáticamente al tesauro sin preguntar al investigador.
+
+    umbral_similitud_dudosa: Decimal = 0.70
+    -- Entre este umbral y el anterior, el sistema genera una PropuestaConsolidacion.
+    -- Por debajo: los conceptos se tratan como distintos.
+}
+
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
+-- ════ Inicio de sesión incremental ══════════════════════
+
+rule IniciarSesionIncremental {
+    when: InvestigadorIniciaExtraccionIncremental(transcripcion, proveedor, prompt, modo)
+    requires: transcripcion.estado = normalizada
+    requires: transcripcion.fragmentos.count > 0
+    requires: proveedor.api_key_presente = true or proveedor.es_local = true
+    requires: not exists SesionExtraccionIncremental{
+        transcripcion: transcripcion,
+        estado: activa
+    }
+    let parrafos = DividirEnParrafosYFrases(transcripcion.fragmentos)
+    -- DividirEnParrafosYFrases: caja negra que toma fragmentos normalizados
+    -- y devuelve párrafos con sus frases. Preserva timestamps si existen.
+    let total = ContarFrases(parrafos)
+    let grafo_prev = grafo/Grafo{transcripcion: transcripcion} if exists else null
+    ensures:
+        SesionExtraccionIncremental.created(
+            transcripcion: transcripcion,
+            proveedor: proveedor,
+            prompt: prompt,
+            modo: modo,
+            iniciada_en: now,
+            estado: activa,
+            parrafos: parrafos,
+            total_frases: total,
+            frases_procesadas: 0,
+            grafo_preexistente: grafo_prev
+        )
+}
+
+
+-- ════ Procesamiento frase a frase ═══════════════════════
+
+-- El motor envía lotes de frases (configurado por tamano_lote_llm) al LLM,
+-- siempre dentro del contexto del párrafo que las contiene.
+rule ProcesarLoteDeFrases {
+    when: LoteDeFrasesListo(sesion, parrafo, frases_lote)
+    requires: sesion.estado = activa
+    requires: frases_lote.count > 0
+    ensures: ExtraccionLoteIniciada(sesion, parrafo, frases_lote)
+
+    @guidance
+        -- El LLM recibe: (1) el texto completo del párrafo como contexto,
+        -- (2) el lote de frases a analizar. Para cada frase extrae los
+        -- conceptos mencionados y las relaciones entre ellos.
+        -- La idea central del párrafo sólo se extrae en el último lote de ese párrafo.
+}
+
+rule RegistrarResultadoParcial {
+    when: ExtraccionLoteCompletada(sesion, parrafo, frases_lote, conceptos, relaciones, idea_parrafo?)
+    requires: sesion.estado = activa
+    for frase in frases_lote:
+        ensures:
+            ResultadoParcial.created(
+                sesion: sesion,
+                indice_parrafo: parrafo.indice,
+                indice_frase: frase.indice_en_parrafo,
+                frase_texto: frase.texto,
+                procesada_en: now,
+                conceptos_detectados: ConceptosDeFrase(conceptos, frase),
+                relaciones_detectadas: RelacionesDeFrase(relaciones, frase),
+                idea_parrafo: if frase = parrafo.frases.last: idea_parrafo else: null
+            )
+    ensures:
+        sesion.frases_procesadas = sesion.frases_procesadas + frases_lote.count
+        FrasesRegistradas(sesion, conceptos, relaciones)
+}
+
+rule VerificarConsolidacion {
+    when: FrasesRegistradas(sesion, conceptos_nuevos, _)
+    requires: sesion.estado = activa
+    -- Para cada nuevo concepto, comparar con todos los ya detectados
+    for nuevo in conceptos_nuevos:
+        for existente in ConceptosAcumulados(sesion) where existente != nuevo:
+            let grado = EvaluarSimilitud(nuevo, existente)
+            -- EvaluarSimilitud: caja negra — compara labels, descripciones
+            -- y citas directas para determinar el grado de similitud semántica.
+            ensures:
+                if grado = alta:
+                    HomologarAlTesauro(sesion, nuevo, existente)
+                else if grado = dudosa:
+                    if sesion.modo = automatico:
+                        HomologarAlTesauro(sesion, nuevo, existente)
+                    else:
+                        PropuestaConsolidacion.created(
+                            sesion: sesion,
+                            estado: pendiente,
+                            concepto_a: nuevo,
+                            concepto_b: existente,
+                            similitud: dudosa,
+                            justificacion: JustificarSimilitud(nuevo, existente),
+                            label_canonico_propuesto: ElegirCanonicoLLM(nuevo, existente),
+                            creada_en: now
+                        )
+
+        -- Comparar también contra nodos del grafo preexistente
+        if sesion.grafo_preexistente != null:
+            for nodo in sesion.grafo_preexistente.nodos:
+                let grado_nodo = EvaluarSimilitudConNodo(nuevo, nodo)
+                ensures:
+                    if grado_nodo = alta:
+                        NodoEquivalenteDetectado(sesion, nuevo, nodo)
+                    else if grado_nodo = dudosa:
+                        if sesion.modo = automatico:
+                            NodoEquivalenteDetectado(sesion, nuevo, nodo)
+                        else:
+                            PropuestaConsolidacion.created(
+                                sesion: sesion,
+                                estado: pendiente,
+                                concepto_a: nuevo,
+                                concepto_b: ConceptoDesdeNodo(nodo),
+                                similitud: dudosa,
+                                justificacion: JustificarSimilitudConNodo(nuevo, nodo),
+                                label_canonico_propuesto: nodo.label,
+                                creada_en: now
+                            )
+
+
+-- ════ Extensión de grafo preexistente ═══════════════════
+
+rule RegistrarConceptoEnNodoExistente {
+    when: NodoEquivalenteDetectado(sesion, concepto_nuevo, nodo)
+    requires: sesion.grafo_preexistente != null
+    requires: nodo in sesion.grafo_preexistente.nodos
+    ensures:
+        nodo.conceptos_origen.add(concepto_nuevo)
+        nodo.actualizado_en = now
+
+    @guidance
+        -- El nodo del grafo preexistente absorbe el nuevo concepto como
+        -- evidencia adicional. No se crea un nodo duplicado.
+        -- Los campos label, descripcion_corta y sinonimos_consolidados
+        -- se preservan tal como el investigador los dejó.
+        -- Si el investigador había renombrado el nodo, ese nombre se mantiene.
+}
+
+
+rule ExtenderGrafoExistente {
+    when: SesionExtraccionCompletada(sesion)
+    requires: sesion.grafo_preexistente != null
+
+    let g = sesion.grafo_preexistente
+    -- Conceptos que no tienen nodo equivalente en el grafo preexistente
+    let conceptos_nuevos = ConceptosAcumulados(sesion) where
+        not exists grafo/Nodo{grafo: g, conceptos_origen contains this}
+
+    ensures:
+        -- Agregar nodos genuinamente nuevos
+        for c in conceptos_nuevos:
+            grafo/Nodo.created(
+                id: "node_" + sesion.id + "_" + c.id,
+                grafo: g,
+                label: c.label,
+                tipos: { c.tipo },
+                descripcion_corta: c.descripcion,
+                sinonimos_consolidados: c.sinonimos_candidatos,
+                conceptos_origen: [c],
+                notas_usuario: [],
+                creado_en: now
+            )
+        -- Agregar relaciones que no existan ya en el grafo
+        for r in RelacionesNuevasParaGrafo(sesion, g):
+            grafo/Relacion.created(
+                id: "rel_" + sesion.id + "_" + r.id,
+                grafo: g,
+                origen: NodoParaConcepto(r.origen, g),
+                destino: NodoParaConcepto(r.destino, g),
+                tipo: r.tipo,
+                etiqueta: r.etiqueta,
+                frase_completa: r.frase_completa,
+                bidireccional: r.bidireccional,
+                matiz: r.matiz,
+                contexto: r.contexto,
+                notas_usuario: [],
+                confianza_extraccion: r.confianza,
+                estado_validacion: pendiente,
+                relacion_origen: r,
+                creada_en: now
+            )
+    @guidance
+        -- Esta regla solo corre cuando grafo_preexistente != null.
+        -- Cuando es la primera extracción de una transcripción, el grafo
+        -- se construye por las reglas de materializacion de grafo.allium
+        -- como hasta ahora.
+}
+
+
+-- ════ Tesauro: homologación automática ══════════════════
+
+rule HomologarAlTesauro {
+    when: HomologarAlTesauro(sesion, concepto_nuevo, concepto_existente)
+    let entrada_existente = EntradaTesauro{sesion: sesion, label_canonico: concepto_existente.label}
+    ensures:
+        if exists entrada_existente:
+            -- El concepto existente ya tiene entrada: añadir el nuevo como alias
+            entrada_existente.alias.add(concepto_nuevo.label)
+            entrada_existente.actualizada_en = now
+        else:
+            -- Primera homologación entre estos dos: crear entrada nueva
+            EntradaTesauro.created(
+                sesion: sesion,
+                label_canonico: concepto_existente.label,
+                alias: [concepto_nuevo.label],
+                creada_en: now,
+                actualizada_en: now
+            )
+
+    @guidance
+        -- La homologación automática no elimina el ConceptoPropuesto del alias;
+        -- lo mantiene para trazabilidad. En el grafo final, los alias aparecen
+        -- como etiquetas secundarias del nodo canónico.
+}
+
+
+-- ════ Consolidación: resolución de propuestas ═══════════
+
+rule InvestigadorAceptaConsolidacion {
+    when: InvestigadorAceptaPropuesta(propuesta, label_canonico?)
+    requires: propuesta.estado = pendiente
+    ensures:
+        propuesta.estado = aceptada
+        propuesta.resuelta_en = now
+        HomologarAlTesauro(
+            propuesta.sesion,
+            propuesta.concepto_b,
+            propuesta.concepto_a
+        )
+        -- Si el investigador elige un label canónico distinto al propuesto,
+        -- actualizar la entrada del tesauro tras la homologación
+        if label_canonico != null:
+            let entrada = EntradaTesauro{
+                sesion: propuesta.sesion,
+                label_canonico: propuesta.concepto_a.label
+            }
+            if exists entrada:
+                entrada.label_canonico = label_canonico
+                entrada.actualizada_en = now
+}
+
+rule InvestigadorRechazaConsolidacion {
+    when: InvestigadorRechazaPropuesta(propuesta)
+    requires: propuesta.estado = pendiente
+    ensures:
+        propuesta.estado = rechazada
+        propuesta.resuelta_en = now
+    -- Los conceptos permanecen separados; el sistema no volverá a proponer
+    -- esta misma equivalencia a menos que el investigador la solicite.
+}
+
+
+-- ════ Un-merge: deshacer una equivalencia ═══════════════
+
+rule InvestigadorDeshaceEquivalencia {
+    when: InvestigadorDeshaceAlias(entrada, alias_a_separar)
+    requires: alias_a_separar in entrada.alias
+    ensures:
+        entrada.alias.remove(alias_a_separar)
+        entrada.actualizada_en = now
+        AliasLiberado(sesion: entrada.sesion, label: alias_a_separar)
+
+    @guidance
+        -- Al liberar un alias, los ConceptoPropuesto que tenían ese label
+        -- vuelven a ser conceptos independientes en el grafo resultante.
+        -- Si el alias era el único elemento, la EntradaTesauro puede quedar
+        -- con lista de alias vacía — es válido (sólo tiene el canónico).
+}
+
+rule InvestigadorCambiaCanonicoTesauro {
+    when: InvestigadorCambiaLabelCanonico(entrada, nuevo_label)
+    requires: not (nuevo_label in entrada.alias)
+    ensures:
+        let antiguo = entrada.label_canonico
+        entrada.label_canonico = nuevo_label
+        entrada.alias.add(antiguo)
+        -- El antiguo canónico pasa a ser alias para no perder trazabilidad
+        entrada.actualizada_en = now
+}
+
+
+-- ════ Cierre de sesión ═══════════════════════════════════
+
+rule CompletarSesion {
+    when: sesion: SesionExtraccionIncremental.completada_extraccion
+    requires: sesion.estado = activa
+    ensures:
+        sesion.estado = completada
+        sesion.finalizada_en = now
+        SesionExtraccionCompletada(sesion: sesion)
+
+    @guidance
+        -- Las PropuestaConsolidacion pendientes no bloquean la completación.
+        -- La sesión se cierra en cuanto no quedan frases. Las propuestas
+        -- pendientes siguen en la cola: el investigador puede resolverlas
+        -- después, igual que los PuntoDecision post-extracción.
+}
+
+rule AbortarSesion {
+    when: InvestigadorAbortaSesion(sesion)
+    requires: sesion.estado = activa
+    ensures:
+        sesion.estado = abortada
+        sesion.finalizada_en = now
+        SesionAbortada(sesion: sesion)
+
+    @guidance
+        -- Los ResultadoParciales ya generados se conservan.
+        -- Las PropuestaConsolidacion pendientes siguen en la cola.
+        -- frases_procesadas mantiene su valor: marca dónde reanudar.
+}
+
+rule ReanudarSesion {
+    when: InvestigadorReanudaSesion(sesion, modo?)
+    requires: sesion.estado = abortada
+    ensures:
+        sesion.estado = activa
+        sesion.finalizada_en = null
+        sesion.modo = modo ?? sesion.modo
+        SesionReanudada(sesion: sesion)
+
+    @guidance
+        -- La sesión retoma exactamente desde sesion.frases_procesadas.
+        -- Las frases ya procesadas no se repiten. El tesauro y las propuestas
+        -- acumuladas se conservan. El investigador puede cambiar el modo
+        -- al reanudar (por ejemplo, cambiar de manual a automatico para
+        -- terminar rápido el resto del texto).
+}
+
+rule CambiarModoExtraccion {
+    when: InvestigadorCambiaModo(sesion, nuevo_modo)
+    requires: sesion.estado = activa
+    ensures:
+        sesion.modo = nuevo_modo
+        if nuevo_modo = automatico:
+            -- Auto-aceptar todas las propuestas pendientes acumuladas hasta ahora
+            for p in sesion.propuestas_pendientes:
+                HomologarAlTesauro(sesion, p.concepto_b, p.concepto_a)
+                p.estado = aceptada
+                p.resuelta_en = now
+
+
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
+
+invariant UnicaSesionActivaPorTranscripcion {
+    for a in SesionExtraccionIncrementals:
+        for b in SesionExtraccionIncrementals:
+            a != b and a.transcripcion = b.transcripcion
+                implies not (a.estado = activa and b.estado = activa)
+}
+
+invariant PropuestasSoloEntreConceptosAcumulados {
+    for p in PropuestaConsolidacions:
+        p.concepto_a.transcripcion = p.sesion.transcripcion
+        and p.concepto_b.transcripcion = p.sesion.transcripcion
+}
+
+invariant CanonicoTesauroNoEsAlias {
+    for e in EntradaTesauros:
+        not (e.label_canonico in e.alias)
+}
+
+invariant FrasesProcesamientoCoherente {
+    for s in SesionExtraccionIncrementals:
+        s.frases_procesadas <= s.total_frases
+}
+
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface PanelExtraccionIncremental {
+    -- Vista principal durante la extracción incremental: progreso en tiempo
+    -- real y propuestas de consolidación a medida que se generan.
+    facing investigador: Investigador
+    context sesion: SesionExtraccionIncremental where estado = activa
+
+    exposes:
+        sesion.transcripcion.titulo
+        sesion.modo
+        sesion.total_frases
+        sesion.frases_procesadas
+        sesion.frases_restantes
+        sesion.porcentaje_avance
+        sesion.propuestas_pendientes.count
+        -- Stream de resultados parciales a medida que llegan
+        for r in sesion.resultados:
+            r.indice_parrafo
+            r.indice_frase
+            r.frase_texto
+            r.conceptos_detectados
+            r.relaciones_detectadas
+            r.idea_parrafo
+        -- Tesauro en construcción
+        for e in sesion.tesauro:
+            e.label_canonico
+            e.alias
+        -- Propuestas pendientes
+        for p in sesion.propuestas_pendientes:
+            p.concepto_a.label
+            p.concepto_b.label
+            p.justificacion
+            p.label_canonico_propuesto
+
+    provides:
+        InvestigadorCambiaModo(sesion, nuevo_modo)
+        InvestigadorAceptaPropuesta(propuesta, label_canonico?)
+            when propuesta in sesion.propuestas_pendientes
+        InvestigadorRechazaPropuesta(propuesta)
+            when propuesta in sesion.propuestas_pendientes
+        InvestigadorAbortaSesion(sesion)
+        InvestigadorDeshaceAlias(entrada, alias_a_separar)
+        InvestigadorCambiaLabelCanonico(entrada, nuevo_label)
+
+    @guarantee ProgresoClaroYContinuo
+        -- La barra de progreso refleja siempre las frases restantes reales.
+        -- Nunca retrocede (frases_procesadas es monotónico creciente).
+        -- El investigador puede ver qué texto queda por procesar en cualquier momento.
+
+    @guarantee ProcesoNuncaSePausa
+        -- Las propuestas de consolidación se acumulan sin interrumpir la
+        -- extracción. El proceso continúa aunque haya propuestas pendientes.
+        -- En modo automático, la intervención del investigador es cero.
+
+    timeout:
+        ExtraccionLLMTimeout when sesion.iniciada_en + config.timeout_llm <= now
+}
+
+surface ResumenSesionCompletada {
+    -- Vista post-extracción: resumen del grafo construido, tesauro final
+    -- y propuestas de consolidación que quedaron pendientes.
+    facing investigador: Investigador
+    context sesion: SesionExtraccionIncremental where estado = completada
+
+    exposes:
+        sesion.total_frases
+        sesion.frases_procesadas
+        sesion.propuestas_pendientes.count
+        sesion.tesauro
+        for e in sesion.tesauro:
+            e.label_canonico
+            e.alias
+            e.todos_los_terminos
+        for p in sesion.propuestas_pendientes:
+            p.concepto_a.label
+            p.concepto_b.label
+            p.justificacion
+            p.label_canonico_propuesto
+
+    provides:
+        InvestigadorAceptaPropuesta(propuesta, label_canonico?)
+        InvestigadorRechazaPropuesta(propuesta)
+        InvestigadorDeshaceAlias(entrada, alias_a_separar)
+        InvestigadorCambiaLabelCanonico(entrada, nuevo_label)
+}
+
+
+------------------------------------------------------------
+-- Deferred Specifications
+------------------------------------------------------------
+
+deferred DividirEnParrafosYFrases(fragmentos: List<transcripcion/Fragmento>) -> List<Parrafo>
+    -- Toma los fragmentos normalizados y los descompone en párrafos con sus frases.
+    -- Preserva timestamps. Detecta límites de párrafo por línea en blanco o
+    -- marcador semántico. No requiere LLM: es procesamiento de texto puro.
+
+deferred ContarFrases(parrafos: List<Parrafo>) -> Integer
+    -- Devuelve el total de frases sumando todas las frases de todos los párrafos.
+
+deferred EvaluarSimilitud(a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> GradoSimilitud
+    -- Compara dos conceptos y devuelve su grado de similitud semántica.
+    -- Considera: label, descripcion, sinonimos_candidatos, cita_directa.
+    -- Usa los umbrales config.umbral_similitud_automatica y config.umbral_similitud_dudosa.
+
+deferred JustificarSimilitud(a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> String
+    -- Genera la justificación en lenguaje natural de por qué dos conceptos son similares.
+
+deferred ElegirCanonicoLLM(a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> String
+    -- Elige cuál de los dos labels (o una variante nueva) es el más apropiado
+    -- como canónico del grupo. Devuelve el label recomendado.
+
+deferred ConceptosAcumulados(sesion: SesionExtraccionIncremental) -> List<extraccion/ConceptoPropuesto>
+    -- Devuelve todos los conceptos detectados hasta ahora en la sesión,
+    -- aplanando todos los ResultadoParcial.conceptos_detectados.
+
+deferred ConceptosDeFrase(conceptos: List<extraccion/ConceptoPropuesto>, frase: Frase) -> List<extraccion/ConceptoPropuesto>
+    -- Filtra los conceptos que el LLM atribuye a esta frase específica.
+
+deferred RelacionesDeFrase(relaciones: List<extraccion/RelacionPropuesta>, frase: Frase) -> List<extraccion/RelacionPropuesta>
+    -- Filtra las relaciones que el LLM atribuye a esta frase específica.
+
+deferred EvaluarSimilitudConNodo(concepto: extraccion/ConceptoPropuesto, nodo: grafo/Nodo) -> GradoSimilitud
+    -- Compara un ConceptoPropuesto recién extraído contra un Nodo del grafo preexistente.
+    -- Considera: concepto.label vs nodo.label y nodo.sinonimos_consolidados,
+    -- concepto.descripcion vs nodo.descripcion_corta.
+    -- Usa los mismos umbrales que EvaluarSimilitud.
+
+deferred ConceptoDesdeNodo(nodo: grafo/Nodo) -> extraccion/ConceptoPropuesto
+    -- Construye un ConceptoPropuesto proxy a partir de un Nodo existente,
+    -- para usarlo en PropuestaConsolidacion cuando el investigador debe decidir.
+
+deferred JustificarSimilitudConNodo(concepto: extraccion/ConceptoPropuesto, nodo: grafo/Nodo) -> String
+    -- Genera la justificación de por qué el concepto nuevo parece equivalente al nodo existente.
+
+deferred RelacionesNuevasParaGrafo(sesion: SesionExtraccionIncremental, g: grafo/Grafo) -> List<extraccion/RelacionPropuesta>
+    -- Devuelve las relaciones de la sesión que no tienen equivalente ya en el grafo g.
+    -- Dos relaciones son equivalentes si comparten origen, destino y tipo (sin considerar matiz).
+
+deferred NodoParaConcepto(concepto: extraccion/ConceptoPropuesto, g: grafo/Grafo) -> grafo/Nodo
+    -- Devuelve el Nodo del grafo g que absorbe este concepto (vía conceptos_origen
+    -- o vía equivalencia del tesauro de la sesión).
+
+
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
+
+-- DECISIONES RESUELTAS:
+-- ✓ Una sesión abortada puede reanudarse desde la última frase procesada.
+--   Las PropuestaConsolidacion pendientes se conservan. Ver ReanudarSesion.
+-- ✓ Extracción "rápida" y extracción "incremental" son la misma entidad
+--   (SesionExtraccionIncremental) con modo = automatico vs. manual.
+--   No coexisten como sistemas distintos. EjecucionExtraccion (extraccion.allium)
+--   queda como referencia histórica pero el flujo canónico usa este módulo.
+
+open question "¿Cuándo se genera la idea central del párrafo: al procesar la última frase del párrafo dentro del mismo lote, o en un llamado LLM separado tras completar todas sus frases?"
+
+open question "En modo automático, ¿las PropuestaConsolidacion se crean y se auto-resuelven inmediatamente (trazabilidad completa), o directamente no se crean (trazabilidad mínima)?"
+
+open question "¿El umbral de similitud es configurable por el investigador en tiempo de ejecución vía PanelExtraccionIncremental, o sólo en configuración del sistema antes de iniciar?"
+
+open question "¿Qué campos de un Nodo existente se actualizan al absorber un ConceptoPropuesto nuevo? ¿Solo conceptos_origen, o también descripcion_corta (si la nueva es más precisa) y sinonimos_consolidados?"
+
+-- DECISIÓN RESUELTA: Los grafos no tienen estados; siempre están en edición.
+-- ExtenderGrafoExistente agrega nodos y relaciones sin necesidad de
+-- verificar ni cambiar ningún estado del grafo.

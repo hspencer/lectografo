@@ -1,0 +1,70 @@
+{
+  "id": "rec_7bf33114",
+  "slug": "esquizofrenia-digital",
+  "propuestas": [
+    {
+      "id": "pr_000",
+      "conexion": {
+        "id": "cp_000",
+        "origen_id": "c_011",
+        "destino_id": "c_008",
+        "frase": "La concepción de la mente como actividad refuta el reduccionismo que reduce el pensamiento a conexiones neuronales.",
+        "tipo": "contradicción conceptual",
+        "confianza": 0.95
+      },
+      "frase_editada": "La concepción de la mente como actividad refuta el reduccionismo que reduce el pensamiento a conexiones neuronales.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_001",
+      "conexion": {
+        "id": "cp_001",
+        "origen_id": "c_011",
+        "destino_id": "c_013",
+        "frase": "El solucionismo tecnológico ignora que la mente es un proceso vivo y no una máquina programable.",
+        "tipo": "negación de premisa",
+        "confianza": 0.85
+      },
+      "frase_editada": "El solucionismo tecnológico ignora que la mente es un proceso vivo y no una máquina programable.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_002",
+      "conexion": {
+        "id": "cp_002",
+        "origen_id": "c_010",
+        "destino_id": "c_007",
+        "frase": "Los soportes técnicos son los medios por donde el psicopoder canaliza la atención y deseos de las personas.",
+        "tipo": "medio de operación",
+        "confianza": 0.92
+      },
+      "frase_editada": "Los soportes técnicos son los medios por donde el psicopoder canaliza la atención y deseos de las personas.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_003",
+      "conexion": {
+        "id": "cp_003",
+        "origen_id": "c_010",
+        "destino_id": "c_016",
+        "frase": "Transformar soportes técnicos en herramientas para el intercambio de saberes colectivos y no solo a la mercantilización.",
+        "tipo": "fin alternativo",
+        "confianza": 0.8
+      },
+      "frase_editada": "Transformar soportes técnicos en herramientas para el intercambio de saberes colectivos y no solo a la mercantilización.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    }
+  ],
+  "estado": "completada",
+  "razon_falla": null,
+  "iniciada_en": "2026-06-29T20:27:36.860461",
+  "completada_en": "2026-06-29T20:53:16.727482",
+  "nodos_sueltos_ids": [
+    "c_010",
+    "c_011"
+  ]
+}

@@ -1,8 +1,8 @@
-# Llull
+# Lectógrafo
 
 Sistema local y soberano para extraer y visualizar grafos conceptuales desde transcripciones de analisis filosoficos.
 
-El proyecto toma su nombre de Ramon Llull (1232-1316), pionero de las maquinas combinatorias para razonar sobre conceptos. Llull entendia que el pensamiento puede formalizarse como relaciones entre nociones primitivas; esa intuicion es la raiz operativa de este sistema.
+Lecto- (lectura, texto, lo legible) + -grafo (trazar, representar): "lo que grafica la lectura". El sistema pasa del texto lineal a una topologia de conceptos. Originalmente llamado Llull en referencia a Ramon Llull (1232-1316), pionero de las maquinas combinatorias para razonar sobre conceptos.
 
 ## Que hace
 
@@ -23,16 +23,18 @@ El proyecto toma su nombre de Ramon Llull (1232-1316), pionero de las maquinas c
 ## Estructura
 
 ```
-llull/
+lectografo/
 ├── README.md
 ├── .env.example          Plantilla de variables; nunca commitear .env real
 ├── .gitignore
 ├── specs/                Especificaciones Allium (lenguaje de comportamiento)
-│   ├── llull.allium      Modulo raiz: scope, given, config, defaults
+│   ├── lectografo.allium      Modulo raiz: scope, given, config, defaults
 │   ├── transcripcion.allium
 │   ├── extraccion.allium
+│   ├── extraccion-incremental.allium
 │   ├── validacion.allium
 │   ├── grafo.allium
+│   ├── grafos-personales.allium
 │   └── surfaces.allium
 ├── transcripts/          Transcripciones crudas (.txt, .vtt) ingresadas por el investigador
 ├── data/
@@ -56,12 +58,57 @@ La alternativa Node.js queda descartada por menor disponibilidad de utilidades d
 
 ## Como empezar
 
-1. Copia `.env.example` a `.env` y elige un proveedor LLM.
-2. Pon una transcripcion en `transcripts/` (por ejemplo `mi-charla.txt`).
-3. Lee `specs/llull.allium` para entender el comportamiento esperado.
-4. Implementa segun la especificacion en `src/`.
+```bash
+# 1. Clonar e instalar
+git clone <repo> lectografo && cd lectografo
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 
-El comportamiento del sistema esta definido en `specs/` (Allium v3). Cualquier ambiguedad debe resolverse contra esos archivos, no contra esta descripcion en prosa.
+# 2. Configurar
+cp .env.example .env          # editar con tu proveedor LLM
+
+# 3. Arrancar
+./run.sh                      # o: make run
+# → http://localhost:8000
+```
+
+Desde la interfaz web puedes añadir transcripciones en `transcripts/` y lanzar
+la extraccion con el boton "Procesar". Tambien puedes usar la linea de comandos:
+
+```bash
+make extraer TEXTO=transcripts/mi-charla.txt   # extrae y guarda
+make actualizar TEXTO=transcripts/mi-charla.txt # re-extrae preservando validacion
+make estado                                      # lista transcripts y extracciones
+make ayuda                                       # lista todos los comandos
+```
+
+Lee `specs/lectografo.allium` para entender el comportamiento esperado del sistema.
+
+El comportamiento esta definido en `specs/` (Allium v3). Cualquier ambiguedad debe resolverse contra esos archivos, no contra esta descripcion en prosa.
+
+## Despliegue en linea
+
+La app es stateful (guarda archivos en `data/grafos/` y `transcripts/`), por lo
+que necesita almacenamiento persistente. Opciones recomendadas:
+
+**Fly.io** (recomendado para uso personal):
+```bash
+fly launch --no-deploy
+# editar fly.toml: añadir un volumen persistente para data/ y transcripts/
+fly deploy
+```
+
+**VPS propio** (control total):
+```bash
+# En el servidor, con systemd o supervisord apuntando a: make run
+uvicorn src.app:app --host 0.0.0.0 --port 8000
+```
+
+**Render / Railway**: Requieren configurar un disco persistente para `data/`.
+Sin persistencia las extracciones se pierden al reiniciar el contenedor.
+
+> Nota: los proveedores LLM remotos (Anthropic, OpenAI, Gemini) requieren que
+> el servidor tenga acceso a internet. Ollama necesita correr en el mismo host.
 
 ## Notas al pie
 

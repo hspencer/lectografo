@@ -1,121 +1,347 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-sn-theme="light" data-trio="plex">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Llull</title>
+  <title>Lectógrafo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/sistema/tokens.css">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
-  <!-- ── Topbar ─────────────────────────────────────────── -->
+  <!-- ── Topbar ──────────────────────────────────────────────────── -->
   <header id="topbar">
     <div id="topbar-left">
-      <span id="app-name">Llull</span>
+      <button id="btn-biblioteca" class="btn-back" hidden>← Biblioteca</button>
+      <span id="app-name">Lectógrafo</span>
       <span id="transcripcion-titulo" class="muted"></span>
     </div>
-    <div id="topbar-center">
-      <div id="progreso-barra-wrap">
-        <div id="progreso-barra"></div>
-      </div>
-      <span id="progreso-texto" class="muted"></span>
-    </div>
+
+    <nav id="tabs" hidden>
+      <button class="tab-btn" data-tab="mapa">Mapa</button>
+      <button class="tab-btn" data-tab="conceptos">Conceptos</button>
+      <button class="tab-btn" data-tab="relaciones">Relaciones</button>
+      <button class="tab-btn" data-tab="decisiones">Decisiones <span id="badge-decisiones" class="badge" hidden></span></button>
+      <button class="tab-btn" data-tab="texto">Texto</button>
+    </nav>
+
     <div id="topbar-right">
-      <div id="filtro-estado">
-        <button class="filtro-btn active" data-filtro="pendiente">Pendientes</button>
-        <button class="filtro-btn" data-filtro="diferida">Diferidas</button>
-        <button class="filtro-btn" data-filtro="resuelta">Resueltas</button>
-        <button class="filtro-btn" data-filtro="todas">Todas</button>
-      </div>
+      <button id="btn-settings" title="Configuración">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
     </div>
   </header>
 
-  <!-- ── Layout principal ────────────────────────────────── -->
-  <div id="layout">
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VISTA: Biblioteca                                              -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="vista-biblioteca" hidden>
+    <div id="biblioteca-header">
+      <h1 class="bib-titulo">Textos</h1>
+    </div>
+    <div id="biblioteca-grid"></div>
 
-    <!-- Sidebar: lista de decisiones -->
-    <aside id="sidebar">
-      <div id="decision-list-wrap">
-        <ul id="decision-list"></ul>
+    <!-- ── Grafos personales ─────────────────────────────────────────── -->
+    <div id="gp-biblioteca-section">
+      <div id="gp-biblioteca-header">
+        <h2 class="gp-seccion-titulo">Grafos propios</h2>
+        <button id="btn-nuevo-gp" class="btn btn-aceptar small">+ Nuevo grafo</button>
+      </div>
+      <div id="gp-nuevo-form" hidden>
+        <div class="campo">
+          <span class="campo-etiq">Título</span>
+          <input id="gp-nuevo-titulo" class="edit-input" placeholder="Mi grafo conceptual" style="width:100%">
+        </div>
+        <div class="campo">
+          <span class="campo-etiq">Descripción <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></span>
+          <textarea id="gp-nuevo-desc" class="panel-nota-input" rows="2" placeholder="Notas sobre este grafo…"></textarea>
+        </div>
+        <div style="display:flex;gap:var(--sn-s-2);margin-top:var(--sn-s-3)">
+          <button id="btn-crear-gp" class="btn btn-aceptar small">Crear grafo</button>
+          <button id="btn-cancelar-nuevo-gp" class="btn btn-neutro small">Cancelar</button>
+        </div>
+      </div>
+      <div id="gp-grid"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VISTA: Grafo personal (editor)                                  -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="vista-gp" hidden>
+    <div id="gp-layout">
+
+      <!-- Sidebar: lista de conceptos -->
+      <aside id="gp-sidebar">
+        <div id="gp-info">
+          <div id="gp-titulo-text" class="gp-titulo"></div>
+          <div id="gp-desc-text" class="muted gp-desc"></div>
+        </div>
+        <div id="gp-conceptos-header">
+          <span class="campo-etiq">Conceptos</span>
+          <button id="btn-gp-add-concepto" class="btn-inline">+ Añadir</button>
+        </div>
+        <div id="gp-nuevo-concepto-form" hidden>
+          <input id="gp-concepto-label" class="edit-input" placeholder="Label del concepto…" style="width:100%">
+          <textarea id="gp-concepto-def" class="panel-nota-input" rows="2" placeholder="Definición (opcional)…" style="margin-top:6px"></textarea>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <button id="btn-gp-confirmar-concepto" class="btn btn-aceptar small">Añadir</button>
+            <button id="btn-gp-cancelar-concepto"  class="btn btn-neutro small">Cancelar</button>
+          </div>
+        </div>
+        <ul id="gp-conceptos-lista"></ul>
+      </aside>
+
+      <!-- Canvas: D3 force graph -->
+      <main id="gp-canvas">
+        <svg id="gp-svg"></svg>
+        <div id="gp-canvas-controles">
+          <button id="btn-gp-fit" class="btn btn-neutro small">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+        Ajustar
+      </button>
+        </div>
+        <div id="gp-canvas-vacio" hidden>
+          <div>Añade conceptos para comenzar el grafo.</div>
+        </div>
+      </main>
+
+      <!-- Panel lateral: detalle del nodo seleccionado -->
+      <aside id="gp-panel" hidden>
+        <button id="btn-gp-cerrar-panel" title="Cerrar">×</button>
+        <div id="gp-panel-content"></div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: Mapa (D3 force graph)                                    -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="tab-mapa" class="tab-panel" hidden>
+    <div id="grafo-wrap">
+      <svg id="grafo-svg"></svg>
+      <div id="grafo-controles">
+        <button id="btn-fit" class="btn btn-neutro small">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ajustar
+        </button>
+        <button id="btn-reconectar" class="btn btn-neutro small" hidden title="Conectar nodos sueltos">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+            <line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/>
+            <line x1="5" y1="19" x2="19" y2="19"/>
+          </svg>
+          Reconectar
+        </button>
+        <details id="leyenda-wrap">
+          <summary class="leyenda-summary">Relaciones</summary>
+          <div id="leyenda-tipos"></div>
+        </details>
+      </div>
+    </div>
+    <aside id="panel-nodo" hidden>
+      <button id="btn-cerrar-panel" title="Cerrar">×</button>
+      <div id="panel-nodo-content"></div>
+    </aside>
+    <!-- Panel de reconexión -->
+    <aside id="panel-reconexion" hidden>
+      <div id="panel-reconexion-header">
+        <strong>Propuestas de conexión</strong>
+        <button id="btn-cerrar-reconexion" title="Cerrar">×</button>
+      </div>
+      <div id="panel-reconexion-content"></div>
+      <div id="panel-reconexion-footer">
+        <button id="btn-confirmar-reconexion" class="btn btn-aceptar small">Confirmar</button>
+        <button id="btn-cancelar-reconexion" class="btn btn-neutro small">Cancelar</button>
       </div>
     </aside>
+  </div>
 
-    <!-- Panel principal: detalle + acciones -->
-    <main id="contenido">
-      <div id="empty-state">
-        <p>Selecciona una decisión para comenzar.</p>
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: Conceptos                                                 -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="tab-conceptos" class="tab-panel" hidden>
+    <div class="tabla-toolbar">
+      <input id="buscar-concepto" class="buscar-input" placeholder="Filtrar conceptos…">
+    </div>
+    <div class="tabla-scroll">
+      <table id="tabla-conceptos">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="id">ID</th>
+            <th class="sortable" data-col="label">Label</th>
+            <th class="sortable" data-col="menciones">×</th>
+            <th class="sortable" data-col="confianza">Conf.</th>
+            <th>Sinónimos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="conceptos-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: Relaciones                                               -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="tab-relaciones" class="tab-panel" hidden>
+    <div class="tabla-toolbar">
+      <input id="buscar-relacion" class="buscar-input" placeholder="Filtrar relaciones…">
+      <div class="tipo-filtros" id="filtros-rel-tipo"></div>
+    </div>
+    <div class="tabla-scroll">
+      <table id="tabla-relaciones">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Origen</th>
+            <th>Tipo</th>
+            <th>Destino</th>
+            <th>Bidir.</th>
+            <th class="sortable" data-col="confianza">Conf.</th>
+            <th>Etiqueta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="relaciones-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: Decisiones                                                -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="tab-decisiones" class="tab-panel" hidden>
+    <div class="tabla-toolbar" style="gap:8px;flex-wrap:wrap">
+      <div id="filtros-dec-tipo" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+      <button id="btn-siguiente-pendiente" class="btn btn-neutro small">↓ Siguiente pendiente</button>
+    </div>
+    <div class="tabla-scroll">
+      <div id="decisiones-lista"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- TAB: Texto original                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="tab-texto" class="tab-panel" hidden>
+    <div id="texto-wrap">
+      <div id="texto-meta"></div>
+      <pre id="texto-contenido"></pre>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Modal: Ficha bibliográfica                                     -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="ficha-modal" hidden>
+    <div id="ficha-modal-bg"></div>
+    <div id="ficha-modal-box">
+      <div id="ficha-modal-header">
+        <h3 id="ficha-modal-titulo">Ficha bibliográfica</h3>
+        <button id="ficha-modal-cerrar" title="Cerrar">×</button>
       </div>
-      <div id="detalle" hidden>
-
-        <div id="detalle-header">
-          <span id="detalle-tipo-badge"></span>
-          <span id="detalle-id" class="muted mono"></span>
-          <span id="detalle-estado-badge"></span>
+      <div id="ficha-modal-body">
+        <div class="campo">
+          <span class="campo-etiq">Título de la publicación</span>
+          <input id="fm-titulo" class="edit-input" style="width:100%" placeholder="Título completo">
         </div>
-
-        <div id="detalle-cuerpo"></div>
-
-        <div id="detalle-recomendacion" hidden>
-          <span class="campo-etiq">Recomendación LLM</span>
-          <p id="detalle-rec-texto" class="cita"></p>
-        </div>
-
-        <!-- Acciones -->
-        <div id="acciones" hidden>
-
-          <!-- Sinonimia: modificar label -->
-          <div id="modificar-label-panel" hidden>
-            <label class="campo-etiq" for="input-label">Nuevo label canónico</label>
-            <div class="input-row">
-              <input id="input-label" type="text" placeholder="Label definitivo…">
-              <button id="btn-confirmar-label" class="btn btn-modificar">Confirmar</button>
-            </div>
+        <div class="meta-fila">
+          <div class="campo" style="flex:1">
+            <span class="campo-etiq">Autores <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(separar con «;»)</span></span>
+            <input id="fm-autores" class="edit-input" style="width:100%" placeholder="Autor A; Autor B">
           </div>
-
-          <!-- Tipo ambiguo: selector -->
-          <div id="tipo-selector-panel" hidden>
-            <span class="campo-etiq">Clasificar como</span>
-            <div class="tipo-opciones">
-              <button class="btn btn-tipo" data-tipo="primitivo">Primitivo</button>
-              <button class="btn btn-tipo" data-tipo="derivado">Derivado</button>
-              <button class="btn btn-tipo" data-tipo="metalenguaje">Metalenguaje</button>
-            </div>
-          </div>
-
-          <!-- Botones principales -->
-          <div id="botones-principales">
-            <button id="btn-aceptar"   class="btn btn-aceptar"  >✓ Aceptar</button>
-            <button id="btn-rechazar"  class="btn btn-rechazar" >✗ Rechazar</button>
-            <button id="btn-modificar" class="btn btn-neutro"   >✎ Modificar</button>
-            <button id="btn-diferir"   class="btn btn-diferir"  >⏭ Diferir</button>
-          </div>
-
-          <!-- Nota opcional -->
-          <div id="nota-panel">
-            <textarea id="input-nota" rows="2" placeholder="Nota (opcional)…"></textarea>
-          </div>
-
-          <!-- Atajos de teclado -->
-          <div id="atajos">
-            <kbd>A</kbd> aceptar &ensp;
-            <kbd>R</kbd> rechazar &ensp;
-            <kbd>M</kbd> modificar &ensp;
-            <kbd>D</kbd> diferir &ensp;
-            <kbd>↑↓</kbd> navegar
+          <div class="campo" style="flex:0 0 90px">
+            <span class="campo-etiq">Año</span>
+            <input id="fm-anio" class="edit-input" type="number" min="1000" max="2099" style="width:100%">
           </div>
         </div>
-
-        <!-- Decisión ya resuelta: solo lectura -->
-        <div id="resuelta-panel" hidden>
-          <div id="resuelta-resolucion"></div>
-          <p id="resuelta-nota" class="cita muted"></p>
-          <button id="btn-deshacer" class="btn btn-neutro small">↩ Reabrir</button>
+        <div class="meta-fila">
+          <div class="campo" style="flex:1">
+            <span class="campo-etiq">Editorial / fuente</span>
+            <input id="fm-editorial" class="edit-input" style="width:100%">
+          </div>
+          <div class="campo" style="flex:1">
+            <span class="campo-etiq">URL</span>
+            <input id="fm-url" class="edit-input" type="url" style="width:100%" placeholder="https://…">
+          </div>
         </div>
+        <div class="campo">
+          <span class="campo-etiq">Notas de contexto</span>
+          <textarea id="fm-notas" class="panel-nota-input" rows="3"></textarea>
+        </div>
+        <div id="fm-cita-preview" class="muted" style="font-size:var(--sn-fs-xs);margin-top:var(--sn-s-2);font-style:italic"></div>
+      </div>
+      <div id="ficha-modal-footer">
+        <button id="ficha-modal-guardar" class="btn btn-aceptar">Guardar ficha</button>
+        <button id="ficha-modal-cancelar" class="btn btn-neutro">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
-      </div><!-- /detalle -->
-    </main>
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Panel: Settings (proveedor LLM)                              -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="settings-panel" hidden>
+    <div id="settings-panel-header">
+      <span class="campo-etiq">Configuración LLM</span>
+      <button id="settings-panel-cerrar" title="Cerrar">×</button>
+    </div>
+    <div id="settings-panel-body">
+      <div class="campo">
+        <span class="campo-etiq">Proveedor</span>
+        <div id="settings-providers">
+          <label class="settings-provider-opt">
+            <input type="radio" name="settings-provider" value="ollama">
+            <span>Ollama</span>
+            <span class="settings-badge-local">local</span>
+          </label>
+          <label class="settings-provider-opt">
+            <input type="radio" name="settings-provider" value="anthropic">
+            <span>Anthropic</span>
+            <span id="settings-key-anthropic" class="settings-key-ind"></span>
+          </label>
+          <label class="settings-provider-opt">
+            <input type="radio" name="settings-provider" value="openai">
+            <span>OpenAI</span>
+            <span id="settings-key-openai" class="settings-key-ind"></span>
+          </label>
+          <label class="settings-provider-opt">
+            <input type="radio" name="settings-provider" value="gemini">
+            <span>Gemini</span>
+            <span id="settings-key-gemini" class="settings-key-ind"></span>
+          </label>
+        </div>
+      </div>
 
-  </div><!-- /layout -->
+      <div id="settings-ollama-section" class="campo" style="margin-top:var(--sn-s-3)">
+        <span class="campo-etiq">Modelo local</span>
+        <div id="settings-model-wrap" style="margin-top:var(--sn-s-2)">
+          <select id="settings-model-select" class="edit-input" style="width:100%"></select>
+        </div>
+      </div>
+
+      <div id="settings-api-section" class="campo" style="margin-top:var(--sn-s-3)" hidden>
+        <span class="campo-etiq">Modelo</span>
+        <input id="settings-api-model" class="edit-input" style="width:100%;margin-top:var(--sn-s-2)" placeholder="ej. claude-opus-4-6">
+        <div id="settings-api-key-status" class="muted" style="font-size:var(--sn-fs-xs);margin-top:var(--sn-s-1)"></div>
+      </div>
+
+      <div style="margin-top:var(--sn-s-3);display:flex;align-items:center;gap:var(--sn-s-2)">
+        <button id="settings-guardar" class="btn btn-aceptar small">Guardar</button>
+        <span id="settings-model-status" class="muted" style="font-size:var(--sn-fs-xs)"></span>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="/app.js"></script>
 </body>

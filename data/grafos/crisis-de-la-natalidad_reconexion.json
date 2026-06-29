@@ -1,0 +1,16 @@
+{
+  "id": "rec_9db51c76",
+  "slug": "crisis-de-la-natalidad",
+  "propuestas": [],
+  "estado": "procesando",
+  "razon_falla": null,
+  "iniciada_en": "2026-06-29T20:57:59.105535",
+  "completada_en": null,
+  "nodos_sueltos_ids": [
+    "c_007",
+    "c_008",
+    "c_015",
+    "c_013",
+    "c_009"
+  ]
+}

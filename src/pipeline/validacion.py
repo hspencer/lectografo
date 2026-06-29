@@ -2,7 +2,7 @@
 Generación de puntos de decisión desde el resultado de extracción.
 Implementa GenerarDecisionesDesdeExtraccion de specs/validacion.allium.
 """
-from src.models.extraccion import ResultadoExtraccion, TipoConcepto
+from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import PuntoDecision, TipoDecision
 
 
@@ -68,17 +68,6 @@ def generar_decisiones(
                 relacion_implicada_id=r.id,
             ))
 
-    # ── Tipo ambiguo — promoción de tipo ──────────────────────────────
-    for c in extraccion.conceptos:
-        if c.tipo == TipoConcepto.ambiguo:
-            decisiones.append(PuntoDecision(
-                id=f"d_tipo_{c.id}",
-                tipo=TipoDecision.promocion_de_tipo,
-                pregunta=f"¿Clasificar '{c.label}': primitivo, derivado o metalenguaje?",
-                recomendacion_llm=f"Concepto ambiguo. Revisar: {c.descripcion}",
-                conceptos_implicados_ids=[c.id],
-            ))
-
     # ── Metalenguaje ───────────────────────────────────────────────────
     for m in extraccion.metalenguaje:
         decisiones.append(PuntoDecision(
@@ -88,5 +77,16 @@ def generar_decisiones(
             recomendacion_llm=m.nota,
             flag_implicado_id=m.id,
         ))
+
+    # ── Promoción de tipo ──────────────────────────────────────────────
+    for c in extraccion.conceptos:
+        if c.tipo.value == "ambiguo":
+            decisiones.append(PuntoDecision(
+                id=f"d_tipo_{c.id}",
+                tipo=TipoDecision.promocion_de_tipo,
+                pregunta=f"¿Clasificar '{c.label}': primitivo, derivado o metalenguaje?",
+                recomendacion_llm=f"Concepto marcado como ambiguo por el LLM. Revisar: {c.descripcion}",
+                conceptos_implicados_ids=[c.id],
+            ))
 
     return decisiones

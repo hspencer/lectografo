@@ -1,0 +1,1286 @@
+{
+  "titulo": "Vida Contemplativa: Elogio de la inactividad",
+  "slug": "vida-contemplativa",
+  "extraccion": {
+    "conceptos": [
+      {
+        "id": "c_001",
+        "label": "Vida Contemplativa",
+        "tipo": "primitivo",
+        "descripcion": "Estado de ser humano que se desprende del propósito y la utilidad para entregarse a lo que acontece, reavivando la vida.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 15,
+        "confianza": 0.98,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la inactividad contemplativa diferencia al pensador del observador"
+      },
+      {
+        "id": "c_002",
+        "label": "Inactividad",
+        "tipo": "primitivo",
+        "descripcion": "No es ausencia de actividad ni debilidad, sino una forma de intensidad y esplendor con su propia lógica y temporalidad.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 45,
+        "confianza": 0.99,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la inactividad tiene su propia lógica / su propio lenguaje"
+      },
+      {
+        "id": "c_003",
+        "label": "Actividad y Acción",
+        "tipo": "primitivo",
+        "descripcion": "Modo de existencia dominado por el rendimiento, la utilidad y la historia lineal que puede llevar al apocalipsis.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 30,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la acción forma parte de la historia pero no es una fuerza formadora de cultura"
+      },
+      {
+        "id": "c_004",
+        "label": "Trabajo y Rendimiento",
+        "tipo": "primitivo",
+        "descripcion": "Lógica capitalista que absorbe la existencia humana, reduciendo el tiempo libre a descanso del trabajo.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 25,
+        "confianza": 0.97,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "percibimos la vida solo en términos de trabajo y de rendimiento"
+      },
+      {
+        "id": "c_005",
+        "label": "Capitalismo",
+        "tipo": "primitivo",
+        "descripcion": "Sistema que absolutiza la supervivencia, convierte el lujo en mercancía y transforma las fiestas en consumo.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 20,
+        "confianza": 0.96,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el capitalismo absolutiza la supervivencia"
+      },
+      {
+        "id": "c_006",
+        "label": "Tiempo Verdaderamente Libre",
+        "tipo": "primitivo",
+        "descripcion": "Espacio que no pertenece al orden del trabajo ni de la producción, necesario para lo auténticamente humano.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 10,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el tiempo verdaderamente libre no pertenece al orden del trabajo y de la producción"
+      },
+      {
+        "id": "c_007",
+        "label": "Comunidad / Nosotros",
+        "tipo": "primitivo",
+        "descripcion": "Sentimiento colectivo que surge en las fiestas o inactividades, opuesto a la soledad digital individualista.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 18,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el tiempo sin fiestas es un tiempo sin comunidad"
+      },
+      {
+        "id": "c_008",
+        "label": "Fiesta / Shabat",
+        "tipo": "primitivo",
+        "descripcion": "Ritual de suspensión económica y actividad que establece la comunidad, modelo teológico del reposo divino.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 12,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la inactividad y la suspensión de la economía son esenciales para la fiesta del sabbat"
+      },
+      {
+        "id": "c_009",
+        "label": "Felicidad",
+        "tipo": "primitivo",
+        "descripcion": "Surge de lo vano, inútil e improductivo; se opone a la felicidad basada en el éxito veloz y la utilidad.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 14,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la verdadera felicidad surge de lo vano e inútil"
+      },
+      {
+        "id": "c_010",
+        "label": "Silencio",
+        "tipo": "primitivo",
+        "descripcion": "Condición necesaria para el lenguaje contemplativo y la poesía, opuesto al ruido informativo.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 8,
+        "confianza": 0.91,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "solo el silencio nos permite decir algo inaudito"
+      },
+      {
+        "id": "c_011",
+        "label": "Información y Comunicación Activa",
+        "tipo": "primitivo",
+        "descripcion": "Modo del lenguaje en modo trabajo que degrada la comunicación a portador de información, destruyendo el silencio.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 10,
+        "confianza": 0.89,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la obligación de comunicar todo el tiempo por el contrario nos conduce a la reproducción de lo igual"
+      },
+      {
+        "id": "c_012",
+        "label": "Espera y Duda",
+        "tipo": "primitivo",
+        "descripcion": "Figuras constitutivas de la inactividad que permiten el acontecer inconsciente y nuevos hechos.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 9,
+        "confianza": 0.88,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la espera y la duda son otras dos figuras de la inactividad"
+      },
+      {
+        "id": "c_013",
+        "label": "Ignorancia Voluntaria",
+        "tipo": "primitivo",
+        "descripcion": "Condición para que lo vivo se conserve y crezca, elevada por Nietzsche al núcleo de la vida.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 6,
+        "confianza": 0.85,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Nietzsche elevó la ignorancia al núcleo de la vida"
+      },
+      {
+        "id": "c_014",
+        "label": "Ser con / Relación Interhumana",
+        "tipo": "primitivo",
+        "descripcion": "Estado existencial que se desmantela bajo el capitalismo y la digitalización, reemplazado por soledad primordial.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 12,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la digitalización desmantela al ser en cuanto ser con"
+      },
+      {
+        "id": "c_018",
+        "label": "Actividad / Rendimiento",
+        "tipo": "primitivo",
+        "descripcion": "Modo de vida impulsado por la producción y el trabajo, característico del capitalismo neoliberal que absorbe a la existencia.",
+        "sinonimos_candidatos": [
+          "Acción productiva"
+        ],
+        "menciones": 38,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "absorbidos completamente por la acción y el rendimiento / exceso neoliberal de libertad y rendimiento"
+      },
+      {
+        "id": "c_019",
+        "label": "Comunidad",
+        "tipo": "primitivo",
+        "descripcion": "Sentimiento compartido construido a través del símbolo y la fiesta; se disuelve en las conexiones digitales mercantiles.",
+        "sinonimos_candidatos": [
+          "Nosotros"
+        ],
+        "menciones": 15,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "no establecen comunidad / hoy se habla de Community Pero eso se trata de una forma mercantil"
+      },
+      {
+        "id": "c_020",
+        "label": "Supervivencia",
+        "tipo": "primitivo",
+        "descripcion": "Orden del trabajo y rendimiento que absolutiza la necesidad, opuesto a la vida plena o el lujo.",
+        "sinonimos_candidatos": [
+          "Mera existencia"
+        ],
+        "menciones": 10,
+        "confianza": 0.88,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "trabajo y el rendimiento pertenecen al orden de la supervivencia / cuando la vida degenera en supervivencia"
+      },
+      {
+        "id": "c_021",
+        "label": "Espera",
+        "tipo": "primitivo",
+        "descripcion": "Postura mental de quien está inactivo y contemplativo; sin ella no hay gracia ni acontecimiento nuevo.",
+        "sinonimos_candidatos": [
+          "Paciencia"
+        ],
+        "menciones": 6,
+        "confianza": 0.82,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la espera es la postura mental de quien está inactivo y contemplativo / sin ella no sucede nada"
+      },
+      {
+        "id": "c_022",
+        "label": "Pensamiento",
+        "tipo": "primitivo",
+        "descripcion": "Capacidad que requiere pausa e interrupción; se diferencia del observador por carecer de propósito concreto.",
+        "sinonimos_candidatos": [
+          "Meditación"
+        ],
+        "menciones": 14,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el pensador no tiene un propósito carece de un objetivo en mente / la inteligencia artificial no puede pensar"
+      },
+      {
+        "id": "c_023",
+        "label": "Acción",
+        "tipo": "primitivo",
+        "descripcion": "Fuerza formadora de historia pero que sin interrupción conduce al apocalipsis; se nutre de la inactividad.",
+        "sinonimos_candidatos": [
+          "Hacer"
+        ],
+        "menciones": 18,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la acción forma parte de la historia / para Walter Benjamin la inactividad es el núcleo de lo nuevo"
+      },
+      {
+        "id": "c_024",
+        "label": "Ser Con",
+        "tipo": "primitivo",
+        "descripcion": "Dimensión relacional del ser humano que se disuelve ante la digitalización y falta de símbolos compartidos.",
+        "sinonimos_candidatos": [
+          "Vivir con otros"
+        ],
+        "menciones": 9,
+        "confianza": 0.87,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el ser humano es un animal que narra / la digitalización desmantela al ser en cuanto ser con"
+      },
+      {
+        "id": "c_025",
+        "label": "Falta de Ser",
+        "tipo": "primitivo",
+        "descripcion": "Estado resultante del cortoplacismo y el vacío simbólico; impulsa a la hiperactividad para suplir lo ausente.",
+        "sinonimos_candidatos": [
+          "Fragmentación"
+        ],
+        "menciones": 10,
+        "confianza": 0.89,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "ante la falta de ser se provoca un exceso de producción / el vacío simbólico narrativo"
+      },
+      {
+        "id": "c_026",
+        "label": "Símbolo",
+        "tipo": "primitivo",
+        "descripcion": "Elemento que une a los humanos en una totalidad sana; permite construir comunidad y sentido compartido.",
+        "sinonimos_candidatos": [
+          "Significado"
+        ],
+        "menciones": 12,
+        "confianza": 0.91,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "solo a partir de lo simbólico se construye el sentir compartido / cada parte aspira a reunirse con su otra mitad"
+      },
+      {
+        "id": "c_027",
+        "label": "Religión / Atención",
+        "tipo": "primitivo",
+        "descripcion": "Requiere capacidad contemplativa y pausa; la crisis actual es una crisis de atención más que de fe.",
+        "sinonimos_candidatos": [
+          "Espiritualidad"
+        ],
+        "menciones": 10,
+        "confianza": 0.84,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la crisis de la religión es finalmente una crisis de atención / quien se produce... es incapaz de escuchar"
+      },
+      {
+        "id": "c_015",
+        "label": "Naturaleza",
+        "tipo": "primitivo",
+        "descripcion": "Fuente del encanto y misterio en el romanticismo; la libertad romántica renuncia a la soberanía ante ella.",
+        "sinonimos_candidatos": [
+          "Mundo natural"
+        ],
+        "menciones": 7,
+        "confianza": 0.86,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la libertad romántica no se basa en el quererse sino en el ser con / la romantización del mundo le devuelve a este su Encanto"
+      },
+      {
+        "id": "c_016",
+        "label": "Digitalización",
+        "tipo": "primitivo",
+        "descripcion": "Tecnología que conecta pero aísla, transformando al otro en objeto consumible y desmantelando el ser con.",
+        "sinonimos_candidatos": [
+          "Conexión digital"
+        ],
+        "menciones": 8,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "con la ayuda de la conexión digital hacemos del otro un hecho a disposición / estamos más solos que nunca"
+      },
+      {
+        "id": "c_028",
+        "label": "Actividad",
+        "tipo": "primitivo",
+        "descripcion": "Acción orientada a objetivos y utilidad que forma parte de la historia pero no es fuerza formadora de cultura.",
+        "sinonimos_candidatos": [
+          "Hacer",
+          "Rendimiento"
+        ],
+        "menciones": 30,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la acción forma parte de la historia pero no es una fuerza formadora de cultura"
+      },
+      {
+        "id": "c_029",
+        "label": "Trabajo/Producción",
+        "tipo": "primitivo",
+        "descripcion": "Orden lógico que absorbe la existencia humana y define el tiempo libre como descanso del trabajo.",
+        "sinonimos_candidatos": [
+          "Rendimiento"
+        ],
+        "menciones": 25,
+        "confianza": 0.97,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "en las relaciones de producción capitalistas a la inactividad la llamamos tiempo libre"
+      },
+      {
+        "id": "c_030",
+        "label": "Tiempo Libre Capitalista",
+        "tipo": "primitivo",
+        "descripcion": "Concepto derivado del trabajo que encuadra el descanso dentro de la lógica productiva.",
+        "sinonimos_candidatos": [
+          "Descanso"
+        ],
+        "menciones": 15,
+        "confianza": 0.85,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "si la consideramos un derivado del trabajo la inactividad se entiende Como una forma funcional a la producción"
+      },
+      {
+        "id": "c_031",
+        "label": "Fiesta/Celebración",
+        "tipo": "primitivo",
+        "descripcion": "Evento comunitario que suspende la economía y permite el lujo, esencial para crear comunidad.",
+        "sinonimos_candidatos": [
+          "Shabat"
+        ],
+        "menciones": 28,
+        "confianza": 0.96,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el origen de la cultura no es el arma sino el adorno"
+      },
+      {
+        "id": "c_032",
+        "label": "Comunidad/Sociedad",
+        "tipo": "primitivo",
+        "descripcion": "Totalidad asociativa construida simbólicamente, amenazada por la fragmentación digital.",
+        "sinonimos_candidatos": [
+          "Nosotros"
+        ],
+        "menciones": 22,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "hoy se habla de Community Pero eso se trata de una forma mercantil"
+      },
+      {
+        "id": "c_033",
+        "label": "Contemplación/Meditación",
+        "tipo": "primitivo",
+        "descripcion": "Capacidad que no actúa, supone la pausa y conduce a donde ya estamos desde siempre.",
+        "sinonimos_candidatos": [
+          "Pensamiento"
+        ],
+        "menciones": 20,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la meditación como dimensión de la contemplación nos conduce de vuelta a donde ya estamos"
+      },
+      {
+        "id": "c_034",
+        "label": "Silencio/Pausa",
+        "tipo": "primitivo",
+        "descripcion": "Condición necesaria para el lenguaje poético y la aparición del acontecer inconsciente.",
+        "sinonimos_candidatos": [
+          "Quietud"
+        ],
+        "menciones": 18,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "solo el silencio nos permite decir algo inaudito"
+      },
+      {
+        "id": "c_035",
+        "label": "Ser Humano/Dasein",
+        "tipo": "primitivo",
+        "descripcion": "Entidad que narra y crece en el tiempo, desmantelada por la falta de ser actual.",
+        "sinonimos_candidatos": [
+          "Viviente"
+        ],
+        "menciones": 24,
+        "confianza": 0.97,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el saber no logra reflejar la vida completamente porque la vida completamente consciente es una vida muerta"
+      },
+      {
+        "id": "c_036",
+        "label": "Cortoplacismo/Urgencia",
+        "tipo": "primitivo",
+        "descripcion": "Actitud que desmantela al ser y convierte las acciones en reacciones inmediatas.",
+        "sinonimos_candidatos": [
+          "Aceleración"
+        ],
+        "menciones": 16,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "hoy se impone por todas partes la forma de una vida consumista en la que toda necesidad debe ser satisfecha de inmediato"
+      },
+      {
+        "id": "c_037",
+        "label": "Símbolo/Narrativa",
+        "tipo": "primitivo",
+        "descripcion": "Estructura temporal y afectiva que fija ejes estables, perdida por el vacío simbólico actual.",
+        "sinonimos_candidatos": [
+          "Relato"
+        ],
+        "menciones": 14,
+        "confianza": 0.89,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "los rituales y las fiestas esas arquitecturas temporales desaparecidas"
+      },
+      {
+        "id": "c_038",
+        "label": "Naturaleza/Romanticismo",
+        "tipo": "primitivo",
+        "descripcion": "Fuente de libertad auténtica que devuelve encanto a la vida frente al rendimiento.",
+        "sinonimos_candidatos": [
+          "Infinitud"
+        ],
+        "menciones": 12,
+        "confianza": 0.87,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la libertad romántica no se basa en el quererse sino en el ser con"
+      },
+      {
+        "id": "c_039",
+        "label": "Religión/Faith",
+        "tipo": "primitivo",
+        "descripcion": "Experiencia que requiere desprendimiento y atención, actualmente en crisis por la falta de contemplación.",
+        "sinonimos_candidatos": [
+          "Fe"
+        ],
+        "menciones": 10,
+        "confianza": 0.85,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la crisis actual de la religión no puede atribuirse simplemente al hecho de que hayamos perdido toda fe en Dios"
+      },
+      {
+        "id": "c_040",
+        "label": "Capitalismo/Neoliberalismo",
+        "tipo": "primitivo",
+        "descripcion": "Sistema basado en el rendimiento y la supervivencia, que transforma fiestas en negocios.",
+        "sinonimos_candidatos": [
+          "Mercantilización"
+        ],
+        "menciones": 20,
+        "confianza": 0.96,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el capital es actividad en estado puro"
+      },
+      {
+        "id": "c_041",
+        "label": "Digitalización/Conectividad",
+        "tipo": "primitivo",
+        "descripcion": "Tecnología que desmantela el ser al convertir a los otros en objetos consumibles.",
+        "sinonimos_candidatos": [
+          "Redes"
+        ],
+        "menciones": 9,
+        "confianza": 0.82,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la digitalización desmantela al ser en cuanto ser con"
+      },
+      {
+        "id": "c_042",
+        "label": "Cultura",
+        "tipo": "primitivo",
+        "descripcion": "Formada por digresiones y excesos (fiesta), no por la acción directa o el arma.",
+        "sinonimos_candidatos": [
+          "Magia"
+        ],
+        "menciones": 8,
+        "confianza": 0.91,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el origen de la cultura no es el arma sino el adorno"
+      },
+      {
+        "id": "c_017",
+        "label": "Experiencia/Vivencia",
+        "tipo": "primitivo",
+        "descripcion": "La experiencia profunda se pierde al reducirse a vivencias y emociones superficiales.",
+        "sinonimos_candidatos": [
+          "Información"
+        ],
+        "menciones": 13,
+        "confianza": 0.86,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "las experiencias se rebajan a vivencias"
+      }
+    ],
+    "relaciones": [
+      {
+        "id": "r_001",
+        "origen_id": "c_002",
+        "destino_id": "c_003",
+        "tipo": "se_nutre_de",
+        "etiqueta": "la actividad se nutre de la inactividad",
+        "bidireccional": true,
+        "confianza": 0.95,
+        "frase_completa": "para Walter Benjamin la inactividad... es el umbral de los grandes hechos / la acción forma parte de la historia pero no es una fuerza formadora de cultura",
+        "matiz": "Relación dialéctica donde lo nuevo emerge del espacio indeterminado creado por la pausa.",
+        "contexto": null
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_005",
+        "destino_id": "c_004",
+        "tipo": "impulsa",
+        "etiqueta": "capitalismo impulsa el trabajo y rendimiento",
+        "bidireccional": false,
+        "confianza": 0.98,
+        "frase_completa": "el capitalismo absolutiza la supervivencia / en las relaciones de producción capitalistas a la inactividad la llamamos tiempo libre",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_004",
+        "destino_id": "c_014",
+        "tipo": "desmantela",
+        "etiqueta": "trabajo y rendimiento desmantelan el ser con",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "la digitalización desmantela al ser en cuanto ser con / la absolutización del rendimiento desmantela el ser en cuanto ser con",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_008",
+        "destino_id": "c_007",
+        "tipo": "establece",
+        "etiqueta": "fiesta establece comunidad",
+        "bidireccional": false,
+        "confianza": 0.96,
+        "frase_completa": "la inactividad y la suspensión de la economía son esenciales para la fiesta del sabbat / las fiestas son hoy una forma de consumo y en cuanto tal no establecen comunidad",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_012",
+        "destino_id": "c_002",
+        "tipo": "es_figura_de",
+        "etiqueta": "espera y duda son figuras de la inactividad",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "la espera y la duda son otras dos figuras de la inactividad / sin la duda el andar humano se asemeja a una marcha",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_013",
+        "destino_id": "c_002",
+        "tipo": "condiciona",
+        "etiqueta": "ignorancia voluntaria es condición para la vida",
+        "bidireccional": false,
+        "confianza": 0.87,
+        "frase_completa": "Nietzsche elevó la ignorancia al núcleo de la vida / sin esa clase de ignorancia la vida misma sería imposible",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_010",
+        "destino_id": "c_009",
+        "tipo": "permite",
+        "etiqueta": "silencio permite felicidad inaudita",
+        "bidireccional": false,
+        "confianza": 0.85,
+        "frase_completa": "solo el silencio nos permite decir algo inaudito / la verdadera felicidad surge de lo vano e inútil",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_011",
+        "destino_id": "c_010",
+        "tipo": "se_contrapone_a",
+        "etiqueta": "información se opone al silencio contemplativo",
+        "bidireccional": true,
+        "confianza": 0.93,
+        "frase_completa": "la información es la forma de actividad que adopta el lenguaje / solo el silencio nos permite decir algo inaudito",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_006",
+        "destino_id": "c_004",
+        "tipo": "se_contrapone_a",
+        "etiqueta": "tiempo libre se opone al trabajo y rendimiento",
+        "bidireccional": false,
+        "confianza": 0.97,
+        "frase_completa": "a la obligación de trabajar y rendir se le debe contraponer una política de la inactividad / si así fuera no se trataría en realidad de un tiempo libre vivo",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_002",
+        "destino_id": "c_009",
+        "tipo": "genera",
+        "etiqueta": "inactividad genera felicidad auténtica",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "la inactividad es la condición de posibilidad de la experiencia / la verdadera felicidad surge de lo desmedido y lo superfluo",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_005",
+        "destino_id": "c_009",
+        "tipo": "impide",
+        "etiqueta": "capitalismo impide felicidad auténtica",
+        "bidireccional": false,
+        "confianza": 0.86,
+        "frase_completa": "el capital es actividad en estado puro / la verdadera felicidad surge de lo desmedido y lo superfluo",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_003",
+        "destino_id": "c_005",
+        "tipo": "es_producto_de",
+        "etiqueta": "acción es fuerza del capitalismo histórico",
+        "bidireccional": false,
+        "confianza": 0.84,
+        "frase_completa": "la acción forma parte de la historia / el capital es actividad en estado puro",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_007",
+        "destino_id": "c_014",
+        "tipo": "requiere_de",
+        "etiqueta": "comunidad requiere ser con",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "el vacío simbólico narrativo de nuestro tiempo conduce a la segmentación / los símbolos producen cosas comunes que hacen posible el nosotros",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_002",
+        "destino_id": "c_006",
+        "tipo": "constituye",
+        "etiqueta": "inactividad constituye tiempo libre vivo",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "la inactividad no es una forma de debilidad ni una falta de algo / el tiempo verdaderamente libre no pertenece al orden del trabajo y de la producción",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_008",
+        "destino_id": "c_002",
+        "tipo": "ejemplifica",
+        "etiqueta": "shabat ejemplifica inactividad ritual",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "la inactividad y la suspensión de la economía son esenciales para la fiesta del sabbat / el reposo contemplativo lo que los destaca",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_016",
+        "origen_id": "c_002",
+        "destino_id": "c_007",
+        "tipo": "fomenta",
+        "etiqueta": "inactividad fomenta comunidad",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "la inactividad y la suspensión de la economía son esenciales para la fiesta del sabbat / el tiempo sin fiestas es un tiempo sin comunidad",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_017",
+        "origen_id": "c_005",
+        "destino_id": "c_002",
+        "tipo": "amenaza_con",
+        "etiqueta": "capitalismo amenaza la inactividad contemplativa",
+        "bidireccional": false,
+        "confianza": 0.96,
+        "frase_completa": "hoy esa perspectiva se ha debilitado hasta ser considerada una forma vacía de actividad / en esta obra vio un churujan aborda la creciente pérdida de nuestra capacidad de no hacer nada",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_018",
+        "origen_id": "c_003",
+        "destino_id": "c_009",
+        "tipo": "impide",
+        "etiqueta": "acción impide felicidad contemplativa",
+        "bidireccional": false,
+        "confianza": 0.82,
+        "frase_completa": "la acción forma parte de la historia pero no es una fuerza formadora de cultura / solo el silencio nos permite decir algo inaudito",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_001",
+        "origen_id": "c_002",
+        "destino_id": "c_009",
+        "tipo": "da_lugar_a",
+        "etiqueta": "verdadera felicidad surge de lo vano e inútil",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "la verdadera felicidad surge de lo vano e inútil / la forma fundamental de la felicidad es la inactividad",
+        "matiz": null,
+        "contexto": "párrafo sobre el lujo y la utilidad"
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_002",
+        "destino_id": "c_008",
+        "tipo": "es_una_postura_de",
+        "etiqueta": "la espera es la postura mental de quien está inactivo y contemplativo",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "sin la duda el andar humano se asemeja a una marcha / la espera es la postura mental de quien está inactivo y contemplativo",
+        "matiz": null,
+        "contexto": "párrafo sobre figuras de la inactividad"
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_002",
+        "destino_id": "c_009",
+        "tipo": "requiere_para_existir",
+        "etiqueta": "lenguaje se pone en modo contemplativo / desactivan sus funciones comunicativas",
+        "bidireccional": false,
+        "confianza": 0.88,
+        "frase_completa": "solo el silencio nos permite decir algo inaudito / es en la poesía donde el lenguaje se pone en modo contemplativo",
+        "matiz": null,
+        "contexto": "párrafo sobre el lenguaje y la información"
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_010",
+        "destino_id": "c_005",
+        "tipo": "se_contrapone_a",
+        "etiqueta": "la inactividad y la actividad no son contrarios / el capital es actividad en estado puro",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "para Walter Benjamin la inactividad de la partera de lo nuevo / el capital es actividad en estado puro",
+        "matiz": null,
+        "contexto": "párrafo sobre acción e historia"
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_012",
+        "destino_id": "c_005",
+        "tipo": "provoca_en_respuesta_a",
+        "etiqueta": "ante la falta de ser se provoca un exceso de producción / el capitalismo se funda en la ilusión",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "hoy han desaparecido las arquitecturas temporales... ante la falta de ser se provoca un exceso de producción",
+        "matiz": null,
+        "contexto": "párrafo sobre el vacío simbólico"
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_012",
+        "destino_id": "c_005",
+        "tipo": "se_manifiesta_como",
+        "etiqueta": "la vida es una vida desnuda solo supervivencia / el corazón humano no puede brindar hoy ningún refugio",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "el capitalismo se funda en la ilusión de que más capital produce más vida... esa vida es una vida desnuda solo supervivencia",
+        "matiz": null,
+        "contexto": "párrafo sobre el sentimiento de falta"
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_013",
+        "destino_id": "c_004",
+        "tipo": "construye_mediante",
+        "etiqueta": "solo a partir de lo simbólico se construye el sentir compartido / dan forma a una sociedad cohesionada",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "los símbolos producen cosas comunes que hacen posible el nosotros... solo a partir de lo simbólico se construye el sentir compartido",
+        "matiz": null,
+        "contexto": "párrafo sobre la comunidad y los símbolos"
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_016",
+        "destino_id": "c_012",
+        "tipo": "conduce_a",
+        "etiqueta": "digitalización desmantela al ser en cuanto ser con / conduce a una soledad primordial",
+        "bidireccional": false,
+        "confianza": 0.96,
+        "frase_completa": "la digitalización desmantela al ser en cuanto ser con estar conectado no es lo mismo que estar vinculado... conduce a una soledad primordial",
+        "matiz": null,
+        "contexto": "párrafo sobre la conexión y el tú"
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_014",
+        "destino_id": "c_010",
+        "tipo": "requiere_de",
+        "etiqueta": "la religión requiere de una atención particular / quien se produce... es incapaz de escuchar y de contemplar",
+        "bidireccional": false,
+        "confianza": 0.85,
+        "frase_completa": "quien se produce quien se exhibe es incapaz de escuchar y de contemplar la religión requiere de una atención particular",
+        "matiz": null,
+        "contexto": "párrafo sobre crisis religiosa"
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_015",
+        "destino_id": "c_009",
+        "tipo": "restaura_mediante",
+        "etiqueta": "la romantización del mundo le devuelve a este su Encanto / la contemplación lo auténticamente romántico",
+        "bidireccional": false,
+        "confianza": 0.87,
+        "frase_completa": "el momento en que la libertad se torna naturaleza es un instante religioso... el sujeto frente a la naturaleza renuncia a su soberanía y rompe a llorar",
+        "matiz": null,
+        "contexto": "párrafo sobre romanticismo"
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_002",
+        "destino_id": "c_005",
+        "tipo": "es_una_forma_de",
+        "etiqueta": "el capital es actividad en estado puro / el exceso neoliberal... No es otra cosa que un exceso de capital",
+        "bidireccional": false,
+        "confianza": 0.97,
+        "frase_completa": "el capital es actividad en estado puro / así de este modo el exceso neoliberal de libertad y rendimiento no es otra cosa que un exceso de capital",
+        "matiz": null,
+        "contexto": "párrafo sobre competencia"
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_004",
+        "destino_id": "c_016",
+        "tipo": "se_disuelve_ante",
+        "etiqueta": "a pesar de la creciente conexión y conectividad estamos más solos que nunca / no establece comunidad",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "hoy se habla de Community Pero eso se trata de una forma mercantil... a pesar de la creciente conexión y conectividad estamos más solos que nunca",
+        "matiz": null,
+        "contexto": "párrafo sobre comunidad digital"
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_005",
+        "destino_id": "c_002",
+        "tipo": "pertenece_al_orden_de",
+        "etiqueta": "trabajo y el rendimiento pertenecen al orden de la supervivencia / cuando la vida degenera en supervivencia",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "el trabajo y el rendimiento pertenecen al orden de la supervivencia / el capitalismo absolutiza la supervivencia",
+        "matiz": null,
+        "contexto": "párrafo sobre lujo vs supervivencia"
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_005",
+        "destino_id": "c_012",
+        "tipo": "genera_en_el_individuo",
+        "etiqueta": "el vacío simbólico narrativo de nuestro tiempo conduce a la segmentación / falta de ser reinante",
+        "bidireccional": false,
+        "confianza": 0.86,
+        "frase_completa": "hoy han desaparecido las arquitecturas temporales... el vacío simbólico narrativo de nuestro tiempo conduce a la segmentación / ante la falta de ser se provoca un exceso",
+        "matiz": null,
+        "contexto": "párrafo sobre crisis temporal"
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_009",
+        "destino_id": "c_014",
+        "tipo": "se_vincula_con_la_capacidad_de",
+        "etiqueta": "la inteligencia artificial no puede pensar / la crisis actual consiste en que todo lo que podría darle sentido... se está derrumbando",
+        "bidireccional": false,
+        "confianza": 0.83,
+        "frase_completa": "dice han la Inteligencia artificial no puede pensar porque no está capacitada para el patos / la crisis actual de la religión es finalmente una crisis de atención",
+        "matiz": null,
+        "contexto": "párrafo sobre pensamiento y fe"
+      },
+      {
+        "id": "r_016",
+        "origen_id": "c_008",
+        "destino_id": "c_012",
+        "tipo": "mitiga_mediante_la_ausencia_de",
+        "etiqueta": "sin el aburrimiento no sucede nada / sin ese umbral todo se repite igual (falta de ser)",
+        "bidireccional": false,
+        "confianza": 0.84,
+        "frase_completa": "el aburrimiento es la cara visible del acontecimiento inconsciente... ante la falta de ser se provoca un exceso",
+        "matiz": null,
+        "contexto": "párrafo sobre tedio y umbral"
+      },
+      {
+        "id": "r_017",
+        "origen_id": "c_013",
+        "destino_id": "c_014",
+        "tipo": "se_basa_en_la_tradición_de",
+        "etiqueta": "Platón nos Explica... lo que es un símbolo / los humanos eran en su origen seres esféricos",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "Platón nos Explica en su diálogo simposio lo que es un símbolo... sin el ordenamiento simbólico somos trozos fragmentos",
+        "matiz": null,
+        "contexto": "párrafo sobre Platón y símbolos"
+      },
+      {
+        "id": "r_018",
+        "origen_id": "c_002",
+        "destino_id": "c_016",
+        "tipo": "se_intensifica_mediante",
+        "etiqueta": "hoy se impone por todas partes la forma de una vida consumista / hiperactividad y la hipercomunicación actuales",
+        "bidireccional": false,
+        "confianza": 0.87,
+        "frase_completa": "las acciones se acortan... hoy vivimos La era de la permanente autoproducción y auto escenificación narcisista / las hiperactividad y la hipercomunicación actuales",
+        "matiz": null,
+        "contexto": "párrafo sobre vida consumista"
+      },
+      {
+        "id": "r_019",
+        "origen_id": "c_009",
+        "destino_id": "c_010",
+        "tipo": "requiere_de",
+        "etiqueta": "solo el silencio nos permite decir algo inaudito / la felicidad más elevada se debe a la contemplación",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "la verdadera felicidad surge de lo vano e inútil... solo el silencio nos permite decir algo inaudito / quien está realmente inactivo no se afirma a sí mismo",
+        "matiz": null,
+        "contexto": "párrafo sobre contemplación"
+      },
+      {
+        "id": "r_020",
+        "origen_id": "c_015",
+        "destino_id": "c_005",
+        "tipo": "pierde_ante_la_acción_de",
+        "etiqueta": "el ser humano actúa sobre la naturaleza sometiendo a la por completo / la naturaleza pierde toda autonomía y dignidad",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "para arendt el siglo 20 como una época de la acción en la que el ser humano actúa sobre la naturaleza sometiendo a la por completo / la naturaleza pierde toda autonomía y dignidad",
+        "matiz": null,
+        "contexto": "párrafo sobre antropoceno"
+      },
+      {
+        "id": "r_001",
+        "origen_id": "c_002",
+        "destino_id": "c_002",
+        "tipo": "se_nutre_de",
+        "etiqueta": "la actividad se nutre de la inactividad",
+        "bidireccional": true,
+        "confianza": 0.95,
+        "frase_completa": "para Walter Benjamin la inactividad de la partera de lo nuevo... sin esa zona que crea la dialéctica de la inactividad todo se repite igual",
+        "matiz": "Relación dialectica fundamental según el texto.",
+        "contexto": null
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_014",
+        "destino_id": "c_003",
+        "tipo": "impulsa",
+        "etiqueta": "la obligación de trabajar y rendir se le debe contraponer una política de la inactividad",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "en las relaciones de producción capitalistas a la inactividad la llamamos tiempo libre es decir un tiempo de descanso del trabajo",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_014",
+        "destino_id": "c_005",
+        "tipo": "transforma_en",
+        "etiqueta": "el capitalismo transforma hasta las fiestas religiosas en un negocio",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "las fiestas son hoy una forma de consumo y en cuanto tal no establecen comunidad",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_005",
+        "destino_id": "c_006",
+        "tipo": "crea",
+        "etiqueta": "la fiesta del sabbat toda actividad debe Cesar no se permite seguir ningún negocio la inactividad y la suspensión de la economía son esenciales para la fiesta del shabat",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "la inactividad y la suspensión de la economía son esenciales para la fiesta del sabbat el capitalismo en cambio transforma hasta las fiestas religiosas en un negocio",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_016",
+        "destino_id": "c_005",
+        "tipo": "se_forma_por",
+        "etiqueta": "la cultura se forma por digresiones desvíos y excesos recurre a la fiesta del shabat para caracterizar a la fiesta en tanto comunidad",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "el origen de la cultura no es el arma sino el adorno la cultura se forma por digresiones desvíos y excesos recurre a la fiesta del shabat",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_015",
+        "destino_id": "c_009",
+        "tipo": "destruye",
+        "etiqueta": "el ruido de la comunicación destruye el silencio qué es fundamental en la capacidad contemplativa del lenguaje",
+        "bidireccional": false,
+        "confianza": 0.88,
+        "frase_completa": "la información es la forma de actividad que adopta el lenguaje un lenguaje activo es información en cambio es en la poesía donde el lenguaje se pone en modo contemplativo",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_015",
+        "destino_id": "c_006",
+        "tipo": "impide",
+        "etiqueta": "con la ayuda de la conexión digital hacemos del otro del tú un hecho a disposición Lo cual conduce a una soledad primordial",
+        "bidireccional": false,
+        "confianza": 0.85,
+        "frase_completa": "la digitalización desmantela al ser en cuanto ser con estar conectado no es lo mismo que estar vinculado",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_012",
+        "destino_id": "c_006",
+        "tipo": "construye",
+        "etiqueta": "los símbolos producen cosas comunes que hacen posible el nosotros que dan forma a una sociedad cohesionada solo a partir de lo simbólico se construye el sentir compartido",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "el vacío simbólico narrativo de nuestro tiempo conduce a la segmentación de la sociedad en el vacío simbólico la sociedad se divide en individuos indiferentes",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_012",
+        "destino_id": "c_013",
+        "tipo": "recupera_en",
+        "etiqueta": "la romantización del mundo le devuelve a este su Encanto su magia su misterio y hasta su dignidad el momento en que la libertad se torna naturaleza es un instante religioso",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "la romantización del mundo le devuelve a este su Encanto su magia su misterio y hasta su dignidad el momento en que la libertad se torna naturaleza es un instante religioso",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_013",
+        "destino_id": "c_007",
+        "tipo": "fomenta",
+        "etiqueta": "la fiesta por el contrario crea comunidad reúne y une el sentimiento de festividades siempre un sentimiento de comunidad un sentimiento de nosotros bien",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "el ayuno ritual renueva la vida al reactivar los sentidos le devuelve a la vida su vivacidad el reposo contemplativo lo que los destaca",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_012",
+        "destino_id": "c_014",
+        "tipo": "provoca_en",
+        "etiqueta": "ante la falta de ser se provoca un exceso de producción la hiperactividad y la hipercomunicación actuales pueden entenderse como una consecuencia de la falta de ser reinante",
+        "bidireccional": false,
+        "confianza": 0.87,
+        "frase_completa": "la crisis actual consiste en que todo lo que podría darle sentido y orientación a la vida se está derrumbando ante la falta de ser se provoca un exceso de producción",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_012",
+        "destino_id": "c_009",
+        "tipo": "requiere_de",
+        "etiqueta": "la inactividad es la condición de posibilidad de la experiencia quien está realmente inactivo no se afirma a sí mismo se desprende de su nombre",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "las informaciones poseen un margen de actualidad muy estrecho nos precipitan en un Frenesí de actualidad quizás estemos bien informados pero carecemos de la orientación que nos da un relato",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_017",
+        "destino_id": "c_009",
+        "tipo": "empobrece",
+        "etiqueta": "los sentimientos se empobrecen en las formas de emociones y afectos cada vez soportamos menos el tedio y por eso perdemos la capacidad de tener experiencias",
+        "bidireccional": false,
+        "confianza": 0.86,
+        "frase_completa": "las acciones se acortan y se convierten en reacciones las experiencias se rebajan a vivencias Los sentimientos se empobrecen en las formas de emociones",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_013",
+        "destino_id": "c_017",
+        "tipo": "reemplaza_por",
+        "etiqueta": "la autoproducción finalmente ha resultado ser más dañina que el ateísmo para la religión la crisis actual de la religión no puede atribuirse simplemente al hecho de que hayamos perdido toda fe en Dios ni tampoco a que nos hayamos vuelto desconfiados a determinados dogmas religiosos esta crisis apunta a que estamos perdiendo cada vez más la capacidad contemplativa",
+        "bidireccional": false,
+        "confianza": 0.84,
+        "frase_completa": "la religión pierde su fundamento puesto que el desprenderse de uno mismo es un acto constitutivo de la experiencia religiosa y hoy lejos estamos de ese desprendimiento",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_017",
+        "destino_id": "c_012",
+        "tipo": "genera",
+        "etiqueta": "la crisis actual de la religión es finalmente una crisis de atención quien se produce quien se exhibe es incapaz de escuchar y de contemplar el tiempo de la fiesta es un tiempo detenido porque transitamos por la fiesta y solo podemos transitar por algo que está detenido",
+        "bidireccional": false,
+        "confianza": 0.83,
+        "frase_completa": "quien actúa en cambio tiene objetivos y esos objetivos lo llevan a ir hacia algún lado o aspirar a algo que son formas del andar quien solo actúa no está capacitado para el tránsito festivo",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_016",
+        "origen_id": "c_007",
+        "destino_id": "c_012",
+        "tipo": "se_fragmenta_sin",
+        "etiqueta": "el vacío simbólico narrativo de nuestro tiempo conduce a la segmentación de la sociedad en el vacío simbólico la sociedad se divide en individuos indiferentes ante la carencia de lo asociativo y vinculante Platón nos Explica en su diálogo simposio lo que es un símbolo",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "los símbolos producen cosas comunes que hacen posible el nosotros que dan forma a una sociedad cohesionada solo a partir de lo simbólico se construye el sentir compartido el SIM patos la comunidad es una totalidad que se transmite simbólicamente",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_017",
+        "origen_id": "c_002",
+        "destino_id": "c_012",
+        "tipo": "desmantela_en_cuanto",
+        "etiqueta": "la digitalización desmantela al ser en cuanto ser con estar conectado no es lo mismo que estar vinculado con la ayuda de la conexión digital hacemos del otro del tú un hecho a disposición Lo cual conduce a una soledad primordial El otro es un objeto consumible que satisface nuestras necesidades sin necesidad de una vinculación intensa por eso es que a pesar de la creciente conexión y conectividad estamos más solos que nunca",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "la digitalización desmantela al ser en cuanto ser con estar conectado no es lo mismo que estar vinculado",
+        "matiz": null,
+        "contexto": null
+      },
+      {
+        "id": "r_018",
+        "origen_id": "c_009",
+        "destino_id": "c_007",
+        "tipo": "permite",
+        "etiqueta": "solo en la inactividad nos percatamos del suelo que pisamos y del espacio que ocupamos cuando la vida se pone en modo contemplativo vuelve a montarse sobre su secreta razón de ser",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "solo el silencio nos permite decir algo inaudito la obligación de comunicar todo el tiempo por el contrario nos conduce a la reproducción de lo igual al conformismo shis deleus dice que el problema no es conseguir que la gente se exprese si no en poner a su disposición vacuolas de soledad y de silencio",
+        "matiz": null,
+        "contexto": null
+      }
+    ],
+    "bucles": [
+      {
+        "id": "b_001",
+        "nodos_ids": [
+          "c_005",
+          "c_004",
+          "c_014",
+          "c_002"
+        ],
+        "descripcion": "Ciclo sistémico donde el capitalismo impulsa trabajo y rendimiento, lo que desmantela la relación interhumana (ser con), generando crisis de atención/religión que demanda inactividad contemplativa como contrapeso.",
+        "tipo": "fundamental"
+      }
+    ],
+    "metalenguaje": []
+  },
+  "decisiones": [],
+  "anotaciones": [],
+  "completado": true,
+  "creado_en": "2026-06-29T04:16:34.499981",
+  "actualizado_en": "2026-06-29T13:57:37.529418",
+  "conceptos_editados": {},
+  "relaciones_editadas": {},
+  "relaciones_investigador": [
+    {
+      "id": "r_rec_d40409f3",
+      "origen_id": "c_001",
+      "destino_id": "c_017",
+      "tipo": "habilita",
+      "etiqueta": "La vida contemplativa permite acceder a la experiencia profunda frente a las emociones superficiales.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8e77975b",
+      "origen_id": "c_001",
+      "destino_id": "c_012",
+      "tipo": "alinea con",
+      "etiqueta": "La vida contemplativa implica una rendición de la soberanía propia, similar al ideal romántico ante la naturaleza.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_73787bb0",
+      "origen_id": "c_001",
+      "destino_id": "c_014",
+      "tipo": "se opone a",
+      "etiqueta": "La vida contemplativa se opone a la lógica de supervivencia y rendimiento del capitalismo.",
+      "bidireccional": false
+    }
+  ],
+  "metadatos": {
+    "titulo": "Vida Contemplativa: Elogio de la inactividad",
+    "autores": [
+      "Byung Chul-Han"
+    ],
+    "anio": 2022,
+    "editorial": null,
+    "url": null,
+    "notas": null
+  }
+}

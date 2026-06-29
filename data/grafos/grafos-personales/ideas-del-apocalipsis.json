@@ -1,0 +1,36 @@
+{
+  "titulo": "Ideas del apocalipsis",
+  "slug": "ideas-del-apocalipsis",
+  "descripcion": "Escatología pura",
+  "conceptos_propios": [
+    {
+      "id": "ci_2f399933",
+      "label": "Vida independiente",
+      "definicion": null,
+      "citas": [],
+      "creado_en": "2026-06-28T22:47:48.370071",
+      "actualizado_en": "2026-06-28T22:47:48.370073"
+    },
+    {
+      "id": "ci_e48b5e09",
+      "label": "Melancolía",
+      "definicion": null,
+      "citas": [],
+      "creado_en": "2026-06-29T04:20:44.136351",
+      "actualizado_en": "2026-06-29T04:20:56.613946"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "ri_5806a76f",
+      "origen_id": "ci_e48b5e09",
+      "destino_id": "ci_2f399933",
+      "tipo": "fundamenta",
+      "etiqueta": "fundamenta",
+      "bidireccional": false,
+      "creada_en": "2026-06-29T04:21:08.412679"
+    }
+  ],
+  "creado_en": "2026-06-28T22:47:38.563235",
+  "actualizado_en": "2026-06-29T04:21:08.412706"
+}

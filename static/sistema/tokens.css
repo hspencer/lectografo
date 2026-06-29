@@ -1,0 +1,407 @@
+/* ════════════════════════════════════════════════════════════════════════
+   STELLA NOVA · TOKENS
+   Sistema de diseño portable. Extraído del skin Stella Nova (MediaWiki) y
+   generalizado para cualquier software. Metáfora rectora: «página de papel».
+   Una hoja cálida flota sobre un campo gris ahuesado (el atelier de la
+   e[ad]); un único punto de luz carmín es la nova.
+
+   Tres capas (orden Material 3: reference → system → component):
+     1. PRIMITIVAS  — la paleta nombrada por lo que el color ES.
+     2. SEMÁNTICA   — roles del sistema; flip claro/oscuro vía light-dark().
+     3. COMPONENTE  — tokens de control; consumen SOLO semántica.
+
+   Regla operativa: toca la capa MÁS ALTA que resuelva tu problema.
+   Prefijo --sn- intacto: contrato externo, no renombrar ni eliminar.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+	/* ═══════════════════════════════════════════════════════════════════
+	   CAPA 1 — PRIMITIVAS (REFERENCE)
+	   Agnósticas del tema. Stops 50–950, la luminancia decrece con el número.
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	/* papel — neutros cálidos claros (la hoja, sus pliegues, su sombra) */
+	--sn-papel-50:  #fcfbf7;
+	--sn-papel-75:  #f4f2ed;
+	--sn-papel-100: #f3f0e7;
+	--sn-papel-200: #efece2;
+	--sn-papel-300: #ece7da;
+	--sn-papel-400: #e8e4da;
+	--sn-papel-500: #e7e1d3;
+	--sn-papel-600: #ddd6c7;
+	--sn-papel-700: #a39a86;
+	--sn-papel-800: #968c7c;
+
+	/* tinta — neutros cálidos oscuros (pizarra y tinta china del atelier) */
+	--sn-tinta-300: #756d5d;
+	--sn-tinta-400: #6b6357;
+	--sn-tinta-500: #353123;
+	--sn-tinta-600: #2c2410;
+	--sn-tinta-650: #2a2719;
+	--sn-tinta-700: #262318;
+	--sn-tinta-750: #221f1a;
+	--sn-tinta-800: #1e1c15;
+	--sn-tinta-850: #1a0f0b;
+	--sn-tinta-900: #181610;
+	--sn-tinta-950: #141209;
+
+	/* rojo — sangre del carmín (single source de nova y link claros) */
+	--sn-rojo-500: #ae2d13;
+	--sn-rojo-600: #b21e3e;
+	--sn-rojo-700: #962c08;
+	--sn-rojo-900: #612403;
+
+	/* coral — el rosa cálido del modo noche */
+	--sn-coral-300: #c8a89a;
+	--sn-coral-400: #ff6b7e;
+
+	/* rosa — el rosado pálido de las páginas inexistentes (redlink) */
+	--sn-rosa-300: #e6acb7;
+	--sn-rosa-400: #c98592;
+
+	/* azul — único frío del sistema, link de noche */
+	--sn-azul-200: #b3cef2;
+	--sn-azul-300: #8fb4e8;
+
+	/* malva — visitado en la noche */
+	--sn-malva-400: #a99cae;
+
+	/* verde — la «ok» del taller */
+	--sn-verde-400: #6cc18a;
+	--sn-verde-500: #2f6f43;
+
+	/* masking — la cinta amarilla del taller (warn, notice) y parientes */
+	--sn-masking-300: #f7db7e;
+	--sn-masking-500: #d9a14b;
+	--sn-masking-700: #8a5a12;
+	--sn-masking-900: #5a4416;
+
+	/* blanco — papel químicamente puro (solo donde la nova lo exige) */
+	--sn-blanco: #ffffff;
+
+
+	/* ═══════════════════════════════════════════════════════════════════
+	   CAPA 2 — SEMÁNTICA (SYSTEM)
+	   Cada rol → primitiva. :root define el tema CLARO; el bloque
+	   [data-sn-theme="dark"] (y la media query auto) sobrescriben los roles
+	   con su primitiva oscura. Se prefiere el override explícito sobre
+	   light-dark() porque éste no re-resuelve el `color` heredado al
+	   conmutar color-scheme por atributo en caliente (texto oscuro sobre
+	   papel oscuro). --sn-icon y los washes derivan de --sn-ink/--sn-paper:
+	   voltean solos, sin duplicar.
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	color-scheme: light;
+
+	/* campo y papel */
+	--sn-field:        var(--sn-papel-75);
+	--sn-field-grain:  0.035;
+	--sn-paper:        var(--sn-papel-50);
+	--sn-paper-edge:   var(--sn-papel-100);
+	--sn-sunk:         var(--sn-papel-200);
+
+	/* tinta — texto, secundarios, filetes */
+	--sn-ink:          var(--sn-tinta-750);
+	--sn-ink-soft:     var(--sn-tinta-400);
+	--sn-ink-faint:    var(--sn-papel-800);
+	--sn-hairline:     var(--sn-papel-600);
+	--sn-hairline-soft:var(--sn-papel-500);
+
+	/* la nova — único acento agudo, usado con avaricia */
+	--sn-nova:         var(--sn-rojo-500);
+	--sn-nova-ink:     var(--sn-blanco);
+	--sn-nova-wash:    #f7e9e6;
+
+	/* enlaces — rojos en ambos temas */
+	--sn-link:         var(--sn-rojo-500);
+	--sn-link-hover:   var(--sn-rojo-700);
+	--sn-link-visited: var(--sn-rojo-900);
+	--sn-link-new:     var(--sn-rosa-400);
+
+	/* íconos de UI: tinta al ~55% en reposo, plena al hover. Nunca carmín. */
+	--sn-icon:         color-mix(in oklab, var(--sn-ink) 55%, transparent);
+	--sn-icon-active:  var(--sn-ink);
+
+	/* señales */
+	--sn-ok:           var(--sn-verde-500);
+	--sn-warn:         var(--sn-masking-700);
+	--sn-warn-ink:     var(--sn-papel-50);
+	--sn-danger:       var(--sn-rojo-600);
+	--sn-notice-bg:    var(--sn-masking-300);
+	--sn-notice-ink:   var(--sn-tinta-600);
+
+	/* washes — fondos suaves derivados con color-mix (el flip viene gratis) */
+	--sn-ok-wash:     color-mix(in oklab, var(--sn-ok)     14%, var(--sn-paper));
+	--sn-warn-wash:   color-mix(in oklab, var(--sn-warn)   14%, var(--sn-paper));
+	--sn-danger-wash: color-mix(in oklab, var(--sn-danger) 12%, var(--sn-paper));
+	--sn-info-wash:   color-mix(in oklab, var(--sn-warn)    8%, var(--sn-paper));
+
+
+	/* ═══════════════════════════════════════════════════════════════════
+	   CAPA 3 — COMPONENTE
+	   Tokens de control. Consumen SOLO semántica: heredan el flip.
+	   ═══════════════════════════════════════════════════════════════════ */
+	--sn-btn-bg:            var(--sn-sunk);
+	--sn-btn-bg-hover:      var(--sn-paper);
+	--sn-btn-fg:            var(--sn-ink);
+	--sn-btn-border:        var(--sn-hairline);
+	--sn-btn-border-hover:  var(--sn-ink-faint);
+	--sn-btn-primary-bg:        var(--sn-ink);
+	--sn-btn-primary-bg-hover:  color-mix(in oklab, var(--sn-ink) 86%, var(--sn-paper));
+	--sn-btn-primary-fg:        var(--sn-paper);
+	--sn-btn-danger-bg:     var(--sn-danger);
+	--sn-btn-danger-fg:     var(--sn-nova-ink);
+	--sn-field-bg:          var(--sn-paper);
+	--sn-field-bg-disabled: var(--sn-sunk);
+	--sn-field-fg:          var(--sn-ink);
+	--sn-field-border:      var(--sn-hairline);
+	--sn-field-placeholder: var(--sn-ink-faint);
+	--sn-on-bg:             var(--sn-ink);
+	--sn-on-fg:             var(--sn-paper);
+	--sn-opt-hover-bg:      var(--sn-sunk);
+	--sn-opt-sel-bg:        var(--sn-nova-wash);
+	--sn-opt-fg:            var(--sn-ink);
+	--sn-focus-border:      var(--sn-nova);
+	--sn-focus-ring:        0 0 0 2px var(--sn-nova-wash);
+	--sn-scrim:             color-mix(in oklab, var(--sn-ink) 45%, transparent);
+
+	--sn-ext-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cline x1='10' y1='14' x2='21' y2='3'/%3E%3C/svg%3E");
+
+
+	/* ═══════════════════════════════════════════════════════════════════
+	   TIPOGRAFÍA
+	   Primitivas (las familias reales) + semánticas (alias que consume el
+	   sistema). El conmutador de TRÍO [data-trio] redefine las primitivas;
+	   el conmutador de FAMILIA [data-sn-family] invierte sans↔serif en el
+	   cuerpo. Default = trío Plex, familia sans.
+	   ═══════════════════════════════════════════════════════════════════ */
+	--sn-font-sans:  'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--sn-font-serif: 'IBM Plex Serif', 'Iowan Old Style', Palatino, Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+	--sn-font-text:    var(--sn-font-sans);
+	--sn-font-display: var(--sn-font-text);
+	--sn-font-quote:   var(--sn-font-serif);
+
+	/* Escala fluida sobria. --sn-font-scale lo modula la preferencia de
+	   tamaño; --sn-leading es FIJO (cambiarlo desparametriza el baseline). */
+	--sn-font-scale: 1;
+	--sn-leading: 1.61;
+	--sn-leading-table: 1.305;
+
+	--sn-fs-root:  calc(1rem * var(--sn-font-scale));
+	--sn-fs-xs:    clamp(.72rem, .70rem + .10vw, .78rem);
+	--sn-fs-sm:    clamp(.82rem, .79rem + .14vw, .90rem);
+	--sn-fs-base:  calc(clamp(1.04rem, 1rem + .18vw, 1.1rem) * var(--sn-font-scale));
+	--sn-fs-md:    calc(clamp(1.15rem, 1.1rem + .24vw, 1.28rem) * var(--sn-font-scale));
+	--sn-fs-lg:    calc(clamp(1.2rem, 1.12rem + .40vw, 1.42rem) * var(--sn-font-scale));
+	--sn-fs-xl:    calc(clamp(1.35rem, 1.22rem + .55vw, 1.62rem) * var(--sn-font-scale));
+	--sn-fs-display:    calc(clamp(1.5rem, 1.32rem + .85vw, 2rem) * var(--sn-font-scale));
+	--sn-fs-page-title: calc(clamp(1.85rem, 1.55rem + 1.3vw, 2.5rem) * var(--sn-font-scale));
+	--sn-fs-table: calc(var(--sn-fs-base) * .85);
+
+	/* Baseline grid — la unidad del ritmo vertical es la interlínea del cuerpo */
+	--sn-baseline:    calc(var(--sn-fs-base) * var(--sn-leading));
+	--sn-baseline-2:  calc(var(--sn-baseline) * 2);
+	--sn-baseline-3:  calc(var(--sn-baseline) * 3);
+
+	/* Ritmo espacial (escala 1.5) */
+	--sn-s-1: .25rem;  --sn-s-2: .5rem;   --sn-s-3: .75rem;
+	--sn-s-4: 1rem;    --sn-s-5: 1.5rem;  --sn-s-6: 2.25rem;
+	--sn-s-7: 3.5rem;  --sn-s-8: 5.25rem;
+
+	/* Anchos */
+	--sn-measure: 64rem;     /* medida de lectura de la hoja */
+	--sn-shell:   88rem;     /* ancho máximo del conjunto */
+	--sn-ctl:     2.4rem;    /* altura común de controles */
+	--sn-header-h: 3.5rem;
+
+	/* Forma y materia */
+	--sn-radius-s: 2px;
+	--sn-radius:   4px;
+	--sn-radius-l: 8px;
+	--sn-radius-paper: 3px;
+	--sn-radius-pill: 999px;
+	--sn-hair: 1px solid var(--sn-hairline);
+
+	/* Sombra de la hoja: apenas un asentamiento sobre el campo.
+	   Varían geometría además de color: se redefinen por tema al final. */
+	--sn-lift-paper:
+		0 1px 1px rgba(40, 33, 20, .03),
+		0 3px 8px rgba(40, 33, 20, .04);
+	--sn-lift:
+		0 1px 2px rgba(40, 33, 20, .05),
+		0 8px 24px rgba(40, 33, 20, .08);
+	--sn-lift-soft: 0 2px 8px rgba(40, 33, 20, .05);
+
+	/* Movimiento (--sn-motion lo apaga reduced-motion) */
+	--sn-motion: 1;
+	--sn-dur-1: calc(120ms * var(--sn-motion));
+	--sn-dur-2: calc(220ms * var(--sn-motion));
+	--sn-dur-3: calc(420ms * var(--sn-motion));
+	--sn-ease: cubic-bezier(.22, 1, .36, 1);
+
+	--sn-z-rail: 10;
+	--sn-z-header: 20;
+	--sn-z-panel: 40;
+	--sn-z-skip: 60;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   CONMUTACIÓN DE TEMA
+   1. color-scheme para que light-dark() resuelva al lado correcto.
+   2. los cuatro tokens NO-color que varían por tema (grain + 3 lift).
+   ════════════════════════════════════════════════════════════════════════ */
+:root[data-sn-theme="light"] { color-scheme: light; }
+
+/* Roles oscuros — cada semántica apunta a su primitiva noche. Los washes y
+   --sn-icon no se listan: derivan de --sn-ink/--sn-paper y voltean solos. */
+:root[data-sn-theme="dark"] {
+	color-scheme: dark;
+	--sn-field:        var(--sn-tinta-950);
+	--sn-paper:        var(--sn-tinta-800);
+	--sn-paper-edge:   var(--sn-tinta-700);
+	--sn-sunk:         var(--sn-tinta-900);
+	--sn-ink:          var(--sn-papel-300);
+	--sn-ink-soft:     var(--sn-papel-700);
+	--sn-ink-faint:    var(--sn-tinta-300);
+	--sn-hairline:     var(--sn-tinta-500);
+	--sn-hairline-soft:var(--sn-tinta-650);
+	--sn-nova:         var(--sn-coral-400);
+	--sn-nova-ink:     var(--sn-tinta-850);
+	--sn-nova-wash:    #2b1c1d;
+	--sn-link:         var(--sn-coral-400);
+	--sn-link-hover:   color-mix(in oklab, var(--sn-coral-400) 80%, white);
+	--sn-link-visited: color-mix(in oklab, var(--sn-coral-400) 75%, black);
+	--sn-link-new:     var(--sn-rosa-300);
+	--sn-ok:           var(--sn-verde-400);
+	--sn-warn:         var(--sn-masking-500);
+	--sn-warn-ink:     var(--sn-tinta-850);
+	--sn-danger:       var(--sn-coral-400);
+	--sn-notice-bg:    var(--sn-masking-900);
+	--sn-notice-ink:   var(--sn-masking-300);
+	--sn-field-grain: .05;
+	--sn-lift-paper: 0 1px 1px rgba(0,0,0,.25), 0 3px 10px rgba(0,0,0,.35);
+	--sn-lift:       0 1px 2px rgba(0,0,0,.35), 0 8px 22px rgba(0,0,0,.45), 0 24px 60px rgba(0,0,0,.4);
+	--sn-lift-soft:  0 2px 12px rgba(0,0,0,.4);
+}
+
+:root[data-sn-theme="auto"] { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) {
+	:root[data-sn-theme="auto"] {
+		color-scheme: dark;
+		--sn-field:        var(--sn-tinta-950);
+		--sn-paper:        var(--sn-tinta-800);
+		--sn-paper-edge:   var(--sn-tinta-700);
+		--sn-sunk:         var(--sn-tinta-900);
+		--sn-ink:          var(--sn-papel-300);
+		--sn-ink-soft:     var(--sn-papel-700);
+		--sn-ink-faint:    var(--sn-tinta-300);
+		--sn-hairline:     var(--sn-tinta-500);
+		--sn-hairline-soft:var(--sn-tinta-650);
+		--sn-nova:         var(--sn-coral-400);
+		--sn-nova-ink:     var(--sn-tinta-850);
+		--sn-nova-wash:    #2b1c1d;
+		--sn-link:         var(--sn-coral-400);
+		--sn-link-hover:   color-mix(in oklab, var(--sn-coral-400) 80%, white);
+		--sn-link-visited: color-mix(in oklab, var(--sn-coral-400) 75%, black);
+		--sn-link-new:     var(--sn-rosa-300);
+		--sn-ok:           var(--sn-verde-400);
+		--sn-warn:         var(--sn-masking-500);
+		--sn-warn-ink:     var(--sn-tinta-850);
+		--sn-danger:       var(--sn-coral-400);
+		--sn-notice-bg:    var(--sn-masking-900);
+		--sn-notice-ink:   var(--sn-masking-300);
+		--sn-field-grain: .05;
+		--sn-lift-paper: 0 1px 1px rgba(0,0,0,.25), 0 3px 10px rgba(0,0,0,.35);
+		--sn-lift:       0 1px 2px rgba(0,0,0,.35), 0 8px 22px rgba(0,0,0,.45), 0 24px 60px rgba(0,0,0,.4);
+		--sn-lift-soft:  0 2px 12px rgba(0,0,0,.4);
+	}
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   TRÍOS TIPOGRÁFICOS — feature del sistema.
+   [data-trio] redefine SOLO las tres primitivas de familia. Todo lo demás
+   (color, ritmo, grilla, alias semánticos) queda intacto, y el conmutador
+   de familia sans↔serif sigue funcionando sobre cualquier trío.
+   ════════════════════════════════════════════════════════════════════════ */
+:root[data-trio="plex"] {
+	--sn-font-sans:  'IBM Plex Sans', system-ui, sans-serif;
+	--sn-font-serif: 'IBM Plex Serif', Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, monospace;
+}
+:root[data-trio="source"] {
+	--sn-font-sans:  'Source Sans 3', system-ui, sans-serif;
+	--sn-font-serif: 'Source Serif 4', Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, monospace;
+}
+:root[data-trio="literata"] {
+	--sn-font-sans:  'Libre Franklin', system-ui, sans-serif;
+	--sn-font-serif: 'Literata', Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, monospace;
+}
+:root[data-trio="newsreader"] {
+	--sn-font-sans:  'Hanken Grotesk', system-ui, sans-serif;
+	--sn-font-serif: 'Newsreader', Georgia, serif;
+	--sn-font-mono:  'JetBrains Mono', ui-monospace, monospace;
+}
+:root[data-trio="spectral"] {
+	--sn-font-sans:  'Work Sans', system-ui, sans-serif;
+	--sn-font-serif: 'Spectral', Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, monospace;
+}
+:root[data-trio="space"] {
+	--sn-font-sans:  'Space Grotesk', system-ui, sans-serif;
+	--sn-font-serif: 'Crimson Pro', Georgia, serif;
+	--sn-font-mono:  'Space Mono', ui-monospace, monospace;
+}
+:root[data-trio="geist"] {
+	--sn-font-sans:  'Geist', system-ui, sans-serif;
+	--sn-font-serif: 'Lora', Georgia, serif;
+	--sn-font-mono:  'Geist Mono', ui-monospace, monospace;
+}
+:root[data-trio="sora"] {
+	--sn-font-sans:  'Sora', system-ui, sans-serif;
+	--sn-font-serif: 'Bitter', Georgia, serif;
+	--sn-font-mono:  'JetBrains Mono', ui-monospace, monospace;
+}
+:root[data-trio="barlow"] {
+	--sn-font-sans:  'Barlow', system-ui, sans-serif;
+	--sn-font-serif: 'Source Serif 4', Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, monospace;
+}
+:root[data-trio="archivo"] {
+	--sn-font-sans:  'Archivo', system-ui, sans-serif;
+	--sn-font-serif: 'Newsreader', Georgia, serif;
+	--sn-font-mono:  'JetBrains Mono', ui-monospace, monospace;
+}
+:root[data-trio="plexcond"] {
+	--sn-font-sans:  'IBM Plex Sans Condensed', system-ui, sans-serif;
+	--sn-font-serif: 'IBM Plex Serif', Georgia, serif;
+	--sn-font-mono:  'IBM Plex Mono', ui-monospace, monospace;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   PREFERENCIAS DEL LECTOR
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Tamaño de fuente */
+:root[data-sn-font="small"]  { --sn-font-scale: .92; }
+:root[data-sn-font="medium"] { --sn-font-scale: 1; }
+:root[data-sn-font="large"]  { --sn-font-scale: 1.14; }
+
+/* Familia del cuerpo: default sans (cuerpo+UI sans, citas serif).
+   Al elegir "serif" se invierten los dos alias y, en cascada, todo lo que
+   los consume voltea a la vez. Las primitivas no se tocan. */
+:root[data-sn-family="serif"] {
+	--sn-font-text:  var(--sn-font-serif);
+	--sn-font-quote: var(--sn-font-sans);
+}
+
+/* Movimiento: la señal del SO apaga las transiciones (1ª clase). */
+@media (prefers-reduced-motion: reduce) {
+	:root { --sn-motion: 0; }
+}

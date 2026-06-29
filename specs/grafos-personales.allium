@@ -1,0 +1,786 @@
+-- allium: 3
+-- grafos-personales.allium
+
+-- Scope: Mapas conceptuales libres del investigador. Capa interpretativa
+-- donde se tejen relaciones propias entre conceptos, cruzando textos,
+-- ancorando ideas en el corpus local o añadiendo conceptos puramente
+-- del investigador. Un grafo personal puede referenciar Nodos de
+-- cualquier GrafoDerivado o ConceptoInvestigador de cualquier otro
+-- GrafoPersonal mediante referencias vivas: si el concepto fuente cambia,
+-- el grafo personal lo refleja automáticamente.
+--
+-- Includes:
+--   - GrafoPersonal: mapa libre del investigador (siempre mutable, sin estados)
+--   - ConceptoInvestigador: concepto propio enriquecible (definición, citas, aforismos)
+--   - ReferenciaConcepto: enlace vivo a un Nodo de grafo derivado o a un
+--     ConceptoInvestigador de otro grafo personal
+--   - RelacionInvestigador: vínculo tipado entre conceptos accesibles en el grafo;
+--     puede cruzar textos y grafos (ésa es la gracia del sistema)
+--   - Sugerencias del LLM a partir del corpus: el investigador selecciona qué acepta
+--   - Anotaciones libres sobre cualquier entidad del grafo personal
+--
+-- Excludes:
+--   - Grafos derivados de texto (viven en grafo.allium)
+--   - Extracción LLM de transcripciones (vive en extraccion.allium)
+--   - Validación de propuestas de extracción (vive en validacion.allium)
+--   - Visualización e interacción directa (viven en surfaces.allium)
+--
+-- Dependencies:
+--   grafo.allium         — Nodo (concepto validado de un grafo derivado)
+--   extraccion.allium    — TipoRelacion (vocabulario compartido de vínculos)
+
+use "./grafo.allium" as grafo
+use "./extraccion.allium" as extraccion
+
+
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
+
+value CitaPasaje {
+    texto: String
+    fuente: String?
+    -- fuente: título del texto de origen.
+    -- Si el texto pertenece al corpus local, el Nodo o la Transcripcion
+    -- de origen son accesibles a través de la referencia que lo contiene.
+}
+
+
+------------------------------------------------------------
+-- Entities
+------------------------------------------------------------
+
+-- ─── Grafo personal ───────────────────────────────────────
+
+-- El GrafoPersonal no tiene estados. Siempre está en proceso.
+-- El investigador añade, quita y conecta conceptos libremente.
+entity GrafoPersonal {
+    titulo: String
+    slug: String
+    descripcion: String?
+    creado_en: Timestamp
+    actualizado_en: Timestamp
+
+    -- Conceptos propios del investigador (creados en este grafo)
+    conceptos_propios: ConceptoInvestigador with grafo_origen = this
+
+    -- Referencias vivas a conceptos de otros grafos
+    referencias: ReferenciaConcepto with grafo = this
+
+    -- Relaciones entre cualquier concepto accesible en este grafo
+    relaciones: RelacionInvestigador with grafo = this
+
+    -- Sugerencias del LLM pendientes de aceptar o descartar
+    sugerencias: Sugerencia with grafo = this
+
+    -- Derived
+    sugerencias_pendientes: sugerencias where estado = pendiente
+    total_conceptos: conceptos_propios.count + referencias.count
+}
+
+
+-- ─── Concepto del investigador ────────────────────────────
+
+-- Un ConceptoInvestigador nace en un GrafoPersonal (su grafo_origen)
+-- pero puede ser referenciado como concepto vivo desde otros GrafosPersonales.
+entity ConceptoInvestigador {
+    label: String
+    definicion: String?
+    citas: List<CitaPasaje>
+    -- citas: aforismos que lo dibujan, pasajes de textos donde el concepto
+    --   acontece, citas de autor. Pueden provenir del corpus local o de fuentes externas.
+    grafo_origen: GrafoPersonal
+    creado_en: Timestamp
+    actualizado_en: Timestamp
+
+    -- Derived
+    enriquecido: definicion != null or citas.count > 0
+}
+
+
+-- ─── Referencia a concepto externo ───────────────────────
+
+-- Enlace vivo desde un GrafoPersonal hacia un concepto de otro grafo.
+-- El label y los atributos del concepto referenciado se leen desde el origen;
+-- cualquier cambio allí se refleja automáticamente aquí.
+--
+-- El concepto referenciado puede ser:
+--   (a) un Nodo de un GrafoDerivado — ancla a texto filosófico procesado
+--   (b) un ConceptoInvestigador de otro GrafoPersonal — teje grafos personales entre sí
+entity ReferenciaConcepto {
+    grafo: GrafoPersonal
+    agregada_en: Timestamp
+
+    -- Exactamente uno de los dos siguientes estará presente:
+    nodo_derivado: grafo/Nodo?
+    -- nodo_derivado: concepto materializado de un GrafoDerivado
+    concepto_investigador: ConceptoInvestigador?
+    -- concepto_investigador: concepto propio de OTRO GrafoPersonal (no el grafo_origen)
+
+    -- Derived
+    label_visible: nodo_derivado?.label ?? concepto_investigador?.label
+
+    invariant ExactamenteUnaFuente {
+        (nodo_derivado != null) != (concepto_investigador != null)
+    }
+
+    @guidance
+        -- Cuando nodo_derivado cambia de label (el investigador lo editó
+        -- en el panel de validación), label_visible se actualiza sin
+        -- intervención en el grafo personal.
+        -- Cuando concepto_investigador es enriquecido (nueva definición, nueva cita),
+        -- la referencia refleja el enriquecimiento actualizado.
+}
+
+
+-- ─── Relación del investigador ────────────────────────────
+
+-- Vínculo tipado entre dos conceptos accesibles en un GrafoPersonal.
+-- Los extremos pueden ser de grafos y fuentes distintas: ésa es la gracia.
+-- Un RelacionInvestigador puede conectar "Inactividad" (de vida-contemplativa)
+-- con "Disociación" (de esquizofrenia-digital) si ambos son accesibles en el grafo.
+entity RelacionInvestigador {
+    grafo: GrafoPersonal
+    tipo: extraccion/TipoRelacion
+    etiqueta: String
+    -- etiqueta: frase exacta del investigador que nombra el vínculo
+    bidireccional: Boolean
+    creada_en: Timestamp
+
+    -- Cada extremo es exactamente uno de: nodo derivado o concepto investigador
+    origen_nodo: grafo/Nodo?
+    origen_concepto: ConceptoInvestigador?
+    destino_nodo: grafo/Nodo?
+    destino_concepto: ConceptoInvestigador?
+
+    -- Derived
+    origen_label: origen_nodo?.label ?? origen_concepto?.label
+    destino_label: destino_nodo?.label ?? destino_concepto?.label
+
+    invariant OrigenExclusivo {
+        (origen_nodo != null) != (origen_concepto != null)
+    }
+    invariant DestinoExclusivo {
+        (destino_nodo != null) != (destino_concepto != null)
+    }
+    invariant NoAutorelacion {
+        not (origen_nodo != null and origen_nodo = destino_nodo)
+        and not (origen_concepto != null and origen_concepto = destino_concepto)
+    }
+
+    @guidance
+        -- Ambos extremos deben ser accesibles en el grafo: propios
+        -- (conceptos_propios) o referenciados (referencias). Las reglas
+        -- verifican la accesibilidad antes de crear la relación.
+}
+
+
+-- ─── Sugerencias del LLM ─────────────────────────────────
+
+-- El LLM analiza el corpus de grafos existentes y el estado actual del
+-- GrafoPersonal, luego propone conceptos y relaciones que el investigador
+-- aún no tiene en su mapa. El investigador recibe la lista como checkboxes
+-- y elige qué acepta. El control es siempre del investigador.
+entity Sugerencia {
+    grafo: GrafoPersonal
+    estado: pendiente | aceptada | descartada
+    creada_en: Timestamp
+    tipo: SugerenciaConcepto | SugerenciaRelacion
+
+    transitions estado {
+        pendiente -> aceptada
+        pendiente -> descartada
+        terminal: aceptada, descartada
+    }
+}
+
+variant SugerenciaConcepto : Sugerencia {
+    label_propuesto: String
+    descripcion_propuesta: String
+    nodo_origen: grafo/Nodo?
+    -- nodo_origen: si no es null, el LLM sugiere importar este Nodo existente
+    --   del corpus (se creará una ReferenciaConcepto al aceptar).
+    -- Si es null, el LLM propone un concepto enteramente nuevo
+    --   (se creará un ConceptoInvestigador con el label y descripción propuestos).
+}
+
+variant SugerenciaRelacion : Sugerencia {
+    tipo_propuesto: extraccion/TipoRelacion
+    etiqueta_propuesta: String
+
+    -- Extremos sugeridos (misma estructura que RelacionInvestigador)
+    origen_nodo: grafo/Nodo?
+    origen_concepto: ConceptoInvestigador?
+    destino_nodo: grafo/Nodo?
+    destino_concepto: ConceptoInvestigador?
+
+    invariant OrigenExclusivo {
+        (origen_nodo != null) != (origen_concepto != null)
+    }
+    invariant DestinoExclusivo {
+        (destino_nodo != null) != (destino_concepto != null)
+    }
+}
+
+
+-- ─── Anotaciones del investigador ────────────────────────
+
+entity AnotacionPersonal {
+    grafo: GrafoPersonal
+    texto: String
+    -- Referencia al objeto anotado (exactamente uno de los siguientes)
+    concepto_investigador: ConceptoInvestigador?
+    nodo_derivado: grafo/Nodo?
+    relacion: RelacionInvestigador?
+    creada_en: Timestamp
+    actualizada_en: Timestamp
+
+    invariant TieneReferencia {
+        concepto_investigador != null
+        or nodo_derivado != null
+        or relacion != null
+    }
+}
+
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    max_sugerencias_por_solicitud: Integer = 10
+    -- Límite de sugerencias que el LLM puede devolver en una sola invocación.
+    -- El investigador puede solicitar nuevas rondas si lo desea.
+}
+
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
+-- ════ Creación y gestión de grafos personales ═══════════
+
+rule CrearGrafoPersonal {
+    when: InvestigadorCreaGrafoPersonal(titulo, descripcion?)
+    requires: not exists GrafoPersonal{slug: slugify(titulo)}
+    ensures: GrafoPersonal.created(
+        titulo: titulo,
+        slug: slugify(titulo),
+        descripcion: descripcion,
+        creado_en: now,
+        actualizado_en: now
+    )
+}
+
+rule RenombrarGrafoPersonal {
+    when: InvestigadorRenombraGrafoPersonal(grafo, nuevo_titulo, nueva_descripcion?)
+    requires: exists grafo
+    requires: nuevo_titulo.trim() != ""
+    ensures:
+        grafo.titulo = nuevo_titulo.trim()
+        grafo.descripcion = nueva_descripcion ?? grafo.descripcion
+        grafo.actualizado_en = now
+}
+
+rule EliminarGrafoPersonal {
+    when: InvestigadorEliminaGrafoPersonal(grafo)
+    requires: not exists ReferenciaConcepto{concepto_investigador: any where grafo_origen = grafo}
+        -- No hay ConceptoInvestigador de este grafo referenciado por otro grafo personal
+    ensures:
+        not exists grafo
+        -- En cascada: todos los ConceptoInvestigador, RelacionInvestigador,
+        -- ReferenciaConcepto y AnotacionPersonal de este grafo son eliminados.
+}
+
+
+-- ════ Gestión de conceptos propios ══════════════════════
+
+rule AgregarConceptoPropio {
+    when: InvestigadorAgregaConcepto(grafo, label, definicion?)
+    ensures:
+        ConceptoInvestigador.created(
+            label: label,
+            definicion: definicion,
+            citas: [],
+            grafo_origen: grafo,
+            creado_en: now,
+            actualizado_en: now
+        )
+        grafo.actualizado_en = now
+}
+
+rule EnriquecerConcepto {
+    when: InvestigadorEnriqueceConcepto(concepto, nuevo_label?, nueva_definicion?, citas_nuevas?)
+    ensures:
+        if nuevo_label != null:
+            concepto.label = nuevo_label
+        if nueva_definicion != null:
+            concepto.definicion = nueva_definicion
+        if citas_nuevas != null:
+            for cita in citas_nuevas:
+                concepto.citas.add(cita)
+        concepto.actualizado_en = now
+        concepto.grafo_origen.actualizado_en = now
+
+    @guidance
+        -- El investigador puede dar sustancia a un concepto puro en cualquier
+        -- momento: añadir una definición propia, aforismos que lo dibujen,
+        -- o pasajes de textos (del corpus o externos) donde el concepto acontece.
+}
+
+rule EliminarConceptoPropio {
+    when: InvestigadorEliminaConcepto(concepto)
+    requires: not exists RelacionInvestigador{origen_concepto: concepto}
+    requires: not exists RelacionInvestigador{destino_concepto: concepto}
+    requires: not exists ReferenciaConcepto{concepto_investigador: concepto}
+    ensures:
+        not exists concepto
+        concepto.grafo_origen.actualizado_en = now
+}
+
+
+-- ════ Importar conceptos de otros grafos ════════════════
+
+rule ImportarNodoDerivado {
+    when: InvestigadorImportaNodo(grafo, nodo)
+    requires: not exists ReferenciaConcepto{grafo: grafo, nodo_derivado: nodo}
+    ensures:
+        ReferenciaConcepto.created(
+            grafo: grafo,
+            nodo_derivado: nodo,
+            concepto_investigador: null,
+            agregada_en: now
+        )
+        grafo.actualizado_en = now
+}
+
+rule ImportarConceptoDeOtroGrafoPersonal {
+    when: InvestigadorImportaConcepto(grafo, concepto)
+    requires: concepto.grafo_origen != grafo
+    requires: not exists ReferenciaConcepto{grafo: grafo, concepto_investigador: concepto}
+    ensures:
+        ReferenciaConcepto.created(
+            grafo: grafo,
+            nodo_derivado: null,
+            concepto_investigador: concepto,
+            agregada_en: now
+        )
+        grafo.actualizado_en = now
+}
+
+rule EliminarReferencia {
+    when: InvestigadorEliminaReferencia(referencia)
+    requires: not exists RelacionInvestigador{
+        origen_nodo: referencia.nodo_derivado,
+        grafo: referencia.grafo
+    }
+    requires: not exists RelacionInvestigador{
+        destino_nodo: referencia.nodo_derivado,
+        grafo: referencia.grafo
+    }
+    requires: not exists RelacionInvestigador{
+        origen_concepto: referencia.concepto_investigador,
+        grafo: referencia.grafo
+    }
+    requires: not exists RelacionInvestigador{
+        destino_concepto: referencia.concepto_investigador,
+        grafo: referencia.grafo
+    }
+    ensures:
+        not exists referencia
+        referencia.grafo.actualizado_en = now
+
+    @guidance
+        -- No se puede eliminar una referencia si hay relaciones que la usan
+        -- como extremo. El investigador debe eliminar las relaciones antes.
+}
+
+
+-- ════ Relaciones del investigador ═══════════════════════
+
+rule CrearRelacionEntreConcepotosDerivados {
+    when: InvestigadorConectaNodos(grafo, origen, destino, tipo, etiqueta, bidireccional)
+    requires: exists ReferenciaConcepto{grafo: grafo, nodo_derivado: origen}
+              or exists ConceptoInvestigador{grafo_origen: grafo}
+    -- Simplificado: las reglas de accesibilidad se capturan en ConceptoAccesible (deferred)
+    requires: ConceptoAccesible(grafo, origen_nodo: origen)
+    requires: ConceptoAccesible(grafo, destino_nodo: destino)
+    requires: origen != destino
+    ensures:
+        RelacionInvestigador.created(
+            grafo: grafo,
+            tipo: tipo,
+            etiqueta: etiqueta,
+            bidireccional: bidireccional,
+            origen_nodo: origen,
+            origen_concepto: null,
+            destino_nodo: destino,
+            destino_concepto: null,
+            creada_en: now
+        )
+        grafo.actualizado_en = now
+}
+
+rule CrearRelacionEntreConceptosInvestigador {
+    when: InvestigadorConectaConceptos(grafo, origen, destino, tipo, etiqueta, bidireccional)
+    requires: ConceptoAccesible(grafo, origen_concepto: origen)
+    requires: ConceptoAccesible(grafo, origen_concepto: destino)
+    requires: origen != destino
+    ensures:
+        RelacionInvestigador.created(
+            grafo: grafo,
+            tipo: tipo,
+            etiqueta: etiqueta,
+            bidireccional: bidireccional,
+            origen_nodo: null,
+            origen_concepto: origen,
+            destino_nodo: null,
+            destino_concepto: destino,
+            creada_en: now
+        )
+        grafo.actualizado_en = now
+}
+
+rule CrearRelacionMixta {
+    -- Un extremo es un Nodo derivado, el otro es un ConceptoInvestigador.
+    -- Éste es el caso que convierte el grafo personal en tejido conectivo entre textos.
+    when: InvestigadorConectaMixto(grafo, origen_nodo, destino_concepto, tipo, etiqueta, bidireccional)
+    requires: ConceptoAccesible(grafo, origen_nodo: origen_nodo)
+    requires: ConceptoAccesible(grafo, origen_concepto: destino_concepto)
+    ensures:
+        RelacionInvestigador.created(
+            grafo: grafo,
+            tipo: tipo,
+            etiqueta: etiqueta,
+            bidireccional: bidireccional,
+            origen_nodo: origen_nodo,
+            origen_concepto: null,
+            destino_nodo: null,
+            destino_concepto: destino_concepto,
+            creada_en: now
+        )
+        grafo.actualizado_en = now
+
+    @guidance
+        -- La versión simétrica (origen_concepto, destino_nodo) se cubre
+        -- con el mismo trigger con parámetros intercambiados.
+}
+
+rule EditarRelacion {
+    when: InvestigadorEditaRelacion(relacion, tipo?, etiqueta?, bidireccional?)
+    ensures:
+        relacion.tipo = tipo ?? relacion.tipo
+        relacion.etiqueta = etiqueta ?? relacion.etiqueta
+        relacion.bidireccional = bidireccional ?? relacion.bidireccional
+        relacion.grafo.actualizado_en = now
+}
+
+rule EliminarRelacion {
+    when: InvestigadorEliminaRelacion(relacion)
+    ensures:
+        not exists relacion
+        relacion.grafo.actualizado_en = now
+}
+
+
+-- ════ Anotaciones ════════════════════════════════════════
+
+rule AnotarEnGrafoPersonal {
+    when: InvestigadorAnotaEnPersonal(grafo, texto, concepto_investigador?, nodo_derivado?, relacion?)
+    ensures: AnotacionPersonal.created(
+        grafo: grafo,
+        texto: texto,
+        concepto_investigador: concepto_investigador,
+        nodo_derivado: nodo_derivado,
+        relacion: relacion,
+        creada_en: now,
+        actualizada_en: now
+    )
+}
+
+rule EditarAnotacion {
+    when: InvestigadorEditaAnotacion(anotacion, nuevo_texto)
+    ensures:
+        anotacion.texto = nuevo_texto
+        anotacion.actualizada_en = now
+}
+
+
+-- ════ Sugerencias del corpus vía LLM ════════════════════
+
+rule SolicitarSugerencias {
+    when: InvestigadorSolicitaSugerencias(grafo)
+    ensures: SugerenciasIniciadas(grafo)
+
+    @guidance
+        -- El LLM recibe el corpus completo de GrafosDerivados (publicados o
+        -- en revisión) y el estado actual del GrafoPersonal (conceptos propios
+        -- y referencias). Propone hasta config.max_sugerencias_por_solicitud
+        -- items: conceptos aún no presentes y relaciones entre conceptos que
+        -- ya están en el mapa. El investigador las recibe como lista de
+        -- checkboxes y elige qué acepta; las demás se descartan.
+        -- El investigador puede solicitar nuevas rondas de sugerencias.
+}
+
+rule ProcesarSugerencias {
+    when: SugerenciasCompletadas(grafo, propuestas_crudas)
+    let propuestas = ParsearSugerencias(propuestas_crudas)
+    for p in propuestas:
+        ensures:
+            if p.tipo = SugerenciaConcepto:
+                SugerenciaConcepto.created(
+                    grafo: grafo,
+                    estado: pendiente,
+                    creada_en: now,
+                    label_propuesto: p.label,
+                    descripcion_propuesta: p.descripcion,
+                    nodo_origen: p.nodo_origen
+                )
+            else:
+                SugerenciaRelacion.created(
+                    grafo: grafo,
+                    estado: pendiente,
+                    creada_en: now,
+                    tipo_propuesto: p.tipo_relacion,
+                    etiqueta_propuesta: p.etiqueta,
+                    origen_nodo: p.origen_nodo,
+                    origen_concepto: p.origen_concepto,
+                    destino_nodo: p.destino_nodo,
+                    destino_concepto: p.destino_concepto
+                )
+}
+
+rule AceptarSugerenciaConcepto {
+    when: InvestigadorAceptaSugerencia(sugerencia)
+    requires: sugerencia.estado = pendiente
+    requires: sugerencia.tipo = SugerenciaConcepto
+    ensures:
+        sugerencia.estado = aceptada
+        if sugerencia.nodo_origen != null:
+            -- El LLM sugiere importar un Nodo existente del corpus
+            ReferenciaConcepto.created(
+                grafo: sugerencia.grafo,
+                nodo_derivado: sugerencia.nodo_origen,
+                concepto_investigador: null,
+                agregada_en: now
+            )
+        else:
+            -- El LLM propone un concepto nuevo para el investigador
+            ConceptoInvestigador.created(
+                label: sugerencia.label_propuesto,
+                definicion: sugerencia.descripcion_propuesta,
+                citas: [],
+                grafo_origen: sugerencia.grafo,
+                creado_en: now,
+                actualizado_en: now
+            )
+        sugerencia.grafo.actualizado_en = now
+}
+
+rule AceptarSugerenciaRelacion {
+    when: InvestigadorAceptaSugerencia(sugerencia)
+    requires: sugerencia.estado = pendiente
+    requires: sugerencia.tipo = SugerenciaRelacion
+    ensures:
+        sugerencia.estado = aceptada
+        RelacionInvestigador.created(
+            grafo: sugerencia.grafo,
+            tipo: sugerencia.tipo_propuesto,
+            etiqueta: sugerencia.etiqueta_propuesta,
+            bidireccional: false,
+            origen_nodo: sugerencia.origen_nodo,
+            origen_concepto: sugerencia.origen_concepto,
+            destino_nodo: sugerencia.destino_nodo,
+            destino_concepto: sugerencia.destino_concepto,
+            creada_en: now
+        )
+        sugerencia.grafo.actualizado_en = now
+}
+
+rule DescartarSugerencia {
+    when: InvestigadorDescartaSugerencia(sugerencia)
+    requires: sugerencia.estado = pendiente
+    ensures: sugerencia.estado = descartada
+}
+
+rule DescartarTodasLasSugerencias {
+    when: InvestigadorDescartaTodasSugerencias(grafo)
+    for s in grafo.sugerencias_pendientes:
+        ensures: s.estado = descartada
+}
+
+
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
+
+invariant ReferenciaNoAutopropia {
+    for ref in ReferenciaConceptos:
+        ref.concepto_investigador = null
+        or ref.concepto_investigador.grafo_origen != ref.grafo
+    -- Un grafo no se referencia a sí mismo: sus propios ConceptoInvestigador
+    -- se acceden directamente a través de GrafoPersonal.conceptos_propios.
+}
+
+invariant LabelVisibleSiemprePresente {
+    for ref in ReferenciaConceptos:
+        ref.label_visible != null
+}
+
+invariant RelacionUsaConceptosAccesibles {
+    for r in RelacionInvestigadors:
+        -- El origen es accesible en el grafo
+        (r.origen_nodo != null implies
+            exists ReferenciaConcepto{grafo: r.grafo, nodo_derivado: r.origen_nodo})
+        and
+        (r.origen_concepto != null implies
+            (r.origen_concepto.grafo_origen = r.grafo
+            or exists ReferenciaConcepto{grafo: r.grafo, concepto_investigador: r.origen_concepto}))
+        -- El destino es accesible en el grafo
+        and (r.destino_nodo != null implies
+            exists ReferenciaConcepto{grafo: r.grafo, nodo_derivado: r.destino_nodo})
+        and (r.destino_concepto != null implies
+            (r.destino_concepto.grafo_origen = r.grafo
+            or exists ReferenciaConcepto{grafo: r.grafo, concepto_investigador: r.destino_concepto}))
+}
+
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface EditorGrafoPersonal {
+    -- Panel de edición del grafo personal: conceptos, referencias y relaciones.
+    facing investigador: Investigador
+    context grafo: GrafoPersonal
+
+    exposes:
+        grafo.titulo
+        grafo.descripcion
+        grafo.total_conceptos
+        grafo.sugerencias_pendientes.count
+        grafo.actualizado_en
+        for c in grafo.conceptos_propios:
+            c.label
+            c.definicion
+            c.citas
+            c.enriquecido
+        for ref in grafo.referencias:
+            ref.label_visible
+            ref.nodo_derivado
+            ref.concepto_investigador
+            ref.agregada_en
+        for r in grafo.relaciones:
+            r.tipo
+            r.etiqueta
+            r.bidireccional
+            r.origen_label
+            r.destino_label
+        for s in grafo.sugerencias_pendientes:
+            s.tipo
+            s.tipo = SugerenciaConcepto
+            s.tipo = SugerenciaRelacion
+
+    provides:
+        InvestigadorAgregaConcepto(investigador, grafo, label, definicion?)
+        InvestigadorEnriqueceConcepto(investigador, concepto, nuevo_label?, nueva_definicion?, citas_nuevas?)
+        InvestigadorEliminaConcepto(investigador, concepto)
+        InvestigadorImportaNodo(investigador, grafo, nodo)
+        InvestigadorImportaConcepto(investigador, grafo, concepto)
+        InvestigadorEliminaReferencia(investigador, referencia)
+        InvestigadorConectaNodos(investigador, grafo, origen, destino, tipo, etiqueta, bidireccional)
+        InvestigadorConectaConceptos(investigador, grafo, origen, destino, tipo, etiqueta, bidireccional)
+        InvestigadorConectaMixto(investigador, grafo, origen_nodo, destino_concepto, tipo, etiqueta, bidireccional)
+        InvestigadorEditaRelacion(investigador, relacion, tipo?, etiqueta?, bidireccional?)
+        InvestigadorEliminaRelacion(investigador, relacion)
+        InvestigadorAnotaEnPersonal(investigador, grafo, texto, concepto_investigador?, nodo_derivado?, relacion?)
+        InvestigadorSolicitaSugerencias(investigador, grafo)
+        InvestigadorAceptaSugerencia(investigador, sugerencia)
+        InvestigadorDescartaSugerencia(investigador, sugerencia)
+        InvestigadorDescartaTodasSugerencias(investigador, grafo)
+        InvestigadorRenombraGrafoPersonal(investigador, grafo, nuevo_titulo, nueva_descripcion?)
+        InvestigadorEliminaGrafoPersonal(investigador, grafo)
+            when not exists ReferenciaConcepto{concepto_investigador: any where grafo_origen = grafo}
+
+    @guarantee InvestigadorControlaTodo
+        -- El LLM sólo propone. Ninguna sugerencia se incorpora al grafo
+        -- personal sin acción explícita del investigador. Las sugerencias
+        -- permanecen en estado pendiente hasta que el investigador actúa.
+
+    related:
+        VisualizacionGrafoPersonal(grafo)
+}
+
+surface VisualizacionGrafoPersonal {
+    -- Vista de exploración interactiva del grafo personal (D3 o similar).
+    facing investigador: Investigador
+    context grafo: GrafoPersonal
+
+    exposes:
+        grafo.titulo
+        grafo.actualizado_en
+        -- Nodos: mezcla de conceptos propios y referenciados
+        for c in grafo.conceptos_propios:
+            c.label
+            c.enriquecido
+        for ref in grafo.referencias:
+            ref.label_visible
+            ref.nodo_derivado?.descripcion_corta
+            ref.nodo_derivado?.contexto_primera_aparicion
+        -- Aristas
+        for r in grafo.relaciones:
+            r.tipo
+            r.etiqueta
+            r.bidireccional
+            r.origen_label
+            r.destino_label
+
+    provides:
+        InvestigadorConectaNodos(investigador, grafo, origen, destino, tipo, etiqueta, bidireccional)
+        InvestigadorConectaConceptos(investigador, grafo, origen, destino, tipo, etiqueta, bidireccional)
+        InvestigadorConectaMixto(investigador, grafo, origen_nodo, destino_concepto, tipo, etiqueta, bidireccional)
+        InvestigadorAnotaEnPersonal(investigador, grafo, texto, concepto_investigador?, nodo_derivado?, relacion?)
+
+    @guidance
+        -- La manipulación directa por drag entre nodos debe despachar
+        -- el trigger InvestigadorConectaX correspondiente según el tipo
+        -- de los nodos conectados. El tipo de relación y la etiqueta
+        -- se capturan en un modal antes de confirmar.
+
+    related:
+        EditorGrafoPersonal(grafo)
+}
+
+
+------------------------------------------------------------
+-- Deferred Specifications
+------------------------------------------------------------
+
+deferred ConceptoAccesible(grafo: GrafoPersonal, origen_nodo: grafo/Nodo?) -> Boolean
+    -- Ver: grafos-personales/accesibilidad.allium
+    -- True si el nodo es accesible en el grafo personal:
+    -- existe ReferenciaConcepto{grafo, nodo_derivado: nodo}.
+
+deferred ConceptoAccesible(grafo: GrafoPersonal, origen_concepto: ConceptoInvestigador?) -> Boolean
+    -- True si el concepto es accesible en el grafo personal:
+    -- su grafo_origen = grafo (propio) o existe ReferenciaConcepto{grafo, concepto_investigador: concepto}.
+
+deferred ParsearSugerencias(propuestas_crudas: String) -> List<Any>
+    -- Ver: grafos-personales/sugerencias-parser.allium
+    -- Interpreta el output JSON del LLM y retorna propuestas tipadas.
+    -- Tolerante a respuestas parciales o malformadas.
+
+
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
+
+open question "Cuando el investigador acepta una SugerenciaConcepto nueva (nodo_origen = null), ¿el LLM debe sugerir también desde qué texto del corpus podría enriquecerse ese concepto, o el enriquecimiento siempre queda al criterio del investigador?"
+
+open question "¿Un GrafoPersonal puede ser referenciado desde otro GrafoPersonal (referenciar el grafo completo, no sólo un ConceptoInvestigador)? Actualmente sólo se referencian conceptos individuales."
+
+open question "¿Hay un mecanismo de 'buscar concepto en corpus' distinto de las sugerencias del LLM? El investigador puede querer buscar un Nodo específico por label para importarlo manualmente."
+
+open question "Las RelacionInvestigador usan el mismo TipoRelacion que las extracciones. ¿El investigador puede crear tipos de relación propios, o el vocabulario tipado es cerrado?"
+
+open question "Cuando se elimina un Nodo de un GrafoDerivado (tras re-extracción), ¿qué sucede con las ReferenciaConcepto que apuntan a él? ¿Se marcan como huérfanas, se eliminan en cascada, o el grafo personal lo muestra como concepto perdido?"

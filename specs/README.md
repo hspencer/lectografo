@@ -1,12 +1,12 @@
-# Specs de Llull en Allium v3
+# Specs de Lectógrafo en Allium v3
 
-Esta carpeta contiene la especificacion de comportamiento de Llull en lenguaje Allium. Allium describe que hace el sistema y bajo que condiciones, sin prescribir como esta implementado [^1].
+Esta carpeta contiene la especificacion de comportamiento de Lectógrafo en lenguaje Allium. Allium describe que hace el sistema y bajo que condiciones, sin prescribir como esta implementado [^1].
 
 ## Orden de lectura
 
 ```mermaid
 flowchart TD
-    L[llull.allium<br/>raiz, config, invariantes globales]
+    L[lectografo.allium<br/>raiz, config, invariantes globales]
     T[transcripcion.allium<br/>ingesta y normalizacion]
     E[extraccion.allium<br/>propuesta del LLM]
     V[validacion.allium<br/>refinamiento humano]
@@ -21,7 +21,7 @@ flowchart TD
     L --> S
 ```
 
-1. `llull.allium` para entender el alcance y la configuracion global.
+1. `lectografo.allium` para entender el alcance y la configuracion global.
 2. `transcripcion.allium` para el ciclo de vida del texto.
 3. `extraccion.allium` para la propuesta cruda del LLM.
 4. `validacion.allium` para el flujo de decisiones del investigador.

@@ -1,0 +1,55 @@
+{
+  "id": "rec_5f0ffda8",
+  "slug": "situacion-y-constelacion",
+  "propuestas": [
+    {
+      "id": "pr_000",
+      "conexion": {
+        "id": "cp_000",
+        "origen_id": "c_011",
+        "destino_id": "c_004",
+        "frase": "La resonancia permite conectar genuinamente con la situación y sus factores holísticos",
+        "tipo": "permite conexión situacional",
+        "confianza": 0.92
+      },
+      "frase_editada": "La resonancia permite conectar genuinamente con la situación y sus factores holísticos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_001",
+      "conexion": {
+        "id": "cp_001",
+        "origen_id": "c_011",
+        "destino_id": "c_015",
+        "frase": "La resonancia en la acción genera energía interior y evita el agotamiento de la ejecución",
+        "tipo": "revitaliza energía emocional",
+        "confianza": 0.88
+      },
+      "frase_editada": "La resonancia en la acción genera energía interior y evita el agotamiento de la ejecución",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_002",
+      "conexion": {
+        "id": "cp_002",
+        "origen_id": "c_011",
+        "destino_id": "c_006",
+        "frase": "Los actores generan resonancia mediante su juicio propio y tacto en situaciones complejas",
+        "tipo": "vincula actor con situación vía resonancia",
+        "confianza": 0.9
+      },
+      "frase_editada": "Los actores generan resonancia mediante su juicio propio y tacto en situaciones complejas",
+      "seleccionada": true,
+      "estado": "aceptada"
+    }
+  ],
+  "estado": "completada",
+  "razon_falla": null,
+  "iniciada_en": "2026-06-29T04:43:56.275100",
+  "completada_en": "2026-06-29T13:58:07.394155",
+  "nodos_sueltos_ids": [
+    "c_011"
+  ]
+}

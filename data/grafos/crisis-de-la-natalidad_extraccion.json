@@ -1,0 +1,411 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "Crisis mundial de fertilidad",
+      "descripcion": "El fenómeno central del texto que describe la caída global y acelerada de las tasas de natalidad en todas partes.",
+      "sinonimos_candidatos": [
+        "baja de la fertilidad",
+        "colapso demográfico"
+      ],
+      "menciones": 25,
+      "confianza": 0.98,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"LA CRISIS MUNDIAL DE FERTILIDAD ES PEOR DE LO QUE PIENSAS\""
+    },
+    {
+      "id": "c_002",
+      "label": "Tasa de reemplazo demográfico",
+      "descripcion": "El umbral teórico (aproximadamente 2.1 hijos por mujer) necesario para mantener una población constante a largo plazo.",
+      "sinonimos_candidatos": [
+        "nivel de reemplazo"
+      ],
+      "menciones": 8,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"por cada mujer en esa población se necesitan 2.1 hijos\""
+    },
+    {
+      "id": "c_003",
+      "label": "Ansiedad existencial moderna",
+      "descripcion": "La sensación de incertumbre y tristeza global que impide a los jóvenes asumir el compromiso irreversible de tener un hijo.",
+      "sinonimos_candidatos": [
+        "melancolía existencial del siglo XXI"
+      ],
+      "menciones": 6,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"la generación actual está demasiado ansiosa por el futuro como para asumir el compromiso irreversible de tener un hijo\""
+    },
+    {
+      "id": "c_004",
+      "label": "Inteligencia artificial y tecnología",
+      "descripcion": "Factores tecnológicos citados tanto como causa posible o distracción del fenómeno demográfico.",
+      "sinonimos_candidatos": [
+        "teléfonos inteligentes",
+        "redes sociales"
+      ],
+      "menciones": 12,
+      "confianza": 0.8,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"Algunos culpan al obsesivo consumo de tecnología, redes sociales e inteligencia artificial\""
+    },
+    {
+      "id": "c_005",
+      "label": "Empoderamiento femenino",
+      "descripcion": "El aumento del control sobre los cuerpos y el futuro económico de las mujeres que reduce la tasa fecundidad.",
+      "sinonimos_candidatos": [
+        "feminismo empoderado"
+      ],
+      "menciones": 9,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"las nociones modernas del feminismo empoderaron a las mujeres para que tengan un mayor control sobre sus cuerpos\""
+    },
+    {
+      "id": "c_006",
+      "label": "Precios de la vivienda",
+      "descripcion": "El factor económico crítico donde los máximos históricos limitan el acceso y la capacidad económica para tener hijos.",
+      "sinonimos_candidatos": [
+        "acceso a la casa"
+      ],
+      "menciones": 5,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"los precios de la vivienda se encuentran en máximos históricos en relación con su valor relativo\""
+    },
+    {
+      "id": "c_007",
+      "label": "Seguridad social pública",
+      "descripcion": "El sistema que depende del número de trabajadores activos para sostener pensiones y salud, amenazado por el descenso poblacional.",
+      "sinonimos_candidatos": [
+        "prestaciones de jubilación"
+      ],
+      "menciones": 7,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"Todo lo relacionado con las prestaciones de jubilación... va a suponer un coste enorme si la tasa de fecundidad se sigue desplomando\""
+    },
+    {
+      "id": "c_008",
+      "label": "Inmigración masiva",
+      "descripcion": "La solución propuesta para sostener el sistema social que a menudo genera reacciones políticas no deseadas.",
+      "sinonimos_candidatos": [
+        "importar gente"
+      ],
+      "menciones": 6,
+      "confianza": 0.89,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"si hay escasez de personas, hay que importar gente\""
+    },
+    {
+      "id": "c_009",
+      "label": "Populismo político de derecha",
+      "descripcion": "La reacción política observada en Europa y otros lugares ante la inmigración o el declive demográfico.",
+      "sinonimos_candidatos": [
+        "voto a la extrema derecha"
+      ],
+      "menciones": 5,
+      "confianza": 0.82,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"una reacción populista en toda Europa\""
+    },
+    {
+      "id": "c_010",
+      "label": "Economía de servicios",
+      "descripcion": "La estructura económica actual que facilita el trabajo femenino fuera del hogar y reduce la necesidad tradicional de hijos.",
+      "sinonimos_candidatos": [
+        "trabajos en tiendas y oficinas"
+      ],
+      "menciones": 4,
+      "confianza": 0.75,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"hemos evolucionado hacia una economía mucho más basada en los servicios\""
+    },
+    {
+      "id": "c_011",
+      "label": "Carrera armamentística educativa",
+      "descripcion": "La necesidad de títulos superiores que retrasa la formación familiar y reduce el tiempo para tener hijos.",
+      "sinonimos_candidatos": [
+        "presión académica"
+      ],
+      "menciones": 3,
+      "confianza": 0.78,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"está lo que Fernández Villaverde llama la carrera armamentística educativa\""
+    },
+    {
+      "id": "c_012",
+      "label": "Redes sociales e internet",
+      "descripcion": "Medios de comunicación globalizadores que homogeneizan valores occidentales y cambian percepciones culturales.",
+      "sinonimos_candidatos": [
+        "TikTok"
+      ],
+      "menciones": 8,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"las redes sociales y los teléfonos móviles, que han permitido conocer masivamente las formas de vida de otros países\""
+    },
+    {
+      "id": "c_013",
+      "label": "Inercia demográfica",
+      "descripcion": "El fenómeno estadístico donde la población sigue creciendo temporalmente aunque la fertilidad haya caído por debajo del reemplazo.",
+      "sinonimos_candidatos": [
+        "efecto inercial"
+      ],
+      "menciones": 4,
+      "confianza": 0.86,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"eso es producto del efecto conocido como inercia demográfica\""
+    },
+    {
+      "id": "c_014",
+      "label": "Identidad cultural y lengua",
+      "descripcion": "El riesgo de desaparición de lenguas regionales o identidades nacionales debido a la inmigración masiva.",
+      "sinonimos_candidatos": [
+        "lengua condenada"
+      ],
+      "menciones": 4,
+      "confianza": 0.83,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"el catalán está condenado como lengua, dejará de existir\""
+    },
+    {
+      "id": "c_015",
+      "label": "Trampa política demográfica",
+      "descripcion": "La situación donde no hay solución popular a largo plazo: inmigración genera populismo o recortes sociales generan reacción adversa.",
+      "sinonimos_candidatos": [
+        "escenario sin salida"
+      ],
+      "menciones": 2,
+      "confianza": 0.79,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "\"te encuentras en un escenario donde no existe una solución popular a largo plazo para los problemas políticos\""
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "se_mide_por_medio_de",
+      "etiqueta": "tasa de reemplazo",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "\"La realidad actual es que la tasa de fecundidad total ha caído por debajo del nivel de reemplaso\"",
+      "matiz": null,
+      "contexto": "párrafo sobre definición técnica"
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "provoca_o_refleja",
+      "etiqueta": "ansiedad existencial",
+      "bidireccional": true,
+      "confianza": 0.85,
+      "frase_completa": "\"la generación actual está demasiado ansiosa por el futuro como para asumir el compromiso irreversible de tener un hijo\"",
+      "matiz": null,
+      "contexto": "párrafo sobre causas"
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_001",
+      "destino_id": "c_004",
+      "tipo": "se_atribuye_a_veces_como_causa_de",
+      "etiqueta": "consumo de tecnología",
+      "bidireccional": false,
+      "confianza": 0.75,
+      "frase_completa": "\"Algunos culpan al obsesivo consumo de tecnología...\"",
+      "matiz": null,
+      "contexto": "párrafo sobre culpables"
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_001",
+      "destino_id": "c_005",
+      "tipo": "reduce_la_tasa_de",
+      "etiqueta": "empoderamiento femenino",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "\"la capacidad... para tomar decisiones sobre la propia fertilidad han reducido en numerosos países la tasa\"",
+      "matiz": null,
+      "contexto": "párrafo de resumen"
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_001",
+      "destino_id": "c_006",
+      "tipo": "limitado_por_el_acceso_a_la",
+      "etiqueta": "precios de vivienda",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "\"los precios de la vivienda se encuentran en máximos históricos... lo que dificulta su acceso\"",
+      "matiz": null,
+      "contexto": "párrafo sobre factores"
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_012",
+      "destino_id": "c_005",
+      "tipo": "transformó_la_percepción_de",
+      "etiqueta": "redes sociales y feminismo occidental",
+      "bidireccional": false,
+      "confianza": 0.89,
+      "frase_completa": "\"las redes sociales han transformado por completo esta percepción\"",
+      "matiz": null,
+      "contexto": "párrafo sobre globalización"
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_012",
+      "destino_id": "c_004",
+      "tipo": "es_una_forma_de_decirlo",
+      "etiqueta": "teléfonos e internet",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "\"internet, TikTok y otras redes son un mundo aparte\"",
+      "matiz": null,
+      "contexto": "párrafo sobre medios"
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_010",
+      "destino_id": "c_005",
+      "tipo": "facilitó_el_acceso_a_trabajos_para_las_mujeres_en",
+      "etiqueta": "economía de servicios",
+      "bidireccional": false,
+      "confianza": 0.78,
+      "frase_completa": "\"Estos son trabajos mucho más accesibles para las mujeres\"",
+      "matiz": null,
+      "contexto": "párrafo sobre economía"
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_011",
+      "destino_id": "c_003",
+      "tipo": "contribuye_a_la_incertumbre_de",
+      "etiqueta": "educación superior y presión académica",
+      "bidireccional": false,
+      "confianza": 0.76,
+      "frase_completa": "\"Esto lleva a que las personas se casen o formen pareja mucho más tarde\"",
+      "matiz": null,
+      "contexto": "párrafo sobre educación"
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_007",
+      "destino_id": "c_008",
+      "tipo": "requiere_para_sostenerse_mediante_la",
+      "etiqueta": "inmigración o recortes",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "\"¿De dónde provienen esos ingresos? Provienen de la gente... si hay escasez de personas, hay que importar gente\"",
+      "matiz": null,
+      "contexto": "párrafo sobre seguridad social"
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_008",
+      "destino_id": "c_009",
+      "tipo": "genera_una_reacción_de",
+      "etiqueta": "populismo de derecha",
+      "bidireccional": false,
+      "confianza": 0.82,
+      "frase_completa": "\"prácticamente todos los países que permiten un aumento súbito de la migración extranjera... casi siempre sufren una reacción populista\"",
+      "matiz": null,
+      "contexto": "párrafo sobre política"
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_007",
+      "destino_id": "c_015",
+      "tipo": "conduce_a_una_trampa_de",
+      "etiqueta": "seguridad social vs inmigración",
+      "bidireccional": false,
+      "confianza": 0.87,
+      "frase_completa": "\"te encuentras en un escenario donde no existe una solución popular a largo plazo para los problemas políticos\"",
+      "matiz": null,
+      "contexto": "párrafo sobre trampa"
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_002",
+      "destino_id": "c_014",
+      "tipo": "amenaza_la_existencia_de",
+      "etiqueta": "identidad cultural y lengua",
+      "bidireccional": false,
+      "confianza": 0.83,
+      "frase_completa": "\"el catalán está condenado como lengua, dejará de existir\"",
+      "matiz": null,
+      "contexto": "párrafo sobre Cataluña"
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_013",
+      "destino_id": "c_007",
+      "tipo": "permite_el_crecimiento_temporal_de_la_población_a_pesar_del_descenso_en",
+      "etiqueta": "inercia demográfica y seguridad social",
+      "bidireccional": false,
+      "confianza": 0.86,
+      "frase_completa": "\"la población seguirá creciendo durante 15 o 30 años después de que se haya perforado la tasa de reemplaso\"",
+      "matiz": null,
+      "contexto": "párrafo sobre inercia"
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_004",
+      "destino_id": "c_012",
+      "tipo": "es_una_forma_de_decirlo",
+      "etiqueta": "tecnología e internet",
+      "bidireccional": true,
+      "confianza": 0.85,
+      "frase_completa": "\"Todo lo demás es irrelevante... Una vez que empiezas a pensar en estas cosas\"",
+      "matiz": null,
+      "contexto": "párrafo introductorio"
+    }
+  ],
+  "bucles": [
+    {
+      "id": "b_001",
+      "nodos_ids": [
+        "c_007",
+        "c_008",
+        "c_009"
+      ],
+      "descripcion": "Ciclo político donde la baja natalidad presiona el sistema social, forzando inmigración que a su vez genera populismo y descontento.",
+      "tipo": "fundamental"
+    },
+    {
+      "id": "b_002",
+      "nodos_ids": [
+        "c_013",
+        "c_007"
+      ],
+      "descripcion": "La inercia demográfica retrasa el colapso de la seguridad social, pero eventualmente ambos convergen en crisis.",
+      "tipo": "contingente"
+    }
+  ],
+  "metalenguaje": [
+    {
+      "id": "m_001",
+      "tipo": "definicion_sobre_el_vuelo",
+      "contexto": "párrafo explicando el concepto técnico",
+      "texto": "\"Para entender el concepto de tasa de reemplazo, imaginemos una población determinada. ¿Cuántos hijos deben nacer para que esa población se mantenga constante a largo plazo... El resultado es que por cada mujer en esa población se necesitan 2.1 hijos\"",
+      "conceptos_afectados_ids": [
+        "c_002"
+      ],
+      "nota": "El autor define explícitamente el término técnico antes de usarlo para argumentar."
+    },
+    {
+      "id": "m_002",
+      "tipo": "refinamiento_de_uso",
+      "contexto": "párrafo sobre la naturaleza del fenómeno",
+      "texto": "\"La baja de la fertilidad se trata de un fenómeno que se comporta como una placa tectónica. Su movimiento provoca un sismo en otros aspectos de la sociedad\"",
+      "conceptos_afectados_ids": [
+        "c_001"
+      ],
+      "nota": "Metáfora conceptual para explicar el impacto sistémico del concepto."
+    }
+  ]
+}

@@ -1,0 +1,702 @@
+{
+  "titulo": "Retrotopía",
+  "slug": "retrotopia",
+  "extraccion": {
+    "conceptos": [
+      {
+        "id": "c_001",
+        "label": "Retrotopía",
+        "tipo": "primitivo",
+        "descripcion": "Concepto central de Bauman que describe la negación de la utopía mediante el retorno al pasado idealizado.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 8,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "retro topía es el libro póstumo del filósofo polaco zygmunt bauman"
+      },
+      {
+        "id": "c_002",
+        "label": "Utopía",
+        "tipo": "primitivo",
+        "descripcion": "El ideal antiguo de progreso y diseño comunitario que ha sido negado por la nostalgia.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 6,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "de la vieja utopía de la cultura moderna hemos pasado a una visión distópica"
+      },
+      {
+        "id": "c_003",
+        "label": "Nostalgia",
+        "tipo": "primitivo",
+        "descripcion": "Mecanismo de defensa ante la incertidumbre que impulsa el retorno al pasado idealizado.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 7,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "estamos frente a lo que él llama la era de la nostalgia"
+      },
+      {
+        "id": "c_004",
+        "label": "Incertidumbre",
+        "tipo": "primitivo",
+        "descripcion": "Condición social actual que alimenta el mecanismo defensivo de la nostalgia.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 5,
+        "confianza": 0.89,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "mecanismo de defensa en tiempos de incertidumbre y convulsiones aceleradas"
+      },
+      {
+        "id": "c_005",
+        "label": "Ángel de la Historia",
+        "tipo": "primitivo",
+        "descripcion": "Metáfora benjaminiana utilizada para describir el empuje del pasado sobre el futuro.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 3,
+        "confianza": 0.85,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "walter benjamin escribió en 1940 acerca de la obra angelus novus"
+      },
+      {
+        "id": "c_006",
+        "label": "Neoliberalismo",
+        "tipo": "primitivo",
+        "descripcion": "Ideología que separó sociedad y responsabilidad individual, facilitando el fin del proyecto utópico.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 4,
+        "confianza": 0.91,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la separación de la sociedad y la asunción de la responsabilidad de personas"
+      },
+      {
+        "id": "c_007",
+        "label": "Individualización",
+        "tipo": "primitivo",
+        "descripcion": "Proceso por el cual las aspiraciones colectivas se trasladan a universos individuales.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 5,
+        "confianza": 0.88,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "ronald aronson afirma que se está privatizando la esperanza"
+      },
+      {
+        "id": "c_008",
+        "label": "Estado Castigador",
+        "tipo": "primitivo",
+        "descripcion": "Nueva función del Estado en lugar de guardián, contribuyendo a inseguridad y criminalización.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 4,
+        "confianza": 0.86,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el estado ha cambiado su viejo rol de guardián y defensor por el de contribuir a elevar la inseguridad"
+      },
+      {
+        "id": "c_009",
+        "label": "Violencia Emergente",
+        "tipo": "primitivo",
+        "descripcion": "Fenómeno derivado del mercado excluyente que convierte al individuo en víctima colateral.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 3,
+        "confianza": 0.82,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el mundo actual expone un aumento sustancial de violencia una violencia imitativa"
+      },
+      {
+        "id": "c_010",
+        "label": "Tribus / Pertenencia",
+        "tipo": "primitivo",
+        "descripcion": "Búsqueda de refugio y sentido en comunidades escogidas frente a la fragmentación social.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 4,
+        "confianza": 0.87,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "muchos tratan de buscar un refugio volviendo al show volviendo a las tribus"
+      },
+      {
+        "id": "c_011",
+        "label": "Narcisismo",
+        "tipo": "primitivo",
+        "descripcion": "Trastorno social o personal que emerge en la cultura retrotopía centrada en el yo.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 3,
+        "confianza": 0.84,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "pasamos a hacer seres narcisistas por sobre todas las cosas"
+      },
+      {
+        "id": "c_012",
+        "label": "Esperanza Social vs Individual",
+        "tipo": "primitivo",
+        "descripcion": "Contraste entre la esperanza colectiva perdida y la privatización de aspiraciones.",
+        "sinonimos_candidatos": [
+          ""
+        ],
+        "menciones": 4,
+        "confianza": 0.89,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "hoy predomina la esperanza individual pero ha desaparecido la esperanza social"
+      }
+    ],
+    "relaciones": [
+      {
+        "id": "r_001",
+        "origen_id": "c_001",
+        "destino_id": "c_002",
+        "tipo": "negación_de_la_negación",
+        "etiqueta": "es una negación de la negación",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "retro topía que es una negación de la negación de la utopía",
+        "matiz": null,
+        "contexto": "párrafo inicial"
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_003",
+        "destino_id": "c_004",
+        "tipo": "mecanismo_de_defensa_ante",
+        "etiqueta": "defensa en tiempos de incertidumbre",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "una epidemia global de nostalgia un mecanismo de defensa en tiempos de incertidumbre",
+        "matiz": null,
+        "contexto": "párrafo medio"
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_001",
+        "destino_id": "c_004",
+        "tipo": "alimentada_por",
+        "etiqueta": "época de la nostalgia que alimenta la retro topía",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "estamos frente a lo que él llama la era de la nostalgia que es una negación...",
+        "matiz": null,
+        "contexto": "párrafo inicial"
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_006",
+        "destino_id": "c_007",
+        "tipo": "transformó_en",
+        "etiqueta": "estado convertido en un estado castigador",
+        "bidireccional": false,
+        "confianza": 0.85,
+        "frase_completa": "el neoliberalismo inyecta violencia a nuestras vidas el mundo actual expone...",
+        "matiz": null,
+        "contexto": "párrafo sobre estado"
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_006",
+        "destino_id": "c_007",
+        "tipo": "contribuye_a_elevar_la_inseguridad",
+        "etiqueta": "el estado ha cambiado su viejo rol de guardián y defensor por el de contribuir a elevar le sin la inseguridad",
+        "bidireccional": false,
+        "confianza": 0.84,
+        "frase_completa": "contribuir a elevar le sin la inseguridad la incertidumbre y la desprotección",
+        "matiz": null,
+        "contexto": "párrafo sobre estado"
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_007",
+        "destino_id": "c_009",
+        "tipo": "genera",
+        "etiqueta": "inyecta violencia a nuestras vidas y temor en nuestra política",
+        "bidireccional": false,
+        "confianza": 0.86,
+        "frase_completa": "el neoliberalismo inyecta violencia a nuestras vidas el mundo actual expone un aumento sustancial de violencia",
+        "matiz": null,
+        "contexto": "párrafo sobre estado"
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_006",
+        "destino_id": "c_008",
+        "tipo": "fomentó_la_privatización_de",
+        "etiqueta": "privatizando la esperanza se están trasladando las aspiraciones y responsabilidades desde el plano de la sociedad en general hacia el de nuestros universos individuales",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "ronald aronson afirma que se está privatizando la esperanza",
+        "matiz": null,
+        "contexto": "párrafo sobre individualización"
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_012",
+        "destino_id": "c_007",
+        "tipo": "desapareció_en_favor_de",
+        "etiqueta": "ha desaparecido la esperanza social esa que persigue un mundo más libre y más democrático",
+        "bidireccional": false,
+        "confianza": 0.83,
+        "frase_completa": "hoy predomina la esperanza individual pero ha desaparecido la esperanza social",
+        "matiz": null,
+        "contexto": "párrafo sobre esperanza"
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_012",
+        "destino_id": "c_011",
+        "tipo": "se_manifiesta_como",
+        "etiqueta": "pasamos a hacer seres narcisistas por sobre todas las cosas",
+        "bidireccional": false,
+        "confianza": 0.82,
+        "frase_completa": "cables reflexionar si ese narcisismo debe seguir siendo considerado un trastorno de personalidad o debe ser enfrentado como un trastorno social",
+        "matiz": null,
+        "contexto": "párrafo sobre narcisismo"
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_010",
+        "destino_id": "c_004",
+        "tipo": "busca_refugio_ante_la",
+        "etiqueta": "protegiéndose de la sociedad de la soledad de los seres individuales",
+        "bidireccional": false,
+        "confianza": 0.87,
+        "frase_completa": "muchos tratan de buscar un refugio volviendo al show volviendo a las tribus como si se volviera el seno materno protegiéndose de la sociedad",
+        "matiz": null,
+        "contexto": "párrafo sobre tribus"
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_005",
+        "destino_id": "c_003",
+        "tipo": "metáfora_de_la_historia_como",
+        "etiqueta": "utilizando la obra como metáfora de benjamin define a la historia como ese vendaval que empuja de manera irresistible hacia el futuro un pasado al cual el ángel da la espalda",
+        "bidireccional": false,
+        "confianza": 0.81,
+        "frase_completa": "walter benjamin escribió en 1940 acerca de la obra angelus novus pintada por por clic en 1920 y esta figura la llamo ángel de la historia",
+        "matiz": null,
+        "contexto": "párrafo sobre benjamin"
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_003",
+        "destino_id": "c_008",
+        "tipo": "conduce_a_la_criminalización_de",
+        "etiqueta": "todo está cada vez mas criminalizados en defensa de la ley financiera y de su control sobre los países el neoliberalismo inyecta violencia",
+        "bidireccional": false,
+        "confianza": 0.79,
+        "frase_completa": "en lo que todo está cada vez mas criminalizados en defensa de la ley financiero...",
+        "matiz": null,
+        "contexto": "párrafo sobre estado"
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_002",
+        "destino_id": "c_004",
+        "tipo": "reemplazada_por_la_nostalgia_de",
+        "etiqueta": "aunque la postura de bauman es que estamos frente a lo que él llama la era de la nostalgia",
+        "bidireccional": false,
+        "confianza": 0.85,
+        "frase_completa": "retro topía analiza la tendencia actual de mirar al futuro con el espejo retrovisor del pasado lo que planteaba un man es que de la vieja utopía...",
+        "matiz": null,
+        "contexto": "párrafo inicial"
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_012",
+        "destino_id": "c_008",
+        "tipo": "se_privatiza_en_el_contexto_de_un",
+        "etiqueta": "ronald aronson afirma que se está privatizando la esperanza",
+        "bidireccional": false,
+        "confianza": 0.84,
+        "frase_completa": "hoy predomina la esperanza individual pero ha desaparecido la esperanza social esa que persigue un mundo más libre y más democrático en el pasado los trabajadores entendieron...",
+        "matiz": null,
+        "contexto": "párrafo sobre privatización"
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_012",
+        "destino_id": "c_011",
+        "tipo": "se_manifiesta_como_trastorno_social_en_la_cultura_de_la",
+        "etiqueta": "pasamos a hacer seres narcisistas por sobre todas las cosas cables reflexionar si ese narcisismo debe seguir siendo considerado un trastorno de personalidad o debe ser enfrentado como un trastorno social",
+        "bidireccional": false,
+        "confianza": 0.83,
+        "frase_completa": "cables reflexionar si ese narcisismo debe seguir siendo considerado un trastorno de personalidad o debe ser enfrentado como un trastorno social se trata de anomalías personales",
+        "matiz": null,
+        "contexto": "párrafo sobre narcisismo"
+      }
+    ],
+    "bucles": [],
+    "metalenguaje": [
+      {
+        "id": "m_001",
+        "tipo": "definicion_sobre_el_vuelo",
+        "contexto": "párrafo inicial sobre retrotopía",
+        "texto": "retro topía que es una negación de la negación de la utopía",
+        "conceptos_afectados_ids": [
+          "c_001",
+          "c_002"
+        ],
+        "nota": "Define el concepto central relacionándolo dialécticamente con la utopía original."
+      },
+      {
+        "id": "m_002",
+        "tipo": "cita_de_otro_autor",
+        "contexto": "párrafo sobre benjamin y angelus novus",
+        "texto": "walter benjamin escribió en 1940 acerca de la obra angelus novus pintada por por clic en 1920 y esta figura la llamo ángel de la historia utilizando la obra como metáfora",
+        "conceptos_afectados_ids": [
+          "c_005"
+        ],
+        "nota": "Introduce una referencia externa (Benjamin) para fundamentar el concepto histórico del progreso y pasado."
+      },
+      {
+        "id": "m_003",
+        "tipo": "refinamiento_de_uso",
+        "contexto": "párrafo sobre privatización de la esperanza",
+        "texto": "ronald aronson afirma que se está privatizando la esperanza se están trasladando las aspiraciones y responsabilidades desde el plano de la sociedad en general hacia el de nuestros universos individuales hoy predomina la esperanza individual pero ha desaparecido la esperanza social",
+        "conceptos_afectados_ids": [
+          "c_012"
+        ],
+        "nota": "Aclara cómo se redefine 'esperanza' pasando del colectivo al individuo en el contexto de retrotopía."
+      }
+    ]
+  },
+  "decisiones": [
+    {
+      "id": "d_sin_c_001",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Retrotopía' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Retrotopía' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Retrotopía",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_001"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:33.217513",
+      "creada_en": "2026-06-29T00:37:25.428452"
+    },
+    {
+      "id": "d_sin_c_002",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Utopía' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Utopía' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Utopía",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_002"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:33.529001",
+      "creada_en": "2026-06-29T00:37:25.428476"
+    },
+    {
+      "id": "d_sin_c_003",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Nostalgia' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Nostalgia' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Nostalgia",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_003"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:34.011423",
+      "creada_en": "2026-06-29T00:37:25.428488"
+    },
+    {
+      "id": "d_sin_c_004",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Incertidumbre' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Incertidumbre' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Incertidumbre",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_004"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:36.117588",
+      "creada_en": "2026-06-29T00:37:25.428501"
+    },
+    {
+      "id": "d_sin_c_005",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Ángel de la Historia' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Ángel de la Historia' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Ángel de la Historia",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_005"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:36.469665",
+      "creada_en": "2026-06-29T00:37:25.428511"
+    },
+    {
+      "id": "d_sin_c_006",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Neoliberalismo' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Neoliberalismo' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Neoliberalismo",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_006"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:36.814974",
+      "creada_en": "2026-06-29T00:37:25.428521"
+    },
+    {
+      "id": "d_sin_c_007",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Individualización' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Individualización' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Individualización",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_007"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:37.142413",
+      "creada_en": "2026-06-29T00:37:25.428556"
+    },
+    {
+      "id": "d_sin_c_008",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Estado Castigador' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Estado Castigador' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Estado Castigador",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_008"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:37.343439",
+      "creada_en": "2026-06-29T00:37:25.428575"
+    },
+    {
+      "id": "d_sin_c_009",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Violencia Emergente' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Violencia Emergente' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Violencia Emergente",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_009"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:37.547361",
+      "creada_en": "2026-06-29T00:37:25.428586"
+    },
+    {
+      "id": "d_sin_c_010",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Tribus / Pertenencia' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Tribus / Pertenencia' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Tribus / Pertenencia",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_010"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:37.740301",
+      "creada_en": "2026-06-29T00:37:25.428596"
+    },
+    {
+      "id": "d_sin_c_011",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Narcisismo' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Narcisismo' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Narcisismo",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_011"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:37.931476",
+      "creada_en": "2026-06-29T00:37:25.428606"
+    },
+    {
+      "id": "d_sin_c_012",
+      "tipo": "sinonimia",
+      "pregunta": "¿Colapsar 'Esperanza Social vs Individual' con sus sinónimos candidatos?",
+      "recomendacion_llm": "El LLM propone 'Esperanza Social vs Individual' como label canónico",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": "Esperanza Social vs Individual",
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [
+        "c_012"
+      ],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:38.334969",
+      "creada_en": "2026-06-29T00:37:25.428616"
+    },
+    {
+      "id": "d_meta_m_001",
+      "tipo": "metalenguaje",
+      "pregunta": "¿Confirmar el pasaje de metalenguaje (definicion_sobre_el_vuelo)?",
+      "recomendacion_llm": "Define el concepto central relacionándolo dialécticamente con la utopía original.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": "m_001",
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:38.622759",
+      "creada_en": "2026-06-29T00:37:25.428669"
+    },
+    {
+      "id": "d_meta_m_002",
+      "tipo": "metalenguaje",
+      "pregunta": "¿Confirmar el pasaje de metalenguaje (cita_de_otro_autor)?",
+      "recomendacion_llm": "Introduce una referencia externa (Benjamin) para fundamentar el concepto histórico del progreso y pasado.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": "m_002",
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:38.915550",
+      "creada_en": "2026-06-29T00:37:25.428681"
+    },
+    {
+      "id": "d_meta_m_003",
+      "tipo": "metalenguaje",
+      "pregunta": "¿Confirmar el pasaje de metalenguaje (refinamiento_de_uso)?",
+      "recomendacion_llm": "Aclara cómo se redefine 'esperanza' pasando del colectivo al individuo en el contexto de retrotopía.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": "m_003",
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-29T00:37:39.334353",
+      "creada_en": "2026-06-29T00:37:25.428691"
+    }
+  ],
+  "anotaciones": [],
+  "completado": true,
+  "creado_en": "2026-06-29T00:37:25.429103",
+  "actualizado_en": "2026-06-29T04:43:24.955530",
+  "conceptos_editados": {},
+  "relaciones_editadas": {},
+  "relaciones_investigador": [
+    {
+      "id": "r_inv_412f467c",
+      "origen_id": "c_003",
+      "destino_id": "c_007",
+      "tipo": "presupone",
+      "etiqueta": "trae",
+      "bidireccional": false
+    }
+  ],
+  "metadatos": {
+    "titulo": "Retrotopía",
+    "autores": [
+      "Zygmunt Bauman"
+    ],
+    "anio": 2017,
+    "editorial": null,
+    "url": null,
+    "notas": null
+  }
+}

@@ -1,0 +1,337 @@
+-- allium: 3
+-- getYourStuffTogether.allium
+
+-- Scope: deteccion y resolucion de nodos sueltos en un grafo ya construido.
+-- Un nodo suelto es aquel que no participa en ninguna Relacion del grafo.
+-- Esta funcion propone conexiones via LLM y las somete al investigador
+-- para su seleccion y edicion antes de formalizarlas en el grafo.
+--
+-- El nombre "getYourStuffTogether" es el nombre canonico en el proyecto.
+--
+-- Includes:
+--   - Deteccion de nodos sin ninguna relacion en el grafo existente
+--   - Invocacion del LLM con el grafo como contexto comprimido y las citas de los nodos sueltos
+--   - Presentacion de propuestas editables pre-seleccionadas al investigador
+--   - Materializacion de las conexiones aceptadas como Relacion en el grafo
+--
+-- Excludes:
+--   - Creacion de nodos nuevos (solo relaciones entre nodos existentes)
+--   - Versionado del grafo (se modifica en su lugar, sin bumping de version)
+--   - Validacion de relaciones ya existentes (vive en validacion.allium)
+
+use "./grafo.allium" as grafo
+use "./extraccion.allium" as extraccion
+
+------------------------------------------------------------
+-- Tipos
+------------------------------------------------------------
+
+-- Una conexion que el LLM propone entre dos nodos del grafo,
+-- donde al menos uno de los extremos es un nodo suelto.
+entity ConexionPropuesta {
+    id: String
+    ejecucion: EjecucionReconexion
+    origen: grafo/Nodo
+    destino: grafo/Nodo
+    frase: String                          -- descripcion de la relacion, editable por el investigador
+    tipo: extraccion/TipoRelacion
+    confianza: Decimal                     -- 0.0 a 1.0
+
+    al_menos_un_suelto: suelto_en(origen, ejecucion.grafo)
+                     or suelto_en(destino, ejecucion.grafo)
+}
+
+-- Estado de una propuesta dentro de la sesion de revision del investigador.
+enum EstadoPropuesta {
+    pendiente      -- llegó del LLM, pre-seleccionada, esperando revision
+    aceptada       -- investigador confirmó
+    rechazada      -- investigador desmarcó
+}
+
+entity PropuestaEnRevision {
+    id: String
+    sesion: SesionReconexion
+    conexion: ConexionPropuesta
+    frase_editada: String                  -- puede ser la original del LLM o una version editada
+    seleccionada: Boolean                  -- true por defecto (pre-marcada)
+    estado: EstadoPropuesta
+
+    transitions estado {
+        pendiente -> aceptada
+        pendiente -> rechazada
+        terminal: aceptada, rechazada
+    }
+}
+
+------------------------------------------------------------
+-- Sesion de revision
+------------------------------------------------------------
+
+-- Una SesionReconexion agrupa las propuestas del LLM para que el
+-- investigador las revise y confirme en una sola interaccion.
+entity SesionReconexion {
+    id: String
+    grafo: grafo/Grafo
+    ejecucion: EjecucionReconexion
+    iniciada_en: Timestamp
+    completada_en: Timestamp?
+    estado: en_revision | completada | cancelada
+
+    propuestas: PropuestaEnRevision with sesion = this
+    aceptadas: propuestas where estado = aceptada
+    rechazadas: propuestas where estado = rechazada
+    pendientes: propuestas where estado = pendiente
+
+    transitions estado {
+        en_revision -> completada
+        en_revision -> cancelada
+        terminal: completada, cancelada
+    }
+}
+
+------------------------------------------------------------
+-- Ejecucion LLM de reconexion
+------------------------------------------------------------
+
+entity EjecucionReconexion {
+    id: String
+    grafo: grafo/Grafo
+    proveedor: extraccion/ProveedorActivo
+    prompt: extraccion/Prompt
+    iniciada_en: Timestamp
+    finalizada_en: Timestamp?
+    estado: en_curso | completada | fallida
+    razon_falla: String? when estado = fallida
+
+    nodos_sueltos: List<grafo/Nodo>         -- snapshot de los nodos sueltos al momento de iniciar
+
+    transitions estado {
+        en_curso -> completada
+        en_curso -> fallida
+        terminal: completada, fallida
+    }
+}
+
+------------------------------------------------------------
+-- Visibilidad del boton
+------------------------------------------------------------
+
+-- El boton "getYourStuffTogether" (icono: anillo de nodos) es visible
+-- en la interfaz del grafo unicamente cuando hay nodos sueltos.
+-- Desaparece cuando el grafo queda completamente conexo.
+
+rule BotonReconexionVisible {
+    when: InvestigadorVisualizaGrafo(g)
+
+    ensures:
+        if nodos_sueltos(g).count > 0
+        then AccionGetYourStuffTogetherDisponible(grafo: g)
+        else AccionGetYourStuffTogetherOculta(grafo: g)
+}
+
+------------------------------------------------------------
+-- Inicio de reconexion
+------------------------------------------------------------
+
+rule IniciarReconexion {
+    when: InvestigadorActivaGetYourStuffTogether(g)
+
+    requires: nodos_sueltos(g).count > 0
+    requires: proveedor_activo.api_key_presente = true or proveedor_activo.es_local = true
+    requires: proveedor_activo.es_local = false or proveedor_activo.endpoint != null
+
+    let sueltos = nodos_sueltos(g)
+
+    ensures: EjecucionReconexion.created(
+        grafo: g,
+        proveedor: proveedor_activo,
+        prompt: prompt_reconexion(),        -- black box: carga el prompt especifico de reconexion
+        iniciada_en: now,
+        estado: en_curso,
+        nodos_sueltos: sueltos
+    )
+
+    @guidance
+        -- El LLM recibe:
+        --   (a) el grafo existente serializado como contexto comprimido
+        --       (nodos con label + descripcion, relaciones con etiqueta);
+        --   (b) las citas directas de los nodos sueltos;
+        --   (c) la transcripcion completa si su longitud cabe en el limite del prompt,
+        --       omitida en caso contrario.
+        -- El grafo ya es la compresion semantica del texto original; la transcripcion
+        -- completa es un enriquecimiento opcional, no el contexto primario.
+        -- El LLM puede proponer conexiones entre nodos sueltos y nodos ya conectados,
+        -- y tambien entre dos nodos sueltos entre si.
+}
+
+------------------------------------------------------------
+-- Retorno del LLM
+------------------------------------------------------------
+
+rule ReconexionLLMCompleta {
+    when: ReconexionLLMRetornaResultado(ejecucion, conexiones_propuestas)
+
+    requires: ejecucion.estado = en_curso
+
+    ensures:
+        ejecucion.estado = completada
+        ejecucion.finalizada_en = now
+        let sesion = SesionReconexion.created(
+            id: "rec_" + ejecucion.id,
+            grafo: ejecucion.grafo,
+            ejecucion: ejecucion,
+            iniciada_en: now,
+            estado: en_revision
+        )
+        for cp in conexiones_propuestas:
+            let conexion = ConexionPropuesta.created(
+                id: "cp_" + cp.id,
+                ejecucion: ejecucion,
+                origen: cp.origen,
+                destino: cp.destino,
+                frase: cp.frase,
+                tipo: cp.tipo,
+                confianza: cp.confianza
+            )
+            PropuestaEnRevision.created(
+                id: "pr_" + cp.id,
+                sesion: sesion,
+                conexion: conexion,
+                frase_editada: cp.frase,    -- pre-cargada con la frase del LLM
+                seleccionada: true,          -- todas pre-marcadas por defecto
+                estado: pendiente
+            )
+        SesionReconexionLista(sesion: sesion)
+
+    @guidance
+        -- El investigador ve una lista de frases editables con checkboxes,
+        -- todas marcadas por defecto. Puede:
+        --   - desmarcar las propuestas que no quiere aceptar,
+        --   - editar el texto de las que decide conservar,
+        --   - confirmar la seleccion completa de una vez.
+}
+
+rule ReconexionLLMFallida {
+    when: ReconexionLLMRetornaError(ejecucion, razon)
+
+    requires: ejecucion.estado = en_curso
+
+    ensures:
+        ejecucion.estado = fallida
+        ejecucion.finalizada_en = now
+        ejecucion.razon_falla = razon
+        ReconexionAbortada(grafo: ejecucion.grafo, razon: razon)
+
+    @guidance
+        -- Un fallo no modifica el grafo. El boton sigue visible si quedan
+        -- nodos sueltos y el investigador puede reintentar.
+}
+
+------------------------------------------------------------
+-- Confirmacion del investigador
+------------------------------------------------------------
+
+rule InvestigadorConfirmaReconexion {
+    when: InvestigadorEnviaSeleccion(sesion, items_aceptados)
+    -- items_aceptados: List<{propuesta: PropuestaEnRevision, frase_final: String}>
+
+    requires: sesion.estado = en_revision
+
+    ensures:
+        for item in sesion.propuestas:
+            let aceptado = item in items_aceptados
+            item.estado = if aceptado then aceptada else rechazada
+            if aceptado:
+                item.frase_editada = frase_final_de(item, items_aceptados)
+        for item in sesion.aceptadas:
+            grafo/Relacion.created(
+                id: "rel_rec_" + item.id,
+                grafo: sesion.grafo,
+                origen: item.conexion.origen,
+                destino: item.conexion.destino,
+                tipo: item.conexion.tipo,
+                etiqueta: item.frase_editada,
+                frase_completa: item.frase_editada,
+                bidireccional: false,
+                notas_usuario: [],
+                confianza_extraccion: item.conexion.confianza,
+                estado_validacion: aceptada,
+                creada_en: now
+            )
+        sesion.estado = completada
+        sesion.completada_en = now
+        ReconexionCompleta(
+            grafo: sesion.grafo,
+            conexiones_agregadas: sesion.aceptadas.count,
+            nodos_sueltos_restantes: nodos_sueltos(sesion.grafo).count
+        )
+
+    @guidance
+        -- Si tras la confirmacion quedan nodos sueltos (porque el investigador
+        -- rechazo todas las propuestas para alguno de ellos, o el LLM no
+        -- propuso conexion para ese nodo), el boton vuelve a aparecer
+        -- automaticamente segun la regla BotonReconexionVisible.
+}
+
+rule InvestigadorCancelaSesion {
+    when: InvestigadorCancela(sesion)
+
+    requires: sesion.estado = en_revision
+
+    ensures:
+        sesion.estado = cancelada
+        -- El grafo no se modifica. El boton sigue visible si quedan nodos sueltos.
+}
+
+------------------------------------------------------------
+-- Invariantes
+------------------------------------------------------------
+
+invariant ConexionTieneAlMenosUnExtremoSuelto {
+    for cp in ConexionPropuesta:
+        suelto_en(cp.origen, cp.ejecucion.grafo)
+        or suelto_en(cp.destino, cp.ejecucion.grafo)
+}
+
+invariant PropuestaPerteneceASuEjecucion {
+    for pr in PropuestaEnRevision:
+        pr.conexion.ejecucion = pr.sesion.ejecucion
+}
+
+invariant ConfianzaEnRango {
+    for cp in ConexionPropuesta:
+        cp.confianza >= 0.0 and cp.confianza <= 1.0
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "El LLM recibe las citas de TODOS los nodos sueltos en un solo prompt, o un prompt por nodo suelto? Para grafos grandes con muchos nodos sueltos, un prompt unico puede superar el limite."
+
+open question "Si el investigador cancela la sesion, se pueden recuperar las propuestas descartadas o se pierden definitivamente?"
+
+open question "Cuando dos nodos sueltos quedan conectados entre si pero no con el resto del grafo, el boton vuelve a aparecer. Deberia el sistema advertir explicitamente que el subgrafo formado sigue siendo un componente aislado?"
+
+open question "El prompt de reconexion es el mismo que el de extraccion con contexto adicional, o es un prompt separado disenado especificamente para la tarea de reconexion?"
+
+------------------------------------------------------------
+-- Funciones deferred
+------------------------------------------------------------
+
+deferred nodos_sueltos(g: grafo/Grafo) -> List<grafo/Nodo>
+    -- Devuelve los nodos del grafo que no aparecen como origen ni destino
+    -- en ninguna Relacion con estado_validacion != rechazada.
+
+deferred suelto_en(nodo: grafo/Nodo, g: grafo/Grafo) -> Boolean
+    -- True si el nodo no participa en ninguna Relacion del grafo.
+
+deferred construir_contexto_grafo(g: grafo/Grafo) -> String
+    -- Serializa el grafo como texto comprimido apto para un prompt LLM:
+    -- nodos (label + descripcion_corta), relaciones (etiqueta), bucles (descripcion).
+
+deferred prompt_reconexion() -> extraccion/Prompt
+    -- Devuelve el prompt especifico de reconexion (archivo en prompts/).
+
+deferred frase_final_de(item: PropuestaEnRevision, aceptados: List) -> String
+    -- Extrae la frase editada por el investigador para un item aceptado.

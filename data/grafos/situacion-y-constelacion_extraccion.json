@@ -1,0 +1,407 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "Modernidad",
+      "descripcion": "Contexto histórico y social caracterizado por la racionalización, burocracia y crisis de reducción del margen de maniobra.",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "crisis de la modernidad como una reducción progresiva"
+    },
+    {
+      "id": "c_002",
+      "label": "Margen de maniobra",
+      "descripcion": "Capacidad humana para actuar libremente y tomar decisiones ante situaciones complejas sin seguir reglas rígidas.",
+      "sinonimos_candidatos": [
+        "capacidad de actuar libremente"
+      ],
+      "menciones": 12,
+      "confianza": 0.98,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "reducción progresiva de nuestro margen de maniobra"
+    },
+    {
+      "id": "c_003",
+      "label": "Constelación",
+      "descripcion": "Lógica reduccionista que simplifica situaciones complejas a puntos medibles, binarios y codificados.",
+      "sinonimos_candidatos": [
+        "lógica constelacional"
+      ],
+      "menciones": 15,
+      "confianza": 0.97,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "reglas mecánicas, burocráticas y algorítmicas"
+    },
+    {
+      "id": "c_004",
+      "label": "Actuar",
+      "descripcion": "Forma de acción humana basada en el juicio propio, tacto, empatía y participación directa.",
+      "sinonimos_candidatos": [
+        "acción situacional"
+      ],
+      "menciones": 18,
+      "confianza": 0.96,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "pasado de actuar a ejecutar"
+    },
+    {
+      "id": "c_005",
+      "label": "Ejecutar",
+      "descripcion": "Acción mecánica basada en la ejecución de protocolos y normas sin margen para el juicio.",
+      "sinonimos_candidatos": [
+        "ejecución"
+      ],
+      "menciones": 14,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "hemos pasado de actuar a ejecutar"
+    },
+    {
+      "id": "c_006",
+      "label": "Actor",
+      "descripcion": "Persona que responde a situaciones complejas con su propio juicio y modifica la situación.",
+      "sinonimos_candidatos": [
+        "actores"
+      ],
+      "menciones": 8,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "somos actores cuando respondemos a la situación compleja"
+    },
+    {
+      "id": "c_007",
+      "label": "Intérprete",
+      "descripcion": "Persona que ejecuta reglas y normas externas sin capacidad de modificar el sistema.",
+      "sinonimos_candidatos": [
+        "intérpretes"
+      ],
+      "menciones": 6,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "somos intérpretes cuando ejecutamos reglas y normas"
+    },
+    {
+      "id": "c_008",
+      "label": "Situación compleja",
+      "descripcion": "Contexto holístico que requiere interpretación moral, no reducible a parámetros simples.",
+      "sinonimos_candidatos": [
+        "situaciones de por sí complejas"
+      ],
+      "menciones": 10,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "enfrentadas a situaciones complejas"
+    },
+    {
+      "id": "c_009",
+      "label": "Optimización paramétrica",
+      "descripcion": "Proceso de desarmar procesos vitales en factores individuales para mejorarlos sistémicamente.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 0.89,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "optimización paramétrica consiste en desarmar nuestros procesos vitales"
+    },
+    {
+      "id": "c_010",
+      "label": "Tacto / Juicio propio",
+      "descripcion": "Capacidad de discernimiento y decisión personal que permite la acción auténtica.",
+      "sinonimos_candidatos": [
+        "juicio humano"
+      ],
+      "menciones": 7,
+      "confianza": 0.93,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "nuestro juicio propio"
+    },
+    {
+      "id": "c_011",
+      "label": "Resonancia",
+      "descripcion": "Factor transformador en relaciones humanas y educativas que permite conexión genuina.",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "concepto de resonancia como parte central"
+    },
+    {
+      "id": "c_012",
+      "label": "Burocracia",
+      "descripcion": "Estructura estatal diseñada para predecibilidad y control, asociada a la racionalización moderna.",
+      "sinonimos_candidatos": [
+        "estructura burocrática"
+      ],
+      "menciones": 4,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "burocracia y política no son lo mismo"
+    },
+    {
+      "id": "c_013",
+      "label": "Populismo de derecha",
+      "descripcion": "Movimiento político que rechaza normas constelacionales buscando recuperar margen de maniobra.",
+      "sinonimos_candidatos": [
+        "corrientes populistas autocráticas"
+      ],
+      "menciones": 5,
+      "confianza": 0.87,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "populismos de derecha prometieron volver a la acción política"
+    },
+    {
+      "id": "c_014",
+      "label": "Yugat / Jitinho",
+      "descripcion": "Conceptos del sur global que aluden a resolución creativa y flexibilidad situacional.",
+      "sinonimos_candidatos": [
+        "Jugat"
+      ],
+      "menciones": 3,
+      "confianza": 0.82,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Yugat y Jitinho"
+    },
+    {
+      "id": "c_015",
+      "label": "Energía emocional",
+      "descripcion": "Fuerza interior generada por la acción en situaciones que impulsa a actuar.",
+      "sinonimos_candidatos": [
+        "energías"
+      ],
+      "menciones": 6,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "nos sentimos vivos cuando actuamos"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "reduce_progresivamente",
+      "etiqueta": "reducción progresiva de nuestro margen de maniobra",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Harmut Rosa percibe la crisis de la modernidad como una reducción progresiva de nuestro margen de maniobra",
+      "matiz": null,
+      "contexto": "párrafo introductorio"
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_004",
+      "destino_id": "c_005",
+      "tipo": "se_sustituye_por",
+      "etiqueta": "pasado de actuar a ejecutar",
+      "bidireccional": false,
+      "confianza": 0.98,
+      "frase_completa": "La tesis principal de su libro es que hoy en día hemos pasado de actuar a ejecutar",
+      "matiz": null,
+      "contexto": "párrafo introductorio"
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_004",
+      "destino_id": "c_010",
+      "tipo": "requiere",
+      "etiqueta": "nuestro juicio, nuestro tacto",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "Los actores accionan dentro de una situación... con nuestro juicio, nuestro tacto",
+      "matiz": null,
+      "contexto": "párrafo sobre actores"
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_007",
+      "destino_id": "c_003",
+      "tipo": "ejecuta_reglas_de",
+      "etiqueta": "interpretamos opciones parametrizadas que no admiten la ambigüedad",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "Cuando somos intérpretes de la constelación... solo debemos interpretar opciones parametrizadas",
+      "matiz": null,
+      "contexto": "párrafo sobre interpretes"
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_003",
+      "destino_id": "c_008",
+      "tipo": "reduce_a_puntos_de",
+      "etiqueta": "reducción de una situación de por sí compleja a solo algunos de los elementos que la componen, los puntos de la constelación",
+      "bidireccional": false,
+      "confianza": 0.96,
+      "frase_completa": "Halmut Rosa define a la constelación como la reducción de una situación de por sí compleja",
+      "matiz": null,
+      "contexto": "párrafo sobre definición"
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_012",
+      "destino_id": "c_003",
+      "tipo": "forma_parte_de",
+      "etiqueta": "estructura burocrática de un estado... racionalización de la modernidad",
+      "bidireccional": false,
+      "confianza": 0.89,
+      "frase_completa": "Max Weber entendía que la máxima racionalización de la modernidad es hacer al mundo sistemáticamente predecible y controlable por medio de la estructura burocrática",
+      "matiz": null,
+      "contexto": "párrafo sobre Max Weber"
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_013",
+      "destino_id": "c_002",
+      "tipo": "anhela_recuperar",
+      "etiqueta": "recuperar la capacidad política de actuar",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "detrás de estos eslóganes se esconde un anhelo de recuperar la capacidad política de actuar",
+      "matiz": null,
+      "contexto": "párrafo sobre populismo"
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_014",
+      "destino_id": "c_003",
+      "tipo": "contrasta_con",
+      "etiqueta": "omitir la lógica constelacional de ejecución a favor de accionar con suficiente margen de maniobra en una situación",
+      "bidireccional": false,
+      "confianza": 0.84,
+      "frase_completa": "Ambos términos se refieren a omitir la lógica constelacional de ejecución a favor de accionar con suficiente margen de maniobra",
+      "matiz": null,
+      "contexto": "párrafo sobre Yugat y Jitinho"
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_015",
+      "destino_id": "c_004",
+      "tipo": "generada_por",
+      "etiqueta": "nos sentimos vivos cuando actuamos, pero nos sentimos agotados cuando estamos ocupados con la ejecución de tareas",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "Nos sentimos vivos cuando actuamos... La acción en situaciones tiene un rol fundamental para la generación de energía individual y social",
+      "matiz": null,
+      "contexto": "párrafo sobre energía"
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_009",
+      "destino_id": "c_005",
+      "tipo": "implica",
+      "etiqueta": "desarmar nuestros procesos vitales en factores individuales con el objetivo de mejorarlos sistémicamente",
+      "bidireccional": false,
+      "confianza": 0.87,
+      "frase_completa": "La optimización paramétrica consiste en desarmar nuestros procesos vitales en factores individuales",
+      "matiz": null,
+      "contexto": "párrafo sobre optimización"
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_006",
+      "destino_id": "c_007",
+      "tipo": "se_opone_a",
+      "etiqueta": "somos actores... En cambio, somos intérpretes",
+      "bidireccional": true,
+      "confianza": 0.95,
+      "frase_completa": "Nuestras acciones se dividen en ser actores de situaciones o ser intérpretes de constelaciones",
+      "matiz": null,
+      "contexto": "párrafo sobre división acción"
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_003",
+      "destino_id": "c_015",
+      "tipo": "erosiona",
+      "etiqueta": "La desaparición del tacto y el margen de maniobra afecta a los actores porque su capacidad de juicio ha sido eliminada... erosión de energía que genera la ejecución",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "Un efecto secundario y preocupante del fenómeno de la constelación es la erosión de energía que genera la ejecución",
+      "matiz": null,
+      "contexto": "párrafo sobre efectos"
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_014",
+      "destino_id": "c_002",
+      "tipo": "permite_recuperar",
+      "etiqueta": "reconquistar la libertad, no solo en sus prácticas cotidianas, sino también en las acciones institucionales",
+      "bidireccional": false,
+      "confianza": 0.86,
+      "frase_completa": "Rosa hace un llamamiento a una incorporación creativa de Yugat y Cheitinho... para reconquistar la libertad",
+      "matiz": null,
+      "contexto": "párrafo sobre recomendación"
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_008",
+      "destino_id": "c_003",
+      "tipo": "se_convierte_en",
+      "etiqueta": "convertidas en constelaciones simples, medibles, cerradas y a menudo binarias",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "En todas partes enfrentamos situaciones complejas... que son convertidas en constelaciones simples",
+      "matiz": null,
+      "contexto": "párrafo sobre reducción"
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_002",
+      "destino_id": "c_013",
+      "tipo": "reclaman_para_reducir",
+      "etiqueta": "rechazan las constelaciones normativas porque reducen de manera consistente la libertad de acción... reclamar una mayor libertad de acción para poder reducir el alcance del margen de maniobra",
+      "bidireccional": false,
+      "confianza": 0.83,
+      "frase_completa": "¿No será que los sectores populistas de derecha reclaman una mayor libertad de acción para poder reducir el alcance del margen de maniobra?",
+      "matiz": null,
+      "contexto": "párrafo sobre contradicción"
+    }
+  ],
+  "bucles": [
+    {
+      "id": "b_001",
+      "nodos_ids": [
+        "c_004",
+        "c_015",
+        "c_008"
+      ],
+      "descripcion": "Ciclo donde la acción en situaciones complejas genera energía emocional, que a su vez permite seguir actuando; si se reduce el margen (constelación), la energía disminuye y la capacidad de actuar se erosiona.",
+      "tipo": "fundamental"
+    }
+  ],
+  "metalenguaje": [
+    {
+      "id": "m_001",
+      "tipo": "definicion_sobre_el_vuelo",
+      "contexto": "párrafo sobre definición de constelación",
+      "texto": "Halmut Rosa define a la constelación como la reducción de una situación de por sí compleja a solo algunos de los elementos que la componen, los puntos de la constelación, que se encuentran en relación fija, medible y a menudo codificada.",
+      "conceptos_afectados_ids": [
+        "c_003",
+        "c_008"
+      ],
+      "nota": "Clarifica el concepto central del libro definiendo su estructura lógica."
+    },
+    {
+      "id": "m_002",
+      "tipo": "refinamiento_de_uso",
+      "contexto": "párrafo sobre distinción actor/intérprete",
+      "texto": "Nuestras acciones se dividen en ser actores de situaciones o ser intérpretes de constelaciones. Somos actores cuando respondemos a la situación compleja... En cambio, somos intérpretes cuando ejecutamos reglas y normas.",
+      "conceptos_afectados_ids": [
+        "c_006",
+        "c_007"
+      ],
+      "nota": "Refina el uso de los términos actor e intérprete para distinguir modos de acción."
+    },
+    {
+      "id": "m_003",
+      "tipo": "cita_de_otro_autor",
+      "contexto": "párrafo sobre Max Weber y Bloemberberg",
+      "texto": "Según el filósofo alemán Hans Bloemberberg, la cultura se alimenta de tomar desvíos. En cambio, la lógica constelacional está empeñada en eliminar todos los desvíos de nuestra vida.",
+      "conceptos_afectados_ids": [
+        "c_012",
+        "c_003"
+      ],
+      "nota": "Introduce citas externas para contrastar con la tesis central."
+    }
+  ]
+}

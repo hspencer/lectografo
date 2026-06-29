@@ -1,0 +1,608 @@
+{
+  "titulo": "Esquizofrenia Digital: La crisis del espíritu en la era de las nuevas tecnologías",
+  "slug": "esquizofrenia-digital",
+  "extraccion": {
+    "conceptos": [
+      {
+        "id": "c_001",
+        "label": "Esquizofrenia Digital",
+        "tipo": "primitivo",
+        "descripcion": "Condición central de la época descrita por Ann Alomber donde convergen crisis ecológica y progreso tecnológico, generando una dislocación teletecológica.",
+        "sinonimos_candidatos": [],
+        "menciones": 3,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "nuestra época parece sufrir una verdadera esquizofrenia digital"
+      },
+      {
+        "id": "c_002",
+        "label": "Crisis del Espíritu",
+        "tipo": "primitivo",
+        "descripcion": "Estado de perturbación permanente donde la reflexión y meditación son interrumpidas por sacudidas constantes, afectando las facultades de sentir y pensar.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "La digitalización de la existencia ha transformado las relaciones sociales en meras conductas pulsionales"
+      },
+      {
+        "id": "c_003",
+        "label": "Libertad del Espíritu",
+        "tipo": "primitivo",
+        "descripcion": "Capacidad que requiere una toma de distancia temporal y rechazo a sensaciones incoherentes, actualmente puesta en peligro por las tecnologías.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "las tecnologías de la información y la comunicación parecen poner en peligro la libertad del espíritu"
+      },
+      {
+        "id": "c_004",
+        "label": "Algoritmos Automatizados",
+        "tipo": "primitivo",
+        "descripcion": "Sistemas que reducen las conversaciones a cálculos programados, segmentan usuarios y adaptan publicidad mediante subastas automatizadas.",
+        "sinonimos_candidatos": [],
+        "menciones": 4,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Las conversaciones se han reducido a cálculos automatizados y secuencias programadas"
+      },
+      {
+        "id": "c_005",
+        "label": "Economía de la Atención",
+        "tipo": "primitivo",
+        "descripcion": "Modelo económico donde las plataformas venden el tiempo que los usuarios pasan frente a pantallas mediante subastas algorítmicas.",
+        "sinonimos_candidatos": [],
+        "menciones": 3,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "destinadas a vender el tiempo que pasamos delante de las pantallas"
+      },
+      {
+        "id": "c_006",
+        "label": "Captología",
+        "tipo": "primitivo",
+        "descripcion": "Disciplina científica (Stanford) que combina neurociencia y psicología conductual para influir en comportamientos mediante diseño persuasivo.",
+        "sinonimos_candidatos": [],
+        "menciones": 3,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "La captología es una disciplina impartida en el departamento de comportamiento de la Universidad de Stanford"
+      },
+      {
+        "id": "c_007",
+        "label": "Psicopoder",
+        "tipo": "primitivo",
+        "descripcion": "Estructura de poder que establece qué debe transmitirse y canaliza deseos mediante oligopolios tecnológicos, heredero del cine y la TV.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Este oligopolio tecnológico en manos de un puñado de megacorporaciones da forma entonces a un psicopoder"
+      },
+      {
+        "id": "c_008",
+        "label": "Ideología Neurocentrista",
+        "tipo": "primitivo",
+        "descripcion": "Enfoque que reduce el pensamiento a conexiones neuronales y electroquímicos, explotando mentes mediante tecnologías persuasivas.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Por un lado, la ideología neurocentrista, que reduce el pensamiento a un conjunto de conexiones neuronales"
+      },
+      {
+        "id": "c_009",
+        "label": "Ideología Cognitivista",
+        "tipo": "primitivo",
+        "descripcion": "Enfoque equiparable al procesamiento de datos y algoritmos, impregnando discursos transhumanistas sobre la descarga de mente.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Por otro lado, la ideología cognitivista que equipara el pensamiento al procesamiento de datos y a los algoritmos"
+      },
+      {
+        "id": "c_010",
+        "label": "Soportes Simbólicos",
+        "tipo": "primitivo",
+        "descripcion": "Dispositivos artificiales (libros, pantallas) que sostienen significados compartidos sin ser meramente materiales ni mecánicos.",
+        "sinonimos_candidatos": [],
+        "menciones": 3,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Solo superando esta disyuntiva será posible considerar los soportes técnicos como soportes simbólicos"
+      },
+      {
+        "id": "c_011",
+        "label": "Mente como Actividad",
+        "tipo": "primitivo",
+        "descripcion": "Concepción de la mente no como sustancia material o incorpórea, sino como un proceso que presupone cuerpos y medio técnico.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "La mente es una actividad o un proceso que presupone la existencia de cuerpos vivientes"
+      },
+      {
+        "id": "c_012",
+        "label": "Paternalismo Libertario",
+        "tipo": "primitivo",
+        "descripcion": "Técnica para modificar comportamientos mediante incitaciones suaves infraconscientes sin autoridad política central, sino del mercado.",
+        "sinonimos_candidatos": [],
+        "menciones": 1,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "De esta manera se genera una nueva forma de paternalismo de carácter libertario"
+      },
+      {
+        "id": "c_013",
+        "label": "Solucionismo Tecnológico",
+        "tipo": "primitivo",
+        "descripcion": "Creencia errónea que todo problema tiene solución digital, llevando a innovación destructiva y automatización del espíritu.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "salir en la práctica del terreno de la innovación destructiva y el solucionismo tecnológico"
+      },
+      {
+        "id": "c_014",
+        "label": "Bienes Comunes",
+        "tipo": "primitivo",
+        "descripcion": "Objetivo para poner las tecnologías al servicio, contraponiéndose a la mercantilización de datos que destruye psiquis.",
+        "sinonimos_candidatos": [],
+        "menciones": 1,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "ponerla al servicio de los bienes comunes y de la inteligencia colectiva"
+      },
+      {
+        "id": "c_015",
+        "label": "Inteligencia Colectiva",
+        "tipo": "primitivo",
+        "descripcion": "Capacidad que se busca potenciar mediante tecnologías contributivas, frente a la explotación individual de atención.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "ponerla al servicio de los bienes comunes y de la inteligencia colectiva"
+      },
+      {
+        "id": "c_016",
+        "label": "Economía de la Contribución",
+        "tipo": "primitivo",
+        "descripcion": "Modelo alternativo propuesto que requiere cambio en financiación, pasando de rentabilidad a corto plazo a contribuciones sociales.",
+        "sinonimos_candidatos": [],
+        "menciones": 2,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "pasar de una economía de la atención y tecnologías persuasivas... a una economía de la contribución"
+      }
+    ],
+    "relaciones": [
+      {
+        "id": "r_001",
+        "origen_id": "c_001",
+        "destino_id": "c_002",
+        "tipo": "constituye",
+        "etiqueta": "es un libro sobre la crisis del espíritu en la era de las nuevas tecnologías",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "Esquizofrenia digital bajo el subtítulo La crisis del espíritu en la era de las nuevas tecnologías es un libro...",
+        "matiz": null,
+        "contexto": "título y introducción"
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_001",
+        "destino_id": "c_003",
+        "tipo": "amenaza_a",
+        "etiqueta": "poner en peligro la libertad del espíritu",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "las tecnologías de la información y la comunicación parecen poner en peligro la libertad del espíritu",
+        "matiz": null,
+        "contexto": "párrafo sobre peligros tecnológicos"
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_004",
+        "destino_id": "c_005",
+        "tipo": "servicio_de",
+        "etiqueta": "al servicio de la economía de datos y de la economía de la atención",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "La mayor parte de las plataformas... están al servicio de la economía de datos y de la economía de la atención",
+        "matiz": null,
+        "contexto": "sección sobre algoritmos"
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_006",
+        "destino_id": "c_007",
+        "tipo": "instrumenta",
+        "etiqueta": "tecnología persuasiva destinada a captar las mentes e influir en los comportamientos",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "Los dispositivos digitales se están convirtiendo en tecnologías persuasivas destinadas a captar las mentes...",
+        "matiz": null,
+        "contexto": "sección sobre interfaces"
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_008",
+        "destino_id": "c_009",
+        "tipo": "convergen_en_error_fundamental",
+        "etiqueta": "son, de hecho, uno y el mismo",
+        "bidireccional": true,
+        "confianza": 1.0,
+        "frase_completa": "Estos dos enfoques son, de hecho, uno y el mismo...",
+        "matiz": null,
+        "contexto": "análisis comparativo"
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_010",
+        "destino_id": "c_011",
+        "tipo": "sustentan_la_circulación_de",
+        "etiqueta": "soportes simbólicos... sin los cuales el pensamiento no podría ejercerse",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "La mente se sitúa en esos símbolos y significados compartidos sostenidos en dispositivos artificiales...",
+        "matiz": null,
+        "contexto": "definición de soporte"
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_012",
+        "destino_id": "c_005",
+        "tipo": "se_genera_mediante",
+        "etiqueta": "teoría del nudge o teoría del empujón... se genera una nueva forma de paternalismo libertario",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "Este principio será tomado en la década de 2010 en la teoría del nudge...",
+        "matiz": null,
+        "contexto": "historia económica"
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_013",
+        "destino_id": "c_002",
+        "tipo": "provoca",
+        "etiqueta": "innovación destructiva y el solucionismo tecnológico, que supone...",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "...salir en la práctica del terreno de la innovación destructiva y el solucionismo tecnológico",
+        "matiz": null,
+        "contexto": "crítica a soluciones"
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_014",
+        "destino_id": "c_015",
+        "tipo": "vincula_con",
+        "etiqueta": "bienes comunes y de la inteligencia colectiva",
+        "bidireccional": true,
+        "confianza": 1.0,
+        "frase_completa": "...ponerla al servicio de los bienes comunes y de la inteligencia colectiva...",
+        "matiz": null,
+        "contexto": "propuesta final"
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_016",
+        "destino_id": "c_005",
+        "tipo": "contrapone_a",
+        "etiqueta": "pasar de una economía de la atención... a una economía de la contribución",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "...a una economía de la contribución y tecnologías contributivas...",
+        "matiz": null,
+        "contexto": "modelo alternativo"
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_002",
+        "destino_id": "c_004",
+        "tipo": "perturba_por",
+        "etiqueta": "sacudidas incesantes que propinan las noticias, desintegrando...",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "...se ve perturbada por las sacudidas incesantes que propinan las noticias...",
+        "matiz": null,
+        "contexto": "impacto en facultades"
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_007",
+        "destino_id": "c_005",
+        "tipo": "se_basa_en",
+        "etiqueta": "canalizando la atención y los deseos de las personas",
+        "bidireccional": false,
+        "confianza": 1.0,
+        "frase_completa": "...establece qué cosas deben transmitirse... canalizando la atención...",
+        "matiz": null,
+        "contexto": "mecanismo de control"
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_016",
+        "destino_id": "c_014",
+        "tipo": "requiere_cambio_en_materia_de_políticas_para_servir_a",
+        "etiqueta": "obviamente requiere de un cambio sustancial... ponerla al servicio de los bienes comunes",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "...a una economía de la contribución y tecnologías contributivas...",
+        "matiz": null,
+        "contexto": "financiación"
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_003",
+        "destino_id": "c_016",
+        "tipo": "posibilita_mediante",
+        "etiqueta": "permitir la expresión de puntos de vista diversos... crear un espacio público digital",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "...al permitir la expresión de puntos de vista diversos...",
+        "matiz": null,
+        "contexto": "uso ético"
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_008",
+        "destino_id": "c_013",
+        "tipo": "implica",
+        "etiqueta": "reducir el espíritu a un conjunto de operaciones lógicas...",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "...es necesario reducir primero el espíritu a un conjunto de operaciones lógicas...",
+        "matiz": null,
+        "contexto": "error fundamental"
+      },
+      {
+        "id": "r_016",
+        "origen_id": "c_015",
+        "destino_id": "c_002",
+        "tipo": "mitiga_la_crisis_de",
+        "etiqueta": "permitir a los individuos reflexionar, analizar y criticar...",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "...debe seguir permitiendo a los individuos reflexionar, analizar y criticar",
+        "matiz": null,
+        "contexto": "educación crítica"
+      }
+    ],
+    "bucles": [
+      {
+        "id": "b_001",
+        "nodos_ids": [
+          "c_008",
+          "c_009"
+        ],
+        "descripcion": "Ciclo de reducción del espíritu: la ideología neurocentrista y cognitivista convergen en el mismo error, reduciendo lo espiritual a procesos materiales o lógicos que luego se formalizan en máquinas.",
+        "tipo": "fundamental"
+      },
+      {
+        "id": "b_002",
+        "nodos_ids": [
+          "c_005",
+          "c_007"
+        ],
+        "descripcion": "Ciclo de la economía de atención: las plataformas venden tiempo (atención) mediante algoritmos que capturan mentes, generando psicopoder que refuerza el control sobre la atención.",
+        "tipo": "fundamental"
+      }
+    ],
+    "metalenguaje": [
+      {
+        "id": "m_001",
+        "tipo": "definicion_sobre_el_vuelo",
+        "contexto": "sección sobre captología",
+        "texto": "La captología es una disciplina impartida en el departamento de comportamiento de la Universidad de Stanford, que es uno de los centros de estudios que forma a gran parte de los creadores de Silicon Valley. La captología es la convergencia de ciencia cognitiva...",
+        "conceptos_afectados_ids": [
+          "c_006"
+        ],
+        "nota": "Define explícitamente el término 'captología' y su origen institucional."
+      },
+      {
+        "id": "m_002",
+        "tipo": "refinamiento_de_uso",
+        "contexto": "sección sobre naturaleza de la mente",
+        "texto": "El espíritu no es algo material o inmaterial, ni biológico ni mecánico... La mente es una actividad o un proceso que presupone la existencia de cuerpos vivientes...",
+        "conceptos_afectados_ids": [
+          "c_011"
+        ],
+        "nota": "Corrige el uso sustancialista del término 'mente' y redefine su naturaleza procesual."
+      },
+      {
+        "id": "m_003",
+        "tipo": "cita_de_otro_autor",
+        "contexto": "sección sobre historia de la escritura",
+        "texto": "Inclusive Platón en el siglo V se interrogó sobre los efectos de la escritura y sintió desconfianza por la herramienta...",
+        "conceptos_afectados_ids": [
+          "c_014"
+        ],
+        "nota": "Introduce una cita histórica para contextualizar el debate sobre soportes simbólicos."
+      }
+    ]
+  },
+  "decisiones": [
+    {
+      "id": "d_bidir_r_005",
+      "tipo": "bidireccionalidad",
+      "pregunta": "¿Confirmar que 'son, de hecho, uno y el mismo' es bidireccional?",
+      "recomendacion_llm": "Sin matiz adicional del LLM",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": "r_005",
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:00.272592",
+      "creada_en": "2026-06-28T23:25:57.499228"
+    },
+    {
+      "id": "d_bidir_r_009",
+      "tipo": "bidireccionalidad",
+      "pregunta": "¿Confirmar que 'bienes comunes y de la inteligencia colectiva' es bidireccional?",
+      "recomendacion_llm": "Sin matiz adicional del LLM",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": "r_009",
+      "bucle_implicado_id": null,
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:00.589084",
+      "creada_en": "2026-06-28T23:25:57.499264"
+    },
+    {
+      "id": "d_bucle_b_001",
+      "tipo": "confirmar_bucle",
+      "pregunta": "¿Aceptar el bucle de retroalimentación descrito?",
+      "recomendacion_llm": "Ciclo de reducción del espíritu: la ideología neurocentrista y cognitivista convergen en el mismo error, reduciendo lo espiritual a procesos materiales o lógicos que luego se formalizan en máquinas.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": "b_001",
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:00.828558",
+      "creada_en": "2026-06-28T23:25:57.499294"
+    },
+    {
+      "id": "d_bucle_b_002",
+      "tipo": "confirmar_bucle",
+      "pregunta": "¿Aceptar el bucle de retroalimentación descrito?",
+      "recomendacion_llm": "Ciclo de la economía de atención: las plataformas venden tiempo (atención) mediante algoritmos que capturan mentes, generando psicopoder que refuerza el control sobre la atención.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": "b_002",
+      "flag_implicado_id": null,
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:01.156758",
+      "creada_en": "2026-06-28T23:25:57.499303"
+    },
+    {
+      "id": "d_meta_m_001",
+      "tipo": "metalenguaje",
+      "pregunta": "¿Confirmar el pasaje de metalenguaje (definicion_sobre_el_vuelo)?",
+      "recomendacion_llm": "Define explícitamente el término 'captología' y su origen institucional.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": "m_001",
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:01.442031",
+      "creada_en": "2026-06-28T23:25:57.499368"
+    },
+    {
+      "id": "d_meta_m_002",
+      "tipo": "metalenguaje",
+      "pregunta": "¿Confirmar el pasaje de metalenguaje (refinamiento_de_uso)?",
+      "recomendacion_llm": "Corrige el uso sustancialista del término 'mente' y redefine su naturaleza procesual.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": "m_002",
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:01.816900",
+      "creada_en": "2026-06-28T23:25:57.499380"
+    },
+    {
+      "id": "d_meta_m_003",
+      "tipo": "metalenguaje",
+      "pregunta": "¿Confirmar el pasaje de metalenguaje (cita_de_otro_autor)?",
+      "recomendacion_llm": "Introduce una cita histórica para contextualizar el debate sobre soportes simbólicos.",
+      "justificacion_llm": null,
+      "label_canonico_propuesto": null,
+      "label_resolucion": null,
+      "conceptos_implicados_ids": [],
+      "relacion_implicada_id": null,
+      "bucle_implicado_id": null,
+      "flag_implicado_id": "m_003",
+      "estado": "resuelta",
+      "resolucion": "aceptada",
+      "nota_resolucion": null,
+      "resuelta_en": "2026-06-28T23:26:02.263656",
+      "creada_en": "2026-06-28T23:25:57.499390"
+    }
+  ],
+  "anotaciones": [],
+  "completado": true,
+  "creado_en": "2026-06-28T23:25:57.500441",
+  "actualizado_en": "2026-06-29T20:53:16.727496",
+  "conceptos_editados": {},
+  "relaciones_editadas": {},
+  "relaciones_investigador": [
+    {
+      "id": "r_rec_e840c37b",
+      "origen_id": "c_011",
+      "destino_id": "c_008",
+      "tipo": "contradicción conceptual",
+      "etiqueta": "La concepción de la mente como actividad refuta el reduccionismo que reduce el pensamiento a conexiones neuronales.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b1b743cb",
+      "origen_id": "c_011",
+      "destino_id": "c_013",
+      "tipo": "negación de premisa",
+      "etiqueta": "El solucionismo tecnológico ignora que la mente es un proceso vivo y no una máquina programable.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7132052a",
+      "origen_id": "c_010",
+      "destino_id": "c_007",
+      "tipo": "medio de operación",
+      "etiqueta": "Los soportes técnicos son los medios por donde el psicopoder canaliza la atención y deseos de las personas.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8a5b458a",
+      "origen_id": "c_010",
+      "destino_id": "c_016",
+      "tipo": "fin alternativo",
+      "etiqueta": "Transformar soportes técnicos en herramientas para el intercambio de saberes colectivos y no solo a la mercantilización.",
+      "bidireccional": false
+    }
+  ],
+  "metadatos": {
+    "titulo": "Esquizofrenia Digital: La crisis del espíritu en la era de las nuevas tecnologías",
+    "autores": [
+      "Anne Alombert"
+    ],
+    "anio": 2023,
+    "editorial": null,
+    "url": null,
+    "notas": null
+  }
+}

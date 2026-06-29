@@ -14,10 +14,10 @@ from src.models.extraccion import ResultadoExtraccion
 class TipoDecision(str, Enum):
     sinonimia = "sinonimia"
     bidireccionalidad = "bidireccionalidad"
-    promocion_de_tipo = "promocion_de_tipo"
     confirmar_bucle = "confirmar_bucle"
     confianza_baja = "confianza_baja"
     metalenguaje = "metalenguaje"
+    promocion_de_tipo = "promocion_de_tipo"   # concepto ambiguo → primitivo|derivado|metalenguaje
 
 
 class ResolucionDecision(str, Enum):
@@ -65,6 +65,29 @@ class AnotacionInvestigador(BaseModel):
     creada_en: datetime = Field(default_factory=datetime.utcnow)
 
 
+class MetadatosTexto(BaseModel):
+    """Metadatos editoriales del texto fuente (autor, año, editorial, etc.)"""
+    titulo: str = ""
+    autores: list[str] = Field(default_factory=list)
+    anio: Optional[int] = None
+    editorial: Optional[str] = None
+    url: Optional[str] = None
+    notas: Optional[str] = None
+
+    def cita(self) -> str:
+        """Devuelve una cadena de cita estilo APA simplificado."""
+        partes = []
+        if self.autores:
+            partes.append("; ".join(self.autores))
+        if self.anio:
+            partes.append(f"({self.anio})")
+        if self.titulo:
+            partes.append(self.titulo)
+        if self.editorial:
+            partes.append(self.editorial)
+        return ". ".join(partes) if partes else ""
+
+
 class EstadoValidacion(BaseModel):
     """Estado completo de una sesión de validación. Persiste en JSON."""
     titulo: str
@@ -75,6 +98,16 @@ class EstadoValidacion(BaseModel):
     completado: bool = False
     creado_en: datetime = Field(default_factory=datetime.utcnow)
     actualizado_en: datetime = Field(default_factory=datetime.utcnow)
+
+    # Overrides del investigador sobre la extracción cruda (label, tipo, etc.)
+    conceptos_editados: dict[str, dict] = Field(default_factory=dict)
+    relaciones_editadas: dict[str, dict] = Field(default_factory=dict)
+
+    # Relaciones añadidas manualmente por el investigador (no provienen del LLM)
+    relaciones_investigador: list[dict] = Field(default_factory=list)
+
+    # Metadatos editoriales del texto fuente
+    metadatos: MetadatosTexto = Field(default_factory=MetadatosTexto)
 
     # ── Proyecciones ──────────────────────────────────────────────────
 

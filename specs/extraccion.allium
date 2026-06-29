@@ -1,17 +1,23 @@
 -- allium: 3
 -- extraccion.allium
 
--- Scope: extraccion de grafo conceptual desde una transcripcion normalizada
--- usando un LLM. Modela la propuesta inicial como una unidad inmutable que
--- luego sera refinada en el flujo de validacion.
+-- Scope: tipos y entidades base de extracción compartidos por todos los
+-- modos de extracción. Define el vocabulario común (TipoRelacion, TipoConcepto,
+-- ConceptoPropuesto, RelacionPropuesta, etc.) y el proveedor LLM activo.
+--
+-- NOTA: EjecucionExtraccion (llamada única sobre documento completo) es el
+-- modo "clásico". El flujo canónico actual usa extraccion-incremental.allium,
+-- que procesa frase a frase y soporta modo automatico (equivalente a la
+-- extracción rápida) y modo manual (con consolidación interactiva).
 --
 -- Includes:
 --   - Modelado del LLM como agente externo con nivel de confianza
 --   - Ejecucion de prompt versionado contra un proveedor configurado
---   - Generacion de conceptos, relaciones, sinonimia candidata, bucles
---   - Identificacion de pasajes de metalenguaje
+--   - Tipos de datos compartidos: ConceptoPropuesto, RelacionPropuesta,
+--     BucleDetectado, FlagMetalenguaje, TipoRelacion, TipoConcepto
 --
 -- Excludes:
+--   - Extracción incremental frase a frase (vive en extraccion-incremental.allium)
 --   - Estructura final del grafo (vive en grafo.allium)
 --   - Validacion humana de las propuestas (vive en validacion.allium)
 
@@ -44,6 +50,7 @@ enum TipoRelacion {
     genera
     presupone
 }
+-- Vocabulario orientativo; no es una restricción. El LLM puede usar cualquier verbo o frase.
 
 enum TipoBucle {
     fundamental
@@ -91,12 +98,20 @@ entity ConceptoPropuesto {
     es_dudoso: confianza < config.confianza_minima
 }
 
+-- RelacionPropuesta usa ontología abierta: el tipo de relación es un String
+-- libre, no restringido al enum TipoRelacion. El LLM puede producir cualquier
+-- frase en español que nombre el vínculo entre conceptos.
 entity RelacionPropuesta {
     id: String                                   -- por ejemplo "r_001"
     transcripcion: transcripcion/Transcripcion
+    origen_id: String                            -- ID crudo del LLM (ej. "c_001")
+    destino_id: String                           -- ID crudo del LLM (ej. "c_003")
+    -- origen_id y destino_id se resuelven a ConceptoPropuesto por coincidencia
+    -- de sufijo numérico. Los campos derivados origen/destino reflejan esa resolución.
     origen: ConceptoPropuesto
     destino: ConceptoPropuesto
-    tipo: TipoRelacion
+    tipo: String
+    -- tipo: ontología abierta; cualquier frase en español que nombre el vínculo.
     etiqueta: String                             -- la palabra que el autor usa
     bidireccional: Boolean
     confianza: Decimal

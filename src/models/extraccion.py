@@ -8,14 +8,9 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class TipoConcepto(str, Enum):
-    primitivo = "primitivo"
-    derivado = "derivado"
-    metalenguaje = "metalenguaje"
-    ambiguo = "ambiguo"
-
-
 class TipoRelacion(str, Enum):
+    """Tipos canónicos. En la práctica el campo tipo es str libre; este enum
+    sirve como referencia de valores esperados."""
     fundamenta = "fundamenta"
     amplifica = "amplifica"
     especifica = "especifica"
@@ -23,6 +18,7 @@ class TipoRelacion(str, Enum):
     constituye = "constituye"
     genera = "genera"
     presupone = "presupone"
+    relacionado_con = "relacionado_con"   # fallback genérico
 
 
 class TipoBucle(str, Enum):
@@ -36,10 +32,17 @@ class TipoMetalenguaje(str, Enum):
     cita_de_otro_autor = "cita_de_otro_autor"
 
 
+class TipoConcepto(str, Enum):
+    primitivo    = "primitivo"
+    derivado     = "derivado"
+    metalenguaje = "metalenguaje"
+    ambiguo      = "ambiguo"
+
+
 class ConceptoPropuesto(BaseModel):
     id: str                                        # "c_001", "c_002", ...
     label: str
-    tipo: TipoConcepto
+    tipo: TipoConcepto = TipoConcepto.primitivo    # clasificación epistemológica
     descripcion: str
     sinonimos_candidatos: list[str] = Field(default_factory=list)
     menciones: int = Field(default=1, ge=1)
@@ -52,7 +55,7 @@ class RelacionPropuesta(BaseModel):
     id: str                                        # "r_001", "r_002", ...
     origen_id: str
     destino_id: str
-    tipo: TipoRelacion
+    tipo: str                                      # string libre; TipoRelacion como guía
     etiqueta: str                                  # la palabra que el autor usa
     bidireccional: bool = False
     confianza: float = Field(ge=0.0, le=1.0)

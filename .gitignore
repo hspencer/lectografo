@@ -28,3 +28,6 @@ transcripts/*.mp3
 transcripts/*.wav
 transcripts/*.m4a
 transcripts/*.mp4
+
+# Backups temporales
+*.bak

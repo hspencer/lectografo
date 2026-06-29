@@ -17,6 +17,7 @@ use "./transcripcion.allium" as transcripcion
 use "./extraccion.allium" as extraccion
 use "./validacion.allium" as validacion
 use "./grafo.allium" as grafo
+use "./extraccion-incremental.allium" as extraccionIncremental
 
 ------------------------------------------------------------
 -- Actores
@@ -58,7 +59,8 @@ contract Codec {
 }
 
 contract EvaluadorLLM {
-    invocar: (prompt: String, transcripcion: transcripcion/Transcripcion) -> String
+    invocar: (prompt: String, transcripcion: transcripcion/Transcripcion, on_token: (Integer -> Void)?) -> String
+    -- on_token: callback opcional invocado en cada token generado; permite progreso en tiempo real y cancelación.
     parsear_respuesta: (texto: String) -> (List<extraccion/ConceptoPropuesto>, List<extraccion/RelacionPropuesta>, List<extraccion/BucleDetectado>, List<extraccion/FlagMetalenguaje>)
 
     @invariant ParseoEsTotal
@@ -66,7 +68,7 @@ contract EvaluadorLLM {
         -- retorna listas vacias y la falla se reporta por otro canal.
 
     @guidance
-        -- Cada proveedor (anthropic, openai, gemini) implementa este
+        -- Cada proveedor (anthropic, openai, gemini, ollama) implementa este
         -- contrato detras de la misma interfaz.
 }
 
@@ -133,7 +135,6 @@ surface VisualizacionGrafo {
     exposes:
         grafo.titulo
         grafo.version
-        grafo.estado
         grafo.total_nodos
         grafo.total_relaciones
         grafo.densidad
@@ -155,28 +156,74 @@ surface VisualizacionGrafo {
             b.nodos
 
     provides:
-        InvestigadorMarcaGrafoRevisado(grafo)
-            when grafo.estado = borrador
-        InvestigadorPublicaGrafo(grafo)
-            when grafo.estado = revisado
-        InvestigadorRevierteRevision(grafo)
-            when grafo.estado = revisado
         InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
 
     related:
         PanelValidacion(grafo.transcripcion)
-            when grafo.estado in {borrador, revisado}
 
     contracts:
         demands Codec
 
-    @guarantee GrafoPublicadoNoSeMutaPorEstaSurface
-        -- Una vez publicado, esta surface es read-only. Los provides
-        -- no aplican y la implementacion debe rechazar mutaciones.
-
     @guidance
         -- La visualizacion usa D3 force-directed por defecto. El
         -- investigador puede arrastrar nodos para reorganizar.
+}
+
+------------------------------------------------------------
+-- Surface: mapa conceptual en construcción
+------------------------------------------------------------
+
+surface VisualizacionGrafoEnConstruccion {
+    -- Mapa conceptual que crece en tiempo real mientras el LLM procesa
+    -- el texto frase a frase. El investigador es espectador puro.
+    -- Al completarse la sesión, esta vista cede lugar a VisualizacionGrafo.
+    facing investigador: Investigador
+    context sesion: extraccionIncremental/SesionExtraccionIncremental where estado = activa
+
+    -- Nodos y relaciones ya materializados hasta este momento
+    let nodos_actuales = NodosParcialesDeSesion(sesion)
+    let relaciones_actuales = RelacionesParcialesdeSesion(sesion)
+
+    exposes:
+        sesion.transcripcion.titulo
+        sesion.porcentaje_avance
+        sesion.frases_procesadas
+        sesion.total_frases
+        sesion.frase_en_curso
+        -- Nodos del grafo en construcción
+        for n in nodos_actuales:
+            n.label
+            n.tipo
+            n.es_nuevo_en_sesion
+            -- es_nuevo_en_sesion: false si el nodo ya existía en grafo_preexistente
+        -- Relaciones del grafo en construcción
+        for r in relaciones_actuales:
+            r.etiqueta
+            r.origen.label
+            r.destino.label
+            r.es_nueva_en_sesion
+
+    provides:
+        InvestigadorAbortaSesion(sesion)
+
+    transitions:
+        when sesion.estado = completada -> VisualizacionGrafo(sesion.grafo_resultante)
+
+    @guarantee InvestigadorEsEspectador
+        -- Esta surface no permite editar el grafo en construcción.
+        -- La única acción disponible es abortar la sesión.
+        -- Las propuestas de consolidación se acumulan en segundo plano
+        -- sin interrumpir la visualización ni requerir atención inmediata.
+
+    @guarantee NodosAparecenAlInstante
+        -- Cada ResultadoParcial nuevo causa que los nodos y relaciones
+        -- detectados en esa frase aparezcan en el mapa inmediatamente,
+        -- sin esperar al fin de la sesión ni al siguiente lote.
+
+    @guarantee NodosExistentesSeDistinguen
+        -- Los conceptos reconocidos como equivalentes a nodos del
+        -- grafo_preexistente se muestran diferenciados de los nodos
+        -- nuevos, pero se destacan visualmente al recibir nueva evidencia.
 }
 
 ------------------------------------------------------------
@@ -236,6 +283,17 @@ rule AbortarExtraccionPorTimeout {
     ensures: ExtraccionLLMRetornaError(ejecucion: e, razon: "timeout")
 }
 
+rule CancelarExtraccion {
+    when: CancelarExtraccion(ejecucion)
+    requires: ejecucion.estado = en_curso
+    ensures:
+        ejecucion.estado = fallida
+        ejecucion.finalizada_en = now
+        ejecucion.razon_falla = "cancelado_por_investigador"
+        ejecucion.transcripcion.estado = normalizada
+        -- La transcripción vuelve a estado normalizada: puede procesarse de nuevo.
+}
+
 ------------------------------------------------------------
 -- Surface: configuracion del proveedor LLM
 ------------------------------------------------------------
@@ -252,12 +310,70 @@ surface ConfiguracionProveedor {
             when proveedor in {anthropic, openai, gemini}
         InvestigadorSeleccionaProveedorLocal(modelo, endpoint)
             when proveedor = ollama
+        InvestigadorSeleccionaModeloOllama(modelo)
+            when proveedor = ollama
+            -- modelo: seleccionado de la lista devuelta por el endpoint de Ollama
 
     @guarantee ApiKeyNoSeExponeEnOtrasSuperficies
         -- La api_key de proveedores remotos nunca aparece en otras surfaces
         -- ni en la serializacion del grafo. Solo es visible en esta surface
         -- para su configuracion.
 }
+
+------------------------------------------------------------
+-- Surface: panel de biblioteca (vista principal)
+------------------------------------------------------------
+
+surface PanelBiblioteca {
+    -- Vista principal de la aplicación: lista de textos disponibles,
+    -- estado de cada uno, y control del proceso de extracción.
+    facing investigador: Investigador
+
+    exposes:
+        -- Textos ya extraídos
+        for t in transcripcion/Transcripcion where estado != raw:
+            t.titulo
+            t.estado
+            t.metadatos
+        -- Extracciones en curso: progreso en tokens
+        for e in extraccion/EjecucionExtraccion where estado = en_curso:
+            e.transcripcion.titulo
+            e.tokens_generados       -- contador en tiempo real vía on_token
+            e.tokens_total_estimado  -- estimación previa al inicio
+            e.porcentaje_avance      -- tokens_generados * 100 / tokens_total_estimado, cap 90%
+            e.elapsed                -- segundos desde iniciada_en
+
+    provides:
+        InvestigadorSolicitaExtraccion(transcripcion, proveedor, prompt)
+            when transcripcion.estado = normalizada
+        CancelarExtraccion(ejecucion)
+            when ejecucion.estado = en_curso
+        InvestigadorEditaMetadatos(transcripcion, metadatos)
+            -- Editar ficha bibliográfica; funciona antes y después de extraer
+
+    @guarantee ProgresoEnTiempoReal
+        -- El conteo de tokens se actualiza en cada token generado,
+        -- sin esperar al fin de la extracción. El porcentaje nunca
+        -- supera el 90% hasta que la extracción completa.
+
+    @guarantee CancelacionResponsiva
+        -- Tras CancelarExtraccion, el proceso se detiene en el próximo token
+        -- generado (< 1 segundo de latencia). Los archivos parciales no quedan
+        -- escritos: la extracción cancelada deja el texto en estado normalizada.
+}
+
+------------------------------------------------------------
+-- Deferred
+------------------------------------------------------------
+
+deferred NodosParcialesDeSesion(sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Nodo>
+    -- Proyecta los ResultadoParciales acumulados hasta ahora en nodos
+    -- del grafo (aplicando el tesauro y la equivalencia con grafo_preexistente).
+    -- Devuelve el estado actual del grafo en construcción.
+
+deferred RelacionesParcialesdeSesion(sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Relacion>
+    -- Proyecta las relaciones detectadas hasta ahora en el grafo en construcción.
+
 
 ------------------------------------------------------------
 -- Preguntas abiertas
@@ -267,4 +383,10 @@ open question "El timeout de 5 minutos para la invocacion del LLM es razonable p
 
 open question "La surface VisualizacionGrafo expone la densidad pero no expone la lista completa de bucles con sus tipos. Es informacion que el investigador quiere ver en el panel principal o solo bajo demanda?"
 
-open question "Para modelos locales via ollama: el investigador selecciona el modelo de una lista de modelos disponibles en el endpoint, o lo escribe manualmente?"
+open question "VisualizacionGrafoEnConstruccion: ¿la frase actualmente en proceso se muestra en el mapa (p.ej. como tooltip o panel lateral con el texto fuente), o solo el mapa de nodos y relaciones?"
+
+open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstruccion cierra y muestra el grafo parcial hasta ese punto, o vuelve a PanelBiblioteca?"
+
+-- DECISIÓN RESUELTA: El investigador selecciona el modelo Ollama de una lista
+-- consultada en tiempo real al endpoint /api/tags de Ollama. El panel de
+-- configuración muestra los modelos instalados y guarda la selección en .env.

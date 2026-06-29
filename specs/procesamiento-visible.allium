@@ -1,0 +1,501 @@
+-- allium: 3
+-- procesamiento-visible.allium
+
+-- Scope: secuencia visual de emergencia del grafo durante la extraccion
+-- incremental, interaccion libre del investigador con el grafo parcial,
+-- y manejo del "doble contra-argumento" cuando un concepto previamente
+-- rechazado reaparece en un nuevo lote.
+--
+-- El grafo crece lote a lote en dos fases visibles: primero los conceptos
+-- emergen como nodos, luego las relaciones se consolidan como arcos. El
+-- investigador puede interactuar con lotes ya integrados mientras nuevos
+-- lotes siguen procesandose en segundo plano. Una nueva aparicion de un
+-- concepto rechazado no detiene el proceso: genera un ContraArgumentoDecision
+-- que se acumula como las PropuestaConsolidacion.
+--
+-- Includes:
+--   - Secuencia de emergencia visual por lote (conceptos -> relaciones -> integrado)
+--   - Interaccion libre con lotes integrados (navegacion, edicion, decisiones)
+--   - Proteccion de monotonia: lotes nuevos no modifican decisiones previas
+--   - Deteccion de conceptos rechazados que reaparecen (contra-argumento)
+--   - Resolucion del contra-argumento: confirmar rechazo o revocar
+--
+-- Excludes:
+--   - Extraccion incremental en si (vive en extraccion-incremental.allium)
+--   - Validacion post-extraccion de puntos de decision (vive en validacion.allium)
+--   - Estructura y persistencia del grafo (vive en grafo.allium)
+--   - Layout, rendering, motor de fuerza D3 (detalle de implementacion)
+--
+-- Dependencies:
+--   extraccion-incremental.allium — SesionExtraccionIncremental, ExtraccionLoteCompletada, FrasesRegistradas
+--   extraccion.allium             — ConceptoPropuesto, RelacionPropuesta
+--   validacion.allium             — PuntoDecision, ResolucionDecision
+--   grafo.allium                  — Nodo, Grafo
+
+use "./transcripcion.allium" as transcripcion
+use "./extraccion-incremental.allium" as extInc
+use "./extraccion.allium" as extraccion
+use "./validacion.allium" as validacion
+use "./grafo.allium" as grafo
+use "./surfaces.allium" as surfaces
+
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum FaseLote {
+    conceptos_emergiendo
+    relaciones_consolidando
+    integrado
+}
+
+enum EstadoContraArgumento {
+    pendiente
+    confirmado_rechazo
+    revocado
+}
+
+
+------------------------------------------------------------
+-- Entities
+------------------------------------------------------------
+
+-- ─── Lote visualizado ────────────────────────────────────
+
+-- Cada lote procesado por el LLM se convierte en un LoteVisualizado que
+-- transita por tres fases: primero los conceptos emergen como nodos en
+-- el grafo, luego las relaciones se consolidan como arcos, y finalmente
+-- el lote queda integrado y es interactivo para el investigador.
+entity LoteVisualizado {
+    sesion: extInc/SesionExtraccionIncremental
+    indice_lote: Integer
+    -- indice_lote: orden secuencial dentro de la sesion (1, 2, 3...)
+
+    fase: FaseLote
+
+    -- Contenido del lote
+    conceptos: List<extraccion/ConceptoPropuesto>
+    relaciones: List<extraccion/RelacionPropuesta>
+
+    -- Conceptos que ya existian en el grafo antes de este lote.
+    -- No se renderizan como nodos nuevos; el nodo existente pulsa/destaca.
+    conceptos_reencuentro: List<extraccion/ConceptoPropuesto>
+
+    -- Timestamps de fase
+    emergencia_iniciada_en: Timestamp
+    relaciones_iniciadas_en: Timestamp? when fase = relaciones_consolidando | integrado
+    integrado_en: Timestamp? when fase = integrado
+
+    transitions fase {
+        conceptos_emergiendo -> relaciones_consolidando
+        relaciones_consolidando -> integrado
+        terminal: integrado
+    }
+
+    -- Derived
+    es_interactivo: fase = integrado
+    tiene_reencuentros: conceptos_reencuentro.count > 0
+
+    invariant OrdenFasesTemporal {
+        fase = relaciones_consolidando implies relaciones_iniciadas_en != null
+    }
+    invariant IntegradoTieneTimestamps {
+        fase = integrado implies integrado_en != null
+    }
+}
+
+
+-- ─── Contra-argumento de decision ────────────────────────
+
+-- Cuando un concepto rechazado previamente reaparece en un nuevo lote,
+-- se crea un ContraArgumentoDecision. El investigador ve lado a lado:
+-- la nueva evidencia (contexto del nuevo lote) y la decision previa
+-- (con su nota de rechazo). No detiene el procesamiento.
+entity ContraArgumentoDecision {
+    sesion: extInc/SesionExtraccionIncremental
+    estado: EstadoContraArgumento
+
+    -- La nueva aparicion del concepto
+    concepto_nuevo: extraccion/ConceptoPropuesto
+    lote_origen: LoteVisualizado
+
+    -- La decision previa que lo rechazo
+    decision_previa: validacion/PuntoDecision
+
+    -- Notas del investigador
+    nota_confirmacion: String? when estado = confirmado_rechazo
+    nota_revocacion: String? when estado = revocado
+
+    creado_en: Timestamp
+    resuelto_en: Timestamp? when estado = confirmado_rechazo | revocado
+
+    transitions estado {
+        pendiente -> confirmado_rechazo
+        pendiente -> revocado
+        terminal: confirmado_rechazo, revocado
+    }
+
+    -- La decision previa debe haber sido resuelta como rechazada
+    invariant DecisionPreviaFueRechazada {
+        decision_previa.estado = resuelta
+        and decision_previa.resolucion = rechazada
+    }
+}
+
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    duracion_emergencia_conceptos: Duration = 2.seconds
+    -- Tiempo que los nodos del lote permanecen en fase conceptos_emergiendo
+    -- antes de pasar a relaciones_consolidando. Permite que el investigador
+    -- perciba la aparicion de nodos antes de que los arcos se dibujen.
+
+    duracion_consolidacion_relaciones: Duration = 1.seconds
+    -- Tiempo que los arcos del lote permanecen en fase relaciones_consolidando
+    -- antes de que el lote pase a integrado.
+}
+
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
+-- ════ Emergencia visual por lote ═══════════════════════
+
+rule EmergenciaConceptos {
+    when: ExtraccionLoteCompletada(sesion, parrafo, frases_lote, conceptos, relaciones, idea_parrafo?)
+    requires: sesion.estado = activa
+    let reencuentros = ConceptosYaEnGrafo(sesion, conceptos)
+    let conceptos_nuevos = ConceptosNuevosEnLote(conceptos, reencuentros)
+    let indice = SiguienteIndiceLote(sesion)
+    ensures:
+        LoteVisualizado.created(
+            sesion: sesion,
+            indice_lote: indice,
+            fase: conceptos_emergiendo,
+            conceptos: conceptos_nuevos,
+            relaciones: relaciones,
+            conceptos_reencuentro: reencuentros,
+            emergencia_iniciada_en: now
+        )
+        -- Para cada concepto de reencuentro, emitir senal de destaque
+        for c in reencuentros:
+            NodoExistentePulsa(sesion: sesion, concepto: c)
+
+    @guidance
+        -- Los conceptos genuinamente nuevos se renderizan como nodos nuevos
+        -- en el grafo. Los conceptos de reencuentro no crean nodo nuevo:
+        -- el nodo existente recibe una animacion de destaque (pulso, brillo)
+        -- para señalar que fue encontrado de nuevo en este lote.
+}
+
+rule ConsolidarRelaciones {
+    when: lote: LoteVisualizado.emergencia_iniciada_en + config.duracion_emergencia_conceptos <= now
+    requires: lote.fase = conceptos_emergiendo
+    ensures:
+        lote.fase = relaciones_consolidando
+        lote.relaciones_iniciadas_en = now
+
+    @guidance
+        -- Los arcos del lote se dibujan ahora, conectando nodos nuevos
+        -- entre si y con nodos ya existentes en el grafo. El investigador
+        -- puede observar pero no editar: el lote aun no esta integrado.
+}
+
+rule IntegrarLote {
+    when: lote: LoteVisualizado.relaciones_iniciadas_en + config.duracion_consolidacion_relaciones <= now
+    requires: lote.fase = relaciones_consolidando
+    ensures:
+        lote.fase = integrado
+        lote.integrado_en = now
+        LoteIntegrado(sesion: lote.sesion, lote: lote)
+
+    @guidance
+        -- El lote pasa a integrado y sus nodos y relaciones quedan
+        -- disponibles para interaccion del investigador: aceptar, rechazar,
+        -- anotar, editar labels. Nuevos lotes que lleguen despues no
+        -- modifican el estado de este lote ni las decisiones tomadas sobre el.
+}
+
+
+-- ════ Interaccion con grafo parcial ════════════════════
+
+rule InvestigadorInteractuaConGrafoParcial {
+    when: InvestigadorEditaElementoIntegrado(sesion, lote, accion)
+    requires: sesion.estado = activa or sesion.estado = completada
+    requires: lote.fase = integrado
+    ensures:
+        AplicarAccionSobreElemento(sesion, lote, accion)
+
+    @guidance
+        -- El investigador puede: aceptar/rechazar conceptos o relaciones,
+        -- agregar notas, editar labels de nodos. Solo sobre lotes integrados.
+        -- Lotes en conceptos_emergiendo o relaciones_consolidando son
+        -- visibles pero no editables. La accion concreta se delega a
+        -- AplicarAccionSobreElemento (caja negra) porque las operaciones
+        -- individuales (aceptar, rechazar, anotar) ya estan modeladas en
+        -- validacion.allium y grafo.allium.
+}
+
+
+-- ════ Deteccion de concepto rechazado que reaparece ════
+
+rule DetectarConceptoRechazadoQueReaparece {
+    when: LoteIntegrado(sesion, lote)
+    for concepto in lote.conceptos:
+        let rechazo_previo = BuscarRechazoPrevia(concepto.label, sesion.transcripcion)
+        -- BuscarRechazoPrevia: busca un PuntoDecision resuelto como rechazada
+        -- cuyo concepto implicado tiene el mismo label que este concepto
+        ensures:
+            if exists rechazo_previo:
+                ContraArgumentoDecision.created(
+                    sesion: sesion,
+                    estado: pendiente,
+                    concepto_nuevo: concepto,
+                    lote_origen: lote,
+                    decision_previa: rechazo_previo,
+                    creado_en: now
+                )
+                ContraArgumentoDetectado(
+                    sesion: sesion,
+                    concepto: concepto,
+                    decision_previa: rechazo_previo
+                )
+
+    @guidance
+        -- La deteccion se basa en coincidencia de label entre el
+        -- ConceptoPropuesto nuevo y los conceptos implicados en un
+        -- PuntoDecision previamente resuelto como rechazada. El sistema
+        -- no usa similitud semantica aqui: el mismo termino debe reaparecer
+        -- textualmente. Si se desea similitud, ver open question abajo.
+}
+
+rule InvestigadorConfirmaRechazo {
+    when: InvestigadorConfirmaRechazoContraArgumento(contra_argumento, nota)
+    requires: contra_argumento.estado = pendiente
+    ensures:
+        contra_argumento.estado = confirmado_rechazo
+        contra_argumento.nota_confirmacion = nota
+        contra_argumento.resuelto_en = now
+
+    @guidance
+        -- El investigador refuerza su decision previa. El concepto no entra
+        -- al grafo. La nota del investigador se preserva como registro
+        -- hermeneutico: "lo rechace antes porque X, y lo confirmo ahora
+        -- porque Y". Ambas notas (la original y esta) quedan trazables.
+}
+
+rule InvestigadorRevocaRechazo {
+    when: InvestigadorRevocaRechazoContraArgumento(contra_argumento, nota)
+    requires: contra_argumento.estado = pendiente
+    requires: contra_argumento.decision_previa.estado = resuelta
+    ensures:
+        contra_argumento.estado = revocado
+        contra_argumento.nota_revocacion = nota
+        contra_argumento.resuelto_en = now
+        -- El concepto entra al grafo como nuevo PuntoDecision pendiente.
+        -- No se acepta directamente: debe pasar por validacion.
+        validacion/PuntoDecision.created(
+            id: "d_revocado_" + contra_argumento.concepto_nuevo.id,
+            transcripcion: contra_argumento.sesion.transcripcion,
+            tipo: confianza_baja,
+            conceptos_implicados: [contra_argumento.concepto_nuevo],
+            pregunta: "Concepto '" + contra_argumento.concepto_nuevo.label + "' fue rechazado previamente y reaparecio. Confirmar su inclusion?",
+            recomendacion_llm: "El concepto fue rechazado en decision " + contra_argumento.decision_previa.id + " con nota: " + (contra_argumento.decision_previa.nota_resolucion ?? "(sin nota)") + ". Ahora reaparecio con nueva evidencia.",
+            justificacion_llm: "Reaparicion en lote " + contra_argumento.lote_origen.indice_lote + " con contexto: " + contra_argumento.concepto_nuevo.cita_directa,
+            estado: pendiente,
+            creada_en: now
+        )
+
+    @guidance
+        -- La revocacion no implica aceptacion automatica. El concepto
+        -- entra como PuntoDecision pendiente para que el investigador lo
+        -- valide conscientemente. Se preservan tres capas de trazabilidad:
+        -- (1) la nota del rechazo original, (2) la nota de revocacion,
+        -- (3) la nueva decision pendiente con su propia nota eventual.
+}
+
+
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
+
+invariant LotesSecuencialesEnSesion {
+    for a in LoteVisualizados:
+        for b in LoteVisualizados:
+            a != b and a.sesion = b.sesion
+                implies a.indice_lote != b.indice_lote
+}
+
+invariant ContraArgumentoSoloConRechazo {
+    for ca in ContraArgumentoDecisions:
+        ca.decision_previa.estado = resuelta
+        and ca.decision_previa.resolucion = rechazada
+}
+
+invariant MonotoniaGrafoParcial {
+    -- Un lote integrado no puede ser des-integrado. La fase es terminal.
+    for lote in LoteVisualizados:
+        lote.fase = integrado implies lote.integrado_en != null
+}
+
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface GrafoEnConstruccion {
+    -- Mapa conceptual que crece en tiempo real durante la extraccion
+    -- incremental. El investigador puede observar todos los lotes e
+    -- interactuar con los ya integrados. Reemplaza la vista de
+    -- "espectador puro" con interaccion diferenciada por fase.
+    facing investigador: surfaces/Investigador
+    context sesion: extInc/SesionExtraccionIncremental where estado in {activa, completada}
+
+    let lotes = LoteVisualizados where sesion = sesion
+    let lotes_integrados = lotes where fase = integrado
+    let lotes_en_curso = lotes where fase != integrado
+    let contra_argumentos_pendientes = ContraArgumentoDecisions where sesion = sesion and estado = pendiente
+
+    exposes:
+        sesion.transcripcion.titulo
+        sesion.porcentaje_avance
+        sesion.frases_procesadas
+        sesion.total_frases
+        sesion.frase_en_curso
+        -- Todos los lotes con su fase actual
+        for lote in lotes:
+            lote.indice_lote
+            lote.fase
+            lote.es_interactivo
+            lote.tiene_reencuentros
+            for c in lote.conceptos:
+                c.label
+                c.tipo
+                c.descripcion
+            for c in lote.conceptos_reencuentro:
+                c.label
+            for r in lote.relaciones:
+                r.etiqueta
+                r.origen.label
+                r.destino.label
+        -- Contra-argumentos pendientes
+        contra_argumentos_pendientes.count
+        for ca in contra_argumentos_pendientes:
+            ca.concepto_nuevo.label
+            ca.concepto_nuevo.cita_directa
+            ca.decision_previa.pregunta
+            ca.decision_previa.nota_resolucion
+
+    provides:
+        -- Interaccion solo con lotes integrados
+        InvestigadorEditaElementoIntegrado(sesion, lote, accion)
+            when lote in lotes_integrados
+        -- Resolucion de contra-argumentos
+        InvestigadorConfirmaRechazoContraArgumento(contra_argumento, nota)
+            when contra_argumento in contra_argumentos_pendientes
+        InvestigadorRevocaRechazoContraArgumento(contra_argumento, nota)
+            when contra_argumento in contra_argumentos_pendientes
+        -- Control de sesion
+        InvestigadorAbortaSesion(sesion)
+            when sesion.estado = activa
+
+    @guarantee CrecimientoMonotonico
+        -- El grafo visible solo crece: nuevos nodos y arcos se agregan,
+        -- nunca se eliminan automaticamente. Un lote nuevo jamas revierte
+        -- ni modifica el estado de lotes ya integrados. Las decisiones
+        -- del investigador sobre elementos integrados son permanentes.
+
+    @guarantee SecuenciaEmergenciaLote
+        -- Cada lote sigue estrictamente la secuencia conceptos_emergiendo
+        -- -> relaciones_consolidando -> integrado. Los conceptos aparecen
+        -- antes que los arcos. El investigador percibe la construccion
+        -- progresiva del grafo, no una aparicion instantanea.
+
+    @guarantee InteraccionNoBloqueante
+        -- El investigador puede navegar (pan, zoom), seleccionar nodos y
+        -- leer detalles en cualquier momento, incluso mientras lotes nuevos
+        -- estan en fase de emergencia. La llegada de un nuevo lote no
+        -- interrumpe la interaccion en curso. La edicion (aceptar, rechazar,
+        -- anotar, renombrar) solo esta disponible sobre lotes integrados.
+
+    @guarantee ReencuentrosDistinguibles
+        -- Conceptos que ya existian en el grafo antes del lote actual no
+        -- generan nodos nuevos. En su lugar, el nodo existente recibe una
+        -- senal visual de destaque (pulso, brillo) para indicar que fue
+        -- encontrado de nuevo. El investigador siempre puede distinguir
+        -- un concepto genuinamente nuevo de uno reencontrado.
+
+    @guarantee ContraArgumentosNoInterrumpen
+        -- Los contra-argumentos se acumulan como notificaciones en un
+        -- panel lateral, igual que las PropuestaConsolidacion. No pausan
+        -- la extraccion ni bloquean la interaccion con el grafo. El
+        -- investigador los resuelve cuando quiere.
+
+    timeout:
+        ConsolidarRelaciones when lote in lotes_en_curso
+        IntegrarLote when lote in lotes_en_curso
+
+    @guidance
+        -- Esta surface reemplaza a VisualizacionGrafoEnConstruccion de
+        -- surfaces.allium, que modelaba al investigador como espectador
+        -- puro. Aqui el investigador es participante activo: puede
+        -- interactuar con el grafo parcial mientras se construye.
+        -- Al completarse la sesion, la surface sigue activa (estado =
+        -- completada) para que el investigador termine de resolver
+        -- contra-argumentos pendientes y editar lotes integrados.
+}
+
+
+------------------------------------------------------------
+-- Deferred Specifications
+------------------------------------------------------------
+
+deferred ConceptosYaEnGrafo(sesion: extInc/SesionExtraccionIncremental, conceptos: List<extraccion/ConceptoPropuesto>) -> List<extraccion/ConceptoPropuesto>
+    -- Filtra los conceptos del lote que ya tienen un nodo equivalente en el
+    -- grafo en construccion (sea por grafo_preexistente o por lotes anteriores
+    -- de esta misma sesion). Usa coincidencia de label y sinonimos del tesauro.
+
+deferred ConceptosNuevosEnLote(conceptos: List<extraccion/ConceptoPropuesto>, reencuentros: List<extraccion/ConceptoPropuesto>) -> List<extraccion/ConceptoPropuesto>
+    -- Devuelve los conceptos del lote que no estan en la lista de reencuentros.
+    -- Complemento de ConceptosYaEnGrafo.
+
+deferred SiguienteIndiceLote(sesion: extInc/SesionExtraccionIncremental) -> Integer
+    -- Devuelve el proximo indice secuencial para un LoteVisualizado dentro
+    -- de la sesion. Empieza en 1 y se incrementa.
+
+deferred BuscarRechazoPrevia(label: String, t: transcripcion/Transcripcion) -> validacion/PuntoDecision?
+    -- Busca un PuntoDecision resuelto como rechazada cuyo concepto implicado
+    -- tiene un label que coincide con el label dado, dentro de la transcripcion.
+    -- Devuelve el primero encontrado o null si no hay coincidencia.
+
+deferred ConceptosRenderizados(lote: LoteVisualizado) -> Boolean
+    -- Devuelve true cuando todos los nodos del lote han sido renderizados
+    -- visualmente en el canvas. Usado internamente por el motor de visualizacion.
+
+deferred AplicarAccionSobreElemento(sesion: extInc/SesionExtraccionIncremental, lote: LoteVisualizado, accion: String) -> Void
+    -- Delega la accion del investigador al subsistema correspondiente:
+    -- aceptar/rechazar -> validacion.allium, anotar -> validacion.allium,
+    -- editar label -> grafo.allium. La accion es un string discriminador
+    -- que la implementacion interpreta.
+
+deferred NodosDesdeConceptos(conceptos: List<extraccion/ConceptoPropuesto>) -> List<grafo/Nodo>
+    -- Proyecta una lista de ConceptoPropuesto a los Nodos del grafo que
+    -- los representan. Usado para renderizar el lote en la visualizacion.
+
+
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
+
+open question "La deteccion de contra-argumento usa coincidencia textual de label. Deberia usar similitud semantica (como el tesauro) para detectar conceptos rechazados que reaparecen con label ligeramente distinto?"
+
+open question "Cuando un ContraArgumentoDecision se revoca y el concepto entra como PuntoDecision pendiente, las relaciones del lote que involucran ese concepto tambien deberian entrar al grafo como pendientes, o solo el concepto aislado?"
+
+open question "Los tiempos de config.duracion_emergencia_conceptos y config.duracion_consolidacion_relaciones son fijos. Deberian escalar con el tamano del lote (mas conceptos = mas tiempo de emergencia)?"
+
+open question "Cuando la sesion tiene grafo_preexistente, los conceptos de reencuentro que pulsan: deberian mostrar cuantas veces han sido reencontrados en total (contador acumulativo), o solo señalar el reencuentro mas reciente?"

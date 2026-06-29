@@ -2,13 +2,13 @@
 -- grafo.allium
 
 -- Scope: estructura final del grafo conceptual, persistencia en disco y
--- publicacion inmutable. El grafo es la cristalizacion del trabajo
--- interpretativo del investigador sobre la propuesta del LLM.
+-- versionado. El grafo es la cristalizacion del trabajo interpretativo
+-- del investigador sobre la propuesta del LLM. Los grafos siempre estan
+-- en edicion; no tienen maquina de estados.
 --
 -- Includes:
 --   - Modelado de nodos y relaciones con anotacion semantica
 --   - Persistencia en JSON con versionado
---   - Publicacion como version inmutable
 --   - Operaciones de fusion y particion derivadas de decisiones validadas
 --
 -- Excludes:
@@ -90,13 +90,9 @@ entity Grafo {
     id: String                                   -- slug + version corta
     transcripcion: transcripcion/Transcripcion
     titulo: String                               -- usualmente igual al de la transcripcion
-    version: String                              -- "1.0-draft", "1.0", "1.1", ...
+    version: String                              -- "1.0", "1.1", ...
     creador: String                              -- nombre del investigador
     creado_en: Timestamp
-
-    estado: borrador | revisado | publicado
-    fecha_publicacion: Timestamp? when estado = publicado
-    hash_contenido: String? when estado = publicado    -- huella inmutable
 
     -- Relaciones internas
     nodos: Nodo with grafo = this
@@ -113,32 +109,24 @@ entity Grafo {
     total_relaciones: relaciones.count
     densidad: if total_nodos < 2 then 0 else total_relaciones / (total_nodos * (total_nodos - 1))    -- aprox dirigida; 0 si hay menos de 2 nodos
 
-    transitions estado {
-        borrador -> revisado
-        revisado -> publicado
-        revisado -> borrador
-        terminal: publicado
-    }
 }
 
 ------------------------------------------------------------
 -- Construccion del grafo desde validacion
 ------------------------------------------------------------
 
-rule CrearGrafoBorrador {
+rule CrearGrafo {
     when: ValidacionLista(transcripcion)
 
     requires: transcripcion.estado = validada
-    requires: not exists Grafo{transcripcion: transcripcion, estado: borrador}
 
     ensures: Grafo.created(
         id: transcripcion.id + "-v1",
         transcripcion: transcripcion,
         titulo: transcripcion.titulo,
-        version: "1.0-draft",
+        version: "1.0",
         creador: nombre_investigador(),       -- caja negra
-        creado_en: now,
-        estado: borrador
+        creado_en: now
     )
 
     @guidance
@@ -167,7 +155,7 @@ rule MaterializarNodoDesdeConceptoAceptado {
                           else conceptos.first.tipo
 
     ensures:
-        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        let g = Grafo{transcripcion: decision.transcripcion}
         Nodo.created(
             id: "node_" + decision.id,
             grafo: g,
@@ -193,7 +181,7 @@ rule MaterializarRelacionDesdeDecisionAceptada {
     let bidir = decision.resolucion = aceptada
 
     ensures:
-        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        let g = Grafo{transcripcion: decision.transcripcion}
         Relacion.created(
             id: "rel_" + decision.id,
             grafo: g,
@@ -223,7 +211,7 @@ rule MaterializarRelacionConfianzaBajaAceptada {
     let r = decision.relacion_implicada
 
     ensures:
-        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        let g = Grafo{transcripcion: decision.transcripcion}
         Relacion.created(
             id: "rel_" + decision.id,
             grafo: g,
@@ -258,7 +246,7 @@ rule MaterializarBucleAceptado {
     let b = decision.bucle_implicado
 
     ensures:
-        let g = Grafo{transcripcion: decision.transcripcion, estado: borrador}
+        let g = Grafo{transcripcion: decision.transcripcion}
         Bucle.created(
             id: "loop_" + decision.id,
             grafo: g,
@@ -267,49 +255,6 @@ rule MaterializarBucleAceptado {
             tipo: b.tipo,
             bucle_origen: b
         )
-}
-
-------------------------------------------------------------
--- Revision y publicacion
-------------------------------------------------------------
-
-rule MarcarGrafoComoRevisado {
-    when: InvestigadorMarcaGrafoRevisado(grafo)
-
-    requires: grafo.estado = borrador
-    requires: grafo.total_nodos > 0
-    requires: grafo.total_relaciones > 0
-
-    ensures: grafo.estado = revisado
-}
-
-rule PublicarGrafo {
-    when: InvestigadorPublicaGrafo(grafo)
-
-    requires: grafo.estado = revisado
-    requires: grafo.transcripcion.estado = validada
-    requires: not exists validacion/PuntoDecision{transcripcion: grafo.transcripcion, estado: pendiente}
-
-    ensures:
-        grafo.estado = publicado
-        grafo.fecha_publicacion = now
-        grafo.hash_contenido = calcular_hash(grafo)    -- caja negra
-        grafo.transcripcion.estado = publicada
-        grafo.transcripcion.fecha_publicacion = now
-        GrafoPublicado(grafo: grafo)
-
-    @guidance
-        -- Publicar congela el grafo. Para hacer cambios posteriores se
-        -- crea un nuevo Grafo con version incrementada y se vuelve a
-        -- ejecutar el flujo de validacion sobre la transcripcion.
-}
-
-rule RevertirRevisionABorrador {
-    when: InvestigadorRevierteRevision(grafo)
-
-    requires: grafo.estado = revisado
-
-    ensures: grafo.estado = borrador
 }
 
 ------------------------------------------------------------
@@ -332,11 +277,6 @@ invariant BuclePerteneceAUnSoloGrafo {
             n.grafo = b.grafo
 }
 
-invariant GrafoPublicadoTieneHash {
-    for g in Grafo:
-        g.estado = publicado implies g.hash_contenido != null
-}
-
 ------------------------------------------------------------
 -- Preguntas abiertas
 ------------------------------------------------------------
@@ -344,8 +284,6 @@ invariant GrafoPublicadoTieneHash {
 open question "Permitir que un mismo nodo pertenezca a multiples grafos como referencia compartida, o cada grafo debe tener su propia copia del nodo?"
 
 open question "El calculo de densidad asume grafo dirigido sin auto-loops. Como cuenta densidad en presencia de bucles?"
-
-open question "Una relacion en estado indefinida, debe bloquear la transicion borrador -> revisado, o es suficiente con destacarla visualmente?"
 
 -- Funciones auxiliares de lookup usadas en las reglas de materializacion.
 -- Se declaran como deferred porque su logica depende del modelo de datos concreto.
