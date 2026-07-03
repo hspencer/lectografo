@@ -1,0 +1,659 @@
+{
+  "titulo": "Herbert Marcuse",
+  "slug": "marcuse",
+  "extraccion": {
+    "conceptos": [
+      {
+        "id": "c_001",
+        "label": "Teoría Crítica de la Sociedad",
+        "tipo": "primitivo",
+        "descripcion": "Enfoque filosófico desarrollado por la Escuela de Frankfurt que analiza críticamente los malestares y contradicciones de la sociedad capitalista moderna, identificando mecanismos de represión y alienación.",
+        "sinonimos_candidatos": [
+          "pensamiento crítico",
+          "análisis crítico"
+        ],
+        "menciones": 12,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "construyendo la llamada teoría crítica de la sociedad que aborda los malestares de una sociedad aparentemente funcional"
+      },
+      {
+        "id": "c_002",
+        "label": "Sociedad Unidimensional",
+        "tipo": "derivado",
+        "descripcion": "Concepto marcusiano que describe una sociedad donde todos los planos del pensamiento, la cultura y la existencia se absorben en una única lógica de racionalidad tecnológica y consumo, eliminando la posibilidad de crítica y contraposición.",
+        "sinonimos_candidatos": [
+          "hombre unidimensional",
+          "unidimensionalidad"
+        ],
+        "menciones": 18,
+        "confianza": 0.98,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el mundo que describe Marcus es el de la unidimensionalidad con una sola dimensión que absorbe todos los planes de pensamiento en una realidad estandarizada y homogénea"
+      },
+      {
+        "id": "c_003",
+        "label": "Alienación",
+        "tipo": "primitivo",
+        "descripcion": "Estado de separación del individuo respecto a sí mismo, su trabajo y su potencial de autodeterminación, producido por las estructuras del capitalismo industrial que lo integran al sistema sin libertad de elección genuina.",
+        "sinonimos_candidatos": [
+          "reificación",
+          "pérdida de sí mismo"
+        ],
+        "menciones": 8,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la crítica a la cultura del capitalismo... centrada en la alienación y la represión"
+      },
+      {
+        "id": "c_004",
+        "label": "Represión",
+        "tipo": "primitivo",
+        "descripcion": "Mecanismo mediante el cual el sistema capitalista sofoca las contradicciones, necesidades auténticas y potencial de transformación de los individuos, convirtiéndola en represión administrativa imperceptible.",
+        "sinonimos_candidatos": [
+          "supresión",
+          "control social"
+        ],
+        "menciones": 7,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "desplegar una batería teórica en la que pondrá en cuestionamiento la construcción del mundo occidental marcado por la alienación y la represión"
+      },
+      {
+        "id": "c_005",
+        "label": "Capitalismo Integrador",
+        "tipo": "derivado",
+        "descripcion": "Forma mutante del capitalismo que logra absorber y neutralizar todas las fuerzas opositoras y contradicciones, integrándolas en su propia lógica sin permitir espacios externos o alternativos de resistencia.",
+        "sinonimos_candidatos": [
+          "sociedad integrista",
+          "capitalismo industrial avanzado"
+        ],
+        "menciones": 9,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el sistema integrista centrado en lo productivo devora y rechaza todas las alternativas y contradicciones"
+      },
+      {
+        "id": "c_006",
+        "label": "Falsas Necesidades",
+        "tipo": "derivado",
+        "descripcion": "Necesidades artificialmente producidas por el sistema capitalista mediante la publicidad y la cultura de consumo que no responden a necesidades auténticas humanas sino al imperative de expansión productiva y acumulación de capital.",
+        "sinonimos_candidatos": [
+          "necesidades impuestas",
+          "consumo fabricado"
+        ],
+        "menciones": 6,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "un sistema que no produce ni bienes ni servicios que produce necesidades falsas necesidades y que transforma esas necesidades en desenfrenado consumo"
+      },
+      {
+        "id": "c_007",
+        "label": "Racionalidad Tecnológica",
+        "tipo": "derivado",
+        "descripcion": "Forma de razón instrumental que reduce todo a operaciones calculables y funcionales, rechazando conceptos que no pueden ser operacionalizados y constituyendo la base ideológica de la dominación moderna.",
+        "sinonimos_candidatos": [
+          "razón instrumental",
+          "lógica productiva"
+        ],
+        "menciones": 11,
+        "confianza": 0.95,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la racionalidad tecnológica como decíamos anteriormente es sinónimo de racionalidad política y esta razón instrumental hace que todo concepto que no pueda traducirse a operaciones y cálculos sea rechazado"
+      },
+      {
+        "id": "c_008",
+        "label": "Pensamiento Dialéctico",
+        "tipo": "primitivo",
+        "descripcion": "Método de análisis filosófico que opera mediante contraposición de opuestos y negación, permitiendo identificar contradicciones internas del sistema y posibilidades de transformación histórica.",
+        "sinonimos_candidatos": [
+          "negatividad",
+          "pensamiento crítico dialéctico",
+          "pensamiento bidimensional"
+        ],
+        "menciones": 13,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "ingresamos en otro concepto clave de la teoría crítica el del pensamiento dialéctico"
+      },
+      {
+        "id": "c_009",
+        "label": "Negatividad",
+        "tipo": "primitivo",
+        "descripcion": "Dimensión conceptual que expresa lo que falta, lo que se niega, lo que podría ser pero no es; elemento esencial del pensamiento dialéctico y crítico que el sistema unidimensional destruye sistemáticamente.",
+        "sinonimos_candidatos": [
+          "rechazo",
+          "negación",
+          "alteridad"
+        ],
+        "menciones": 14,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "estas categorías contrapuestas dialécticas han perdido su connotación crítica... han perdido su negatividad se han vuelto positivas"
+      },
+      {
+        "id": "c_010",
+        "label": "Clase Obrera",
+        "tipo": "primitivo",
+        "descripcion": "En el análisis de Marcuse, grupo social que históricamente fue agente revolucionario pero que en el capitalismo avanzado es integrado y cooptado por el sistema, perdiendo su capacidad de transformación.",
+        "sinonimos_candidatos": [
+          "proletariado",
+          "trabajadores",
+          "clase trabajadora"
+        ],
+        "menciones": 12,
+        "confianza": 0.91,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la clase trabajadora deja de ser el factor negativo opuesto a la positividad capitalista"
+      },
+      {
+        "id": "c_011",
+        "label": "Agentes de Cambio",
+        "tipo": "derivado",
+        "descripcion": "Grupos o fuerzas sociales identificados como potencialmente capaces de producir transformación revolucionaria del sistema: estudiantes, marginados, trabajadores, movimientos sociales.",
+        "sinonimos_candidatos": [
+          "fuerzas revolucionarias",
+          "sujetos de transformación"
+        ],
+        "menciones": 8,
+        "confianza": 0.88,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "estudiantes desempleados y habitantes de la periferia se responde Marcuse por fuera del sistema"
+      },
+      {
+        "id": "c_012",
+        "label": "Posmodernidad",
+        "tipo": "primitivo",
+        "descripcion": "Época caracterizada por la disolución de grandes relatos, la fragmentación, el pastiche cultural, la pluralidad de discursos y la desaparición de criterios de verdad y negación que permitían la crítica.",
+        "sinonimos_candidatos": [
+          "cultura posmoderna",
+          "fin de la modernidad"
+        ],
+        "menciones": 9,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Marcuse se avisora claramente la llegada del pastiche propio de la cultura posmoderna"
+      },
+      {
+        "id": "c_013",
+        "label": "Pastiche",
+        "tipo": "derivado",
+        "descripcion": "Mezcla indiferenciada de estilos, formas culturales e ideologías contradictorias que coexisten sin conflicto en la cultura posmoderna, donde el arte pierde su potencia crítica y transgresora.",
+        "sinonimos_candidatos": [
+          "eclecticismo",
+          "sincretismo cultural"
+        ],
+        "menciones": 7,
+        "confianza": 0.91,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el nuevo totalitarismo se manifiesta precisamente en un pluralismo armonizador en el que las obras y verdades más contradictorias coexisten pacíficamente"
+      },
+      {
+        "id": "c_014",
+        "label": "Lenguaje Unidimensional",
+        "tipo": "derivado",
+        "descripcion": "Sistema lingüístico que elimina la capacidad crítica mediante rituales, elementos mágicos y la unificación de opuestos, eliminando la bidimensionalidad del pensamiento y la conciencia histórica.",
+        "sinonimos_candidatos": [
+          "discurso unidimensional",
+          "lenguaje mágico ritual"
+        ],
+        "menciones": 9,
+        "confianza": 0.94,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "los medios reproducen el lenguaje unidimensional dice Marcuse opuesto a la bidimensionalidad del pensamiento crítico y dialéctico"
+      },
+      {
+        "id": "c_015",
+        "label": "Medios de Comunicación",
+        "tipo": "primitivo",
+        "descripcion": "Instituciones que funcionan como mediadores entre el poder y los ciudadanos, disolviendo las diferencias entre apariencia y realidad, reproduciendo el lenguaje unidimensional y naturalizando el orden existente.",
+        "sinonimos_candidatos": [
+          "industria cultural",
+          "medios masivos"
+        ],
+        "menciones": 6,
+        "confianza": 0.87,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Marcuse avanza sobre el rol de los medios de comunicación que considera la mediación entre los amos y sus servidores"
+      },
+      {
+        "id": "c_016",
+        "label": "Positividad",
+        "tipo": "primitivo",
+        "descripcion": "Característica del sistema capitalista avanzado de ser completamente afirmativo, sin fisuras, que absorbe toda negación y contradicción, imposibilitando la crítica y la alteridad.",
+        "sinonimos_candidatos": [
+          "pura positividad",
+          "completitud del sistema"
+        ],
+        "menciones": 11,
+        "confianza": 0.92,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la sociedad capitalista avanzada muestra una gran positividad y esto representa un problema"
+      },
+      {
+        "id": "c_017",
+        "label": "Alteridad",
+        "tipo": "primitivo",
+        "descripcion": "Dimensión de lo otro, de la diferencia radical, del otro como sujeto irreducible; lo que el sistema posmoderno destruye mediante la integración total, la comunicación perpetua y la creación de diferencias artificiales.",
+        "sinonimos_candidatos": [
+          "otredad",
+          "diferencia",
+          "lo otro"
+        ],
+        "menciones": 9,
+        "confianza": 0.93,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la hipercomunicación como perpetradora del crimen perfecto de la alteridad"
+      },
+      {
+        "id": "c_018",
+        "label": "Mutación Cultural",
+        "tipo": "derivado",
+        "descripcion": "Transformación profunda de la sociedad, la cultura y la economía a finales del siglo XX que Marcuse anticipa: paso del capitalismo industrial al capitalismo informático, cambio en la naturaleza del trabajo y la subjetividad.",
+        "sinonimos_candidatos": [
+          "transformación cultural",
+          "cambio de paradigma"
+        ],
+        "menciones": 7,
+        "confianza": 0.89,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "la capacidad profética de Marcuse de ver lo que venía aún cuando todavía no venía merece detenernos"
+      },
+      {
+        "id": "c_019",
+        "label": "Conciencia Histórica",
+        "tipo": "derivado",
+        "descripcion": "Comprensión de que el presente es resultado de procesos históricos y que el futuro puede ser diferente; capacidad de reconocer el carácter contingente y mudable de las contradicciones actuales.",
+        "sinonimos_candidatos": [
+          "dimensión histórica",
+          "pensamiento histórico"
+        ],
+        "menciones": 5,
+        "confianza": 0.85,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "el pensamiento crítico es el que deviene en conciencia histórica"
+      },
+      {
+        "id": "c_020",
+        "label": "Autodeterminación Real",
+        "tipo": "derivado",
+        "descripcion": "Condición de libertad auténtica donde los individuos pueden conocer, comprender hechos, evaluar alternativas y elegir sin propaganda, adoctrinamiento o manipulación del sistema.",
+        "sinonimos_candidatos": [
+          "libertad genuina",
+          "autonomía real"
+        ],
+        "menciones": 4,
+        "confianza": 0.86,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "para el cambio considera necesaria una autodeterminación real que produzca individuos liberados de toda propaganda adoctrinamiento o manipulación"
+      }
+    ],
+    "relaciones": [
+      {
+        "id": "r_001",
+        "origen_id": "c_002",
+        "destino_id": "c_007",
+        "tipo": "se_constituye_mediante",
+        "etiqueta": "absorbe",
+        "bidireccional": false,
+        "confianza": 0.95,
+        "frase_completa": "la unidimensionalidad absorbe todos los planes de pensamiento en la racionalidad tecnológica",
+        "matiz": null,
+        "contexto": "definición de sociedad unidimensional"
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_002",
+        "destino_id": "c_006",
+        "tipo": "se_sustenta_en",
+        "etiqueta": "produce",
+        "bidireccional": true,
+        "confianza": 0.94,
+        "frase_completa": "un sistema que produce necesidades falsas y transforma esas necesidades en desenfrenado consumo",
+        "matiz": null,
+        "contexto": "análisis del mecanismo de control social"
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_005",
+        "destino_id": "c_009",
+        "tipo": "anula",
+        "etiqueta": "absorbe su contradicciones",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "en el que la clase Obrera absorbe su contradicciones",
+        "matiz": "El capitalismo integrador destruye la capacidad negativa",
+        "contexto": "sobre la absorción de la clase obrera"
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_001",
+        "destino_id": "c_008",
+        "tipo": "se_fundamenta_en",
+        "etiqueta": "utiliza",
+        "bidireccional": true,
+        "confianza": 0.96,
+        "frase_completa": "la teoría crítica ingresa en el concepto clave del pensamiento dialéctico",
+        "matiz": null,
+        "contexto": "definición metodológica de la teoría crítica"
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_008",
+        "destino_id": "c_009",
+        "tipo": "requiere",
+        "etiqueta": "se basa en",
+        "bidireccional": true,
+        "confianza": 0.97,
+        "frase_completa": "el pensamiento dialéctico se basa en la negatividad y la contraposición",
+        "matiz": null,
+        "contexto": "explicación del método dialéctico"
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_002",
+        "destino_id": "c_008",
+        "tipo": "elimina_la_posibilidad_de",
+        "etiqueta": "anula",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "en una sociedad positiva sin conceptos de análisis negativos que contraponerle las posibilidades de cuestionamiento son mínimas",
+        "matiz": null,
+        "contexto": "análisis de por qué la sociedad unidimensional impide la crítica"
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_010",
+        "destino_id": "c_011",
+        "tipo": "cesa_de_ser",
+        "etiqueta": "deja de ser",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "la clase trabajadora deja de ser el factor negativo opuesto a la positividad capitalista",
+        "matiz": "La clase obrera pierde su rol revolucionario en el capitalismo integrador",
+        "contexto": "análisis de la transformación de la clase obrera"
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_005",
+        "destino_id": "c_010",
+        "tipo": "integra",
+        "etiqueta": "absorbe",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "la clase Obrera absorbe su contradicciones",
+        "matiz": null,
+        "contexto": "sobre la cooptación de la clase trabajadora"
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_003",
+        "destino_id": "c_002",
+        "tipo": "constituye",
+        "etiqueta": "fundamenta",
+        "bidireccional": true,
+        "confianza": 0.9,
+        "frase_completa": "la alienación y la represión marcan la construcción del mundo occidental que genera la unidimensionalidad",
+        "matiz": null,
+        "contexto": "análisis de los fundamentos del sistema"
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_004",
+        "destino_id": "c_002",
+        "tipo": "produce",
+        "etiqueta": "se encubre de racionalidad administrativa",
+        "bidireccional": false,
+        "confianza": 0.88,
+        "frase_completa": "la represión se encubre de racionalidad administrativa",
+        "matiz": "La represión se vuelve imperceptible mediante la lógica instrumental",
+        "contexto": "análisis de cómo el sistema oculta la dominación"
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_007",
+        "destino_id": "c_014",
+        "tipo": "genera",
+        "etiqueta": "produce",
+        "bidireccional": true,
+        "confianza": 0.93,
+        "frase_completa": "la racionalidad tecnológica genera el lenguaje unidimensional lleno de elementos mágicos y rituales",
+        "matiz": null,
+        "contexto": "análisis del lenguaje como instrumento de control"
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_014",
+        "destino_id": "c_019",
+        "tipo": "destruye",
+        "etiqueta": "anula",
+        "bidireccional": false,
+        "confianza": 0.94,
+        "frase_completa": "el lenguaje unidimensional elimina la dimensión histórica que es lo que le falta al pensamiento unidimensional",
+        "matiz": null,
+        "contexto": "análisis de cómo el lenguaje destruye la conciencia histórica"
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_012",
+        "destino_id": "c_013",
+        "tipo": "se_caracteriza_por",
+        "etiqueta": "se expresa en",
+        "bidireccional": true,
+        "confianza": 0.95,
+        "frase_completa": "la cultura posmoderna se caracteriza por el pastiche donde coexisten pacíficamente verdades contradictorias",
+        "matiz": null,
+        "contexto": "definición de la cultura posmoderna"
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_013",
+        "destino_id": "c_001",
+        "tipo": "anula_la_posibilidad_de",
+        "etiqueta": "elimina",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "en el pastiche el arte pierde su potencia de negación y de crítica",
+        "matiz": null,
+        "contexto": "análisis de cómo el pastiche destruye la capacidad crítica"
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_015",
+        "destino_id": "c_014",
+        "tipo": "reproducen",
+        "etiqueta": "disuelven",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "los medios de comunicación reproducen el lenguaje unidimensional y disuelven la diferencia entre apariencia y realidad",
+        "matiz": null,
+        "contexto": "análisis del rol de los medios"
+      },
+      {
+        "id": "r_016",
+        "origen_id": "c_002",
+        "destino_id": "c_020",
+        "tipo": "impide",
+        "etiqueta": "anula",
+        "bidireccional": false,
+        "confianza": 0.91,
+        "frase_completa": "la sociedad industrial avanzada imposibilita la autodeterminación real por la total asimilación del poder",
+        "matiz": null,
+        "contexto": "análisis de por qué no puede surgir un nuevo sujeto"
+      },
+      {
+        "id": "r_017",
+        "origen_id": "c_011",
+        "destino_id": "c_005",
+        "tipo": "provienen_de_fuera_de",
+        "etiqueta": "están excluidos de",
+        "bidireccional": false,
+        "confianza": 0.88,
+        "frase_completa": "los agentes de cambio estudiantes marginados y desempleados existen por fuera del sistema",
+        "matiz": null,
+        "contexto": "identificación de quiénes pueden producir cambio"
+      },
+      {
+        "id": "r_018",
+        "origen_id": "c_016",
+        "destino_id": "c_001",
+        "tipo": "elimina",
+        "etiqueta": "absorbe",
+        "bidireccional": false,
+        "confianza": 0.92,
+        "frase_completa": "la pura positividad del sistema absorbe todos sus factores negativos impidiendo la teoría crítica",
+        "matiz": null,
+        "contexto": "análisis de la patología de la positividad total"
+      },
+      {
+        "id": "r_019",
+        "origen_id": "c_016",
+        "destino_id": "c_017",
+        "tipo": "anula",
+        "etiqueta": "destruye",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "la ultra realidad y positividad total constituye el crimen perfecto de la alteridad",
+        "matiz": null,
+        "contexto": "análisis de Baudrillard sobre la destrucción de la otredad"
+      },
+      {
+        "id": "r_020",
+        "origen_id": "c_018",
+        "destino_id": "c_005",
+        "tipo": "transforma_en",
+        "etiqueta": "genera",
+        "bidireccional": false,
+        "confianza": 0.89,
+        "frase_completa": "la mutación cultural a finales del siglo XX consolida el capitalismo integrador",
+        "matiz": null,
+        "contexto": "análisis de la transformación histórica"
+      },
+      {
+        "id": "r_021",
+        "origen_id": "c_001",
+        "destino_id": "c_019",
+        "tipo": "requiere",
+        "etiqueta": "deviene en",
+        "bidireccional": true,
+        "confianza": 0.91,
+        "frase_completa": "el pensamiento crítico deviene en conciencia histórica",
+        "matiz": null,
+        "contexto": "sobre la relación entre crítica e historia"
+      },
+      {
+        "id": "r_022",
+        "origen_id": "c_009",
+        "destino_id": "c_001",
+        "tipo": "es_condición_para",
+        "etiqueta": "fundamenta",
+        "bidireccional": true,
+        "confianza": 0.93,
+        "frase_completa": "la negatividad es lo que permite que exista pensamiento crítico que se oponga a la positividad del sistema",
+        "matiz": null,
+        "contexto": "sobre por qué desaparece la crítica cuando desaparece la negatividad"
+      },
+      {
+        "id": "r_023",
+        "origen_id": "c_002",
+        "destino_id": "c_012",
+        "tipo": "genera",
+        "etiqueta": "anticipa",
+        "bidireccional": false,
+        "confianza": 0.87,
+        "frase_completa": "Marcuse anticipa claramente la llegada de la cultura posmoderna",
+        "matiz": "Marcuse vislumbra décadas antes lo que será la posmodernidad",
+        "contexto": "capacidad profética de Marcuse"
+      },
+      {
+        "id": "r_024",
+        "origen_id": "c_006",
+        "destino_id": "c_002",
+        "tipo": "refuerza",
+        "etiqueta": "asegura",
+        "bidireccional": true,
+        "confianza": 0.92,
+        "frase_completa": "las falsas necesidades y el consumo hacen su servidumbre agradable e imperceptible en la sociedad unidimensional",
+        "matiz": null,
+        "contexto": "mecanismo de integración del consumidor"
+      },
+      {
+        "id": "r_025",
+        "origen_id": "c_007",
+        "destino_id": "c_009",
+        "tipo": "rechaza",
+        "etiqueta": "elimina",
+        "bidireccional": false,
+        "confianza": 0.93,
+        "frase_completa": "la racionalidad tecnológica rechaza todo concepto que no pueda traducirse a operaciones funcionales",
+        "matiz": null,
+        "contexto": "análisis de cómo la razón instrumental destruye la negación"
+      },
+      {
+        "id": "r_026",
+        "origen_id": "c_012",
+        "destino_id": "c_009",
+        "tipo": "caracterizada_por_la_ausencia_de",
+        "etiqueta": "carece de",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "la posmodernidad se caracteriza por la ausencia de negatividad y dimensión crítica",
+        "matiz": null,
+        "contexto": "análisis de la cultura posmoderna"
+      },
+      {
+        "id": "r_027",
+        "origen_id": "c_015",
+        "destino_id": "c_016",
+        "tipo": "refuerzan",
+        "etiqueta": "reproducen",
+        "bidireccional": true,
+        "confianza": 0.88,
+        "frase_completa": "los medios de comunicación reproducen la pura positividad del sistema",
+        "matiz": null,
+        "contexto": "sobre el rol de los medios en la unidimensionalidad"
+      },
+      {
+        "id": "r_028",
+        "origen_id": "c_014",
+        "destino_id": "c_002",
+        "tipo": "asegura",
+        "etiqueta": "reproduce",
+        "bidireccional": true,
+        "confianza": 0.93,
+        "frase_completa": "el lenguaje unidimensional reproduciéndose constantemente asegura la perpetuación de la sociedad unidimensional",
+        "matiz": null,
+        "contexto": "análisis del lenguaje como mecanismo de reproducción"
+      }
+    ],
+    "bucles": [],
+    "metalenguaje": []
+  },
+  "decisiones": [],
+  "anotaciones": [],
+  "completado": true,
+  "creado_en": "2026-07-01T18:55:50.745359",
+  "actualizado_en": "2026-07-01T18:57:47.821254",
+  "conceptos_editados": {},
+  "relaciones_editadas": {},
+  "relaciones_investigador": [],
+  "metadatos": {
+    "titulo": "Herbert Marcuse",
+    "autores": [
+      "Alvarez Teran"
+    ],
+    "anio": 2025,
+    "editorial": null,
+    "url": null,
+    "notas": null
+  },
+  "texto_editado": "# HERBERT MARCUSE\n### Profeta de la mutación\n\n Herbert Marcuse fue un filósofo alemán fallecido en 1979 a los 81 años pero muy actual con una profunda obra que merece ser revisitada Ya que en su desarrollo logra anticipar el advenimiento de la mutación que afectará al mundo en el cambio de siglo Marcuse alcanzó su celebridad inicial por haber formado parte de la primera generación de La ya mítica corriente filosófica llamada escuela de Frankfurt a comienzos de la década de 1930 junto a pensadores de la talla de teodorador adorno Max hocker heimer Eric from y Walter Benjamin construyendo la llamada teoría crítica de la sociedad que aborda los malestares de una sociedad Aparentemente funcional con el advenimiento del nazismo Marcuse que era judío y marxista abandona a Alemania para luego de cortas estadías en Suiza y en Francia recalar en su exilio definitivo en los Estados Unidos Marcus se escribe en Estados Unidos sus obras fundamentales razón y Revolución en 1941 Eros y civilización en 1955 el marxismo soviético análisis crítico en 1958 el hombre unidimensional en 1964 y el final de la utopía en 1967 construyendo una línea de pensamiento centrada en la crítica a la cultura del capitalismo adquiere una particular fama entre los jóvenes en las décadas de 1960 y 1970 tanto en Europa como en América y se convierte aún más allá de su voluntad en una referencia central para las agitaciones estudiantiles de 1968 por su postura de identificar a los jóvenes como un colectivo emergente y como nuevo agente de cambio de la lectura de las obras de Marcuse surgen una gran cantidad de reflexiones que proyectadas medio siglo hacia adelante resultan reveladoras de un pensamiento intelectualmente profético que anunciaba el fin de una era la de la modernidad industrial y el inicio de una profunda mutación cultural social política y económica la capacidad profética de Marcuse de ver lo que venía aún cuando todavía no venía merece detenernos en ella mucho más cuando injustamente no forma parte de los autores habitualmente leídos en el siglo XXI pero la riqueza y amplitud del pensamiento marcuciano permite tomar contacto con otros pensadores tempranos de la mutación de finales del siglo XX como shambo driliar David herbai John Kenneth Jean françois Frederick Jameson o Manuel castells Marcuse desarrolla su gran productor intelectual al finalizar la Segunda Guerra Mundial y durante el tercer cuarto del siglo 20 en el marco de la consolidación del modelo capitalista industrial y este apogeo del industrialismo significará también su canto de cisne el zenit y su inmediata decadencia sucede en casi al mismo tiempo lo que hará Marcuse ya afincado en Estados Unidos es desplegar una batería teórica en la que pondrá en cuestionamiento la construcción del mundo occidental marcado por la alienación y la represión en ese análisis comenzará a delinear de una manera sorprendentemente aguda las formas que irá adquiriendo una nueva cultura y una nueva sociedad que comenzó a gestarse a finales del siglo 20 posteriormente a su fallecimiento A fines del siglo 20 el escenario mundial cambia las normas conocidas se pulverizan el tiempo se contrae el pasado se refugia en los museos y el futuro en la distopía las Industrias mutan en ensambladoras de una cadena de suministros de alcance Global asentadas en la periferia del mundo las clases sociales se transforman y los agentes de cambio desaparecen en un escenario que absorbe los conflictos Marcuse uno de los primeros intelectuales neomarxistas fue un pionero en identificar el cambio que se estaba operando en el modelo clásico de la sociedad en camino a un nuevo paradigma capitalista que se ordena mediante una integración de todos los planos de la vida en torno al eficientismo del liberal capitalismo Marcuse explica al mundo con 30 años de antelación que ya no existe un exterior para el sistema capitalista indicando que el mundo comunista se encuentra comprendido en la economía de la política capitalista esto es el mundo comunista no le era ajeno al capitalismo con la alternativa socialista menguante y en un capitalismo en el que se disuelven los conflictos avisora una sola posibilidad para que en el sistema vuelvan a estallar las contradicciones que se detenga la expansión productiva y lucrativa pero lo que marcusen no podía imaginar era que a partir de los 80 el paradigma Tecnológico iba a mutar de tal manera que lejos de interrumpir la expansión del sistema dispararía un salto cualitativo hacia una nueva fase de expansión rentística mediante la gestación de un nuevo modelo productivo basado en la información como recurso modificando las características del trabajo y como consecuencia de esto Dando forma a una nueva estructuración social Marcus se comienza a delinear la idea de una sociedad integrista en torno al factor productivo integrista porque hace de lo productivo su único objetivo sin limitarse al plano económico e integrándose en todos los órdenes de la vida destruyendo El libre desarrollo de las necesidades y facultades humanas además Marcus Se observa con agudeza que el sistema productivo comienza a expandirse a zonas del mundo menos desarrolladas e incluso pre industriales es sugestivo que Marcuse muere el primer día de enero de 1979 tan solo 12 días después que el partido comunista chino liderado por denshopping anunciar el cambio de rumbo que confirmaría la idea del filósofo alemán llevando a China a convertirse en la primera potencia Industrial del planeta el sistema integrista centrado en lo productivo devora y rechaza todas las alternativas y contradicciones convirtiendo la razón tecnológica en razón política en su obra El hombre unidimensional de 1964 Marcuse expondrá con Claridad la gente se reconoce en sus mercancías encuentra su alma en su automóvil en su aparato de alta fidelidad en su casa en su equipo de cocina el mecanismo que une al individuo a su sociedad ha cambiado y el control social sea incrustado en las nuevas necesidades que ha producido Marcuse anuncia a la distancia el advenimiento de un sistema que no produce ni bienes ni servicios que produce necesidades falsas necesidades y que transforma esas necesidades en desenfrenado Consumo el más preciso mecanismo de control este mundo que describe Marcus es el de la unidimensionalidad con una sola dimensión que absorbe todos los planes de pensamiento en una realidad estandarizada y homogénea en la que los individuos se identifican con la existencia que les es impuesta la de la racionalidad tecnológica y el consumo feliz la absorción de toda ideología en un pensamiento único y homogéneo no significa el fin de la ideología dice un Marcuse pre Claro porque la cultura de esta fase capitalista es en algún sentido más ideológica que sus predecesoras ya que termina imponiéndose como la idea dominante la paradoja Y que cuando existe solo una ideología parece y solo parece no existe ninguna la racionalidad tecnológica como decíamos anteriormente es sinónimo de racionalidad política y esta razón instrumental hace que todo concepto que no pueda traducirse a operaciones y cálculos sea rechazado si no es operativo productivo o funcional no es esta unidimensionalidad de la vida dice Marcuse se expresa en una unificación de los Opuestos cuyo ejemplo más claro es el fenómeno de sindicato y empresas formando grupos de presión para juntos alcanzar objetivos que sabemos A cuál de las dos partes beneficia a la postre como diría décadas después Marc fischer la lucha de clases se sigue peleando Pero solo del lado de los ricos Marcus ya se pregunta cuál es la razón que hace que las clases desistan de jugar su rol de lucha y transformación la respuesta que se da gira en torno a la eficiencia productiva del sistema que asegura una vida cada vez más confortable para cada vez mayor número de personas integrando en este plano todos los demás ámbitos de la vida humana el sistema satisface sus mayores necesidades haciendo su servidumbre agradable e incluso imperceptible y para el caso de aquellos que sufran el infierno de la sociedad opulenta los perdedores les está reservada una brutal represión frente a este panorama las clases dice Marcuse sufren una mutación y aparece un nuevo proletariado un proletariado mayormente de cuello blanco del sector Servicios aniquilando al trabajador manual y modificando el carácter del trabajo y con ello la conducta y la conciencia del trabajador el Enigma que plantea Marcus es si este cambio en la conciencia del trabajador solo se queda en eso o si se produce una consecuente transformación en su existencia generando una integración social y cultural de la clase trabajadora con la sociedad capitalista la respuesta que da Es que la clase trabajadora deja de ser el factor negativo opuesto a la positividad capitalista Aunque la explotación no desaparece esa explotación se encubre de racionalidad administrativa Marcuse hace foco con clarividencia en la búsqueda desesperada de la eficiencia en el mundo productivo y un sistema político y social que asimila las fuerzas opuestas sin quebrantarse y en el que la clase Obrera absorbe su contradicciones El desafío está planteado el pensador alemán describe tempranamente un sistema cuya productividad rompe Los lazos de solidaridad la sociedad contemporánea Parece ser capaz de contener el cambio social Afirma Marcuse esta contención de cambio social es Quizás El logro más singular de la sociedad industrial avanzada estamos frente a uno de los puntos centrales del pensamiento marcuciano la idea de la disolución de la lucha de clases y la absorción de la clase Obrera por la positividad del sistema Cómo cambiar se pregunta Marcuse cuando las antiguas clases revolucionarias se han vuelto parte íntima del sistema que reproducen a la sociedad histórica en la que la burguesía y el proletariado se enfrentaban entre sí el desarrollo capitalista le ha alterado a la clase Obrera funciones y estructura y ya no parecen ser los agentes de transformación y aquí ingresamos en otro concepto clave de la teoría crítica el del pensamiento dialéctico Marcuse va a decir que la sociedad capitalista avanzada muestra una gran positividad y esto representa un problema ya que para producir un cambio debe oponerse un pensamiento de rechazo la negatividad lo que está ausente en la sociedad capitalista tradicional conceptos tales como sociedad estado individuo clase privado público eran conceptos que contenían tensión eran esferas no integradas entre sí opuestas y contradictorias pero en el presente marcuciano y en el proceso posterior que deviene a nuestro siglo estas categorías contrapuestas dialécticas han perdido su connotación crítica y solo son términos descriptivos han perdido su negatividad se han vuelto positivas en una sociedad positiva sin conceptos de análisis negativos que contraponerle las posibilidades de cuestionamiento y transformación desde dentro son mínimas Marcuse expresa crudamente la cuestión para el cambio considera necesaria una autodeterminación real que produzca individuos liberados de toda propaganda adoctrinamiento o manipulación individuos capaces de conocer y comprender los hechos y evaluar alternativas lo que requiere la sociedad piensa Marcuse es un sujeto históricamente nuevo pero comprende que en la sociedad industrial avanzada Esta es una posibilidad remota ya que la total asimilación que el poder produce entre espíritu y hechos pensamiento y conducta aspiraciones y realidad es una barrera insalvable para la aparición de un nuevo sujeto pero si el cambio no puede provenir desde dentro se pregunta Marcuse entonces deberá llegar desde fuera en un sistema que absorbe toda negación que asimila los Opuestos que anula las contradicciones solo es de esperar que el cambio pueda penetrar desde fuera del sistema y cuáles son los grupos externos al sistema no integrados no comprometidos con su lógica capaces de producir un cambio estudiantes desempleados y habitantes de la periferia se responde Marcuse por fuera del sistema se esconden los factores que Marcus se considera gérmenes de cambio los explotados los perseguidos los desempleados y los excluidos como estos sectores existen más allá del sistema por fuera de él su oposición es Revolucionaria Incluso si su conciencia no lo es dice Marcuse al golpear desde fuera del sistema estos sectores no pueden ser atacados por el sistema se trata de una fuerza elemental que viola las reglas del juego pero este panorama incluso para Marcuse no se presenta como un panorama promisorio ya que la lógica productiva del sistema permite ajustes y concesiones permanentes incluso con los marginados y desposeídos por eso se muestra tempranamente escéptico ya que si no se produce un reconocimiento de lo que está sucediendo que subvierta la conciencia y la conducta del hombre ni siquiera una catástrofe provocará el cambio sostiene Marcuse intuye lo que Se volverá muy evidente a partir de la década de 1980 que la nueva estratificación de la sociedad industrial avanzada Crea una nueva base popular conservadora que sostiene el sistema Pero para entonces Marcuse ya habrá muerto en este mismo sentido uno de los pensadores de fin de siglo Frederick Jameson al igual que Marcuse postula que desaparecen las clases sociales en su forma clásica al derrumbarse el esquema productivo Industrial que les daba sentido y esta desaparición debe tener efectos directos en la práctica política el economista John Creed Gabriel en su libro la cultura de la satisfacción de 1992 considera que el problema del quiebre del sistema social clásico obedece a la aparición de lo que dan Llamar la subclase esta subclase está formada por los que fueran en la posguerra los trabajadores industriales que en medio de un sistema económico que se expande abandonando espacios fabriles tradicionales reduce puestos de trabajo industriales y paraliza su posibilidad de por si es casa de movilidad social esta inmovilidad de la subclase produce a la vista del resto de sistema el efecto de ser etiquetada como conflictiva fuente de delito y generadora de la subclase deriva Así dice gabrite en un callejón sin salida marginada del sistema que bien Podría convertirse en un agente de cambio alumarcuse Aunque limitada para construir una adecuada conciencia para llevar a cabo ese cambio mientras Marcus se busca un agente de cambio que suplante a la desaparecida fortaleza Revolucionaria de la clase Obrera y se vuelca a favor de los estudiantes los marginados y los habitantes de la periferia Michelle apelará en los 60 a movimientos sociales como los feministas gays grupos étnicos grupos religiosos y autonomistas regionales como factores de ruptura Aunque el geógrafo David Harvey en su libro de 1990 la condición de la posmodernidad manifiesta que los grupos mencionados por foucault no han logrado desafiar al capitalismo la razón de esta imposibilidad es que ese no fue el objetivo propuesto por el pensador francés fuco postula la teoría de la pluralidad de discursos condenando a la desaparición a los llamados grandes relatos vastos y totalizantes esquemas interpretativos el concepto de pluralidad de discursos toma contacto con el concepto de juegos del lenguaje que Jean Franz plantea en su libro la condición posmoderna de 1979 año de la muerte de Marcuse ya que ambas ideas se basan en el hecho de que las fuentes de la opresión social son múltiples y Por ende también son múltiples las reacciones que la opresión provoca otro que Acompaña a Marcus en la búsqueda de nuevos agentes de cambios y sociólogo español Manuel castells en su trilogía de 1997 La era de la información que identifica a ecologistas y feministas como nuevos agentes de cambio ecologistas por su discurso de impugnación a la lógica productivista y feministas por la fortaleza de constituir más de la mitad de la población mundial en estado de sometimiento David Harvey señala la gran dificultad en encontrar sujetos colectivos de cambio dentro de un modelo que como el actual sostiene la diversidad la multiplicidad y la democratización del gusto pero de manera preclara Harvey anuncia que el impulso a recortarse en el protagonismo de la mutación cultural de fin de siglo encuentra terreno más fértil en el anarquismo y en las fuerzas libertarias que en el marxismo tradicional cosa que derivó el enfrentamiento de la nueva izquierda con las actitudes e instituciones de la clase Obrera tradicional lo cual terminará con el desplazamiento político de esa nueva izquierda hacia los movimientos sociales y las políticas de la identidad abandonando su fe en el proletariado como agente revolucionario en el plano cultural Marcus se avisora claramente la llegada del pastiche propio de la cultura posmoderna la caída de los modelos culturales modernos abrumados por la catarata de contenidos dice Marcuse en el campo de la cultura el nuevo totalitarismo se manifiesta Precisamente en un pluralismo armonizador en el que las obras y verdades más contradictorias coexisten pacíficamente en La indiferencia como factor específico de la cultura el arte privado de su fuerza antagonista se ve unificado en un pastiche donde no se reconoce la diferencia entre la alta cultura y la cultura de lo obvio Y de lo efímero perdiendo el arte su potencia transgresora y de acusación todo el arte se vuelve más realista osado desinhibido uña y carne con la sociedad pero en ese tránsito pierde su capacidad de negación lo que ocurre en el arte dice Marcuse es sin duda salvaje y obsceno viril y atrevido bastante inmoral y precisamente por eso perfectamente inofensivo Frederick Jameson también sostiene que la cultura de fin de siglo es la del pastiche la del multiculturalismo el hombre posmoderno influenciado por las nuevas categorías culturales no puede permitirse la crítica ideológica a la antigua e incluso las formas culturales supuestamente más cuestionadoras quedan atrapadas en el sistema también Marcuse avanza sobre el rol de los medios de comunicación que considera la mediación entre los amos y sus servidores sostiene que los medios de comunicación masivos disuelven la atención entre apariencia y realidad lo cual se puede observar claramente en nuestras mediáticas guerras posmodernas guerras sin víctimas Sin sangre sin muerte sin dolor los medios reproducen el lenguaje unidimensional dice Marcuse opuesto a la bidimensionalidad del pensamiento crítico y dialéctico el idioma se llena de elementos mágicos autoritarios y rituales sin las mediaciones que requieren las etapas del conocimiento y la evaluación un lenguaje que ya no identifica razón y hecho esencia y existencia cosa y función ahora el sustantivo gobierna la oración se anula así toda conciencia crítica el hombre unidimensional acepta la realidad dada sin cuestionarla el concepto ritualizado dice Marcuse se hace inmune a toda contradicción el discurso comercial y también el político se inmunizan contra la negación recurriendo a la unificación de los Opuestos cerrando el camino a todo Otro discurso que no se desarrolle en sus propios términos se trata de un discurso unidimensional se pierde el pensamiento bidimensional del universo crítico y abstracto el pensamiento que denuncia el carácter histórico de las contradicciones la dimensión histórica es la dimensión que le falta al pensamiento unidimensional Marcus se avisó a su progresiva eliminación anulando con ello la posibilidad de una postura crítica respecto al presente al desaparecer el concepto negativo del futuro es una supresión del propio pasado de la sociedad y de su futuro ya que el futuro invoca la negación del presente el pensamiento crítico es el que deviene en conciencia histórica Mientras que el lenguaje funcional actual es esencialmente antihistórico Este lenguaje unidimensional cerrado sólo Define no da lugar a los grises es un lenguaje ritual que se extiende por democracia sino democracias que absorbe al lenguaje trascendente ya no se busca la verdad o la mentira se impone sustituyendo los conceptos por imágenes y Marcus se revela lúcidamente una perspectiva Que hará eclosión a fin de siglo el nuevo recurso del lenguaje mágico ritual consiste en que la gente no lo cree o no le importa y sin embargo actúa de acuerdo con él en el mismo sentido Jean bolillar sostendrá en los 90 en su obra El crimen perfecto que este mundo de fin de siglo es una realidad a la que no le falta nada Todo es visible hiper real y por lo tanto no puede soñarse con ningún factor de impugnación en términos de Marcus se hablaríamos de un mundo sumido en una pura positividad que anula el espacio de lo negativo la imposibilidad de la crítica bodliar bromea con que la dialéctica se ha realizado pero de una forma irónica en lugar del Triunfo de lo negativo como imaginaba el pensamiento crítico estamos frente a una positividad total sin apelación utilizando un giro discursivo escalofriante podríamos hablar de una purificación étnica del concepto perpetrando el asesinato de lo negativo El crimen de lo racional la victoria de lo virtual dice bolillar estamos ante el fin de la muerte el fin del rostro y el cuerpo acosado por la cirugía estética el fin del mundo que se borra con la realidad virtual el fin de cada uno de nosotros que seremos abolidos un día con la clonación la muerte del otro en vías de diluirse en la comunicación perpetua Marcuse tres décadas antes proponía Volver al pensamiento crítico para romper la lógica de la pura positividad del mundo real ya que una de las características esenciales del hombre unidimensional es su aceptación de la realidad dada como la única su realidad sin impugnación sin Rebeldía pero bodrillar toma un camino sorprendente al sostener que el pensamiento crítico para ser crítico en esta realidad transparente libere a ser más positivo aún más real que la propia realidad un pensamiento hiper real en los tiempos heroicos del pensamiento crítico se luchaba contra lo mágico y lo mítico hoy postula abolillar ya no se combate contra el mito sino que se lucha contra el mundo real y considera a la ilusión como ese factor capaz de impugnar Y cuestionar a lo real la ilusión dice podría ser la encargada de devolver la no veracidad a los hechos por eso podría sostiene que ya no se lucha contra el fantasma de la alienación aquel que perseguía Marcuse sino contra el fantasma de la Ultra realidad la transparencia podría nos habla de una realidad indiferente en la que resulta imposible ser más indiferente que la propia realidad La indiferencia la ausencia de diferencias todo lo Iguala y todo lo relativiza nada es cuestionable en esa realidad una realidad apática que se ve invadida por el terio otra de las reflexiones que realiza bobiliar en 1994 es la de presentar a la hipercomunicación como perpetradora del crimen perfecto de la alteridad la comunicación acabó con el otro dice bodlillar la negociación acabó con el enemigo la buena convivencia acabó con el predador El Clon acabó con la muerte La indiferencia acabó con la seducción y nadie se ha dado cuenta de quién es el criminal El otro es el enemigo en la paradójica sociedad de la diversidad la Ultra positividad del mundo denunciada por Marcuse ya hace carne en botrillar hasta el límite de considerarla una patología viral que apunta a la existencia de un sujeto sin el otro estamos frente a un hombre sin sombra transparente despojado de sustancia como el azúcar sin calorías la sal sin sodio el efecto sin causa la Guerra sin enemigo las pasiones sin objeto el tiempo sin memoria el amo sin esclavo el esclavo sin amo pero la paradoja que plantea bodrillar es que ante la necesidad vital de contar con el otro que ya no está ante su ausencia debemos producirlo Y por esa razón lo inventamos como diferencia por eso boddrilliar sostiene que un verdadero racismo surge En nuestro tiempo ya que nuestro otro no tiene con nosotros una diferencia natural sino una diferencia artificial generada creada voluntaria el racismo clásico buscaba desesperadamente al otro como portador del mal y nuestro tiempo dio una creación a la nueva forma de racismo el humanitarismo de la buena conciencia que necesita al otro pero ahora como víctima John Kenneth considera el principio humanitario como uno de los tres puntales de la cultura de la satisfacción de fin de siglo funcionando el humanitarismo como válvula de escape a la conciencia para ser soportable la existencia de tan grande franja de desposeídos y Miserables el hombre de fin de siglo necesita vitalmente algo de realidad y va en búsqueda de esa realidad allí donde sangra los puentes aéreos que proveen ayuda humanitaria a los espacios marginados del mundo de la satisfacción son en realidad bombas de succión de la energía vital de la desdicha pero esa desdicha debe ser blanqueada conceptualmente devorando su negatividad en un mundo que no la soporta como vampiros succionando toda negatividad así como apunta con frialdad Allen finca en su libro la humanidad perdida de 1996 la llamada generación humanitaria no quiera a los hombres quiero ocuparse de ellos no los quiere libres los quiere tullidos la solidaridad dice fin que Cloud no tiene riesgos es una apuesta ganador trabaja con seres dependientes sujetos penetrados por el sufrimiento con individuos pasivos inermes en la era de la ideología dice fin que crowd creíamos saberlo todo en la era de la solidaridad no queremos conocer nada de la primacía de la razón pasamos a la primacía del sentimiento de la sublevación a la compasión la muerte de la dimensión crítica a riesgo cero porque la filantropía no se extiende Más allá del espacio de la masacre necesita sangre y horror para manifestarse pero también necesita distancia para evitar riesgos menciona el nivel máximo de hundimiento de las categorías ninguna idea en el mundo merece que se mate por ella se trata de un pensamiento arraigado en la nueva cultura que ningún ser humano merece morir por nada el mundo Ha logrado absorber todos sus factores negativos y reciclarlos ni la pasión ha quedado en pie solo el odio y el odio es hoy una fuerza sin objetivo es puro medio pura razón instrumental el odio no sabe lo que quiere solo sabe lo que no quiere pero no se trata de odio de clase la vieja pasión burguesa quiere un odio especial que no era un medio sino Un fin que tenía una responsabilidad histórica un odio constructivo al decir de Marcuse el odio actual es la reacción vital contra la pura positividad del sistema pero en este Universo de La indiferencia hay que encontrar espacios de pasión capaces de desenmascarar la ausencia de realidad Pero hay riesgos ya que los portadores de la pasión dice bolillar están condenados al Exterminio la relegación o la exclusión en su libro de 1992 la ilusión delfín bodlirear como Marcuse dirige su mirada a la periferia En búsqueda de la pasión y observa allí un depósito de libertad no la libertad simulada y satisfecha del primer mundo sino la libertad esencial la libertad del deseo la libertad apasionada dice es la pasión característica no del final de la historia sino de una historia a la vez sin final y sin salida por eso el mundo guarda alguna esperanza incluso para abodrillar la actual esclavitud de lo mismo y de la semejanza se romperá un día con la reaparición de la alteridad detrás de cada semejanza se oculta el otro vencido y un día ese otro se levantará y esta vez no será vencido en el último párrafo del hombre unidimensional Marcus se rescata una frase de su colega Walter Benjamin solo gracias a aquellos sin esperanza nos es dada la esperanza ",
+  "revisiones_texto": [
+    {
+      "texto_anterior": "(97) HERBERT MARCUSE. Profeta de la mutación - YouTube  Herbert Marcuse fue un filósofo alemán fallecido en 1979 a los 81 años pero muy actual con una profunda obra que merece ser revisitada Ya que en su desarrollo logra anticipar el advenimiento de la mutación que afectará al mundo en el cambio de siglo Marcuse alcanzó su celebridad inicial por haber formado parte de la primera generación de La ya mítica corriente filosófica llamada escuela de Frankfurt a comienzos de la década de 1930 junto a pensadores de la talla de teodorador adorno Max hocker heimer Eric from y Walter Benjamin construyendo la llamada teoría crítica de la sociedad que aborda los malestares de una sociedad Aparentemente funcional con el advenimiento del nazismo Marcuse que era judío y marxista abandona a Alemania para luego de cortas estadías en Suiza y en Francia recalar en su exilio definitivo en los Estados Unidos Marcus se escribe en Estados Unidos sus obras fundamentales razón y Revolución en 1941 Eros y civilización en 1955 el marxismo soviético análisis crítico en 1958 el hombre unidimensional en 1964 y el final de la utopía en 1967 construyendo una línea de pensamiento centrada en la crítica a la cultura del capitalismo adquiere una particular fama entre los jóvenes en las décadas de 1960 y 1970 tanto en Europa como en América y se convierte aún más allá de su voluntad en una referencia central para las agitaciones estudiantiles de 1968 por su postura de identificar a los jóvenes como un colectivo emergente y como nuevo agente de cambio de la lectura de las obras de Marcuse surgen una gran cantidad de reflexiones que proyectadas medio siglo hacia adelante resultan reveladoras de un pensamiento intelectualmente profético que anunciaba el fin de una era la de la modernidad industrial y el inicio de una profunda mutación cultural social política y económica la capacidad profética de Marcuse de ver lo que venía aún cuando todavía no venía merece detenernos en ella mucho más cuando injustamente no forma parte de los autores habitualmente leídos en el siglo XXI pero la riqueza y amplitud del pensamiento marcuciano permite tomar contacto con otros pensadores tempranos de la mutación de finales del siglo XX como shambo driliar David herbai John Kenneth Jean françois Frederick Jameson o Manuel castells Marcuse desarrolla su gran productor intelectual al finalizar la Segunda Guerra Mundial y durante el tercer cuarto del siglo 20 en el marco de la consolidación del modelo capitalista industrial y este apogeo del industrialismo significará también su canto de cisne el zenit y su inmediata decadencia sucede en casi al mismo tiempo lo que hará Marcuse ya afincado en Estados Unidos es desplegar una batería teórica en la que pondrá en cuestionamiento la construcción del mundo occidental marcado por la alienación y la represión en ese análisis comenzará a delinear de una manera sorprendentemente aguda las formas que irá adquiriendo una nueva cultura y una nueva sociedad que comenzó a gestarse a finales del siglo 20 posteriormente a su fallecimiento A fines del siglo 20 el escenario mundial cambia las normas conocidas se pulverizan el tiempo se contrae el pasado se refugia en los museos y el futuro en la distopía las Industrias mutan en ensambladoras de una cadena de suministros de alcance Global asentadas en la periferia del mundo las clases sociales se transforman y los agentes de cambio desaparecen en un escenario que absorbe los conflictos Marcuse uno de los primeros intelectuales neomarxistas fue un pionero en identificar el cambio que se estaba operando en el modelo clásico de la sociedad en camino a un nuevo paradigma capitalista que se ordena mediante una integración de todos los planos de la vida en torno al eficientismo del liberal capitalismo Marcuse explica al mundo con 30 años de antelación que ya no existe un exterior para el sistema capitalista indicando que el mundo comunista se encuentra comprendido en la economía de la política capitalista esto es el mundo comunista no le era ajeno al capitalismo con la alternativa socialista menguante y en un capitalismo en el que se disuelven los conflictos avisora una sola posibilidad para que en el sistema vuelvan a estallar las contradicciones que se detenga la expansión productiva y lucrativa pero lo que marcusen no podía imaginar era que a partir de los 80 el paradigma Tecnológico iba a mutar de tal manera que lejos de interrumpir la expansión del sistema dispararía un salto cualitativo hacia una nueva fase de expansión rentística mediante la gestación de un nuevo modelo productivo basado en la información como recurso modificando las características del trabajo y como consecuencia de esto Dando forma a una nueva estructuración social Marcus se comienza a delinear la idea de una sociedad integrista en torno al factor productivo integrista porque hace de lo productivo su único objetivo sin limitarse al plano económico e integrándose en todos los órdenes de la vida destruyendo El libre desarrollo de las necesidades y facultades humanas además Marcus Se observa con agudeza que el sistema productivo comienza a expandirse a zonas del mundo menos desarrolladas e incluso pre industriales es sugestivo que Marcuse muere el primer día de enero de 1979 tan solo 12 días después que el partido comunista chino liderado por denshopping anunciar el cambio de rumbo que confirmaría la idea del filósofo alemán llevando a China a convertirse en la primera potencia Industrial del planeta el sistema integrista centrado en lo productivo devora y rechaza todas las alternativas y contradicciones convirtiendo la razón tecnológica en razón política en su obra El hombre unidimensional de 1964 Marcuse expondrá con Claridad la gente se reconoce en sus mercancías encuentra su alma en su automóvil en su aparato de alta fidelidad en su casa en su equipo de cocina el mecanismo que une al individuo a su sociedad ha cambiado y el control social sea incrustado en las nuevas necesidades que ha producido Marcuse anuncia a la distancia el advenimiento de un sistema que no produce ni bienes ni servicios que produce necesidades falsas necesidades y que transforma esas necesidades en desenfrenado Consumo el más preciso mecanismo de control este mundo que describe Marcus es el de la unidimensionalidad con una sola dimensión que absorbe todos los planes de pensamiento en una realidad estandarizada y homogénea en la que los individuos se identifican con la existencia que les es impuesta la de la racionalidad tecnológica y el consumo feliz la absorción de toda ideología en un pensamiento único y homogéneo no significa el fin de la ideología dice un Marcuse pre Claro porque la cultura de esta fase capitalista es en algún sentido más ideológica que sus predecesoras ya que termina imponiéndose como la idea dominante la paradoja Y que cuando existe solo una ideología parece y solo parece no existe ninguna la racionalidad tecnológica como decíamos anteriormente es sinónimo de racionalidad política y esta razón instrumental hace que todo concepto que no pueda traducirse a operaciones y cálculos sea rechazado si no es operativo productivo o funcional no es esta unidimensionalidad de la vida dice Marcuse se expresa en una unificación de los Opuestos cuyo ejemplo más claro es el fenómeno de sindicato y empresas formando grupos de presión para juntos alcanzar objetivos que sabemos A cuál de las dos partes beneficia a la postre como diría décadas después Marc fischer la lucha de clases se sigue peleando Pero solo del lado de los ricos Marcus ya se pregunta cuál es la razón que hace que las clases desistan de jugar su rol de lucha y transformación la respuesta que se da gira en torno a la eficiencia productiva del sistema que asegura una vida cada vez más confortable para cada vez mayor número de personas integrando en este plano todos los demás ámbitos de la vida humana el sistema satisface sus mayores necesidades haciendo su servidumbre agradable e incluso imperceptible y para el caso de aquellos que sufran el infierno de la sociedad opulenta los perdedores les está reservada una brutal represión frente a este panorama las clases dice Marcuse sufren una mutación y aparece un nuevo proletariado un proletariado mayormente de cuello blanco del sector Servicios aniquilando al trabajador manual y modificando el carácter del trabajo y con ello la conducta y la conciencia del trabajador el Enigma que plantea Marcus es si este cambio en la conciencia del trabajador solo se queda en eso o si se produce una consecuente transformación en su existencia generando una integración social y cultural de la clase trabajadora con la sociedad capitalista la respuesta que da Es que la clase trabajadora deja de ser el factor negativo opuesto a la positividad capitalista Aunque la explotación no desaparece esa explotación se encubre de racionalidad administrativa Marcuse hace foco con clarividencia en la búsqueda desesperada de la eficiencia en el mundo productivo y un sistema político y social que asimila las fuerzas opuestas sin quebrantarse y en el que la clase Obrera absorbe su contradicciones El desafío está planteado el pensador alemán describe tempranamente un sistema cuya productividad rompe Los lazos de solidaridad la sociedad contemporánea Parece ser capaz de contener el cambio social Afirma Marcuse esta contención de cambio social es Quizás El logro más singular de la sociedad industrial avanzada estamos frente a uno de los puntos centrales del pensamiento marcuciano la idea de la disolución de la lucha de clases y la absorción de la clase Obrera por la positividad del sistema Cómo cambiar se pregunta Marcuse cuando las antiguas clases revolucionarias se han vuelto parte íntima del sistema que reproducen a la sociedad histórica en la que la burguesía y el proletariado se enfrentaban entre sí el desarrollo capitalista le ha alterado a la clase Obrera funciones y estructura y ya no parecen ser los agentes de transformación y aquí ingresamos en otro concepto clave de la teoría crítica el del pensamiento dialéctico Marcuse va a decir que la sociedad capitalista avanzada muestra una gran positividad y esto representa un problema ya que para producir un cambio debe oponerse un pensamiento de rechazo la negatividad lo que está ausente en la sociedad capitalista tradicional conceptos tales como sociedad estado individuo clase privado público eran conceptos que contenían tensión eran esferas no integradas entre sí opuestas y contradictorias pero en el presente marcuciano y en el proceso posterior que deviene a nuestro siglo estas categorías contrapuestas dialécticas han perdido su connotación crítica y solo son términos descriptivos han perdido su negatividad se han vuelto positivas en una sociedad positiva sin conceptos de análisis negativos que contraponerle las posibilidades de cuestionamiento y transformación desde dentro son mínimas Marcuse expresa crudamente la cuestión para el cambio considera necesaria una autodeterminación real que produzca individuos liberados de toda propaganda adoctrinamiento o manipulación individuos capaces de conocer y comprender los hechos y evaluar alternativas lo que requiere la sociedad piensa Marcuse es un sujeto históricamente nuevo pero comprende que en la sociedad industrial avanzada Esta es una posibilidad remota ya que la total asimilación que el poder produce entre espíritu y hechos pensamiento y conducta aspiraciones y realidad es una barrera insalvable para la aparición de un nuevo sujeto pero si el cambio no puede provenir desde dentro se pregunta Marcuse entonces deberá llegar desde fuera en un sistema que absorbe toda negación que asimila los Opuestos que anula las contradicciones solo es de esperar que el cambio pueda penetrar desde fuera del sistema y cuáles son los grupos externos al sistema no integrados no comprometidos con su lógica capaces de producir un cambio estudiantes desempleados y habitantes de la periferia se responde Marcuse por fuera del sistema se esconden los factores que Marcus se considera gérmenes de cambio los explotados los perseguidos los desempleados y los excluidos como estos sectores existen más allá del sistema por fuera de él su oposición es Revolucionaria Incluso si su conciencia no lo es dice Marcuse al golpear desde fuera del sistema estos sectores no pueden ser atacados por el sistema se trata de una fuerza elemental que viola las reglas del juego pero este panorama incluso para Marcuse no se presenta como un panorama promisorio ya que la lógica productiva del sistema permite ajustes y concesiones permanentes incluso con los marginados y desposeídos por eso se muestra tempranamente escéptico ya que si no se produce un reconocimiento de lo que está sucediendo que subvierta la conciencia y la conducta del hombre ni siquiera una catástrofe provocará el cambio sostiene Marcuse intuye lo que Se volverá muy evidente a partir de la década de 1980 que la nueva estratificación de la sociedad industrial avanzada Crea una nueva base popular conservadora que sostiene el sistema Pero para entonces Marcuse ya habrá muerto en este mismo sentido uno de los pensadores de fin de siglo Frederick Jameson al igual que Marcuse postula que desaparecen las clases sociales en su forma clásica al derrumbarse el esquema productivo Industrial que les daba sentido y esta desaparición debe tener efectos directos en la práctica política el economista John Creed Gabriel en su libro la cultura de la satisfacción de 1992 considera que el problema del quiebre del sistema social clásico obedece a la aparición de lo que dan Llamar la subclase esta subclase está formada por los que fueran en la posguerra los trabajadores industriales que en medio de un sistema económico que se expande abandonando espacios fabriles tradicionales reduce puestos de trabajo industriales y paraliza su posibilidad de por si es casa de movilidad social esta inmovilidad de la subclase produce a la vista del resto de sistema el efecto de ser etiquetada como conflictiva fuente de delito y generadora de la subclase deriva Así dice gabrite en un callejón sin salida marginada del sistema que bien Podría convertirse en un agente de cambio alumarcuse Aunque limitada para construir una adecuada conciencia para llevar a cabo ese cambio mientras Marcus se busca un agente de cambio que suplante a la desaparecida fortaleza Revolucionaria de la clase Obrera y se vuelca a favor de los estudiantes los marginados y los habitantes de la periferia Michelle apelará en los 60 a movimientos sociales como los feministas gays grupos étnicos grupos religiosos y autonomistas regionales como factores de ruptura Aunque el geógrafo David Harvey en su libro de 1990 la condición de la posmodernidad manifiesta que los grupos mencionados por foucault no han logrado desafiar al capitalismo la razón de esta imposibilidad es que ese no fue el objetivo propuesto por el pensador francés fuco postula la teoría de la pluralidad de discursos condenando a la desaparición a los llamados grandes relatos vastos y totalizantes esquemas interpretativos el concepto de pluralidad de discursos toma contacto con el concepto de juegos del lenguaje que Jean Franz plantea en su libro la condición posmoderna de 1979 año de la muerte de Marcuse ya que ambas ideas se basan en el hecho de que las fuentes de la opresión social son múltiples y Por ende también son múltiples las reacciones que la opresión provoca otro que Acompaña a Marcus en la búsqueda de nuevos agentes de cambios y sociólogo español Manuel castells en su trilogía de 1997 La era de la información que identifica a ecologistas y feministas como nuevos agentes de cambio ecologistas por su discurso de impugnación a la lógica productivista y feministas por la fortaleza de constituir más de la mitad de la población mundial en estado de sometimiento David Harvey señala la gran dificultad en encontrar sujetos colectivos de cambio dentro de un modelo que como el actual sostiene la diversidad la multiplicidad y la democratización del gusto pero de manera preclara Harvey anuncia que el impulso a recortarse en el protagonismo de la mutación cultural de fin de siglo encuentra terreno más fértil en el anarquismo y en las fuerzas libertarias que en el marxismo tradicional cosa que derivó el enfrentamiento de la nueva izquierda con las actitudes e instituciones de la clase Obrera tradicional lo cual terminará con el desplazamiento político de esa nueva izquierda hacia los movimientos sociales y las políticas de la identidad abandonando su fe en el proletariado como agente revolucionario en el plano cultural Marcus se avisora claramente la llegada del pastiche propio de la cultura posmoderna la caída de los modelos culturales modernos abrumados por la catarata de contenidos dice Marcuse en el campo de la cultura el nuevo totalitarismo se manifiesta Precisamente en un pluralismo armonizador en el que las obras y verdades más contradictorias coexisten pacíficamente en La indiferencia como factor específico de la cultura el arte privado de su fuerza antagonista se ve unificado en un pastiche donde no se reconoce la diferencia entre la alta cultura y la cultura de lo obvio Y de lo efímero perdiendo el arte su potencia transgresora y de acusación todo el arte se vuelve más realista osado desinhibido uña y carne con la sociedad pero en ese tránsito pierde su capacidad de negación lo que ocurre en el arte dice Marcuse es sin duda salvaje y obsceno viril y atrevido bastante inmoral y precisamente por eso perfectamente inofensivo Frederick Jameson también sostiene que la cultura de fin de siglo es la del pastiche la del multiculturalismo el hombre posmoderno influenciado por las nuevas categorías culturales no puede permitirse la crítica ideológica a la antigua e incluso las formas culturales supuestamente más cuestionadoras quedan atrapadas en el sistema también Marcuse avanza sobre el rol de los medios de comunicación que considera la mediación entre los amos y sus servidores sostiene que los medios de comunicación masivos disuelven la atención entre apariencia y realidad lo cual se puede observar claramente en nuestras mediáticas guerras posmodernas guerras sin víctimas Sin sangre sin muerte sin dolor los medios reproducen el lenguaje unidimensional dice Marcuse opuesto a la bidimensionalidad del pensamiento crítico y dialéctico el idioma se llena de elementos mágicos autoritarios y rituales sin las mediaciones que requieren las etapas del conocimiento y la evaluación un lenguaje que ya no identifica razón y hecho esencia y existencia cosa y función ahora el sustantivo gobierna la oración se anula así toda conciencia crítica el hombre unidimensional acepta la realidad dada sin cuestionarla el concepto ritualizado dice Marcuse se hace inmune a toda contradicción el discurso comercial y también el político se inmunizan contra la negación recurriendo a la unificación de los Opuestos cerrando el camino a todo Otro discurso que no se desarrolle en sus propios términos se trata de un discurso unidimensional se pierde el pensamiento bidimensional del universo crítico y abstracto el pensamiento que denuncia el carácter histórico de las contradicciones la dimensión histórica es la dimensión que le falta al pensamiento unidimensional Marcus se avisó a su progresiva eliminación anulando con ello la posibilidad de una postura crítica respecto al presente al desaparecer el concepto negativo del futuro es una supresión del propio pasado de la sociedad y de su futuro ya que el futuro invoca la negación del presente el pensamiento crítico es el que deviene en conciencia histórica Mientras que el lenguaje funcional actual es esencialmente antihistórico Este lenguaje unidimensional cerrado sólo Define no da lugar a los grises es un lenguaje ritual que se extiende por democracia sino democracias que absorbe al lenguaje trascendente ya no se busca la verdad o la mentira se impone sustituyendo los conceptos por imágenes y Marcus se revela lúcidamente una perspectiva Que hará eclosión a fin de siglo el nuevo recurso del lenguaje mágico ritual consiste en que la gente no lo cree o no le importa y sin embargo actúa de acuerdo con él en el mismo sentido Jean bolillar sostendrá en los 90 en su obra El crimen perfecto que este mundo de fin de siglo es una realidad a la que no le falta nada Todo es visible hiper real y por lo tanto no puede soñarse con ningún factor de impugnación en términos de Marcus se hablaríamos de un mundo sumido en una pura positividad que anula el espacio de lo negativo la imposibilidad de la crítica bodliar bromea con que la dialéctica se ha realizado pero de una forma irónica en lugar del Triunfo de lo negativo como imaginaba el pensamiento crítico estamos frente a una positividad total sin apelación utilizando un giro discursivo escalofriante podríamos hablar de una purificación étnica del concepto perpetrando el asesinato de lo negativo El crimen de lo racional la victoria de lo virtual dice bolillar estamos ante el fin de la muerte el fin del rostro y el cuerpo acosado por la cirugía estética el fin del mundo que se borra con la realidad virtual el fin de cada uno de nosotros que seremos abolidos un día con la clonación la muerte del otro en vías de diluirse en la comunicación perpetua Marcuse tres décadas antes proponía Volver al pensamiento crítico para romper la lógica de la pura positividad del mundo real ya que una de las características esenciales del hombre unidimensional es su aceptación de la realidad dada como la única su realidad sin impugnación sin Rebeldía pero bodrillar toma un camino sorprendente al sostener que el pensamiento crítico para ser crítico en esta realidad transparente libere a ser más positivo aún más real que la propia realidad un pensamiento hiper real en los tiempos heroicos del pensamiento crítico se luchaba contra lo mágico y lo mítico hoy postula abolillar ya no se combate contra el mito sino que se lucha contra el mundo real y considera a la ilusión como ese factor capaz de impugnar Y cuestionar a lo real la ilusión dice podría ser la encargada de devolver la no veracidad a los hechos por eso podría sostiene que ya no se lucha contra el fantasma de la alienación aquel que perseguía Marcuse sino contra el fantasma de la Ultra realidad la transparencia podría nos habla de una realidad indiferente en la que resulta imposible ser más indiferente que la propia realidad La indiferencia la ausencia de diferencias todo lo Iguala y todo lo relativiza nada es cuestionable en esa realidad una realidad apática que se ve invadida por el terio otra de las reflexiones que realiza bobiliar en 1994 es la de presentar a la hipercomunicación como perpetradora del crimen perfecto de la alteridad la comunicación acabó con el otro dice bodlillar la negociación acabó con el enemigo la buena convivencia acabó con el predador El Clon acabó con la muerte La indiferencia acabó con la seducción y nadie se ha dado cuenta de quién es el criminal El otro es el enemigo en la paradójica sociedad de la diversidad la Ultra positividad del mundo denunciada por Marcuse ya hace carne en botrillar hasta el límite de considerarla una patología viral que apunta a la existencia de un sujeto sin el otro estamos frente a un hombre sin sombra transparente despojado de sustancia como el azúcar sin calorías la sal sin sodio el efecto sin causa la Guerra sin enemigo las pasiones sin objeto el tiempo sin memoria el amo sin esclavo el esclavo sin amo pero la paradoja que plantea bodrillar es que ante la necesidad vital de contar con el otro que ya no está ante su ausencia debemos producirlo Y por esa razón lo inventamos como diferencia por eso boddrilliar sostiene que un verdadero racismo surge En nuestro tiempo ya que nuestro otro no tiene con nosotros una diferencia natural sino una diferencia artificial generada creada voluntaria el racismo clásico buscaba desesperadamente al otro como portador del mal y nuestro tiempo dio una creación a la nueva forma de racismo el humanitarismo de la buena conciencia que necesita al otro pero ahora como víctima John Kenneth considera el principio humanitario como uno de los tres puntales de la cultura de la satisfacción de fin de siglo funcionando el humanitarismo como válvula de escape a la conciencia para ser soportable la existencia de tan grande franja de desposeídos y Miserables el hombre de fin de siglo necesita vitalmente algo de realidad y va en búsqueda de esa realidad allí donde sangra los puentes aéreos que proveen ayuda humanitaria a los espacios marginados del mundo de la satisfacción son en realidad bombas de succión de la energía vital de la desdicha pero esa desdicha debe ser blanqueada conceptualmente devorando su negatividad en un mundo que no la soporta como vampiros succionando toda negatividad así como apunta con frialdad Allen finca en su libro la humanidad perdida de 1996 la llamada generación humanitaria no quiera a los hombres quiero ocuparse de ellos no los quiere libres los quiere tullidos la solidaridad dice fin que Cloud no tiene riesgos es una apuesta ganador trabaja con seres dependientes sujetos penetrados por el sufrimiento con individuos pasivos inermes en la era de la ideología dice fin que crowd creíamos saberlo todo en la era de la solidaridad no queremos conocer nada de la primacía de la razón pasamos a la primacía del sentimiento de la sublevación a la compasión la muerte de la dimensión crítica a riesgo cero porque la filantropía no se extiende Más allá del espacio de la masacre necesita sangre y horror para manifestarse pero también necesita distancia para evitar riesgos menciona el nivel máximo de hundimiento de las categorías ninguna idea en el mundo merece que se mate por ella se trata de un pensamiento arraigado en la nueva cultura que ningún ser humano merece morir por nada el mundo Ha logrado absorber todos sus factores negativos y reciclarlos ni la pasión ha quedado en pie solo el odio y el odio es hoy una fuerza sin objetivo es puro medio pura razón instrumental el odio no sabe lo que quiere solo sabe lo que no quiere pero no se trata de odio de clase la vieja pasión burguesa quiere un odio especial que no era un medio sino Un fin que tenía una responsabilidad histórica un odio constructivo al decir de Marcuse el odio actual es la reacción vital contra la pura positividad del sistema pero en este Universo de La indiferencia hay que encontrar espacios de pasión capaces de desenmascarar la ausencia de realidad Pero hay riesgos ya que los portadores de la pasión dice bolillar están condenados al Exterminio la relegación o la exclusión en su libro de 1992 la ilusión delfín bodlirear como Marcuse dirige su mirada a la periferia En búsqueda de la pasión y observa allí un depósito de libertad no la libertad simulada y satisfecha del primer mundo sino la libertad esencial la libertad del deseo la libertad apasionada dice es la pasión característica no del final de la historia sino de una historia a la vez sin final y sin salida por eso el mundo guarda alguna esperanza incluso para abodrillar la actual esclavitud de lo mismo y de la semejanza se romperá un día con la reaparición de la alteridad detrás de cada semejanza se oculta el otro vencido y un día ese otro se levantará y esta vez no será vencido en el último párrafo del hombre unidimensional Marcus se rescata una frase de su colega Walter Benjamin solo gracias a aquellos sin esperanza nos es dada la esperanza ",
+      "fecha": "2026-07-01T18:57:22.188590",
+      "nota_autor": null
+    }
+  ],
+  "texto_desincronizado_desde": "2026-07-01T18:57:22.188643"
+}

@@ -6,6 +6,7 @@
       {
         "id": "c_001",
         "label": "Crisis mundial de fertilidad",
+        "tipo": "primitivo",
         "descripcion": "El fenómeno central del texto que describe la caída global y acelerada de las tasas de natalidad en todas partes.",
         "sinonimos_candidatos": [
           "baja de la fertilidad",
@@ -19,6 +20,7 @@
       {
         "id": "c_002",
         "label": "Tasa de reemplazo demográfico",
+        "tipo": "primitivo",
         "descripcion": "El umbral teórico (aproximadamente 2.1 hijos por mujer) necesario para mantener una población constante a largo plazo.",
         "sinonimos_candidatos": [
           "nivel de reemplazo"
@@ -31,6 +33,7 @@
       {
         "id": "c_003",
         "label": "Ansiedad existencial moderna",
+        "tipo": "primitivo",
         "descripcion": "La sensación de incertumbre y tristeza global que impide a los jóvenes asumir el compromiso irreversible de tener un hijo.",
         "sinonimos_candidatos": [
           "melancolía existencial del siglo XXI"
@@ -43,6 +46,7 @@
       {
         "id": "c_004",
         "label": "Inteligencia artificial y tecnología",
+        "tipo": "primitivo",
         "descripcion": "Factores tecnológicos citados tanto como causa posible o distracción del fenómeno demográfico.",
         "sinonimos_candidatos": [
           "teléfonos inteligentes",
@@ -56,6 +60,7 @@
       {
         "id": "c_005",
         "label": "Empoderamiento femenino",
+        "tipo": "primitivo",
         "descripcion": "El aumento del control sobre los cuerpos y el futuro económico de las mujeres que reduce la tasa fecundidad.",
         "sinonimos_candidatos": [
           "feminismo empoderado"
@@ -68,6 +73,7 @@
       {
         "id": "c_006",
         "label": "Precios de la vivienda",
+        "tipo": "primitivo",
         "descripcion": "El factor económico crítico donde los máximos históricos limitan el acceso y la capacidad económica para tener hijos.",
         "sinonimos_candidatos": [
           "acceso a la casa"
@@ -80,6 +86,7 @@
       {
         "id": "c_007",
         "label": "Seguridad social pública",
+        "tipo": "primitivo",
         "descripcion": "El sistema que depende del número de trabajadores activos para sostener pensiones y salud, amenazado por el descenso poblacional.",
         "sinonimos_candidatos": [
           "prestaciones de jubilación"
@@ -92,6 +99,7 @@
       {
         "id": "c_008",
         "label": "Inmigración masiva",
+        "tipo": "primitivo",
         "descripcion": "La solución propuesta para sostener el sistema social que a menudo genera reacciones políticas no deseadas.",
         "sinonimos_candidatos": [
           "importar gente"
@@ -104,6 +112,7 @@
       {
         "id": "c_009",
         "label": "Populismo político de derecha",
+        "tipo": "primitivo",
         "descripcion": "La reacción política observada en Europa y otros lugares ante la inmigración o el declive demográfico.",
         "sinonimos_candidatos": [
           "voto a la extrema derecha"
@@ -116,6 +125,7 @@
       {
         "id": "c_010",
         "label": "Economía de servicios",
+        "tipo": "primitivo",
         "descripcion": "La estructura económica actual que facilita el trabajo femenino fuera del hogar y reduce la necesidad tradicional de hijos.",
         "sinonimos_candidatos": [
           "trabajos en tiendas y oficinas"
@@ -128,6 +138,7 @@
       {
         "id": "c_011",
         "label": "Carrera armamentística educativa",
+        "tipo": "primitivo",
         "descripcion": "La necesidad de títulos superiores que retrasa la formación familiar y reduce el tiempo para tener hijos.",
         "sinonimos_candidatos": [
           "presión académica"
@@ -140,6 +151,7 @@
       {
         "id": "c_012",
         "label": "Redes sociales e internet",
+        "tipo": "primitivo",
         "descripcion": "Medios de comunicación globalizadores que homogeneizan valores occidentales y cambian percepciones culturales.",
         "sinonimos_candidatos": [
           "TikTok"
@@ -152,6 +164,7 @@
       {
         "id": "c_013",
         "label": "Inercia demográfica",
+        "tipo": "primitivo",
         "descripcion": "El fenómeno estadístico donde la población sigue creciendo temporalmente aunque la fertilidad haya caído por debajo del reemplazo.",
         "sinonimos_candidatos": [
           "efecto inercial"
@@ -164,6 +177,7 @@
       {
         "id": "c_014",
         "label": "Identidad cultural y lengua",
+        "tipo": "primitivo",
         "descripcion": "El riesgo de desaparición de lenguas regionales o identidades nacionales debido a la inmigración masiva.",
         "sinonimos_candidatos": [
           "lengua condenada"
@@ -176,6 +190,7 @@
       {
         "id": "c_015",
         "label": "Trampa política demográfica",
+        "tipo": "primitivo",
         "descripcion": "La situación donde no hay solución popular a largo plazo: inmigración genera populismo o recortes sociales generan reacción adversa.",
         "sinonimos_candidatos": [
           "escenario sin salida"
@@ -825,10 +840,55 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-06-29T00:25:44.606646",
-  "actualizado_en": "2026-06-29T00:27:08.381349",
+  "actualizado_en": "2026-07-02T23:40:32.723458",
   "conceptos_editados": {},
-  "relaciones_editadas": {},
-  "relaciones_investigador": [],
+  "relaciones_editadas": {
+    "r_002": {
+      "bidireccional": false
+    }
+  },
+  "relaciones_investigador": [
+    {
+      "id": "r_rec_c4128d01",
+      "origen_id": "c_007",
+      "destino_id": "c_001",
+      "tipo": "amenaza financiera",
+      "etiqueta": "El desplome de la fecundidad amenaza el financiamiento del sistema público.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1aefd10c",
+      "origen_id": "c_013",
+      "destino_id": "c_001",
+      "tipo": "explicación estadística",
+      "etiqueta": "La población sigue creciendo temporalmente a pesar de las tasas por debajo del reemplazo.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2755cb03",
+      "origen_id": "c_015",
+      "destino_id": "c_002",
+      "tipo": "causa estructural",
+      "etiqueta": "La imposibilidad de alcanzar la tasa de reemplazo sin inmigración genera esta trampa política.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1d01aa89",
+      "origen_id": "c_009",
+      "destino_id": "c_007",
+      "tipo": "consecuencia política",
+      "etiqueta": "El descontento social por el sistema público deriva en un incremento del voto a la derecha radicalizada.",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_980331ad",
+      "origen_id": "c_008",
+      "destino_id": "c_002",
+      "tipo": "solución propuesta",
+      "etiqueta": "La inmigración se propone para compensar el déficit de reemplazo demográfico.",
+      "bidireccional": false
+    }
+  ],
   "metadatos": {
     "titulo": "La crisis de la fertilidad es peor de lo que piensas",
     "autores": [
@@ -838,5 +898,8 @@
     "editorial": null,
     "url": null,
     "notas": null
-  }
+  },
+  "texto_editado": null,
+  "revisiones_texto": [],
+  "texto_desincronizado_desde": null
 }

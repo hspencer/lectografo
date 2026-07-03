@@ -7,11 +7,14 @@ Lecto- (lectura, texto, lo legible) + -grafo (trazar, representar): "lo que graf
 ## Que hace
 
 1. Ingesta una transcripcion (texto plano, VTT o subtitulos de YouTube).
-2. Normaliza el texto y conserva timestamps cuando estan disponibles.
-3. Pide a un LLM que extraiga conceptos, relaciones, sinonimia candidata, bidireccionalidad, metalenguaje y bucles.
+2. Normaliza el texto y conserva timestamps cuando estan disponibles; el texto fuente se puede editar en cualquier momento, con historial de revisiones y re-normalizacion.
+3. Pide a un LLM que extraiga conceptos, relaciones, sinonimia candidata, bidireccionalidad, metalenguaje y bucles, mostrando el grafo emerger en vivo lote a lote.
 4. Presenta puntos de decision al investigador para validar caso a caso.
 5. Persiste el grafo refinado en un JSON versionable.
-6. Visualiza el grafo con D3 y permite anotar, exportar y publicar versiones inmutables.
+6. Detecta nodos sueltos y propone reconectarlos (*getYourStuffTogether*), y detecta conceptos duplicados para fusionarlos en un nodo canonico (consolidacion de sinonimos) — ambos flujos via LLM con revision humana.
+7. Visualiza el grafo en un mapa interactivo, alternando entre vista 2D (D3/SVG) y 3D (three.js): resalta el concepto seleccionado, aisla su vecindad al pasar el mouse y atenua el resto.
+8. Permite crear y editar grafos personales del investigador, independientes de cualquier transcripcion.
+9. Permite anotar, exportar y publicar versiones inmutables del grafo.
 
 ## Filosofia de diseno
 
@@ -28,19 +31,28 @@ lectografo/
 ├── .env.example          Plantilla de variables; nunca commitear .env real
 ├── .gitignore
 ├── specs/                Especificaciones Allium (lenguaje de comportamiento)
-│   ├── lectografo.allium      Modulo raiz: scope, given, config, defaults
+│   ├── lectografo.allium            Modulo raiz: scope, given, config, defaults
 │   ├── transcripcion.allium
+│   ├── edicion-texto.allium         Edicion del texto fuente y re-normalizacion
 │   ├── extraccion.allium
 │   ├── extraccion-incremental.allium
+│   ├── procesamiento-visible.allium Emergencia visual del grafo durante la extraccion
 │   ├── validacion.allium
 │   ├── grafo.allium
+│   ├── getYourStuffTogether.allium  Reconexion de nodos sueltos
 │   ├── grafos-personales.allium
 │   └── surfaces.allium
 ├── transcripts/          Transcripciones crudas (.txt, .vtt) ingresadas por el investigador
 ├── data/
 │   └── grafos/           Grafos persistidos en JSON, una version por archivo
 ├── prompts/              Plantillas de prompts versionadas (Markdown)
-└── src/                  Implementacion (a desarrollar a partir de specs/)
+├── static/               Frontend: HTML/CSS/JS vanilla, mapa D3 (2D) y three.js (3D)
+└── src/
+    ├── app.py            FastAPI: rutas y orquestacion
+    ├── llm/               Providers intercambiables (Anthropic, OpenAI, Gemini, Ollama)
+    ├── models/            Modelos Pydantic (grafo, validacion, reconexion, consolidacion...)
+    ├── persistencia/      Lectura/escritura de estado en data/
+    └── pipeline/          Extraccion, validacion, reconexion, consolidacion, grafo
 ```
 
 ## Stack tecnico elegido
@@ -51,7 +63,7 @@ Razones que justifican esta eleccion:
 
 - **Ecosistema NLP maduro:** `yt-dlp` para descarga de YouTube, `faster-whisper` para transcripcion local cuando hace falta, librerias estables para limpieza de texto y parsing VTT.
 - **Runtime unico:** un solo `python` corre el pipeline, el servidor y los scripts de mantenimiento. Reduce dependencias y simplifica el `requirements.txt`.
-- **Frontend sin bundler:** D3 cargado por CDN o copiado a `static/` evita el ciclo de build de un frontend Node.js. El investigador puede abrir el HTML directamente si quisiera.
+- **Frontend sin bundler:** D3 y three.js/3d-force-graph cargados por CDN (via import map) evitan el ciclo de build de un frontend Node.js. El investigador puede abrir el HTML directamente si quisiera.
 - **SDK oficiales para LLM:** Anthropic, OpenAI y Google publican SDK Python que se intercambian detras de una interfaz `LLMProvider`.
 
 La alternativa Node.js queda descartada por menor disponibilidad de utilidades de transcripcion local. La opcion hibrida (Node frontend + Python pipeline) anade complejidad sin beneficio observable a este alcance.

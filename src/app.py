@@ -40,6 +40,9 @@ from src.persistencia.reconexion import (
     eliminar as eliminar_sesion,
 )
 from src.models.reconexion import SesionReconexion
+from src.persistencia import consolidacion as persistencia_consolidacion
+from src.pipeline.consolidacion import detectar_candidatos, fusionar_conceptos
+from src.models.consolidacion import SesionConsolidacion
 from src.persistencia.grafo_personal import (
     cargar_gp, guardar_gp, listar_gp, ruta_grafo_personal,
 )
@@ -170,9 +173,16 @@ _TAREAS: dict[str, dict] = {}
 _executor = ThreadPoolExecutor(max_workers=1)   # una extracción a la vez
 
 # Buffers de log en tiempo real para reconexión (in-memory, no persiste)
-# slug → texto acumulado del LLM (últimos 16 KB)
-_RECONEXION_LOG: dict[str, str] = {}
+_RECONEXION_LOG: dict[str, str] = {}     # mensajes de progreso (sin tokens LLM crudos)
+_RECONEXION_TOKENS: dict[str, int] = {}  # contador de tokens LLM generados
 _RECONEXION_DONE: dict[str, bool] = {}
+_RECONEXION_CANCEL: dict[str, bool] = {} # flag de cancelación por slug
+
+# Mismos buffers, para consolidación de sinónimos
+_CONSOLIDACION_LOG: dict[str, str] = {}
+_CONSOLIDACION_TOKENS: dict[str, int] = {}
+_CONSOLIDACION_DONE: dict[str, bool] = {}
+_CONSOLIDACION_CANCEL: dict[str, bool] = {}
 
 _EXTS_TRANSCRIPT = ("txt", "md", "vtt", "srt")
 
@@ -240,17 +250,38 @@ def listar_extracciones():
         slug = f.stem.replace("_extraccion", "")
         slugs_procesados.add(slug)
         ruta_val = ruta_validacion(slug, GRAFOS)
+
+        # Verificar si hay un reproceso en curso para este slug
+        tarea = _TAREAS.get(slug, {})
+        estado_tarea = tarea.get("estado", "") if isinstance(tarea, dict) else ""
+        procesando   = estado_tarea == "procesando"
+        tokens       = tarea.get("tokens", 0)       if isinstance(tarea, dict) else 0
+        tok_total    = tarea.get("tokens_total", 0) if isinstance(tarea, dict) else 0
+        elapsed      = int(time.time() - tarea["inicio"]) if procesando and isinstance(tarea, dict) else 0
+        if tok_total > 0 and tokens > 0:
+            porcentaje = int(min(tokens / tok_total * 90, 90))
+        else:
+            porcentaje = 0
+
         info: dict = {
-            "slug": slug,
-            "titulo": slug.replace("_", " ").title(),
-            "procesado": True,
-            "procesando": False,
+            "slug":            slug,
+            "titulo":          slug.replace("_", " ").title(),
+            "procesado":       True,
+            "procesando":      procesando,
+            "fase_extraccion": tarea.get("fase", "") if isinstance(tarea, dict) else "",
+            "elapsed":         elapsed,
+            "tokens":          tokens,
+            "tokens_total":    tok_total,
+            "porcentaje":      porcentaje,
+            "estado":          estado_tarea or "listo",
+            "error":           (estado_tarea if estado_tarea.startswith("error")
+                                else ("cancelado" if estado_tarea == "cancelado" else None)),
         }
         if ruta_val.exists():
-            estado = cargar(ruta_val)
+            val = cargar(ruta_val)
             info.update({
-                "titulo":    estado.titulo,
-                "metadatos": estado.metadatos.model_dump(),
+                "titulo":    val.titulo,
+                "metadatos": val.metadatos.model_dump(),
             })
         resultado.append(info)
 
@@ -665,21 +696,32 @@ def resolver_decision(slug: str, did: str, payload: ResolverPayload):
         )
 
         if decision.tipo == TD.sinonimia and aceptada_o_modificada:
-            # Aplicar label canónico al concepto en conceptos_editados.
-            # label_resolucion > label_canonico_propuesto > label actual.
-            for cid in decision.conceptos_implicados_ids:
+            # label_resolucion > label_canonico_propuesto > label actual del canónico.
+            # Hoy conceptos_implicados_ids siempre trae un solo id (ver
+            # generar_decisiones en pipeline/validacion.py: cada concepto propone
+            # sus propios sinonimos_candidatos como variantes de sí mismo, no
+            # como referencias a otros conceptos ya extraídos). Si en el futuro
+            # llegara a traer más de uno, se fusionan de verdad vía
+            # fusionar_conceptos (redirección de relaciones incluida), en vez
+            # de solo renombrar cada uno por separado.
+            ids = decision.conceptos_implicados_ids
+            if ids:
+                canonico_id = ids[0]
                 label_final = (
                     payload.label_resolucion
                     or decision.label_canonico_propuesto
                     or next(
-                        (c.label for c in estado.extraccion.conceptos if c.id == cid),
+                        (c.label for c in estado.extraccion.conceptos if c.id == canonico_id),
                         None,
                     )
                 )
-                if label_final:
-                    ov = estado.conceptos_editados.get(cid, {})
+                if len(ids) > 1:
+                    from src.pipeline.consolidacion import fusionar_conceptos
+                    fusionar_conceptos(estado, canonico_id, ids[1:], label_canonico=label_final)
+                elif label_final:
+                    ov = estado.conceptos_editados.get(canonico_id, {})
                     ov["label"] = label_final
-                    estado.conceptos_editados[cid] = ov
+                    estado.conceptos_editados[canonico_id] = ov
 
         elif decision.tipo == TD.promocion_de_tipo and payload.resolucion == ResolucionDecision.modificada:
             # nota_resolucion contiene el tipo elegido: "primitivo" | "derivado" | "metalenguaje"
@@ -832,12 +874,14 @@ async def iniciar_reconexion(slug: str, background_tasks: BackgroundTasks):
     )
     guardar_sesion(sesion_placeholder, slug, GRAFOS)
 
-    # Inicializar buffer de log
+    # Inicializar buffers de log y cancelación
     _RECONEXION_LOG[slug] = ""
+    _RECONEXION_TOKENS[slug] = 0
     _RECONEXION_DONE[slug] = False
+    _RECONEXION_CANCEL[slug] = False
 
-    def _on_texto_rec(fragmento: str) -> None:
-        _RECONEXION_LOG[slug] = (_RECONEXION_LOG.get(slug, "") + fragmento)[-16000:]
+    def _on_token_rec(total: int) -> None:
+        _RECONEXION_TOKENS[slug] = total
 
     def _on_log_rec(msg: str) -> None:
         _RECONEXION_LOG[slug] = (_RECONEXION_LOG.get(slug, "") + msg)[-16000:]
@@ -853,11 +897,14 @@ async def iniciar_reconexion(slug: str, background_tasks: BackgroundTasks):
                 transcripcion_texto=transcripcion_texto,
                 grafos_dir=GRAFOS,
                 max_chars_transcripcion=settings.max_chars_prompt,
-                on_texto=_on_texto_rec,
+                on_token=_on_token_rec,
+                on_texto=None,          # no mezclamos tokens crudos en el log visible
                 on_log=_on_log_rec,
+                should_cancel=lambda: _RECONEXION_CANCEL.get(slug, False),
             )
         finally:
             _RECONEXION_DONE[slug] = True
+            _RECONEXION_CANCEL.pop(slug, None)  # limpiar flag
 
     background_tasks.add_task(_tarea)
     return {"ok": True, "estado": "procesando", "nodos_sueltos": len(desconectados)}
@@ -892,17 +939,21 @@ async def stream_reconexion(slug: str):
                 continue
 
             texto = _RECONEXION_LOG.get(slug, "")
+            tokens = _RECONEXION_TOKENS.get(slug, 0)
             nuevo = texto[enviados:]
             if nuevo:
                 enviados += len(nuevo)
-                payload = json.dumps({"chunk": nuevo}, ensure_ascii=False)
+                payload = json.dumps({"chunk": nuevo, "tokens": tokens}, ensure_ascii=False)
                 yield f"data: {payload}\n\n"
+            elif tokens > 0:
+                # Sin texto nuevo pero hay tokens → emitir solo el contador
+                yield f"data: {json.dumps({'tokens': tokens})}\n\n"
 
             if done_flag and enviados >= len(_RECONEXION_LOG.get(slug, "")):
-                yield f"data: {json.dumps({'done': True})}\n\n"
+                yield f"data: {json.dumps({'done': True, 'tokens': tokens})}\n\n"
                 break
 
-            await asyncio.sleep(0.08)
+            await asyncio.sleep(0.1)
 
     return StreamingResponse(
         _generate(),
@@ -997,8 +1048,235 @@ def confirmar_reconexion(slug: str, payload: ConfirmarReconexionPayload):
 
 @app.delete("/api/grafo/{slug}/reconexion/sesion")
 def cancelar_sesion_reconexion(slug: str):
-    """Cancela y elimina la sesión de reconexión activa."""
+    """Cancela la sesión de reconexión activa (detiene el LLM si está en curso)."""
+    _RECONEXION_CANCEL[slug] = True   # señal al watchdog del LLM
     eliminar_sesion(slug, GRAFOS)
+    return {"ok": True}
+
+
+# ── Consolidación de sinónimos — fusión de nodos duplicados ───────────────────
+
+@app.get("/api/grafo/{slug}/consolidacion/estado")
+def estado_consolidacion(slug: str):
+    """
+    Devuelve cuántos grupos candidatos a fusión detecta la heurística de label
+    y si hay una sesión activa. El frontend usa esto para mostrar/ocultar el
+    botón de consolidación.
+    """
+    estado_val, _ = _cargar_o_crear(slug)
+    grafo = materializar_desde_validacion(estado_val)
+    candidatos = detectar_candidatos(grafo)
+    sesion_activa = None
+    if persistencia_consolidacion.existe(slug, GRAFOS):
+        try:
+            s = persistencia_consolidacion.cargar(slug, GRAFOS)
+            if s.estado in ("en_revision", "procesando"):
+                sesion_activa = s.model_dump(mode="json")
+        except Exception:
+            pass
+    return {
+        "candidatos_grupos_count": len(candidatos),
+        "candidatos_nodos_count": sum(len(g) for g in candidatos),
+        "sesion_activa": sesion_activa,
+    }
+
+
+@app.post("/api/grafo/{slug}/consolidacion/iniciar")
+async def iniciar_consolidacion(slug: str, background_tasks: BackgroundTasks):
+    """Lanza la detección y confirmación LLM de fusiones candidatas. Background task."""
+    estado_val, _ = _cargar_o_crear(slug)
+    grafo = materializar_desde_validacion(estado_val)
+    candidatos = detectar_candidatos(grafo)
+    if not candidatos:
+        raise HTTPException(400, "No se detectaron conceptos candidatos a fusionar")
+
+    if persistencia_consolidacion.existe(slug, GRAFOS):
+        try:
+            s = persistencia_consolidacion.cargar(slug, GRAFOS)
+            if s.estado == "en_revision":
+                raise HTTPException(409, "Ya hay una sesión de consolidación activa")
+        except HTTPException:
+            raise
+        except Exception:
+            pass
+
+    transcripcion_texto: str | None = None
+    ruta_t = _ruta_transcript(slug)
+    if ruta_t:
+        try:
+            transcripcion_texto = ruta_t.read_text(encoding="utf-8")
+        except Exception:
+            pass
+
+    import uuid as _uuid
+    sesion_id = f"cons_{_uuid.uuid4().hex[:8]}"
+    sesion_placeholder = SesionConsolidacion(
+        id=sesion_id,
+        slug=slug,
+        estado="procesando",
+        candidatos_ids=[n.id for grupo in candidatos for n in grupo],
+    )
+    persistencia_consolidacion.guardar(sesion_placeholder, slug, GRAFOS)
+
+    _CONSOLIDACION_LOG[slug] = ""
+    _CONSOLIDACION_TOKENS[slug] = 0
+    _CONSOLIDACION_DONE[slug] = False
+    _CONSOLIDACION_CANCEL[slug] = False
+
+    def _on_token_cons(total: int) -> None:
+        _CONSOLIDACION_TOKENS[slug] = total
+
+    def _on_log_cons(msg: str) -> None:
+        _CONSOLIDACION_LOG[slug] = (_CONSOLIDACION_LOG.get(slug, "") + msg)[-16000:]
+
+    def _tarea():
+        from src.pipeline.consolidacion import ejecutar_consolidacion
+        try:
+            ejecutar_consolidacion(
+                slug=slug,
+                sesion_id=sesion_id,
+                grafo=grafo,
+                transcripcion_texto=transcripcion_texto,
+                grafos_dir=GRAFOS,
+                max_chars_transcripcion=settings.max_chars_prompt,
+                on_token=_on_token_cons,
+                on_texto=None,
+                on_log=_on_log_cons,
+                should_cancel=lambda: _CONSOLIDACION_CANCEL.get(slug, False),
+            )
+        finally:
+            _CONSOLIDACION_DONE[slug] = True
+            _CONSOLIDACION_CANCEL.pop(slug, None)
+
+    background_tasks.add_task(_tarea)
+    return {"ok": True, "estado": "procesando", "candidatos_grupos": len(candidatos)}
+
+
+@app.get("/api/grafo/{slug}/consolidacion/stream")
+async def stream_consolidacion(slug: str):
+    """SSE: emite el log de consolidación en tiempo real. Mismo patrón que /reconexion/stream."""
+    async def _generate():
+        enviados = 0
+        while True:
+            done_flag = _CONSOLIDACION_DONE.get(slug)
+
+            if done_flag is None:
+                if persistencia_consolidacion.existe(slug, GRAFOS):
+                    try:
+                        s = persistencia_consolidacion.cargar(slug, GRAFOS)
+                        if s.estado in ("en_revision", "cancelada"):
+                            yield f"data: {json.dumps({'done': True})}\n\n"
+                            break
+                    except Exception:
+                        pass
+                else:
+                    yield f"data: {json.dumps({'done': True})}\n\n"
+                    break
+                await asyncio.sleep(0.2)
+                continue
+
+            texto = _CONSOLIDACION_LOG.get(slug, "")
+            tokens = _CONSOLIDACION_TOKENS.get(slug, 0)
+            nuevo = texto[enviados:]
+            if nuevo:
+                enviados += len(nuevo)
+                payload = json.dumps({"chunk": nuevo, "tokens": tokens}, ensure_ascii=False)
+                yield f"data: {payload}\n\n"
+            elif tokens > 0:
+                yield f"data: {json.dumps({'tokens': tokens})}\n\n"
+
+            if done_flag and enviados >= len(_CONSOLIDACION_LOG.get(slug, "")):
+                yield f"data: {json.dumps({'done': True, 'tokens': tokens})}\n\n"
+                break
+
+            await asyncio.sleep(0.1)
+
+    return StreamingResponse(
+        _generate(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+@app.get("/api/grafo/{slug}/consolidacion/sesion")
+def obtener_sesion_consolidacion(slug: str):
+    """Devuelve la sesión de consolidación activa, con labels resueltos."""
+    if not persistencia_consolidacion.existe(slug, GRAFOS):
+        raise HTTPException(404, "No hay sesión de consolidación activa")
+    sesion = persistencia_consolidacion.cargar(slug, GRAFOS)
+    estado_val, _ = _cargar_o_crear(slug)
+    label_por_id = {c.id: c.label for c in estado_val.extraccion.conceptos}
+    ov = estado_val.conceptos_editados
+
+    def _label(cid: str) -> str:
+        return ov.get(cid, {}).get("label") or label_por_id.get(cid, cid)
+
+    datos = sesion.model_dump(mode="json")
+    for p in datos.get("propuestas", []):
+        prop = p["propuesta"]
+        prop["nodo_canonico_label"] = _label(prop["nodo_canonico_id"])
+        prop["nodos_absorbidos_labels"] = [_label(a) for a in prop["nodos_absorbidos_ids"]]
+    return datos
+
+
+class ConfirmarConsolidacionPayload(BaseModel):
+    items: list[dict]  # [{propuesta_id, label_editado, seleccionada}]
+
+
+@app.post("/api/grafo/{slug}/consolidacion/confirmar")
+def confirmar_consolidacion(slug: str, payload: ConfirmarConsolidacionPayload):
+    """
+    Acepta la selección del investigador: fusiona de verdad los nodos
+    aceptados (redirección de relaciones incluida vía materializar_desde_validacion).
+    """
+    if not persistencia_consolidacion.existe(slug, GRAFOS):
+        raise HTTPException(404, "No hay sesión de consolidación activa")
+    sesion = persistencia_consolidacion.cargar(slug, GRAFOS)
+    if sesion.estado != "en_revision":
+        raise HTTPException(409, f"La sesión está en estado '{sesion.estado}', no se puede confirmar")
+
+    estado_val, ruta_val = _cargar_o_crear(slug)
+    ids_validos = {c.id for c in estado_val.extraccion.conceptos}
+
+    items_por_id = {it["propuesta_id"]: it for it in payload.items if "propuesta_id" in it}
+
+    fusiones_aplicadas = 0
+    for p in sesion.propuestas:
+        override = items_por_id.get(p.id, {})
+        seleccionada = override.get("seleccionada", p.seleccionada)
+        if not seleccionada:
+            p.estado = "rechazada"
+            continue
+        label_final = override.get("label_editado", p.label_editado) or p.label_editado
+        canonico_id = p.propuesta.nodo_canonico_id
+        absorbidos_ids = [a for a in p.propuesta.nodos_absorbidos_ids if a in ids_validos]
+        if canonico_id not in ids_validos or not absorbidos_ids:
+            p.estado = "rechazada"
+            continue
+        fusionar_conceptos(estado_val, canonico_id, absorbidos_ids, label_canonico=label_final)
+        p.estado = "aceptada"
+        fusiones_aplicadas += 1
+
+    sesion.estado = "completada"
+    from datetime import datetime as _dt
+    sesion.completada_en = _dt.utcnow()
+    guardar(estado_val, ruta_val)
+    persistencia_consolidacion.guardar(sesion, slug, GRAFOS)
+
+    grafo_actualizado = materializar_desde_validacion(estado_val)
+
+    return {
+        "ok": True,
+        "fusiones_aplicadas": fusiones_aplicadas,
+        "nodos_totales": len(grafo_actualizado.nodos),
+    }
+
+
+@app.delete("/api/grafo/{slug}/consolidacion/sesion")
+def cancelar_sesion_consolidacion(slug: str):
+    """Cancela la sesión de consolidación activa."""
+    _CONSOLIDACION_CANCEL[slug] = True
+    persistencia_consolidacion.eliminar(slug, GRAFOS)
     return {"ok": True}
 
 
@@ -1458,6 +1736,21 @@ def _actualizar_env(key: str, value: str) -> None:
     env_path.write_text("\n".join(nuevas) + "\n", encoding="utf-8")
 
 
+def _leer_key_env(nombre: str) -> str | None:
+    """Lee un valor del .env en disco (fresco, no del proceso en memoria)."""
+    env_path = Path(".env")
+    if not env_path.exists():
+        return None
+    for linea in env_path.read_text("utf-8").splitlines():
+        linea = linea.strip()
+        if linea.startswith(f"{nombre}="):
+            val = linea[len(f"{nombre}="):].strip()
+            if val and val[0] in ('"', "'") and val[-1] == val[0]:
+                val = val[1:-1]
+            return val or None
+    return None
+
+
 @app.get("/api/settings")
 async def obtener_settings():
     """Configuración actual + modelos disponibles y estado por proveedor."""
@@ -1487,15 +1780,15 @@ async def obtener_settings():
             },
             "anthropic": {
                 "model":   settings.anthropic_model,
-                "has_key": bool(settings.anthropic_api_key),
+                "has_key": bool(_leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key),
             },
             "openai": {
                 "model":   settings.openai_model,
-                "has_key": bool(settings.openai_api_key),
+                "has_key": bool(_leer_key_env("OPENAI_API_KEY") or settings.openai_api_key),
             },
             "gemini": {
                 "model":   settings.gemini_model,
-                "has_key": bool(settings.gemini_api_key),
+                "has_key": bool(_leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key),
             },
         },
     }
@@ -1521,17 +1814,32 @@ async def actualizar_settings(payload: SettingsPayload):
         if not new_model:
             raise HTTPException(400, "OLLAMA_MODEL debe estar configurado")
     elif target == "anthropic":
-        if not settings.anthropic_api_key:
+        key = _leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key
+        if not key:
             raise HTTPException(400, "ANTHROPIC_API_KEY no está configurada en .env")
+        object.__setattr__(settings, "anthropic_api_key", key)
         new_model = (payload.model or "").strip() or settings.anthropic_model
     elif target == "openai":
-        if not settings.openai_api_key:
+        key = _leer_key_env("OPENAI_API_KEY") or settings.openai_api_key
+        if not key:
             raise HTTPException(400, "OPENAI_API_KEY no está configurada en .env")
+        object.__setattr__(settings, "openai_api_key", key)
         new_model = (payload.model or "").strip() or settings.openai_model
     elif target == "gemini":
-        if not settings.gemini_api_key:
+        key = _leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key
+        if not key:
             raise HTTPException(400, "GEMINI_API_KEY no está configurada en .env")
-        new_model = (payload.model or "").strip() or settings.gemini_model
+        object.__setattr__(settings, "gemini_api_key", key)
+        _GEMINI_DEFAULT = "gemini-2.0-flash"
+        _GEMINI_DEPRECATED = {"gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro"}
+        env_model = _leer_key_env("GEMINI_MODEL") or ""
+        requested = (payload.model or "").strip()
+        if requested:
+            new_model = requested
+        elif env_model and env_model not in _GEMINI_DEPRECATED:
+            new_model = env_model
+        else:
+            new_model = _GEMINI_DEFAULT
 
     if new_provider and new_provider != settings.provider:
         _actualizar_env("PROVIDER", new_provider)
@@ -1596,18 +1904,90 @@ async def cancelar_extraccion(slug: str):
     return {"ok": True}
 
 
-# ── Transcripts (lectura del texto original) ─────────────────────────────────
+# ── Transcripts (lectura y edición del texto fuente) ─────────────────────────
 
 @app.get("/api/transcripts/{slug}")
 def obtener_transcript(slug: str):
-    """Devuelve el texto completo del transcript original."""
+    """Devuelve el texto del transcript (editado si existe, original en caso contrario)."""
     ruta = _ruta_transcript(slug)
-    if not ruta:
+    texto_original: str | None = None
+    if ruta:
+        texto_original = ruta.read_text("utf-8", errors="replace")
+
+    # Leer texto editado y metadatos de revisión desde el estado de validación
+    texto_editado: str | None = None
+    revisiones: list[dict] = []
+    desincronizado_desde: str | None = None
+    rv = ruta_validacion(slug, GRAFOS)
+    if rv.exists():
+        try:
+            ev = cargar(rv)
+            texto_editado = ev.texto_editado
+            revisiones = [
+                {"fecha": r.fecha.isoformat(), "nota_autor": r.nota_autor}
+                for r in ev.revisiones_texto
+            ]
+            if ev.texto_desincronizado_desde:
+                desincronizado_desde = ev.texto_desincronizado_desde.isoformat()
+        except Exception:
+            pass
+
+    texto = texto_editado if texto_editado is not None else texto_original
+    if texto is None:
         raise HTTPException(404, f"No se encontró transcript para slug '{slug}'")
+
     return {
         "slug": slug,
-        "nombre": ruta.name,
-        "texto": ruta.read_text("utf-8", errors="replace"),
+        "nombre": ruta.name if ruta else slug,
+        "texto": texto,
+        "es_editado": texto_editado is not None,
+        "texto_desincronizado_desde": desincronizado_desde,
+        "revisiones": revisiones,
+    }
+
+
+class EditarTextoPayload(BaseModel):
+    texto: str
+    nota: Optional[str] = None
+
+
+@app.patch("/api/transcripts/{slug}")
+def editar_transcript(slug: str, payload: EditarTextoPayload):
+    """Guarda una edición del texto fuente y registra la revisión."""
+    from src.models.validacion import RevisionTexto
+
+    rv = ruta_validacion(slug, GRAFOS)
+    if not rv.exists():
+        raise HTTPException(404, f"No hay datos de validación para '{slug}'")
+
+    estado = cargar(rv)
+
+    # Texto actual (editado o del archivo original)
+    texto_actual = estado.texto_editado
+    if texto_actual is None:
+        ruta = _ruta_transcript(slug)
+        texto_actual = ruta.read_text("utf-8", errors="replace") if ruta else ""
+
+    # Registrar revisión con snapshot del texto anterior
+    estado.revisiones_texto.append(RevisionTexto(
+        texto_anterior=texto_actual,
+        nota_autor=payload.nota,
+    ))
+    estado.texto_editado = payload.texto
+
+    # Marcar desincronización si ya hay extracción
+    if estado.extraccion and estado.extraccion.conceptos:
+        from datetime import datetime
+        estado.texto_desincronizado_desde = datetime.utcnow()
+
+    guardar(estado, rv)
+    return {
+        "ok": True,
+        "revisiones": len(estado.revisiones_texto),
+        "texto_desincronizado_desde": (
+            estado.texto_desincronizado_desde.isoformat()
+            if estado.texto_desincronizado_desde else None
+        ),
     }
 
 

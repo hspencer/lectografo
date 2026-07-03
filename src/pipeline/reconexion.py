@@ -129,6 +129,54 @@ def parsear_respuesta_reconexion(
     return conexiones
 
 
+def filtrar_conexiones_que_reducen_componentes(
+    grafo: Grafo, conexiones: list[ConexionPropuesta],
+) -> tuple[list[ConexionPropuesta], int]:
+    """
+    Descarta las conexiones propuestas cuyos dos extremos ya pertenecen a la
+    misma componente conexa: aceptarlas no reduciría el número de grafos
+    inconexos, sólo añadiría una arista interna redundante.
+
+    Usa Union-Find sobre las componentes actuales del grafo y aplica las
+    conexiones en orden de confianza descendente, para que —cuando varias
+    propuestas compitan por unir la misma componente— sobreviva la de mayor
+    confianza. Cada conexión aceptada fusiona (union) sus dos componentes,
+    así que las siguientes se evalúan contra el estado ya actualizado.
+
+    Devuelve (conexiones_aceptadas, cantidad_descartada_por_redundante).
+    """
+    padre: dict[str, str] = {n.id: n.id for n in grafo.nodos}
+
+    def find(x: str) -> str:
+        while padre[x] != x:
+            padre[x] = padre[padre[x]]
+            x = padre[x]
+        return x
+
+    def union(a: str, b: str) -> bool:
+        ra, rb = find(a), find(b)
+        if ra == rb:
+            return False
+        padre[ra] = rb
+        return True
+
+    for r in grafo.relaciones:
+        if r.origen_id in padre and r.destino_id in padre:
+            union(r.origen_id, r.destino_id)
+
+    aceptadas: list[ConexionPropuesta] = []
+    descartadas = 0
+    for c in sorted(conexiones, key=lambda c: c.confianza, reverse=True):
+        if c.origen_id not in padre or c.destino_id not in padre:
+            continue
+        if union(c.origen_id, c.destino_id):
+            aceptadas.append(c)
+        else:
+            descartadas += 1
+
+    return aceptadas, descartadas
+
+
 def _extraer_items_array(texto: str, inicio: int) -> list[dict]:
     """Extrae items completos de un array JSON desde la posición dada."""
     items = []
@@ -217,18 +265,40 @@ def ejecutar_reconexion(
 
     try:
         llm = get_llm()
+        llm_name = type(llm).__name__
+        label_por_id = {n.id: n.label for n in grafo.nodos}
 
-        _log(f"Grafo: {len(grafo.nodos)} nodos, {len(grafo.relaciones)} relaciones")
-        _log(f"Conceptos a reconectar ({len(sueltos)}):")
+        _log("╔══ RECONEXIÓN DE NODOS ════════════════════╗")
+        _log(f"  modelo  : {llm_name}")
+        _log(f"  grafo   : {len(grafo.nodos)} nodos · {len(grafo.relaciones)} relaciones")
+        _log(f"  sueltos : {len(sueltos)}")
+        _log("╚═══════════════════════════════════════════╝")
+        _log("")
+
+        _log("NODOS SIN CONEXIÓN:")
         for n in sueltos:
             _log(f"  [{n.id}] {n.label}")
+            if n.descripcion_corta:
+                _log(f"    └ {n.descripcion_corta[:120]}")
+            if n.cita_directa:
+                _log(f"    ▸ \"{n.cita_directa[:100]}\"")
         _log("")
-        _log("Consultando al LLM...")
-        _log("")
+
+        _log("CONSTRUYENDO CONTEXTO DEL GRAFO...")
+        contexto = construir_contexto_grafo(grafo)
+        _log(f"  contexto  : {len(contexto):,} chars · {len(grafo.nodos)} nodos · {len(grafo.relaciones)} relaciones")
 
         prompt_sistema, _ = construir_prompt_reconexion(
             grafo, sueltos, transcripcion_texto, max_chars_transcripcion
         )
+        _log(f"  prompt    : {len(prompt_sistema):,} chars")
+        if transcripcion_texto:
+            _log(f"  transcripción incluida: {len(transcripcion_texto):,} chars")
+        _log("")
+
+        _log("─── RESPUESTA DEL LLM ──────────────────────")
+        _log("")
+
         respuesta = llm.invocar(
             prompt_sistema=prompt_sistema,
             texto="",
@@ -237,8 +307,35 @@ def ejecutar_reconexion(
             should_cancel=should_cancel,
         )
 
+        _log("")
+        _log("─── FIN DE RESPUESTA ───────────────────────")
+        _log("")
+
         ids_validos = {n.id for n in grafo.nodos}
+        _log("PARSEANDO RESPUESTA...")
         conexiones = parsear_respuesta_reconexion(respuesta, ids_validos)
+        _log(f"  {len(conexiones)} conexión(es) válida(s) encontrada(s)")
+        _log("")
+
+        _log("FILTRANDO CONEXIONES REDUNDANTES (que no reducen componentes)...")
+        conexiones, n_descartadas = filtrar_conexiones_que_reducen_componentes(grafo, conexiones)
+        _log(f"  {len(conexiones)} conexión(es) útil(es) · {n_descartadas} descartada(s) por redundante(s)")
+        _log("")
+
+        if conexiones:
+            _log("CONEXIONES PROPUESTAS:")
+            for c in conexiones:
+                orig_l = label_por_id.get(c.origen_id, c.origen_id)
+                dest_l = label_por_id.get(c.destino_id, c.destino_id)
+                conf_pct = int(c.confianza * 100)
+                conf_bar = "█" * (conf_pct // 10) + "░" * (10 - conf_pct // 10)
+                _log(f"  {orig_l}")
+                _log(f"    →[{c.tipo}]→ {dest_l}")
+                _log(f"    confianza: {conf_bar} {conf_pct}%")
+                _log("")
+        else:
+            _log("  (ninguna conexión válida encontrada)")
+            _log("")
 
         propuestas = [
             PropuestaEnRevision(
@@ -253,16 +350,18 @@ def ejecutar_reconexion(
 
         sesion.propuestas = propuestas
         sesion.estado = "en_revision"
-        _log(f"\nCompletado: {len(propuestas)} propuestas generadas.")
+        _log(f"✓ Completado: {len(propuestas)} propuesta(s) listas para revisión.")
 
     except InterruptedError:
         sesion.estado = "cancelada"
         sesion.razon_falla = "cancelado por el usuario"
-        _log("\nCancelado por el usuario.")
+        _log("")
+        _log("✗ Cancelado por el usuario.")
     except Exception as exc:
         sesion.estado = "cancelada"
         sesion.razon_falla = str(exc)
-        _log(f"\nError: {exc}")
+        _log("")
+        _log(f"✗ Error: {exc}")
         print(f"[reconexion] Error: {exc}", flush=True)
 
     guardar_sesion(sesion, slug, grafos_dir)

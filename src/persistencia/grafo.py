@@ -38,6 +38,15 @@ def cargar(slug: str, grafos_dir: Path) -> Grafo:
 
 # ── Materialización ───────────────────────────────────────────────────────────
 
+def _resolver_fusion(cid: str, fusiones: dict[str, str]) -> str:
+    """Sigue la cadena de conceptos_fusionados hasta el id canónico final."""
+    visto: set[str] = set()
+    while cid in fusiones and cid not in visto:
+        visto.add(cid)
+        cid = fusiones[cid]
+    return cid
+
+
 def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     """
     Construye un Grafo desde el estado de validación actual.
@@ -46,17 +55,32 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     e incluye las relaciones añadidas manualmente. Implementa las reglas
     MaterializarNodoDesdeConceptoAceptado y MaterializarRelacionDesdeDecisionAceptada
     de specs/grafo.allium en su forma actual (pre-decisiones explícitas).
+
+    Los conceptos fusionados (estado.conceptos_fusionados: absorbido → canónico)
+    no generan Nodo propio: sus relaciones se redirigen al canónico y su label
+    pasa a integrar los sinónimos consolidados del nodo canónico.
     """
     slug = estado.slug
     ext = estado.extraccion
+    fusiones = estado.conceptos_fusionados
+
+    def resolver(cid: str) -> str:
+        return _resolver_fusion(cid, fusiones)
 
     # ── Nodos ─────────────────────────────────────────────────────────────────
+    # Los conceptos absorbidos por una fusión no generan Nodo: su label pasa a
+    # engrosar sinonimos_consolidados del nodo canónico que los absorbe.
+    labels_absorbidos: dict[str, list[str]] = {}
     nodos: list[Nodo] = []
     for c in ext.conceptos:
         ov = estado.conceptos_editados.get(c.id, {})
+        label_efectivo = ov.get("label", c.label)
+        if resolver(c.id) != c.id:
+            labels_absorbidos.setdefault(resolver(c.id), []).append(label_efectivo)
+            continue
         nodos.append(Nodo(
             id=c.id,
-            label=ov.get("label", c.label),
+            label=label_efectivo,
             tipos=[ov.get("tipo", "primitivo")],
             descripcion_corta=c.descripcion,
             sinonimos_consolidados=list(c.sinonimos_candidatos),
@@ -67,14 +91,24 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
             cita_directa=c.cita_directa,
         ))
 
+    for n in nodos:
+        for label in labels_absorbidos.get(n.id, []):
+            if label and label != n.label and label not in n.sinonimos_consolidados:
+                n.sinonimos_consolidados.append(label)
+
     # ── Relaciones del LLM ────────────────────────────────────────────────────
+    # origen_id/destino_id se redirigen a través de la fusión; una relación que
+    # quede como auto-loop (ambos extremos fusionados al mismo canónico) se descarta.
     relaciones: list[Relacion] = []
     for r in ext.relaciones:
         ov = estado.relaciones_editadas.get(r.id, {})
+        origen_id, destino_id = resolver(r.origen_id), resolver(r.destino_id)
+        if origen_id == destino_id:
+            continue
         relaciones.append(Relacion(
             id=r.id,
-            origen_id=r.origen_id,
-            destino_id=r.destino_id,
+            origen_id=origen_id,
+            destino_id=destino_id,
             tipo=ov.get("tipo", r.tipo),
             etiqueta=ov.get("etiqueta", r.etiqueta),
             frase_completa=r.frase_completa,
@@ -88,10 +122,13 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
 
     # ── Relaciones del investigador ───────────────────────────────────────────
     for r in estado.relaciones_investigador:
+        origen_id, destino_id = resolver(r["origen_id"]), resolver(r["destino_id"])
+        if origen_id == destino_id:
+            continue
         relaciones.append(Relacion(
             id=r["id"],
-            origen_id=r["origen_id"],
-            destino_id=r["destino_id"],
+            origen_id=origen_id,
+            destino_id=destino_id,
             tipo=r["tipo"],
             etiqueta=r["etiqueta"],
             frase_completa="",
@@ -102,11 +139,16 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
         ))
 
     # ── Bucles ────────────────────────────────────────────────────────────────
+    # nodo_ids también se redirige a través de la fusión, sin perder los ids
+    # duplicados que resulten (un bucle puede terminar con menos nodos distintos).
     bucles: list[Bucle] = []
     for b in ext.bucles:
+        nodo_ids_resueltos = list(dict.fromkeys(resolver(nid) for nid in b.nodos_ids))
+        if len(nodo_ids_resueltos) < 2:
+            continue
         bucles.append(Bucle(
             id=b.id,
-            nodo_ids=list(b.nodos_ids),
+            nodo_ids=nodo_ids_resueltos,
             descripcion=b.descripcion,
             tipo=b.tipo.value,
         ))

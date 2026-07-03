@@ -1,0 +1,628 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "Teoría Crítica de la Sociedad",
+      "tipo": "primitivo",
+      "descripcion": "Enfoque filosófico desarrollado por la Escuela de Frankfurt que analiza críticamente los malestares y contradicciones de la sociedad capitalista moderna, identificando mecanismos de represión y alienación.",
+      "sinonimos_candidatos": [
+        "pensamiento crítico",
+        "análisis crítico"
+      ],
+      "menciones": 12,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "construyendo la llamada teoría crítica de la sociedad que aborda los malestares de una sociedad aparentemente funcional"
+    },
+    {
+      "id": "c_002",
+      "label": "Sociedad Unidimensional",
+      "tipo": "derivado",
+      "descripcion": "Concepto marcusiano que describe una sociedad donde todos los planos del pensamiento, la cultura y la existencia se absorben en una única lógica de racionalidad tecnológica y consumo, eliminando la posibilidad de crítica y contraposición.",
+      "sinonimos_candidatos": [
+        "hombre unidimensional",
+        "unidimensionalidad"
+      ],
+      "menciones": 18,
+      "confianza": 0.98,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el mundo que describe Marcus es el de la unidimensionalidad con una sola dimensión que absorbe todos los planes de pensamiento en una realidad estandarizada y homogénea"
+    },
+    {
+      "id": "c_003",
+      "label": "Alienación",
+      "tipo": "primitivo",
+      "descripcion": "Estado de separación del individuo respecto a sí mismo, su trabajo y su potencial de autodeterminación, producido por las estructuras del capitalismo industrial que lo integran al sistema sin libertad de elección genuina.",
+      "sinonimos_candidatos": [
+        "reificación",
+        "pérdida de sí mismo"
+      ],
+      "menciones": 8,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la crítica a la cultura del capitalismo... centrada en la alienación y la represión"
+    },
+    {
+      "id": "c_004",
+      "label": "Represión",
+      "tipo": "primitivo",
+      "descripcion": "Mecanismo mediante el cual el sistema capitalista sofoca las contradicciones, necesidades auténticas y potencial de transformación de los individuos, convirtiéndola en represión administrativa imperceptible.",
+      "sinonimos_candidatos": [
+        "supresión",
+        "control social"
+      ],
+      "menciones": 7,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "desplegar una batería teórica en la que pondrá en cuestionamiento la construcción del mundo occidental marcado por la alienación y la represión"
+    },
+    {
+      "id": "c_005",
+      "label": "Capitalismo Integrador",
+      "tipo": "derivado",
+      "descripcion": "Forma mutante del capitalismo que logra absorber y neutralizar todas las fuerzas opositoras y contradicciones, integrándolas en su propia lógica sin permitir espacios externos o alternativos de resistencia.",
+      "sinonimos_candidatos": [
+        "sociedad integrista",
+        "capitalismo industrial avanzado"
+      ],
+      "menciones": 9,
+      "confianza": 0.93,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el sistema integrista centrado en lo productivo devora y rechaza todas las alternativas y contradicciones"
+    },
+    {
+      "id": "c_006",
+      "label": "Falsas Necesidades",
+      "tipo": "derivado",
+      "descripcion": "Necesidades artificialmente producidas por el sistema capitalista mediante la publicidad y la cultura de consumo que no responden a necesidades auténticas humanas sino al imperative de expansión productiva y acumulación de capital.",
+      "sinonimos_candidatos": [
+        "necesidades impuestas",
+        "consumo fabricado"
+      ],
+      "menciones": 6,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "un sistema que no produce ni bienes ni servicios que produce necesidades falsas necesidades y que transforma esas necesidades en desenfrenado consumo"
+    },
+    {
+      "id": "c_007",
+      "label": "Racionalidad Tecnológica",
+      "tipo": "derivado",
+      "descripcion": "Forma de razón instrumental que reduce todo a operaciones calculables y funcionales, rechazando conceptos que no pueden ser operacionalizados y constituyendo la base ideológica de la dominación moderna.",
+      "sinonimos_candidatos": [
+        "razón instrumental",
+        "lógica productiva"
+      ],
+      "menciones": 11,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la racionalidad tecnológica como decíamos anteriormente es sinónimo de racionalidad política y esta razón instrumental hace que todo concepto que no pueda traducirse a operaciones y cálculos sea rechazado"
+    },
+    {
+      "id": "c_008",
+      "label": "Pensamiento Dialéctico",
+      "tipo": "primitivo",
+      "descripcion": "Método de análisis filosófico que opera mediante contraposición de opuestos y negación, permitiendo identificar contradicciones internas del sistema y posibilidades de transformación histórica.",
+      "sinonimos_candidatos": [
+        "negatividad",
+        "pensamiento crítico dialéctico",
+        "pensamiento bidimensional"
+      ],
+      "menciones": 13,
+      "confianza": 0.93,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "ingresamos en otro concepto clave de la teoría crítica el del pensamiento dialéctico"
+    },
+    {
+      "id": "c_009",
+      "label": "Negatividad",
+      "tipo": "primitivo",
+      "descripcion": "Dimensión conceptual que expresa lo que falta, lo que se niega, lo que podría ser pero no es; elemento esencial del pensamiento dialéctico y crítico que el sistema unidimensional destruye sistemáticamente.",
+      "sinonimos_candidatos": [
+        "rechazo",
+        "negación",
+        "alteridad"
+      ],
+      "menciones": 14,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "estas categorías contrapuestas dialécticas han perdido su connotación crítica... han perdido su negatividad se han vuelto positivas"
+    },
+    {
+      "id": "c_010",
+      "label": "Clase Obrera",
+      "tipo": "primitivo",
+      "descripcion": "En el análisis de Marcuse, grupo social que históricamente fue agente revolucionario pero que en el capitalismo avanzado es integrado y cooptado por el sistema, perdiendo su capacidad de transformación.",
+      "sinonimos_candidatos": [
+        "proletariado",
+        "trabajadores",
+        "clase trabajadora"
+      ],
+      "menciones": 12,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la clase trabajadora deja de ser el factor negativo opuesto a la positividad capitalista"
+    },
+    {
+      "id": "c_011",
+      "label": "Agentes de Cambio",
+      "tipo": "derivado",
+      "descripcion": "Grupos o fuerzas sociales identificados como potencialmente capaces de producir transformación revolucionaria del sistema: estudiantes, marginados, trabajadores, movimientos sociales.",
+      "sinonimos_candidatos": [
+        "fuerzas revolucionarias",
+        "sujetos de transformación"
+      ],
+      "menciones": 8,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "estudiantes desempleados y habitantes de la periferia se responde Marcuse por fuera del sistema"
+    },
+    {
+      "id": "c_012",
+      "label": "Posmodernidad",
+      "tipo": "primitivo",
+      "descripcion": "Época caracterizada por la disolución de grandes relatos, la fragmentación, el pastiche cultural, la pluralidad de discursos y la desaparición de criterios de verdad y negación que permitían la crítica.",
+      "sinonimos_candidatos": [
+        "cultura posmoderna",
+        "fin de la modernidad"
+      ],
+      "menciones": 9,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Marcuse se avisora claramente la llegada del pastiche propio de la cultura posmoderna"
+    },
+    {
+      "id": "c_013",
+      "label": "Pastiche",
+      "tipo": "derivado",
+      "descripcion": "Mezcla indiferenciada de estilos, formas culturales e ideologías contradictorias que coexisten sin conflicto en la cultura posmoderna, donde el arte pierde su potencia crítica y transgresora.",
+      "sinonimos_candidatos": [
+        "eclecticismo",
+        "sincretismo cultural"
+      ],
+      "menciones": 7,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el nuevo totalitarismo se manifiesta precisamente en un pluralismo armonizador en el que las obras y verdades más contradictorias coexisten pacíficamente"
+    },
+    {
+      "id": "c_014",
+      "label": "Lenguaje Unidimensional",
+      "tipo": "derivado",
+      "descripcion": "Sistema lingüístico que elimina la capacidad crítica mediante rituales, elementos mágicos y la unificación de opuestos, eliminando la bidimensionalidad del pensamiento y la conciencia histórica.",
+      "sinonimos_candidatos": [
+        "discurso unidimensional",
+        "lenguaje mágico ritual"
+      ],
+      "menciones": 9,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "los medios reproducen el lenguaje unidimensional dice Marcuse opuesto a la bidimensionalidad del pensamiento crítico y dialéctico"
+    },
+    {
+      "id": "c_015",
+      "label": "Medios de Comunicación",
+      "tipo": "primitivo",
+      "descripcion": "Instituciones que funcionan como mediadores entre el poder y los ciudadanos, disolviendo las diferencias entre apariencia y realidad, reproduciendo el lenguaje unidimensional y naturalizando el orden existente.",
+      "sinonimos_candidatos": [
+        "industria cultural",
+        "medios masivos"
+      ],
+      "menciones": 6,
+      "confianza": 0.87,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Marcuse avanza sobre el rol de los medios de comunicación que considera la mediación entre los amos y sus servidores"
+    },
+    {
+      "id": "c_016",
+      "label": "Positividad",
+      "tipo": "primitivo",
+      "descripcion": "Característica del sistema capitalista avanzado de ser completamente afirmativo, sin fisuras, que absorbe toda negación y contradicción, imposibilitando la crítica y la alteridad.",
+      "sinonimos_candidatos": [
+        "pura positividad",
+        "completitud del sistema"
+      ],
+      "menciones": 11,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la sociedad capitalista avanzada muestra una gran positividad y esto representa un problema"
+    },
+    {
+      "id": "c_017",
+      "label": "Alteridad",
+      "tipo": "primitivo",
+      "descripcion": "Dimensión de lo otro, de la diferencia radical, del otro como sujeto irreducible; lo que el sistema posmoderno destruye mediante la integración total, la comunicación perpetua y la creación de diferencias artificiales.",
+      "sinonimos_candidatos": [
+        "otredad",
+        "diferencia",
+        "lo otro"
+      ],
+      "menciones": 9,
+      "confianza": 0.93,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la hipercomunicación como perpetradora del crimen perfecto de la alteridad"
+    },
+    {
+      "id": "c_018",
+      "label": "Mutación Cultural",
+      "tipo": "derivado",
+      "descripcion": "Transformación profunda de la sociedad, la cultura y la economía a finales del siglo XX que Marcuse anticipa: paso del capitalismo industrial al capitalismo informático, cambio en la naturaleza del trabajo y la subjetividad.",
+      "sinonimos_candidatos": [
+        "transformación cultural",
+        "cambio de paradigma"
+      ],
+      "menciones": 7,
+      "confianza": 0.89,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la capacidad profética de Marcuse de ver lo que venía aún cuando todavía no venía merece detenernos"
+    },
+    {
+      "id": "c_019",
+      "label": "Conciencia Histórica",
+      "tipo": "derivado",
+      "descripcion": "Comprensión de que el presente es resultado de procesos históricos y que el futuro puede ser diferente; capacidad de reconocer el carácter contingente y mudable de las contradicciones actuales.",
+      "sinonimos_candidatos": [
+        "dimensión histórica",
+        "pensamiento histórico"
+      ],
+      "menciones": 5,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el pensamiento crítico es el que deviene en conciencia histórica"
+    },
+    {
+      "id": "c_020",
+      "label": "Autodeterminación Real",
+      "tipo": "derivado",
+      "descripcion": "Condición de libertad auténtica donde los individuos pueden conocer, comprender hechos, evaluar alternativas y elegir sin propaganda, adoctrinamiento o manipulación del sistema.",
+      "sinonimos_candidatos": [
+        "libertad genuina",
+        "autonomía real"
+      ],
+      "menciones": 4,
+      "confianza": 0.86,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "para el cambio considera necesaria una autodeterminación real que produzca individuos liberados de toda propaganda adoctrinamiento o manipulación"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_002",
+      "destino_id": "c_007",
+      "tipo": "se_constituye_mediante",
+      "etiqueta": "absorbe",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "la unidimensionalidad absorbe todos los planes de pensamiento en la racionalidad tecnológica",
+      "matiz": null,
+      "contexto": "definición de sociedad unidimensional"
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_002",
+      "destino_id": "c_006",
+      "tipo": "se_sustenta_en",
+      "etiqueta": "produce",
+      "bidireccional": true,
+      "confianza": 0.94,
+      "frase_completa": "un sistema que produce necesidades falsas y transforma esas necesidades en desenfrenado consumo",
+      "matiz": null,
+      "contexto": "análisis del mecanismo de control social"
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_005",
+      "destino_id": "c_009",
+      "tipo": "anula",
+      "etiqueta": "absorbe su contradicciones",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "en el que la clase Obrera absorbe su contradicciones",
+      "matiz": "El capitalismo integrador destruye la capacidad negativa",
+      "contexto": "sobre la absorción de la clase obrera"
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_001",
+      "destino_id": "c_008",
+      "tipo": "se_fundamenta_en",
+      "etiqueta": "utiliza",
+      "bidireccional": true,
+      "confianza": 0.96,
+      "frase_completa": "la teoría crítica ingresa en el concepto clave del pensamiento dialéctico",
+      "matiz": null,
+      "contexto": "definición metodológica de la teoría crítica"
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_008",
+      "destino_id": "c_009",
+      "tipo": "requiere",
+      "etiqueta": "se basa en",
+      "bidireccional": true,
+      "confianza": 0.97,
+      "frase_completa": "el pensamiento dialéctico se basa en la negatividad y la contraposición",
+      "matiz": null,
+      "contexto": "explicación del método dialéctico"
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_002",
+      "destino_id": "c_008",
+      "tipo": "elimina_la_posibilidad_de",
+      "etiqueta": "anula",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "en una sociedad positiva sin conceptos de análisis negativos que contraponerle las posibilidades de cuestionamiento son mínimas",
+      "matiz": null,
+      "contexto": "análisis de por qué la sociedad unidimensional impide la crítica"
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_010",
+      "destino_id": "c_011",
+      "tipo": "cesa_de_ser",
+      "etiqueta": "deja de ser",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "la clase trabajadora deja de ser el factor negativo opuesto a la positividad capitalista",
+      "matiz": "La clase obrera pierde su rol revolucionario en el capitalismo integrador",
+      "contexto": "análisis de la transformación de la clase obrera"
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_005",
+      "destino_id": "c_010",
+      "tipo": "integra",
+      "etiqueta": "absorbe",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "la clase Obrera absorbe su contradicciones",
+      "matiz": null,
+      "contexto": "sobre la cooptación de la clase trabajadora"
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_003",
+      "destino_id": "c_002",
+      "tipo": "constituye",
+      "etiqueta": "fundamenta",
+      "bidireccional": true,
+      "confianza": 0.9,
+      "frase_completa": "la alienación y la represión marcan la construcción del mundo occidental que genera la unidimensionalidad",
+      "matiz": null,
+      "contexto": "análisis de los fundamentos del sistema"
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_004",
+      "destino_id": "c_002",
+      "tipo": "produce",
+      "etiqueta": "se encubre de racionalidad administrativa",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "la represión se encubre de racionalidad administrativa",
+      "matiz": "La represión se vuelve imperceptible mediante la lógica instrumental",
+      "contexto": "análisis de cómo el sistema oculta la dominación"
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_007",
+      "destino_id": "c_014",
+      "tipo": "genera",
+      "etiqueta": "produce",
+      "bidireccional": true,
+      "confianza": 0.93,
+      "frase_completa": "la racionalidad tecnológica genera el lenguaje unidimensional lleno de elementos mágicos y rituales",
+      "matiz": null,
+      "contexto": "análisis del lenguaje como instrumento de control"
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_014",
+      "destino_id": "c_019",
+      "tipo": "destruye",
+      "etiqueta": "anula",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "el lenguaje unidimensional elimina la dimensión histórica que es lo que le falta al pensamiento unidimensional",
+      "matiz": null,
+      "contexto": "análisis de cómo el lenguaje destruye la conciencia histórica"
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_012",
+      "destino_id": "c_013",
+      "tipo": "se_caracteriza_por",
+      "etiqueta": "se expresa en",
+      "bidireccional": true,
+      "confianza": 0.95,
+      "frase_completa": "la cultura posmoderna se caracteriza por el pastiche donde coexisten pacíficamente verdades contradictorias",
+      "matiz": null,
+      "contexto": "definición de la cultura posmoderna"
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_013",
+      "destino_id": "c_001",
+      "tipo": "anula_la_posibilidad_de",
+      "etiqueta": "elimina",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "en el pastiche el arte pierde su potencia de negación y de crítica",
+      "matiz": null,
+      "contexto": "análisis de cómo el pastiche destruye la capacidad crítica"
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_015",
+      "destino_id": "c_014",
+      "tipo": "reproducen",
+      "etiqueta": "disuelven",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "los medios de comunicación reproducen el lenguaje unidimensional y disuelven la diferencia entre apariencia y realidad",
+      "matiz": null,
+      "contexto": "análisis del rol de los medios"
+    },
+    {
+      "id": "r_016",
+      "origen_id": "c_002",
+      "destino_id": "c_020",
+      "tipo": "impide",
+      "etiqueta": "anula",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "la sociedad industrial avanzada imposibilita la autodeterminación real por la total asimilación del poder",
+      "matiz": null,
+      "contexto": "análisis de por qué no puede surgir un nuevo sujeto"
+    },
+    {
+      "id": "r_017",
+      "origen_id": "c_011",
+      "destino_id": "c_005",
+      "tipo": "provienen_de_fuera_de",
+      "etiqueta": "están excluidos de",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "los agentes de cambio estudiantes marginados y desempleados existen por fuera del sistema",
+      "matiz": null,
+      "contexto": "identificación de quiénes pueden producir cambio"
+    },
+    {
+      "id": "r_018",
+      "origen_id": "c_016",
+      "destino_id": "c_001",
+      "tipo": "elimina",
+      "etiqueta": "absorbe",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "la pura positividad del sistema absorbe todos sus factores negativos impidiendo la teoría crítica",
+      "matiz": null,
+      "contexto": "análisis de la patología de la positividad total"
+    },
+    {
+      "id": "r_019",
+      "origen_id": "c_016",
+      "destino_id": "c_017",
+      "tipo": "anula",
+      "etiqueta": "destruye",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "la ultra realidad y positividad total constituye el crimen perfecto de la alteridad",
+      "matiz": null,
+      "contexto": "análisis de Baudrillard sobre la destrucción de la otredad"
+    },
+    {
+      "id": "r_020",
+      "origen_id": "c_018",
+      "destino_id": "c_005",
+      "tipo": "transforma_en",
+      "etiqueta": "genera",
+      "bidireccional": false,
+      "confianza": 0.89,
+      "frase_completa": "la mutación cultural a finales del siglo XX consolida el capitalismo integrador",
+      "matiz": null,
+      "contexto": "análisis de la transformación histórica"
+    },
+    {
+      "id": "r_021",
+      "origen_id": "c_001",
+      "destino_id": "c_019",
+      "tipo": "requiere",
+      "etiqueta": "deviene en",
+      "bidireccional": true,
+      "confianza": 0.91,
+      "frase_completa": "el pensamiento crítico deviene en conciencia histórica",
+      "matiz": null,
+      "contexto": "sobre la relación entre crítica e historia"
+    },
+    {
+      "id": "r_022",
+      "origen_id": "c_009",
+      "destino_id": "c_001",
+      "tipo": "es_condición_para",
+      "etiqueta": "fundamenta",
+      "bidireccional": true,
+      "confianza": 0.93,
+      "frase_completa": "la negatividad es lo que permite que exista pensamiento crítico que se oponga a la positividad del sistema",
+      "matiz": null,
+      "contexto": "sobre por qué desaparece la crítica cuando desaparece la negatividad"
+    },
+    {
+      "id": "r_023",
+      "origen_id": "c_002",
+      "destino_id": "c_012",
+      "tipo": "genera",
+      "etiqueta": "anticipa",
+      "bidireccional": false,
+      "confianza": 0.87,
+      "frase_completa": "Marcuse anticipa claramente la llegada de la cultura posmoderna",
+      "matiz": "Marcuse vislumbra décadas antes lo que será la posmodernidad",
+      "contexto": "capacidad profética de Marcuse"
+    },
+    {
+      "id": "r_024",
+      "origen_id": "c_006",
+      "destino_id": "c_002",
+      "tipo": "refuerza",
+      "etiqueta": "asegura",
+      "bidireccional": true,
+      "confianza": 0.92,
+      "frase_completa": "las falsas necesidades y el consumo hacen su servidumbre agradable e imperceptible en la sociedad unidimensional",
+      "matiz": null,
+      "contexto": "mecanismo de integración del consumidor"
+    },
+    {
+      "id": "r_025",
+      "origen_id": "c_007",
+      "destino_id": "c_009",
+      "tipo": "rechaza",
+      "etiqueta": "elimina",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "la racionalidad tecnológica rechaza todo concepto que no pueda traducirse a operaciones funcionales",
+      "matiz": null,
+      "contexto": "análisis de cómo la razón instrumental destruye la negación"
+    },
+    {
+      "id": "r_026",
+      "origen_id": "c_012",
+      "destino_id": "c_009",
+      "tipo": "caracterizada_por_la_ausencia_de",
+      "etiqueta": "carece de",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "la posmodernidad se caracteriza por la ausencia de negatividad y dimensión crítica",
+      "matiz": null,
+      "contexto": "análisis de la cultura posmoderna"
+    },
+    {
+      "id": "r_027",
+      "origen_id": "c_015",
+      "destino_id": "c_016",
+      "tipo": "refuerzan",
+      "etiqueta": "reproducen",
+      "bidireccional": true,
+      "confianza": 0.88,
+      "frase_completa": "los medios de comunicación reproducen la pura positividad del sistema",
+      "matiz": null,
+      "contexto": "sobre el rol de los medios en la unidimensionalidad"
+    },
+    {
+      "id": "r_028",
+      "origen_id": "c_014",
+      "destino_id": "c_002",
+      "tipo": "asegura",
+      "etiqueta": "reproduce",
+      "bidireccional": true,
+      "confianza": 0.93,
+      "frase_completa": "el lenguaje unidimensional reproduciéndose constantemente asegura la perpetuación de la sociedad unidimensional",
+      "matiz": null,
+      "contexto": "análisis del lenguaje como mecanismo de reproducción"
+    }
+  ],
+  "bucles": [],
+  "metalenguaje": []
+}

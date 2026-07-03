@@ -1,0 +1,640 @@
+{
+  "titulo": "Géneros y Estilos Profesionales",
+  "slug": "generos-y-estilos",
+  "extraccion": {
+    "conceptos": [
+      {
+        "id": "c_001",
+        "label": "Género Profesional",
+        "tipo": "primitivo",
+        "descripcion": "Una organización transpersonal de la actividad que sintoniza a cada persona con el trabajo, fijando el ambiente del lugar y sirviendo como memoria para predecir acciones fomentadas o inhibidas en un colectivo. Es un cuerpo de evaluaciones comunes tácitas que regulan la actividad personal.",
+        "sinonimos_candidatos": [
+          "género",
+          "género profesional de la actividad",
+          "responsable genérico del oficio",
+          "separador social del género",
+          "función (del género)"
+        ],
+        "menciones": 20,
+        "confianza": 1.0,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "El género profesional de la actividad es transpersonal (Clot, 2008), como un punto de intersección entre el pasado y eel presente en una historia de la cual nadie es propietario."
+      },
+      {
+        "id": "c_002",
+        "label": "Estilo Individual",
+        "tipo": "derivado",
+        "descripcion": "La estilización individual o de algunos colegas en la renovación del género profesional, que implica la libertad de tomarse con el género para disolver bloques de acciones preexistentes y utilizar solo las combinaciones requeridas para la actividad singular.",
+        "sinonimos_candidatos": [
+          "estilo",
+          "estilización"
+        ],
+        "menciones": 10,
+        "confianza": 1.0,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "El estilo es, ante todo, la estilización individual o la de algunos colegas en la renovación del género profesional."
+      },
+      {
+        "id": "c_003",
+        "label": "Trabajo Colectivo",
+        "tipo": "primitivo",
+        "descripcion": "La actividad laboral realizada en conjunto por un grupo de personas, que es la clave de la existencia del género profesional y a través de la cual este se renueva.",
+        "sinonimos_candidatos": [
+          "trabajo",
+          "colectivo profesional"
+        ],
+        "menciones": 5,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Solo vive con motivo del trabajo colectivo que es la clave de su existencia"
+      },
+      {
+        "id": "c_004",
+        "label": "Historia Transpersonal",
+        "tipo": "primitivo",
+        "descripcion": "Una dimensión histórica que trasciende al individuo, a la cual la actividad puede adeudar y que el género profesional encarna como un punto de intersección entre el pasado y el presente.",
+        "sinonimos_candidatos": [
+          "historia"
+        ],
+        "menciones": 3,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Aquí medimos lo que la actividad puede adeudar a una historia transpersonal."
+      },
+      {
+        "id": "c_005",
+        "label": "Actividad Profesional",
+        "tipo": "primitivo",
+        "descripcion": "El conjunto de acciones y operaciones que se realizan en un contexto laboral, donde el género y el estilo se manifiestan y son esenciales para su organización y eficacia.",
+        "sinonimos_candidatos": [
+          "actividad",
+          "actividad en curso",
+          "operaciones",
+          "conducta"
+        ],
+        "menciones": 10,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "un medio profesional desprovisto de este tipo de organización de la actividad, que sintoniza a cada persona con el trabajo, está privado de un instrumento de acción importante"
+      },
+      {
+        "id": "c_006",
+        "label": "Mundo Social Profesional",
+        "tipo": "derivado",
+        "descripcion": "Un entorno laboral que, gracias al género profesional, adquiere una entidad propia y un ambiente fijado, permitiendo la sintonía entre los individuos y el trabajo.",
+        "sinonimos_candidatos": [
+          "medio profesional"
+        ],
+        "menciones": 2,
+        "confianza": 0.8,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "transforma una situación de trabajo en un mundo social con entidad propia al fijar el ambiente del lugar."
+      },
+      {
+        "id": "c_007",
+        "label": "Evaluaciones Comunes Tácitas",
+        "tipo": "derivado",
+        "descripcion": "Juicios compartidos y sobreentendidos por los miembros de un colectivo profesional, que regulan la actividad personal de manera implícita y constituyen el núcleo del género profesional.",
+        "sinonimos_candidatos": [
+          "evaluaciones presupuestas",
+          "evaluaciones comunes sobreentendidas",
+          "cuerpo de evaluaciones comunes",
+          "parte sobreentendida de la actividad"
+        ],
+        "menciones": 5,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "El separador social del género es un cuerpo de evaluaciones comunes que regulan la actividad personal de manera tácita."
+      },
+      {
+        "id": "c_008",
+        "label": "Prescripciones de la Tarea",
+        "tipo": "primitivo",
+        "descripcion": "Las normas o instrucciones impersonales y explícitas que definen el trabajo a realizar, distintas pero complementarias al género profesional.",
+        "sinonimos_candidatos": [
+          "prescripciones impersonales de la tarea",
+          "tarea oficial"
+        ],
+        "menciones": 3,
+        "confianza": 0.8,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "este género transpersonal es, al mismo tiempo, precioso y diferente de las prescripciones impersonales de la tarea."
+      },
+      {
+        "id": "c_009",
+        "label": "Libertad con el Género",
+        "tipo": "derivado",
+        "descripcion": "La capacidad que el individuo adquiere, una vez asimilado el género profesional, para modificarlo o adaptarlo a situaciones singulares, lo cual es la esencia del estilo.",
+        "sinonimos_candidatos": [
+          "libertad"
+        ],
+        "menciones": 3,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "El estilo es la libertad que nos podemos tomar con el género —en los dos sentidos del término— cuando lo hemos asimilado"
+      },
+      {
+        "id": "c_010",
+        "label": "Renovación del Género",
+        "tipo": "derivado",
+        "descripcion": "El proceso mediante el cual el género profesional se actualiza y se enriquece, impulsado por el estilo individual y el trabajo colectivo, permitiendo la incorporación de novedad.",
+        "sinonimos_candidatos": [
+          "regeneración del género",
+          "ampliar el género"
+        ],
+        "menciones": 4,
+        "confianza": 0.9,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "El estilo es, ante todo, la estilización individual o la de algunos colegas en la renovación del género profesional."
+      },
+      {
+        "id": "c_011",
+        "label": "Novedad y Creación",
+        "tipo": "derivado",
+        "descripcion": "Los resultados de la estilización y el retoque, que permiten al género profesional evolucionar y adaptarse, protegiendo su vitalidad.",
+        "sinonimos_candidatos": [
+          "novedad",
+          "creación"
+        ],
+        "menciones": 3,
+        "confianza": 0.8,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "La novedad y la creación se venden a este precio, al precio del retoque."
+      },
+      {
+        "id": "c_012",
+        "label": "Desarrollo Transpersonal del Oficio",
+        "tipo": "derivado",
+        "descripcion": "La evolución a largo plazo de una profesión, que se nutre de la estilización y la renovación del género profesional, integrando las variaciones y la novedad.",
+        "sinonimos_candidatos": [
+          "desarrollo transpersonal del oficio"
+        ],
+        "menciones": 1,
+        "confianza": 0.8,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Por tanto, la estilización se encuentra pues en el principio mismo del desarrollo transpersonal del oficio."
+      },
+      {
+        "id": "c_013",
+        "label": "Elasticidad Genérica",
+        "tipo": "derivado",
+        "descripcion": "La capacidad del género profesional para adaptarse y permitir variaciones, resultado del acto estilizado y del trabajo de refinamiento genérico.",
+        "sinonimos_candidatos": [
+          "elasticidad genérica"
+        ],
+        "menciones": 1,
+        "confianza": 0.7,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Esta elasticidad genérica es el resultado del acto estilizado que señala un trabajo de refinamiento genérico."
+      },
+      {
+        "id": "c_014",
+        "label": "Sobriedad del Acto",
+        "tipo": "derivado",
+        "descripcion": "La cualidad de un acto estilizado que implica la reducción y aligeramiento de operaciones, gestos o palabras parásitas, contribuyendo a la eficacia y la novedad.",
+        "sinonimos_candidatos": [
+          "sobriedad",
+          "reducción"
+        ],
+        "menciones": 2,
+        "confianza": 0.7,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "La estilización se confabula con la sobriedad del acto, ese poder para aligerar las operaciones, los gestos o incluso las palabras parásitas."
+      },
+      {
+        "id": "c_015",
+        "label": "Esquemas Genéricos",
+        "tipo": "derivado",
+        "descripcion": "Estructuras o compendios colectivos del trabajo, \"pre-trabajados\", que el género profesional conserva y que sirven de referencia para la actividad, activándose o desactivándose según las circunstancias.",
+        "sinonimos_candidatos": [
+          "esquemas sociales \"pre-trabajados\"",
+          "compendios colectivos del trabajo",
+          "precedentes"
+        ],
+        "menciones": 3,
+        "confianza": 0.8,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Conserva, a través de esquemas genéricos, lo que sienta jurisprudencia para el trabajo colectivo."
+      },
+      {
+        "id": "c_016",
+        "label": "Retoque",
+        "tipo": "derivado",
+        "descripcion": "El proceso de ajuste y modificación fina que permite la novedad y la creación en el estilo, y a su vez, la renovación del género.",
+        "sinonimos_candidatos": [
+          "retoque"
+        ],
+        "menciones": 2,
+        "confianza": 0.7,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "La novedad y la creación se venden a este precio, al precio del retoque."
+      },
+      {
+        "id": "c_017",
+        "label": "Realidad del Trabajo",
+        "tipo": "primitivo",
+        "descripcion": "El conjunto de circunstancias y condiciones concretas e imprevisibles que se presentan en la actividad profesional, y que el género profesional ayuda a relacionar con la tarea.",
+        "sinonimos_candidatos": [
+          "realidad"
+        ],
+        "menciones": 2,
+        "confianza": 0.7,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "pone pertinentemente en relación la tarea y la realidad, que esta última jamás puede anticipar por completo."
+      },
+      {
+        "id": "c_018",
+        "label": "Memoria para Predecir",
+        "tipo": "derivado",
+        "descripcion": "Una función del género profesional que permite anticipar y guiar las acciones en un colectivo, interponiéndose entre el individuo y sus propias posibilidades de acción.",
+        "sinonimos_candidatos": [
+          "gama de acciones fomentadas o inhibidas"
+        ],
+        "menciones": 1,
+        "confianza": 0.8,
+        "timestamp_primera_aparicion": null,
+        "cita_directa": "Esta memoria para predecir puede interponerse entre yo y yo como una gama de acciones fomentadas o inhibidas en un colectivo profesional."
+      }
+    ],
+    "relaciones": [
+      {
+        "id": "r_001",
+        "origen_id": "c_001",
+        "destino_id": "c_002",
+        "tipo": "se_extrae_de_/_se_renueva_por",
+        "etiqueta": "género y estilo",
+        "bidireccional": true,
+        "confianza": 1.0,
+        "frase_completa": "Es el nombre de una pareja conceptual — género y estilo — que se extrae de estas nociones del análisis literario donde se las utiliza ampliamente (Bakhtine, 1984; Schaeffer, 1989) para encontrar sus raíces en la vida cotidiana y, ante todo, en el trabajo. En el trabajo, género y estilo son inseparables (Clot, 1999, b; Clot & Faïta, 2000) si lo que se busca es que los trabajadores no corran riesgos.",
+        "matiz": null,
+        "contexto": "P1"
+      },
+      {
+        "id": "r_002",
+        "origen_id": "c_001",
+        "destino_id": "c_003",
+        "tipo": "vive_con_motivo_de",
+        "etiqueta": "vive con motivo del trabajo colectivo",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "Solo vive con motivo del trabajo colectivo que es la clave de su existencia, pero lo sobrepasa pues retiene su historia y prepara su acción.",
+        "matiz": null,
+        "contexto": "P3"
+      },
+      {
+        "id": "r_003",
+        "origen_id": "c_003",
+        "destino_id": "c_001",
+        "tipo": "es_clave_para_la_existencia_de",
+        "etiqueta": "es la clave de su existencia",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "Solo vive con motivo del trabajo colectivo que es la clave de su existencia, pero lo sobrepasa pues retiene su historia y prepara su acción.",
+        "matiz": null,
+        "contexto": "P3"
+      },
+      {
+        "id": "r_004",
+        "origen_id": "c_001",
+        "destino_id": "c_004",
+        "tipo": "encarna",
+        "etiqueta": "es transpersonal, como un punto de intersección entre el pasado y el presente en una historia",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "El género profesional de la actividad es transpersonal (Clot, 2008), como un punto de intersección entre el pasado y eel presente en una historia de la cual nadie es propietario.",
+        "matiz": null,
+        "contexto": "P2"
+      },
+      {
+        "id": "r_005",
+        "origen_id": "c_004",
+        "destino_id": "c_005",
+        "tipo": "la_actividad_puede_adeudar_a",
+        "etiqueta": "la actividad puede adeudar a una historia transpersonal",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "Aquí medimos lo que la actividad puede adeudar a una historia transpersonal.",
+        "matiz": null,
+        "contexto": "P2"
+      },
+      {
+        "id": "r_006",
+        "origen_id": "c_001",
+        "destino_id": "c_005",
+        "tipo": "organiza",
+        "etiqueta": "organización de la actividad",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "No obstante, hemos podido mostrar que un medio profesional desprovisto de este tipo de organización de la actividad, que sintoniza a cada persona con el trabajo, está privado de un instrumento de acción importante (Clot, 1999a; 2008. Roger, 2007).",
+        "matiz": null,
+        "contexto": "P2"
+      },
+      {
+        "id": "r_007",
+        "origen_id": "c_001",
+        "destino_id": "c_006",
+        "tipo": "transforma_en",
+        "etiqueta": "transforma una situación de trabajo en un mundo social con entidad propia",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "Podemos decir que este instrumento colectivo transforma una situación de trabajo en un mundo social con entidad propia al fijar el ambiente del lugar.",
+        "matiz": null,
+        "contexto": "P2"
+      },
+      {
+        "id": "r_008",
+        "origen_id": "c_001",
+        "destino_id": "c_007",
+        "tipo": "es_un_cuerpo_de",
+        "etiqueta": "es un cuerpo de evaluaciones comunes",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "El separador social del género es un cuerpo de evaluaciones comunes que regulan la actividad personal de manera tácita.",
+        "matiz": null,
+        "contexto": "P3"
+      },
+      {
+        "id": "r_009",
+        "origen_id": "c_007",
+        "destino_id": "c_005",
+        "tipo": "regulan",
+        "etiqueta": "regulan la actividad personal de manera tácita",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "El separador social del género es un cuerpo de evaluaciones comunes que regulan la actividad personal de manera tácita.",
+        "matiz": null,
+        "contexto": "P3"
+      },
+      {
+        "id": "r_010",
+        "origen_id": "c_001",
+        "destino_id": "c_008",
+        "tipo": "es_diferente_de_/_es_indispensable_para_la_relación_con",
+        "etiqueta": "diferente de las prescripciones impersonales de la tarea",
+        "bidireccional": true,
+        "confianza": 0.9,
+        "frase_completa": "Constatamos hasta qué punto este género transpersonal es, al mismo tiempo, precioso y diferente de las prescripciones impersonales de la tarea.",
+        "matiz": "Son distintos, pero el género es indispensable para que la tarea se relacione con la realidad.",
+        "contexto": "P4"
+      },
+      {
+        "id": "r_011",
+        "origen_id": "c_002",
+        "destino_id": "c_009",
+        "tipo": "es",
+        "etiqueta": "El estilo es la libertad que nos podemos tomar con el género",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "El estilo es la libertad que nos podemos tomar con el género —en los dos sentidos del término— cuando lo hemos asimilado",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_012",
+        "origen_id": "c_009",
+        "destino_id": "c_001",
+        "tipo": "permite_modificar",
+        "etiqueta": "libertad que nos podemos tomar con el género",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "El estilo es la libertad que nos podemos tomar con el género —en los dos sentidos del término— cuando lo hemos asimilado; la libertad de eliminar de las expectativas genéricas cotidianas lo que es impropio al efecto buscado en la situación singular en la que nos encontramos.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_013",
+        "origen_id": "c_002",
+        "destino_id": "c_010",
+        "tipo": "impulsa",
+        "etiqueta": "en la renovación del género profesional",
+        "bidireccional": false,
+        "confianza": 0.9,
+        "frase_completa": "El estilo es, ante todo, la estilización individual o la de algunos colegas en la renovación del género profesional.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_014",
+        "origen_id": "c_010",
+        "destino_id": "c_011",
+        "tipo": "permite_la_incorporación_de",
+        "etiqueta": "retener la novedad",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "A este precio se vende también la renovación del género. Puesto que esta reducción y esta sobriedad pueden sentar cátedra, desarrollar una \"variante\" y, con el tiempo, \"ampliar\" el género, permitiéndole \"retener\" la novedad pasada por el tamiz del trabajo colectivo.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_015",
+        "origen_id": "c_002",
+        "destino_id": "c_011",
+        "tipo": "da_lugar_a",
+        "etiqueta": "La novedad y la creación se venden a este precio",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "La novedad y la creación se venden a este precio, al precio del retoque.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_016",
+        "origen_id": "c_002",
+        "destino_id": "c_012",
+        "tipo": "es_principio_de",
+        "etiqueta": "se encuentra pues en el principio mismo del desarrollo transpersonal del oficio",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "Por tanto, la estilización se encuentra pues en el principio mismo del desarrollo transpersonal del oficio.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_017",
+        "origen_id": "c_002",
+        "destino_id": "c_013",
+        "tipo": "es_el_resultado_de",
+        "etiqueta": "es el resultado del acto estilizado",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "Esta elasticidad genérica es el resultado del acto estilizado que señala un trabajo de refinamiento genérico.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_018",
+        "origen_id": "c_002",
+        "destino_id": "c_014",
+        "tipo": "se_confabula_con",
+        "etiqueta": "se confabula con la sobriedad del acto",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "La estilización se confabula con la sobriedad del acto, ese poder para aligerar las operaciones, los gestos o incluso las palabras parásitas.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_019",
+        "origen_id": "c_001",
+        "destino_id": "c_015",
+        "tipo": "conserva_a_través_de",
+        "etiqueta": "Conserva, a través de esquemas genéricos",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "Conserva, a través de esquemas genéricos, lo que sienta jurisprudencia para el trabajo colectivo.",
+        "matiz": null,
+        "contexto": "P3"
+      },
+      {
+        "id": "r_020",
+        "origen_id": "c_015",
+        "destino_id": "c_003",
+        "tipo": "sienta_jurisprudencia_para",
+        "etiqueta": "sienta jurisprudencia para el trabajo colectivo",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "Conserva, a través de esquemas genéricos, lo que sienta jurisprudencia para el trabajo colectivo.",
+        "matiz": null,
+        "contexto": "P3"
+      },
+      {
+        "id": "r_021",
+        "origen_id": "c_002",
+        "destino_id": "c_016",
+        "tipo": "se_realiza_mediante",
+        "etiqueta": "al precio del retoque",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "La novedad y la creación se venden a este precio, al precio del retoque.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_022",
+        "origen_id": "c_016",
+        "destino_id": "c_011",
+        "tipo": "permite",
+        "etiqueta": "al precio del retoque",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "La novedad y la creación se venden a este precio, al precio del retoque.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_023",
+        "origen_id": "c_016",
+        "destino_id": "c_010",
+        "tipo": "permite",
+        "etiqueta": "A este precio se vende también la renovación del género.",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "A este precio se vende también la renovación del género.",
+        "matiz": null,
+        "contexto": "P6"
+      },
+      {
+        "id": "r_024",
+        "origen_id": "c_001",
+        "destino_id": "c_017",
+        "tipo": "pone_en_relación_con",
+        "etiqueta": "pone pertinentemente en relación la tarea y la realidad",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "Sin esta correa de transmisión, resulta muy difícil ser capaz de estar solo en el trabajo; algo que, por otro lado, suele ser necesario. Fréderic François",
+        "matiz": "El género pone en relación la tarea (c_008) con la realidad (c_017).",
+        "contexto": "P4"
+      },
+      {
+        "id": "r_025",
+        "origen_id": "c_008",
+        "destino_id": "c_017",
+        "tipo": "no_puede_anticipar",
+        "etiqueta": "jamás puede anticipar por completo",
+        "bidireccional": false,
+        "confianza": 0.7,
+        "frase_completa": "El trabajo a realizar no puede depender solamente de él, sin embargo le es indispensable puesto que pone pertinentemente en relación la tarea y la realidad, que esta última jamás puede anticipar por completo.",
+        "matiz": null,
+        "contexto": "P4"
+      },
+      {
+        "id": "r_026",
+        "origen_id": "c_001",
+        "destino_id": "c_018",
+        "tipo": "es_una_forma_de",
+        "etiqueta": "Esta memoria para predecir",
+        "bidireccional": false,
+        "confianza": 0.8,
+        "frase_completa": "Esta memoria para predecir puede interponerse entre yo y yo como una gama de acciones fomentadas o inhibidas en un colectivo profesional.",
+        "matiz": null,
+        "contexto": "P2"
+      }
+    ],
+    "bucles": [
+      {
+        "id": "b_001",
+        "nodos_ids": [
+          "c_001",
+          "c_002",
+          "c_010"
+        ],
+        "descripcion": "El estilo individual, al ejercer libertad sobre el género, impulsa su renovación, lo que a su vez transforma y actualiza el propio género profesional.",
+        "tipo": "fundamental"
+      },
+      {
+        "id": "b_002",
+        "nodos_ids": [
+          "c_001",
+          "c_015",
+          "c_003"
+        ],
+        "descripcion": "El género profesional conserva esquemas genéricos que sientan jurisprudencia para el trabajo colectivo, y este trabajo colectivo es la clave de la existencia y validación del género.",
+        "tipo": "fundamental"
+      }
+    ],
+    "metalenguaje": [
+      {
+        "id": "m_001",
+        "tipo": "definicion_sobre_el_vuelo",
+        "contexto": "P1",
+        "texto": "Es el nombre de una pareja conceptual — género y estilo — que se extrae de estas nociones del análisis literario donde se las utiliza ampliamente (Bakhtine, 1984; Schaeffer, 1989) para encontrar sus raíces en la vida cotidiana y, ante todo, en el trabajo.",
+        "conceptos_afectados_ids": [
+          "c_001",
+          "c_002"
+        ],
+        "nota": "Aclara el origen y la intención de usar estos términos (género y estilo) en un contexto no literario, sino en la vida cotidiana y el trabajo."
+      },
+      {
+        "id": "m_002",
+        "tipo": "refinamiento_de_uso",
+        "contexto": "P6",
+        "texto": "Entonces, el género es, no tanto una categoría irrevocable, merecedora de pasar al inventario, sino una función: cada acción profesional posee un carácter más o menos genérico.",
+        "conceptos_afectados_ids": [
+          "c_001"
+        ],
+        "nota": "Refina la comprensión del género, pasando de una categoría estática a una función dinámica y omnipresente en la acción profesional, enfatizando su carácter procesual y no meramente clasificatorio."
+      }
+    ]
+  },
+  "decisiones": [],
+  "anotaciones": [],
+  "completado": true,
+  "creado_en": "2026-06-30T19:20:30.810048",
+  "actualizado_en": "2026-06-30T19:22:26.907276",
+  "conceptos_editados": {},
+  "relaciones_editadas": {},
+  "relaciones_investigador": [],
+  "metadatos": {
+    "titulo": "Géneros y Estilos Profesionales",
+    "autores": [
+      "Yves Clot"
+    ],
+    "anio": null,
+    "editorial": "Laboreal, Volume 10 Nº1 | 2014",
+    "url": null,
+    "notas": null
+  },
+  "texto_editado": null,
+  "revisiones_texto": [],
+  "texto_desincronizado_desde": null
+}

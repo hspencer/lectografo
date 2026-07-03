@@ -6,8 +6,13 @@ const state = {
   validacion:  null,
   grafo:       null,
   tabActivo:   "mapa",
-  panelNodo:   null,   // nodo actualmente seleccionado en mapa
-  grafoUpdate: null,   // fn updateVisuals() exportada por initGrafo
+  path:        [],     // camino de navegación en el mapa: [{ node, link, dir }]
+  grafoUpdate: null,   // fn updateVisuals() exportada por initGrafo/initGrafo3D
+  grafoHighlight: null, // fn highlightPath() exportada por initGrafo/initGrafo3D
+  grafoFit:    null,   // fn fitView() del renderer activo
+  grafoDestroy: null,  // fn destroy() del renderer 3D activo (null en modo 2D)
+  modo3d:      false,  // vista activa del mapa: 2D (D3/SVG) o 3D (three.js)
+  navCols:     null,   // instancia activa de initNavCols
 };
 
 const tabsInit = new Set();
@@ -65,7 +70,7 @@ function activarTab(nombre) {
   state.tabActivo = nombre;
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===nombre));
   document.querySelectorAll(".tab-panel").forEach(p=>{ p.hidden = p.id!==`tab-${nombre}`; });
-  if (nombre === "texto" && state.slug) { initTab("texto"); return; }
+  if (nombre === "texto" && state.slug) { if (!_textoModoEdicion) initTab("texto"); return; }
   if (!tabsInit.has(nombre) && state.slug) { tabsInit.add(nombre); initTab(nombre); }
 }
 async function initTab(nombre) {
@@ -100,6 +105,8 @@ async function init() {
 async function mostrarBiblioteca(extData) {
   const exts = extData ?? await apiFetch("/api/extracciones");
 
+  _aplicarFaviconDefault();
+
   // Topbar: modo biblioteca
   document.getElementById("btn-biblioteca").hidden = true;
   document.getElementById("tabs").hidden = true;
@@ -114,12 +121,16 @@ async function mostrarBiblioteca(extData) {
   if (exts.some(e => e.procesando)) _arrancarPolling();
 
   // Reset estado de texto
+  state.grafoDestroy?.();
+  state.grafoDestroy = null;
   state.slug = null;
   state.validacion = null;
   state.grafo = null;
   state.grafoUpdate = null;
-  state.panelNodo = null;
+  state.grafoHighlight = null;
   state.tabActivo = null;
+  state.path = [];
+  if (state.navCols) { state.navCols.destruir(); state.navCols = null; }
   tabsInit.clear();
 
   history.replaceState(null, "", location.pathname);
@@ -132,6 +143,12 @@ async function mostrarBiblioteca(extData) {
 
 function renderBiblioteca(exts) {
   const grid = document.getElementById("biblioteca-grid");
+
+  // Preservar SVGs de minimaps ya renderizados para evitar parpadeo en cada polling
+  const _svgSalvados = {};
+  grid.querySelectorAll(".bib-mini-mapa[data-slug]").forEach(el => {
+    if (el.childElementCount > 0) _svgSalvados[el.dataset.slug] = el.innerHTML;
+  });
 
   if (!exts.length) {
     grid.innerHTML = `<div class="bib-vacia">
@@ -346,7 +363,13 @@ function renderBiblioteca(exts) {
     })
   );
 
-  // Mini-mapas para textos ya procesados — defer one frame so clientWidth is set
+  // Restaurar SVGs salvados — evita parpadeo durante polling
+  Object.entries(_svgSalvados).forEach(([slug, svg]) => {
+    const el = grid.querySelector(`.bib-mini-mapa[data-slug="${CSS.escape(slug)}"]`);
+    if (el && el.childElementCount === 0) el.innerHTML = svg;
+  });
+
+  // Mini-mapas para textos ya procesados que aún no tienen SVG
   const slugsProcesados = exts.filter(x => x.procesado && !x.procesando).map(x => x.slug);
   if (slugsProcesados.length) requestAnimationFrame(() => _renderMiniGrafos(slugsProcesados));
 }
@@ -361,9 +384,90 @@ const REL_PALETTE_MINI = [
   "#2a6da1","#7b4899","#c07030","#166e5a","#ae2d13","#2a6e40","#8a6012","#5c5049","#3d6b6b"
 ];
 
-async function _renderMiniGrafos(slugs) {
+// Construye la malla de aristas coloreadas de un grafo, como elemento SVG
+// desconectado del DOM (S×S). Reutilizado por las tarjetas de biblioteca y
+// por el favicon dinámico. Devuelve null si no hay nada que dibujar.
+async function _construirMallaSVG(rawNodes, rawLinks, S, { maxNodes = 150, porGrado = false, dedupePares = false } = {}) {
+  if (!rawNodes?.length) return null;
   const d3 = await import("https://cdn.jsdelivr.net/npm/d3@7/+esm");
 
+  // Solo nodos conectados (misma lógica que grafo.js)
+  const rNById = Object.fromEntries(rawNodes.map(n => [n.id, n]));
+  const validLinks = rawLinks.filter(l => rNById[l.source] && rNById[l.target]);
+  const connectedIds = new Set(validLinks.flatMap(l => [l.source, l.target]));
+  let candidatos = rawNodes.filter(n => connectedIds.has(n.id));
+  if (porGrado) {
+    // A escala de ícono, mostrar los nodos más conectados da una malla más
+    // legible que un corte arbitrario del orden de llegada.
+    const grado = {};
+    validLinks.forEach(l => {
+      grado[l.source] = (grado[l.source] || 0) + 1;
+      grado[l.target] = (grado[l.target] || 0) + 1;
+    });
+    candidatos = [...candidatos].sort((a, b) => (grado[b.id] || 0) - (grado[a.id] || 0));
+  }
+  const nodes = candidatos.slice(0, maxNodes).map(n => ({ ...n }));
+  if (!nodes.length) return null;
+  const byId  = Object.fromEntries(nodes.map(n => [n.id, n]));
+  let links = validLinks.filter(l => byId[l.source] && byId[l.target]).map(l => ({ ...l }));
+  if (dedupePares) {
+    // A escala de ícono, varias relaciones paralelas entre el mismo par se
+    // dibujan literalmente superpuestas — con una basta para insinuar la malla.
+    const vistos = new Set();
+    links = links.filter(l => {
+      const par = [l.source, l.target].sort().join("~");
+      if (vistos.has(par)) return false;
+      vistos.add(par);
+      return true;
+    });
+  }
+
+  const relTypes = [...new Set(links.map(l => l.tipo || "_"))];
+  const relColor = t => REL_PALETTE_MINI[relTypes.indexOf(t) % REL_PALETTE_MINI.length] || "#888";
+
+  // Layout: simulación sincrónica con repulsión fuerte para que llene el espacio
+  const sim = d3.forceSimulation(nodes)
+    .force("link",    d3.forceLink(links).id(d => d.id).distance(S * 0.15).strength(0.5))
+    .force("charge",  d3.forceManyBody().strength(-S * 0.8))
+    .force("center",  d3.forceCenter(S / 2, S / 2))
+    .stop();
+  for (let i = 0; i < 450; i++) sim.tick();
+
+  // Normalizar al cuadrado con margen uniforme
+  const pad = S * 0.08;
+  const xs  = nodes.map(n => n.x), ys = nodes.map(n => n.y);
+  const x0  = Math.min(...xs), x1 = Math.max(...xs);
+  const y0  = Math.min(...ys), y1 = Math.max(...ys);
+  const sc  = Math.min((S - pad*2) / (x1 - x0 || 1), (S - pad*2) / (y1 - y0 || 1));
+  const ox  = S/2 - sc * (x0 + x1) / 2;
+  const oy  = S/2 - sc * (y0 + y1) / 2;
+  const px  = n => Math.round(ox + sc * n.x);
+  const py  = n => Math.round(oy + sc * n.y);
+
+  // SVG con viewBox cuadrado — coordenadas enteras para nitidez
+  const ns  = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${S} ${S}`);
+  svg.setAttribute("width",  S);
+  svg.setAttribute("height", S);
+  svg.style.cssText = "display:block;";
+
+  links.forEach(l => {
+    const s = byId[l.source?.id ?? l.source];
+    const t = byId[l.target?.id ?? l.target];
+    if (!s || !t) return;
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("x1", px(s)); line.setAttribute("y1", py(s));
+    line.setAttribute("x2", px(t)); line.setAttribute("y2", py(t));
+    line.setAttribute("stroke",       relColor(l.tipo));
+    line.setAttribute("stroke-width", "1.5");
+    svg.appendChild(line);
+  });
+
+  return svg;
+}
+
+async function _renderMiniGrafos(slugs) {
   for (const slug of slugs) {
     const container = document.querySelector(`.bib-mini-mapa[data-slug="${CSS.escape(slug)}"]`);
     if (!container || container.childElementCount > 0) continue;
@@ -373,77 +477,71 @@ async function _renderMiniGrafos(slugs) {
         _miniGrafoCache[slug] = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}`);
       }
       const { nodes: rawNodes, links: rawLinks } = _miniGrafoCache[slug];
-      if (!rawNodes.length) continue;
-
-      // Solo nodos conectados (misma lógica que grafo.js)
-      const rNById = Object.fromEntries(rawNodes.map(n => [n.id, n]));
-      const validLinks = rawLinks.filter(l => rNById[l.source] && rNById[l.target]);
-      const connectedIds = new Set(validLinks.flatMap(l => [l.source, l.target]));
-      const nodes = rawNodes.filter(n => connectedIds.has(n.id)).slice(0, 150).map(n => ({ ...n }));
-      if (!nodes.length) continue;
-      const byId  = Object.fromEntries(nodes.map(n => [n.id, n]));
-      const links = validLinks.filter(l => byId[l.source] && byId[l.target]).map(l => ({ ...l }));
-
       // Cuadrado: el contenedor tiene aspect-ratio:1, pero leemos el ancho real
       const S = container.clientWidth || 260;
-
-      const relTypes = [...new Set(links.map(l => l.tipo || "_"))];
-      const relColor = t => REL_PALETTE_MINI[relTypes.indexOf(t) % REL_PALETTE_MINI.length] || "#888";
-
-      // Layout: simulación sincrónica con repulsión fuerte para que llene el espacio
-      const sim = d3.forceSimulation(nodes)
-        .force("link",    d3.forceLink(links).id(d => d.id).distance(S * 0.15).strength(0.5))
-        .force("charge",  d3.forceManyBody().strength(-S * 0.8))
-        .force("center",  d3.forceCenter(S / 2, S / 2))
-        .stop();
-      for (let i = 0; i < 450; i++) sim.tick();
-
-      // Normalizar al cuadrado con margen uniforme
-      const pad = S * 0.08;
-      const xs  = nodes.map(n => n.x), ys = nodes.map(n => n.y);
-      const x0  = Math.min(...xs), x1 = Math.max(...xs);
-      const y0  = Math.min(...ys), y1 = Math.max(...ys);
-      const sc  = Math.min((S - pad*2) / (x1 - x0 || 1), (S - pad*2) / (y1 - y0 || 1));
-      const ox  = S/2 - sc * (x0 + x1) / 2;
-      const oy  = S/2 - sc * (y0 + y1) / 2;
-      const px  = n => Math.round(ox + sc * n.x);
-      const py  = n => Math.round(oy + sc * n.y);
-
-      // SVG con viewBox cuadrado — coordenadas enteras para nitidez
-      const ns  = "http://www.w3.org/2000/svg";
-      const svg = document.createElementNS(ns, "svg");
-      svg.setAttribute("viewBox", `0 0 ${S} ${S}`);
-      svg.setAttribute("width",  S);
-      svg.setAttribute("height", S);
-      svg.style.cssText = "display:block;";
-
-      // Aristas primero (debajo de los nodos)
-      links.forEach(l => {
-        const s = byId[l.source?.id ?? l.source];
-        const t = byId[l.target?.id ?? l.target];
-        if (!s || !t) return;
-        const line = document.createElementNS(ns, "line");
-        line.setAttribute("x1", px(s)); line.setAttribute("y1", py(s));
-        line.setAttribute("x2", px(t)); line.setAttribute("y2", py(t));
-        line.setAttribute("stroke",       relColor(l.tipo));
-        line.setAttribute("stroke-width", "1.5");
-        svg.appendChild(line);
-      });
-
-      // Nodos: círculos sólidos, tamaño proporcional a menciones
-      nodes.forEach(n => {
-        const r = Math.min(S * 0.022, S * 0.009 + Math.sqrt(n.menciones || 1) * S * 0.006);
-        const c = document.createElementNS(ns, "circle");
-        c.setAttribute("cx",   px(n));
-        c.setAttribute("cy",   py(n));
-        c.setAttribute("r",    Math.max(2.5, r));
-        c.setAttribute("fill", "#221f1a");
-        svg.appendChild(c);
-      });
-
-      container.appendChild(svg);
+      const svg = await _construirMallaSVG(rawNodes, rawLinks, S);
+      if (svg) container.appendChild(svg);
     } catch(_) { /* ignorar errores por tarjeta */ }
   }
+}
+
+// ── Favicon dinámico: minimapa del texto abierto ────────────────────────
+const FAVICON_S = 64;
+const FAVICON_MAX_NODES = 9;    // a escala de ícono, menos nodos = malla más legible
+const FAVICON_OPTS = { maxNodes: FAVICON_MAX_NODES, porGrado: true, dedupePares: true };
+
+function _svgAFaviconHref(svg) {
+  const ns = "http://www.w3.org/2000/svg";
+  const bg = document.createElementNS(ns, "rect");
+  bg.setAttribute("width", FAVICON_S);
+  bg.setAttribute("height", FAVICON_S);
+  bg.setAttribute("rx", FAVICON_S * 0.18);
+  bg.setAttribute("fill", "#f4f2ed");
+  svg.insertBefore(bg, svg.firstChild);
+  svg.querySelectorAll("line").forEach(l => l.setAttribute("stroke-width", "2.5"));
+  const xml = new XMLSerializer().serializeToString(svg);
+  return "data:image/svg+xml," + encodeURIComponent(xml);
+}
+
+function _aplicarFaviconHref(href) {
+  const link = document.getElementById("favicon");
+  if (link) link.href = href;
+}
+
+// Malla abstracta fija — favicon por defecto cuando no hay un texto abierto.
+function _faviconDefaultSVG() {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${FAVICON_S} ${FAVICON_S}`);
+  svg.setAttribute("width",  FAVICON_S);
+  svg.setAttribute("height", FAVICON_S);
+  const pts = [[14,18],[40,10],[54,26],[46,50],[22,54],[8,38],[30,32]];
+  const edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6],[2,6],[4,6],[1,3]];
+  edges.forEach(([a, b], i) => {
+    const [x1, y1] = pts[a], [x2, y2] = pts[b];
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+    line.setAttribute("stroke", REL_PALETTE_MINI[i % REL_PALETTE_MINI.length]);
+    svg.appendChild(line);
+  });
+  return svg;
+}
+
+function _aplicarFaviconDefault() {
+  _aplicarFaviconHref(_svgAFaviconHref(_faviconDefaultSVG()));
+}
+
+async function _actualizarFaviconParaTexto(slug) {
+  try {
+    if (!_miniGrafoCache[slug]) {
+      _miniGrafoCache[slug] = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}`);
+    }
+    const { nodes: rawNodes, links: rawLinks } = _miniGrafoCache[slug];
+    const svg = await _construirMallaSVG(rawNodes, rawLinks, FAVICON_S, FAVICON_OPTS);
+    if (svg) _aplicarFaviconHref(_svgAFaviconHref(svg));
+    else _aplicarFaviconDefault();
+  } catch(_) { _aplicarFaviconDefault(); }
 }
 
 async function procesarTexto(slug) {
@@ -488,6 +586,9 @@ async function abrirTexto(slug) {
 
   // Deep-link
   history.pushState(null, "", `#${slug}`);
+
+  // Favicon: minimapa del texto abierto
+  _actualizarFaviconParaTexto(slug);
 }
 
 function volverBiblioteca() {
@@ -534,19 +635,71 @@ async function refrescarValidacion() {
 // ════════════════════════════════════════════════════════════════════════
 async function initMapa() {
   if (!state.grafo) await cargarGrafo();
-  const svgEl=document.getElementById("grafo-svg");
-  const { initGrafo }=await import("./grafo.js");
-  const { relColorScale, relTypes, updateVisuals }=initGrafo(svgEl, state.grafo, onNodoSeleccionado);
-  state.grafoUpdate=updateVisuals;
-  state.relColor=relColorScale;
-  renderLeyenda(relColorScale, relTypes);
-  // Wire fit button
-  const btnFit = document.getElementById("btn-fit");
-  if (btnFit) btnFit.onclick = () => {};
-  // Botón reconectar
-  await actualizarBotonReconexion();
+
+  // ── Navegador de columnas ──────────────────────────────────────────
+  const navColsEl = document.getElementById("nav-cols");
+  if (navColsEl && !state.navCols) {
+    const { initNavCols } = await import("./navcols.js");
+    state.navCols = initNavCols(navColsEl, {
+      onCerrar: id => {
+        const idx = parseInt(id.replace("col-", ""), 10);
+        state.path = state.path.slice(0, idx);
+        refrescarHighlight();
+      },
+    });
+  }
+
+  // ── Grafo de fuerza (raíz de la navegación) ────────────────────────
+  await initMapaForce();
+
+  // ── Botones de mantenimiento del grafo ─────────────────────────────
+  await actualizarBotonSesion(SESION_RECONEXION);
+  await actualizarBotonSesion(SESION_CONSOLIDACION);
   const btnRec = document.getElementById("btn-reconectar");
-  if (btnRec) btnRec.onclick = () => abrirPanelReconexion();
+  if (btnRec) btnRec.onclick = () => abrirPanelSesion(SESION_RECONEXION);
+  const btnCons = document.getElementById("btn-consolidar");
+  if (btnCons) btnCons.onclick = () => abrirPanelSesion(SESION_CONSOLIDACION);
+}
+
+async function initMapaForce() {
+  if (!state.grafo) return;
+  const svgEl = document.getElementById("grafo-svg");
+  const el3d  = document.getElementById("grafo-3d");
+  if (!svgEl || !el3d) return;
+
+  state.grafoDestroy?.();
+  state.grafoDestroy = null;
+
+  if (state.modo3d) {
+    svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
+    const { initGrafo3D } = await import("./grafo3d.js");
+    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado);
+    state.grafoUpdate    = updateVisuals;
+    state.grafoHighlight = highlightPath;
+    state.grafoFit       = fitView;
+    state.grafoDestroy   = destroy;
+  } else {
+    svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
+    const { initGrafo } = await import("./grafo.js");
+    const { relColorScale, relTypes, updateVisuals, highlightPath, fitView } = initGrafo(svgEl, state.grafo, onNodoSeleccionado);
+    state.grafoUpdate    = updateVisuals;
+    state.grafoHighlight = highlightPath;
+    state.grafoFit       = fitView;
+    state.relColor       = relColorScale;
+    renderLeyenda(relColorScale, relTypes);
+  }
+  refrescarHighlight();
+
+  const btnFit = document.getElementById("btn-fit");
+  if (btnFit) btnFit.onclick = () => state.grafoFit?.();
+
+  const btnModo3d = document.getElementById("btn-modo3d");
+  const lblModo3d = document.getElementById("btn-modo3d-label");
+  if (btnModo3d) {
+    btnModo3d.classList.toggle("active", state.modo3d);
+    if (lblModo3d) lblModo3d.textContent = state.modo3d ? "2D" : "3D";
+    btnModo3d.onclick = () => { state.modo3d = !state.modo3d; initMapaForce(); };
+  }
 }
 
 function renderLeyenda(relColorScale, relTypes) {
@@ -561,25 +714,93 @@ function renderLeyenda(relColorScale, relTypes) {
   ).join("");
 }
 
-// ── Panel lateral del mapa: nodo + decisión + anotaciones ─────────────
+// ── Navegador de columnas: nodo del grafo → columnas concepto+relaciones ──
+// state.path: [{ node, link, dir }] — link/dir describen cómo se llegó a
+// ese paso (null para el primero). Cada paso es una columna en #nav-cols.
+
+const DIR_SYM = { saliente: "→", entrante: "←", bidireccional: "↔" };
 
 function onNodoSeleccionado(nodo) {
-  state.panelNodo = nodo;
-  const panel = document.getElementById("panel-nodo");
-  if (!nodo) { panel.hidden = true; return; }
-  panel.hidden = false;
-  document.getElementById("panel-nodo-content").innerHTML = buildPanelHTML(nodo);
-  bindPanelListeners(nodo);
+  if (!nodo) { limpiarCamino(); return; }
+  state.path = [{ node: nodo, link: null, dir: null }];
+  renderColumnasDesde(0);
+  refrescarHighlight();
 }
 
-function buildPanelHTML(nodo) {
+function limpiarCamino() {
+  state.path = [];
+  state.navCols?.limpiar();
+  refrescarHighlight();
+}
+
+function avanzarCamino(nodoId, link, dir, colIdx) {
+  const nodo = state.grafo?.nodes.find(n => n.id === nodoId);
+  if (!nodo) return;
+  state.path = state.path.slice(0, colIdx + 1);
+  state.path.push({ node: nodo, link, dir });
+  renderColumnasDesde(colIdx + 1);
+  refrescarHighlight();
+}
+
+function refrescarHighlight() {
+  if (!state.grafoHighlight) return;
+  state.grafoHighlight(state.path.map(p => ({ nodeId: p.node.id, linkId: p.link?.id || null })));
+}
+
+// Reata las referencias de state.path al grafo recién recargado (los objetos
+// nodo/link cambian de identidad en cada cargarGrafo()); descarta pasos cuyo
+// nodo ya no exista.
+function resincronizarPath() {
+  if (!state.grafo) { state.path = []; return; }
+  const nodeById = Object.fromEntries(state.grafo.nodes.map(n => [n.id, n]));
+  const linkById = Object.fromEntries(state.grafo.links.map(l => [l.id, l]));
+  state.path = state.path
+    .map(p => ({ node: nodeById[p.node.id], link: p.link ? linkById[p.link.id] : null, dir: p.dir }))
+    .filter(p => p.node);
+}
+
+function renderColumnasDesde(idx) {
+  if (!state.navCols) return;
+  state.navCols.truncarDesde(`col-${idx}`);
+  for (let i = idx; i < state.path.length; i++) {
+    const paso = state.path[i];
+    state.navCols.abrirColumna({
+      id: `col-${i}`,
+      headerHtml: buildColHeaderHTML(paso),
+      bodyHtml:   buildPanelHTML(paso.node, i),
+      onBind:     colEl => bindPanelListeners(colEl, paso.node, i),
+    });
+  }
+}
+
+function buildColHeaderHTML(paso) {
+  const { node, link, dir } = paso;
+  let h = "";
+  if (link && dir) {
+    const sym   = DIR_SYM[dir] || "";
+    const frase = link.frase_completa || link.etiqueta || (link.tipo ? link.tipo.replace(/_/g, " ") : "");
+    const tipo  = link.tipo ? link.tipo.replace(/_/g, " ") : "";
+    h += `<div class="nav-col-rama">
+      <span class="nav-col-dir">${sym}</span>
+      <span class="nav-col-frase-wrap">
+        <span class="nav-col-frase">${esc(frase)}</span>
+        ${tipo ? `<span class="nav-col-tipo-tag">${esc(tipo)}</span>` : ""}
+      </span>
+    </div>`;
+  }
+  h += `<div class="nav-col-titlerow">
+    <div class="nav-col-raiz">${esc(node.label)}</div>
+    <button class="nav-col-close" title="Cerrar">×</button>
+  </div>`;
+  return h;
+}
+
+function buildPanelHTML(nodo, colIdx) {
   let h="";
 
-  // ── Header ────────────────────────────────────────────────────────────
-  h+=`<div class="panel-header">
-    <div class="panel-titulo">${esc(nodo.label)}</div>
-    ${nodo.editado?`<div style="margin-top:4px"><span class="edited-mark" title="Editado por investigador">${ico("edit-2",11)} editado</span></div>`:""}
-  </div>`;
+  if (nodo.editado) {
+    h+=`<div class="panel-editado"><span class="edited-mark" title="Editado por investigador">${ico("edit-2",11)} editado</span></div>`;
+  }
 
   // ── Detalles del concepto ─────────────────────────────────────────────
   h+=`<div class="panel-seccion">`;
@@ -590,8 +811,8 @@ function buildPanelHTML(nodo) {
   if (nodo.sinonimos_candidatos?.length) h+=`<div class="campo"><span class="campo-etiq">Sinónimos candidatos</span><div class="sinonimos-lista">${nodo.sinonimos_candidatos.map(s=>`<span class="tag">${esc(s)}</span>`).join("")}</div></div>`;
   h+=`</div>`;
 
-  // ── Relaciones ────────────────────────────────────────────────────────
-  h+=buildRelacionesHTML(nodo);
+  // ── Relaciones (clicables: cada una abre la siguiente columna) ────────
+  h+=buildRelacionesHTML(nodo, colIdx);
 
   // ── Nueva relación ────────────────────────────────────────────────────
   h+=buildNuevaRelacionHTML(nodo);
@@ -602,34 +823,86 @@ function buildPanelHTML(nodo) {
   return h;
 }
 
-function buildRelacionesHTML(nodo) {
-  const links  = state.grafo?.links || [];
-  const byId   = Object.fromEntries((state.grafo?.nodes||[]).map(n=>[n.id,n]));
-  const color  = state.relColor || (() => "#888");
+// Conexiones de un nodo, salientes+bidireccionales primero, entrantes puras
+// después; una relación bidireccional aparece una sola vez. Misma lógica que
+// usaba el extinto lector.js ("Ruta").
+function conexionesDe(nodoId) {
+  const links = state.grafo?.links || [];
+  const seen  = new Set();
+  const out   = [];
+  links.forEach(l => {
+    if (l.source !== nodoId || seen.has(l.id)) return;
+    seen.add(l.id);
+    out.push({ link: l, neighbor: l.target, dir: l.bidireccional ? "bidireccional" : "saliente" });
+  });
+  links.forEach(l => {
+    if (l.target !== nodoId || seen.has(l.id)) return;
+    seen.add(l.id);
+    out.push({ link: l, neighbor: l.source, dir: l.bidireccional ? "bidireccional" : "entrante" });
+  });
+  return out;
+}
 
-  const sal = links.filter(l => l.source === nodo.id);
-  const ent = links.filter(l => l.target === nodo.id);
-  const total = sal.length + ent.length;
-  if (!total) return "";
+function buildRelacionesHTML(nodo, colIdx) {
+  const color = state.relColor || (() => "#888");
+  const nodeById = Object.fromEntries((state.grafo?.nodes||[]).map(n=>[n.id,n]));
+  const conex = conexionesDe(nodo.id);
 
-  const row = (l, dir) => {
-    const otro  = byId[dir==="→" ? l.target : l.source];
-    const c     = color(l.tipo || "_");
-    return `<div class="panel-rel-fila">
-      <span class="panel-rel-dir" style="color:${c}">${dir}</span>
-      <div class="panel-rel-cuerpo">
-        <span class="panel-rel-tipo" style="color:${c}">${esc(l.tipo||"")}</span>
-        <span class="panel-rel-nodo">${esc(otro?.label||"?")}</span>
-        ${l.etiqueta?`<span class="panel-rel-etiq">${esc(l.etiqueta)}</span>`:""}
-      </div>
+  if (!conex.length) {
+    return `<div class="panel-seccion">
+      <div class="panel-seccion-titulo">Relaciones</div>
+      <p class="muted" style="font-size:var(--sn-fs-xs)">Sin conexiones.</p>
     </div>`;
+  }
+
+  const siguienteLinkId = state.path[colIdx + 1]?.link?.id || null;
+
+  const grupos = { saliente: [], bidireccional: [], entrante: [] };
+  conex.forEach(item => grupos[item.dir]?.push(item));
+  const grupoMeta = {
+    saliente:      { label: "Salientes",       sym: DIR_SYM.saliente },
+    bidireccional: { label: "Bidireccionales", sym: DIR_SYM.bidireccional },
+    entrante:      { label: "Entrantes",       sym: DIR_SYM.entrante },
   };
 
-  return `<div class="panel-seccion">
-    <div class="panel-seccion-titulo">Relaciones (${total})</div>
-    ${sal.map(l=>row(l,"→")).join("")}
-    ${ent.map(l=>row(l,"←")).join("")}
-  </div>`;
+  let h = `<div class="panel-seccion"><div class="panel-seccion-titulo">Relaciones (${conex.length})</div>`;
+  let primerGrupo = true;
+  ["saliente", "bidireccional", "entrante"].forEach(dir => {
+    const items = grupos[dir];
+    if (!items.length) return;
+    const { label, sym } = grupoMeta[dir];
+    const abierto = primerGrupo; primerGrupo = false;
+
+    h += `<details class="panel-rel-grupo"${abierto ? " open" : ""}>
+      <summary class="panel-rel-grupo-hdr">
+        <span class="panel-rel-dir">${sym}</span>
+        <span class="panel-rel-grupo-nombre">${label}</span>
+        <span class="panel-rel-grupo-cnt">${items.length}</span>
+      </summary>
+      <div class="panel-rel-grupo-items">`;
+
+    items.forEach(({ link, neighbor }) => {
+      const nb = nodeById[neighbor];
+      if (!nb) return;
+      const frase   = link.frase_completa || link.etiqueta || (link.tipo ? link.tipo.replace(/_/g, " ") : "");
+      const tipo    = link.tipo ? link.tipo.replace(/_/g, " ") : "";
+      const c       = color(link.tipo || "_");
+      const elegida = link.id === siguienteLinkId;
+
+      h += `<button class="panel-rel-fila panel-rel-fila--clicable${elegida ? " panel-rel-fila--elegida" : ""}"
+        data-link-id="${esc(link.id)}" data-neighbor-id="${esc(neighbor)}" data-dir="${esc(dir)}">
+        <span class="panel-rel-frase">${esc(frase)}</span>
+        <span class="panel-rel-pie">
+          <span class="panel-rel-nodo" style="color:${c}">${esc(nb.label)}</span>
+          ${tipo ? `<span class="panel-rel-tipo">${esc(tipo)}</span>` : ""}
+        </span>
+      </button>`;
+    });
+
+    h += `</div></details>`;
+  });
+  h += `</div>`;
+  return h;
 }
 
 function buildNuevaRelacionHTML(nodo) {
@@ -691,22 +964,29 @@ function buildAnnotationPanelHTML(nodo) {
   return h;
 }
 
-function bindPanelListeners(nodo) {
-  const C = document.getElementById("panel-nodo-content");
-
-  C.querySelector("#pb-anotar")?.addEventListener("click", () => {
-    const t = C.querySelector("#pb-anotacion")?.value.trim(); if (t) anotarEnPanel(nodo.id, t);
+function bindPanelListeners(colEl, nodo, colIdx) {
+  colEl.querySelector("#pb-anotar")?.addEventListener("click", () => {
+    const t = colEl.querySelector("#pb-anotacion")?.value.trim();
+    if (t) anotarEnPanel(nodo.id, t, colIdx);
   });
 
   // Nueva relación
-  C.querySelector("#nr-crear")?.addEventListener("click", () => {
-    const destino  = C.querySelector("#nr-destino")?.value;
-    const tipo     = C.querySelector("#nr-tipo")?.value;
-    const etiqueta = C.querySelector("#nr-etiqueta")?.value.trim();
-    const bidir    = C.querySelector("#nr-bidir")?.checked || false;
-    if (!destino)  { C.querySelector("#nr-destino").focus();  return; }
-    if (!etiqueta) { C.querySelector("#nr-etiqueta").focus(); return; }
+  colEl.querySelector("#nr-crear")?.addEventListener("click", () => {
+    const destino  = colEl.querySelector("#nr-destino")?.value;
+    const tipo     = colEl.querySelector("#nr-tipo")?.value;
+    const etiqueta = colEl.querySelector("#nr-etiqueta")?.value.trim();
+    const bidir    = colEl.querySelector("#nr-bidir")?.checked || false;
+    if (!destino)  { colEl.querySelector("#nr-destino").focus();  return; }
+    if (!etiqueta) { colEl.querySelector("#nr-etiqueta").focus(); return; }
     crearRelacion(nodo.id, destino, tipo, etiqueta, bidir);
+  });
+
+  // Relaciones: cada una abre (o reemplaza) la columna siguiente
+  colEl.querySelectorAll(".panel-rel-fila--clicable").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const link = (state.grafo?.links || []).find(l => l.id === btn.dataset.linkId);
+      avanzarCamino(btn.dataset.neighborId, link, btn.dataset.dir, colIdx);
+    });
   });
 }
 
@@ -721,23 +1001,27 @@ async function crearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional)
     state.grafoUpdate = null;
     tabsInit.delete("mapa");
     tabsInit.delete("relaciones");
+    resincronizarPath();
     if (state.tabActivo === "mapa") {
       tabsInit.add("mapa");
       await initMapa();
     }
-    // Refresh panel with updated connectivity info
-    const updated = state.grafo.nodes.find(n => n.id === state.panelNodo?.id);
-    if (updated) onNodoSeleccionado(updated);
+    renderColumnasDesde(0);
+    refrescarHighlight();
   } catch(e) { alert("Error al crear relación: " + e.message); }
 }
 
-async function anotarEnPanel(nodoId, nota) {
+async function anotarEnPanel(nodoId, nota, colIdx) {
   try {
     await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/anotar`,{method:"POST",body:JSON.stringify({objeto_anotado:nodoId,nota})});
     await refrescarValidacion();
-    // Refresh panel
-    const updated=state.grafo?.nodes.find(n=>n.id===nodoId)||state.panelNodo;
-    if (updated) onNodoSeleccionado(updated);
+    const paso = state.path[colIdx];
+    if (paso && paso.node.id === nodoId) {
+      state.navCols?.refrescarColumna(`col-${colIdx}`, {
+        headerHtml: buildColHeaderHTML(paso),
+        bodyHtml:   buildPanelHTML(paso.node, colIdx),
+      }, colEl => bindPanelListeners(colEl, paso.node, colIdx));
+    }
   } catch(e) { alert("Error al anotar: "+e.message); }
 }
 
@@ -745,183 +1029,435 @@ async function anotarEnPanel(nodoId, nota) {
 // getYourStuffTogether — reconexión de nodos sueltos
 // ════════════════════════════════════════════════════════════════════════
 
-async function actualizarBotonReconexion() {
-  const btn = document.getElementById("btn-reconectar");
+// ── Typewriter reveal para el log de procesamiento ───────────────────────
+// Acumula texto entrante y lo revela a una velocidad fija, dando el efecto
+// de "plano de texto que se llena lentamente" aunque los chunks lleguen rápido.
+const _recLog = {
+  queue:    "",       // texto pendiente de revelar
+  shown:    "",       // texto ya visible en pantalla
+  raf:      null,     // requestAnimationFrame handle
+  cps:      12,       // caracteres por frame (~720/seg a 60fps)
+  flushing: false,    // true cuando queremos vaciar inmediatamente
+
+  reset() {
+    this.queue = ""; this.shown = ""; this.flushing = false;
+    if (this.raf) { cancelAnimationFrame(this.raf); this.raf = null; }
+  },
+
+  append(text) {
+    this.queue += text;
+    if (!this.raf) this.raf = requestAnimationFrame(() => this._tick());
+  },
+
+  flush() {
+    // Vuelca todo lo pendiente de golpe (al terminar el stream) y quita el cursor
+    this.flushing = true;
+    const logPre = document.getElementById("rec-log");
+    if (logPre) logPre.classList.remove("rec-log-pre--active");
+  },
+
+  _tick() {
+    this.raf = null;
+    const logPre = document.getElementById("rec-log");
+    if (!logPre || (!this.queue && !this.flushing)) return;
+
+    const take = this.flushing ? this.queue.length : Math.min(this.cps, this.queue.length);
+    if (take > 0) {
+      this.shown  += this.queue.slice(0, take);
+      this.queue   = this.queue.slice(take);
+      logPre.textContent = this.shown;
+      logPre.scrollTop   = logPre.scrollHeight;
+    }
+    if (this.queue.length > 0) {
+      this.raf = requestAnimationFrame(() => this._tick());
+    } else {
+      this.flushing = false;
+    }
+  },
+};
+
+// ── Configuración por tipo de sesión (reconexión / consolidación) ─────────────
+// El motor de abajo (actualizarBotonSesion, abrirPanelSesion, renderPanelSesion,
+// streaming SSE) es genérico; sólo cambian estos hooks por tipo.
+
+const SESION_RECONEXION = {
+  prefix: "rec",
+  panelId: "panel-reconexion",
+  contentId: "panel-reconexion-content",
+  footerId: "panel-reconexion-footer",
+  tituloId: "panel-reconexion-titulo",
+  descId: "panel-reconexion-desc",
+  btnId: "btn-reconectar",
+  btnConfirmarId: "btn-confirmar-reconexion",
+  btnCancelarId: "btn-cancelar-reconexion",
+  btnCerrarId: "btn-cerrar-reconexion",
+  api: slug => `/api/grafo/${encodeURIComponent(slug)}/reconexion`,
+  tituloTexto: "Reconexión de nodos",
+  campoEditable: "frase_editada",
+  hidden: info => info.es_conexo,
+  tooltip: info => `${info.nodos_sueltos_count} nodo(s) desconectado(s) del núcleo principal — clic para reconectar`,
+  descSesion: sesion => {
+    const n = (sesion.nodos_sueltos_ids || []).length;
+    return n > 0 ? `${n} nodo${n !== 1 ? "s" : ""} sin conexión detectado${n !== 1 ? "s" : ""}` : "";
+  },
+  mensajeVacio: `<p>El LLM no encontró conexiones posibles para estos nodos.</p>
+    <p class="muted">Es posible que los conceptos sean demasiado específicos o periféricos al argumento principal. Puedes crear relaciones manualmente desde el panel de cada nodo.</p>`,
+  instruccion: total => `El LLM propone <strong>${total}</strong> conexión${total !== 1 ? "es" : ""}. Selecciona las que sean válidas y edita la etiqueta si es necesario.`,
+  botonConfirmarTexto: sel => sel > 0 ? `Añadir ${sel} al grafo` : "Nada seleccionado",
+  renderTarjeta: renderTarjetaReconexion,
+  mensajeResultado: res => `<div class="rec-resultado">
+      <p><strong>${res.relaciones_agregadas} conexión${res.relaciones_agregadas !== 1 ? "es" : ""} añadida${res.relaciones_agregadas !== 1 ? "s" : ""} al grafo.</strong></p>
+      ${res.es_conexo
+        ? `<p class="muted">El grafo está ahora completamente conectado.</p>`
+        : `<p class="muted">Quedan ${res.nodos_sueltos_restantes} nodo${res.nodos_sueltos_restantes !== 1 ? "s" : ""} desconectado${res.nodos_sueltos_restantes !== 1 ? "s" : ""}. Puedes volver a reconectar.</p>`
+      }
+    </div>`,
+};
+
+const SESION_CONSOLIDACION = {
+  prefix: "cons",
+  panelId: "panel-consolidacion",
+  contentId: "panel-consolidacion-content",
+  footerId: "panel-consolidacion-footer",
+  tituloId: "panel-consolidacion-titulo",
+  descId: "panel-consolidacion-desc",
+  btnId: "btn-consolidar",
+  btnConfirmarId: "btn-confirmar-consolidacion",
+  btnCancelarId: "btn-cancelar-consolidacion",
+  btnCerrarId: "btn-cerrar-consolidacion",
+  api: slug => `/api/grafo/${encodeURIComponent(slug)}/consolidacion`,
+  tituloTexto: "Consolidación de sinónimos",
+  campoEditable: "label_editado",
+  hidden: info => info.candidatos_grupos_count === 0,
+  tooltip: info => `${info.candidatos_grupos_count} grupo(s) de posibles sinónimos detectado(s) — clic para consolidar`,
+  descSesion: sesion => {
+    const n = (sesion.candidatos_ids || []).length;
+    return n > 0 ? `${n} nodo${n !== 1 ? "s" : ""} candidato${n !== 1 ? "s" : ""} a fusión` : "";
+  },
+  mensajeVacio: `<p>El LLM no confirmó ninguno de los grupos candidatos como el mismo concepto.</p>
+    <p class="muted">La detección por similitud de texto puede tener falsos positivos; es normal si los conceptos son sólo parecidos, no duplicados.</p>`,
+  instruccion: total => `El LLM confirma <strong>${total}</strong> fusión${total !== 1 ? "es" : ""} de conceptos duplicados. Revisa y edita el label final si es necesario.`,
+  botonConfirmarTexto: sel => sel > 0 ? `Fusionar ${sel}` : "Nada seleccionado",
+  renderTarjeta: renderTarjetaConsolidacion,
+  mensajeResultado: res => `<div class="rec-resultado">
+      <p><strong>${res.fusiones_aplicadas} fusión${res.fusiones_aplicadas !== 1 ? "es" : ""} aplicada${res.fusiones_aplicadas !== 1 ? "s" : ""}.</strong></p>
+      <p class="muted">El grafo ahora tiene ${res.nodos_totales} nodo${res.nodos_totales !== 1 ? "s" : ""}.</p>
+    </div>`,
+};
+
+function renderTarjetaReconexion(p, sesion) {
+  const sueltos = new Set(sesion.nodos_sueltos_ids || []);
+  const orig = esc(p.conexion.origen_label || p.conexion.origen_id);
+  const dest = esc(p.conexion.destino_label || p.conexion.destino_id);
+  const esSueltoOrig = sueltos.has(p.conexion.origen_id);
+  const esSueltoDest = sueltos.has(p.conexion.destino_id);
+  const conf   = Math.round((p.conexion.confianza ?? 0.8) * 100);
+  const confCl = conf >= 80 ? "alta" : conf >= 60 ? "media" : "baja";
+  const tipoLabel = (p.conexion.tipo || "relacionado con").replace(/_/g, " ");
+  return `<div class="rec-propuesta${p.seleccionada ? "" : " rec-deseleccionada"}" data-pid="${esc(p.id)}">
+    <label class="rec-check-label">
+      <input type="checkbox" class="rec-check" data-pid="${esc(p.id)}" ${p.seleccionada ? "checked" : ""}>
+      <div class="rec-nodos-wrap">
+        <div class="rec-nodos">
+          <span class="tag${esSueltoOrig ? " suelto" : ""}"${esSueltoOrig ? ' title="nodo desconectado"' : ""}>${orig}</span>
+          <span class="rec-flecha">→</span>
+          <span class="tag${esSueltoDest ? " suelto" : ""}"${esSueltoDest ? ' title="nodo desconectado"' : ""}>${dest}</span>
+        </div>
+        <div class="rec-meta">
+          <span class="tag rec-tipo">${esc(tipoLabel)}</span>
+          <span class="rec-conf rec-conf-${confCl}" title="Confianza del LLM">${conf}%</span>
+        </div>
+      </div>
+    </label>
+    <input class="edit-input rec-frase" data-pid="${esc(p.id)}"
+           value="${esc(p.frase_editada)}" placeholder="etiqueta de la relación…">
+  </div>`;
+}
+
+function renderTarjetaConsolidacion(p) {
+  const canon = esc(p.propuesta.nodo_canonico_label || p.propuesta.nodo_canonico_id);
+  const absorbidosLabels = p.propuesta.nodos_absorbidos_labels || p.propuesta.nodos_absorbidos_ids;
+  const absorbidos = absorbidosLabels.map(l => `<span class="tag suelto">${esc(l)}</span>`).join(" ");
+  const conf   = Math.round((p.propuesta.confianza ?? 0.8) * 100);
+  const confCl = conf >= 80 ? "alta" : conf >= 60 ? "media" : "baja";
+  return `<div class="rec-propuesta${p.seleccionada ? "" : " rec-deseleccionada"}" data-pid="${esc(p.id)}">
+    <label class="rec-check-label">
+      <input type="checkbox" class="rec-check" data-pid="${esc(p.id)}" ${p.seleccionada ? "checked" : ""}>
+      <div class="rec-nodos-wrap">
+        <div class="rec-nodos">
+          ${absorbidos}
+          <span class="rec-flecha">→</span>
+          <span class="tag rec-tipo">${canon}</span>
+        </div>
+        <div class="rec-meta">
+          <span class="rec-conf rec-conf-${confCl}" title="Confianza del LLM">${conf}%</span>
+        </div>
+      </div>
+    </label>
+    <p class="rec-justificacion muted" style="font-size:var(--sn-fs-xs);margin:2px 0 6px">${esc(p.propuesta.justificacion || "")}</p>
+    <input class="edit-input rec-frase" data-pid="${esc(p.id)}"
+           value="${esc(p.label_editado)}" placeholder="label canónico…">
+  </div>`;
+}
+
+// ── Motor genérico de sesión (reconexión / consolidación) ─────────────────────
+
+async function actualizarBotonSesion(cfg) {
+  const btn = document.getElementById(cfg.btnId);
   if (!btn || !state.slug) return;
   try {
-    const info = await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/estado`);
-    btn.hidden = info.es_conexo;
-    if (!info.es_conexo) {
-      btn.title = `${info.nodos_sueltos_count} nodo(s) desconectado(s) del núcleo principal — clic para reconectar`;
-    }
+    const info = await apiFetch(`${cfg.api(state.slug)}/estado`);
+    btn.hidden = cfg.hidden(info);
+    if (!btn.hidden) btn.title = cfg.tooltip(info);
     // Si hay sesión activa: mostrar según estado
     if (info.sesion_activa) {
       if (info.sesion_activa.estado === "en_revision") {
-        renderPanelReconexion(info.sesion_activa);
+        renderPanelSesion(cfg, info.sesion_activa);
       } else if (info.sesion_activa.estado === "procesando") {
-        // Reconectar al stream en curso
-        abrirStreamExistente();
+        abrirStreamExistente(cfg);
       }
     }
   } catch(e) { btn.hidden = true; }
 }
 
-function abrirStreamExistente() {
-  const panel = document.getElementById("panel-reconexion");
-  const content = document.getElementById("panel-reconexion-content");
-  const footer = document.getElementById("panel-reconexion-footer");
-  if (!panel || !content) return;
-  panel.hidden = false;
+// ── UI de procesamiento compartida ────────────────────────────────────────────
+function _mostrarUIprocesando(cfg, content, footer) {
   if (footer) footer.hidden = true;
+  const panel  = document.getElementById(cfg.panelId);
+  const btnCer = document.getElementById(cfg.btnCerrarId);
+  if (btnCer && panel) btnCer.onclick = () => { panel.hidden = true; };
+  _recLog.reset();
   content.innerHTML = `
-    <div class="rec-log-header">Procesando…</div>
-    <pre class="rec-log-pre" id="rec-log"></pre>`;
-  const logPre = document.getElementById("rec-log");
-
-  const es = new EventSource(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/stream`);
-  es.onmessage = (ev) => {
-    const d = JSON.parse(ev.data);
-    if (d.chunk && logPre) { logPre.textContent += d.chunk; logPre.scrollTop = logPre.scrollHeight; }
-    if (d.done) {
-      es.close();
-      apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/sesion`)
-        .then(s => renderPanelReconexion(s)).catch(() => {});
-    }
-  };
-  es.onerror = () => { es.close(); };
+    <div class="rec-procesando-wrap">
+      <div class="rec-progress-bar"></div>
+      <div class="rec-status-row">
+        <span class="rec-log-dot"></span>
+        <span id="${cfg.prefix}-fase">Consultando al LLM…</span>
+        <span id="${cfg.prefix}-token-count" class="rec-token-count"></span>
+        <button id="${cfg.prefix}-btn-detener" class="btn btn-neutro small rec-detener-btn">Detener</button>
+      </div>
+    </div>
+    <pre class="rec-log-pre rec-log-pre--active" id="${cfg.prefix}-log"></pre>`;
 }
 
-async function abrirPanelReconexion() {
-  const panel = document.getElementById("panel-reconexion");
-  const content = document.getElementById("panel-reconexion-content");
+function _conectarStream(cfg, es, content, footer) {
+  // Actualiza el contador de tokens y el log en tiempo real.
+  es.onmessage = (ev) => {
+    const d = JSON.parse(ev.data);
+    if (d.chunk) _recLog.append(d.chunk);
+    if (typeof d.tokens === "number" && d.tokens > 0) {
+      const el = document.getElementById(`${cfg.prefix}-token-count`);
+      if (el) el.textContent = `${d.tokens} tokens`;
+      // Actualizar fase si el log ya tiene la línea de respuesta LLM
+      const fase = document.getElementById(`${cfg.prefix}-fase`);
+      if (fase && _recLog.shown.includes("RESPUESTA DEL LLM")) {
+        fase.textContent = "Generando…";
+      }
+    }
+    if (d.done) {
+      es.close();
+      _recLog.flush();
+      const fase = document.getElementById(`${cfg.prefix}-fase`);
+      if (fase) fase.textContent = "Procesando respuesta…";
+      const tokenEl = document.getElementById(`${cfg.prefix}-token-count`);
+      if (tokenEl) tokenEl.textContent = "";
+      const btnDet = document.getElementById(`${cfg.prefix}-btn-detener`);
+      if (btnDet) btnDet.hidden = true;
+      setTimeout(() => {
+        apiFetch(`${cfg.api(state.slug)}/sesion`)
+          .then(s => renderPanelSesion(cfg, s))
+          .catch(err => {
+            content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error al cargar propuestas: ${esc(err.message)}</p>`;
+          });
+      }, 300);
+    }
+  };
+  es.onerror = () => {
+    es.close();
+    apiFetch(`${cfg.api(state.slug)}/sesion`)
+      .then(s => {
+        if (s.estado === "en_revision") renderPanelSesion(cfg, s);
+        else content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error: ${esc(s.razon_falla || "Error de conexión")}</p>`;
+      })
+      .catch(() => {
+        content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error de conexión con el servidor.</p>`;
+      });
+  };
+}
+
+function _conectarBotonDetener(cfg, es, content) {
+  // Wireing del botón "Detener" (presente en el HTML de procesamiento).
+  const btnDet = document.getElementById(`${cfg.prefix}-btn-detener`);
+  if (!btnDet) return;
+  btnDet.onclick = async () => {
+    btnDet.disabled = true;
+    btnDet.textContent = "Deteniendo…";
+    es.close();
+    try {
+      await apiFetch(`${cfg.api(state.slug)}/sesion`, { method: "DELETE" });
+    } catch(_) {}
+    _recLog.flush();
+    content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Detenido.</p>`;
+    const footer = document.getElementById(cfg.footerId);
+    if (footer) footer.hidden = true;
+    actualizarBotonSesion(cfg);
+  };
+}
+
+// Los paneles de sesión (reconexión/consolidación) comparten la misma
+// posición absoluta sobre el grafo — sólo uno puede estar abierto a la vez.
+const _PANELES_SESION = [SESION_RECONEXION, SESION_CONSOLIDACION];
+function _cerrarOtrosPaneles(cfg) {
+  _PANELES_SESION.forEach(otro => {
+    if (otro.panelId === cfg.panelId) return;
+    const p = document.getElementById(otro.panelId);
+    if (p) p.hidden = true;
+  });
+}
+
+function abrirStreamExistente(cfg) {
+  const panel   = document.getElementById(cfg.panelId);
+  const content = document.getElementById(cfg.contentId);
+  const footer  = document.getElementById(cfg.footerId);
+  if (!panel || !content) return;
+  _cerrarOtrosPaneles(cfg);
+  panel.hidden = false;
+  _mostrarUIprocesando(cfg, content, footer);
+
+  const es = new EventSource(`${cfg.api(state.slug)}/stream`);
+  _conectarStream(cfg, es, content, footer);
+  _conectarBotonDetener(cfg, es, content);
+}
+
+async function abrirPanelSesion(cfg) {
+  const panel   = document.getElementById(cfg.panelId);
+  const content = document.getElementById(cfg.contentId);
+  const footer  = document.getElementById(cfg.footerId);
   if (!panel) return;
 
   // Verificar si hay sesión activa
   let sesion = null;
   try {
-    sesion = await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/sesion`);
+    sesion = await apiFetch(`${cfg.api(state.slug)}/sesion`);
   } catch(e) {}
 
-  if (sesion && sesion.estado === "en_revision") {
-    renderPanelReconexion(sesion);
-    return;
-  }
-  if (sesion && sesion.estado === "procesando") {
-    abrirStreamExistente();
-    return;
-  }
+  if (sesion && sesion.estado === "en_revision") { renderPanelSesion(cfg, sesion); return; }
+  if (sesion && sesion.estado === "procesando")  { abrirStreamExistente(cfg); return; }
 
-  // Iniciar nueva reconexión
+  // Iniciar nueva sesión
+  _cerrarOtrosPaneles(cfg);
   panel.hidden = false;
-  document.getElementById("panel-nodo").hidden = true;
-  // Ocultar footer hasta que las propuestas estén listas
-  const footer = document.getElementById("panel-reconexion-footer");
-  if (footer) footer.hidden = true;
-  content.innerHTML = `
-    <div class="rec-log-header">Procesando…</div>
-    <pre class="rec-log-pre" id="rec-log"></pre>`;
+  limpiarCamino();
+  _mostrarUIprocesando(cfg, content, footer);
 
   try {
-    await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/iniciar`, { method: "POST", body: "{}" });
-
-    // SSE: recibir tokens del LLM en tiempo real
-    const esUrl = `/api/grafo/${encodeURIComponent(state.slug)}/reconexion/stream`;
-    const es = new EventSource(esUrl);
-    const logPre = document.getElementById("rec-log");
-
-    es.onmessage = (ev) => {
-      const d = JSON.parse(ev.data);
-      if (d.chunk && logPre) {
-        logPre.textContent += d.chunk;
-        logPre.scrollTop = logPre.scrollHeight;
-      }
-      if (d.done) {
-        es.close();
-        apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/sesion`)
-          .then(s => renderPanelReconexion(s))
-          .catch(err => {
-            content.innerHTML = `<p class="muted" style="padding:16px">Error al cargar propuestas: ${esc(err.message)}</p>`;
-          });
-      }
-    };
-
-    es.onerror = () => {
-      es.close();
-      // Fallback: intentar cargar la sesión de todos modos
-      apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/sesion`)
-        .then(s => {
-          if (s.estado === "en_revision") renderPanelReconexion(s);
-          else content.innerHTML = `<p class="muted" style="padding:16px">Error: ${esc(s.razon_falla || "Error de conexión")}</p>`;
-        })
-        .catch(() => {
-          content.innerHTML = `<p class="muted" style="padding:16px">Error de conexión con el servidor.</p>`;
-        });
-    };
+    await apiFetch(`${cfg.api(state.slug)}/iniciar`, { method: "POST", body: "{}" });
+    const es = new EventSource(`${cfg.api(state.slug)}/stream`);
+    _conectarStream(cfg, es, content, footer);
+    _conectarBotonDetener(cfg, es, content);
   } catch(e) {
-    content.innerHTML = `<p class="muted" style="padding:16px">Error al iniciar: ${esc(e.message)}</p>`;
+    content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error al iniciar: ${esc(e.message)}</p>`;
   }
 }
 
-function renderPanelReconexion(sesion) {
-  const panel = document.getElementById("panel-reconexion");
-  const content = document.getElementById("panel-reconexion-content");
-  const footer = document.getElementById("panel-reconexion-footer");
+function renderPanelSesion(cfg, sesion) {
+  const panel   = document.getElementById(cfg.panelId);
+  const content = document.getElementById(cfg.contentId);
+  const footer  = document.getElementById(cfg.footerId);
+  const titulo  = document.getElementById(cfg.tituloId);
+  const desc    = document.getElementById(cfg.descId);
   if (!panel || !content) return;
+  _cerrarOtrosPaneles(cfg);
   panel.hidden = false;
-  if (footer) footer.hidden = false;
 
-  if (!sesion.propuestas || sesion.propuestas.length === 0) {
-    content.innerHTML = `<p class="muted" style="padding:16px">El LLM no encontró conexiones adicionales.</p>`;
+  const total = (sesion.propuestas || []).length;
+
+  if (titulo) titulo.textContent = cfg.tituloTexto;
+  if (desc) desc.textContent = cfg.descSesion(sesion);
+
+  // ── Estado vacío ────────────────────────────────────────────────────
+  if (total === 0) {
+    if (footer) footer.hidden = true;
+    content.innerHTML = `<div class="rec-vacio">${cfg.mensajeVacio}</div>`;
+    const btnCer = document.getElementById(cfg.btnCerrarId);
+    if (btnCer) btnCer.onclick = () => { panel.hidden = true; };
     return;
   }
 
-  content.innerHTML = sesion.propuestas.map(p => {
-    const orig = p.conexion.origen_label || p.conexion.origen_id;
-    const dest = p.conexion.destino_label || p.conexion.destino_id;
-    return `<div class="rec-propuesta" data-pid="${esc(p.id)}">
-      <label class="rec-check-label">
-        <input type="checkbox" class="rec-check" data-pid="${esc(p.id)}" ${p.seleccionada ? "checked" : ""}>
-        <span class="rec-nodos"><span class="tag">${esc(orig)}</span> → <span class="tag">${esc(dest)}</span></span>
-      </label>
-      <input class="edit-input rec-frase" data-pid="${esc(p.id)}"
-             value="${esc(p.frase_editada)}" placeholder="descripción de la relación">
-    </div>`;
-  }).join("");
+  if (footer) footer.hidden = false;
 
-  // Bind confirmar
-  const btnConf = document.getElementById("btn-confirmar-reconexion");
-  const btnCan  = document.getElementById("btn-cancelar-reconexion");
-  const btnCer  = document.getElementById("btn-cerrar-reconexion");
+  // ── Propuestas ──────────────────────────────────────────────────────
+  content.innerHTML = `<p class="rec-instruccion">${cfg.instruccion(total)}</p>`
+    + sesion.propuestas.map(p => cfg.renderTarjeta(p, sesion)).join("");
+
+  // ── Actualizar label del botón según selección ──────────────────────
+  function _updateBtn() {
+    const btnConf = document.getElementById(cfg.btnConfirmarId);
+    if (!btnConf) return;
+    const sel = content.querySelectorAll(".rec-check:checked").length;
+    btnConf.textContent = cfg.botonConfirmarTexto(sel);
+    btnConf.disabled    = sel === 0;
+  }
+
+  content.querySelectorAll(".rec-check").forEach(cb => {
+    cb.addEventListener("change", () => {
+      const card = content.querySelector(`.rec-propuesta[data-pid="${esc(cb.dataset.pid)}"]`);
+      if (card) card.classList.toggle("rec-deseleccionada", !cb.checked);
+      _updateBtn();
+    });
+  });
+  _updateBtn();
+
+  // ── Botones ─────────────────────────────────────────────────────────
+  const btnConf = document.getElementById(cfg.btnConfirmarId);
+  const btnCan  = document.getElementById(cfg.btnCancelarId);
+  const btnCer  = document.getElementById(cfg.btnCerrarId);
 
   if (btnConf) btnConf.onclick = async () => {
     const items = sesion.propuestas.map(p => {
       const check = content.querySelector(`.rec-check[data-pid="${p.id}"]`);
-      const frase = content.querySelector(`.rec-frase[data-pid="${p.id}"]`);
+      const input = content.querySelector(`.rec-frase[data-pid="${p.id}"]`);
+      const original = p[cfg.campoEditable];
       return {
         propuesta_id: p.id,
         seleccionada: check ? check.checked : false,
-        frase_editada: frase ? frase.value.trim() || p.frase_editada : p.frase_editada,
+        [cfg.campoEditable]: input ? (input.value.trim() || original) : original,
       };
     });
+    const orig = btnConf.textContent;
+    btnConf.disabled    = true;
+    btnConf.textContent = "Guardando…";
     try {
       const res = await apiFetch(
-        `/api/grafo/${encodeURIComponent(state.slug)}/reconexion/confirmar`,
+        `${cfg.api(state.slug)}/confirmar`,
         { method: "POST", body: JSON.stringify({ items }) }
       );
-      panel.hidden = true;
-      // Invalidar caché del mini-mapa para que se recalcule
+      // Mostrar resultado dentro del panel antes de cerrar
+      content.innerHTML = cfg.mensajeResultado(res);
+      if (footer) footer.hidden = true;
+      // Recargar grafo en segundo plano
       delete _miniGrafoCache[state.slug];
-      // Recargar grafo y actualizar botón
       state.grafo = null; tabsInit.delete("mapa");
+      state.path = [];
       await cargarGrafo(); await initMapa();
-      actualizarBotonReconexion();
-      alert(`${res.relaciones_agregadas} conexión(es) agregada(s). Nodos desconectados restantes: ${res.nodos_sueltos_restantes}`);
-    } catch(e) { alert("Error: " + e.message); }
+      actualizarBotonSesion(cfg);
+      setTimeout(() => { panel.hidden = true; }, 2200);
+    } catch(e) {
+      btnConf.textContent = orig;
+      btnConf.disabled    = false;
+      content.insertAdjacentHTML("afterbegin",
+        `<p class="rec-error">Error al guardar: ${esc(e.message)}</p>`);
+    }
   };
+
   if (btnCan) btnCan.onclick = async () => {
-    try { await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/reconexion/sesion`, { method: "DELETE" }); } catch(e) {}
+    try {
+      await apiFetch(`${cfg.api(state.slug)}/sesion`, { method: "DELETE" });
+    } catch(_) {}
     panel.hidden = true;
+    actualizarBotonSesion(cfg);
   };
+
   if (btnCer) btnCer.onclick = () => { panel.hidden = true; };
 }
 
@@ -1219,10 +1755,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => activarTab(b.dataset.tab)));
 
-  document.getElementById("btn-cerrar-panel").addEventListener("click", () => {
-    document.getElementById("panel-nodo").hidden = true; state.panelNodo = null;
-  });
-
   document.getElementById("btn-biblioteca").addEventListener("click", volverBiblioteca);
 
   window.addEventListener("popstate", () => {
@@ -1251,107 +1783,186 @@ function esc(str) {
 // ════════════════════════════════════════════════════════════════════════
 
 function initSettingsPanel() {
-  const btn         = document.getElementById("btn-settings");
-  const panel       = document.getElementById("settings-panel");
-  const cerrar      = document.getElementById("settings-panel-cerrar");
-  const sel         = document.getElementById("settings-model-select");
-  const status      = document.getElementById("settings-model-status");
-  const guardar     = document.getElementById("settings-guardar");
-  const ollamaSection = document.getElementById("settings-ollama-section");
-  const apiSection    = document.getElementById("settings-api-section");
-  const apiModelInput = document.getElementById("settings-api-model");
-  const apiKeyStatus  = document.getElementById("settings-api-key-status");
+  const btn       = document.getElementById("btn-settings");
+  const panel     = document.getElementById("settings-panel");
+  const cerrar    = document.getElementById("settings-panel-cerrar");
+  const modelSel  = document.getElementById("settings-model-sel");
+  const modelCustom = document.getElementById("settings-model-custom");
+  const keyStatus = document.getElementById("settings-key-status");
+  const status    = document.getElementById("settings-model-status");
+  const guardar   = document.getElementById("settings-guardar");
 
-  let _cfg = null;
+  // Modelos conocidos por proveedor (preset + opción personalizada)
+  const MODELOS = {
+    ollama:    [],   // se pueblan desde la API
+    anthropic: ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-5-20251001"],
+    openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
+    gemini:    ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
+  };
 
-  function _mostrarSeccion(provider) {
-    const esOllama = provider === "ollama";
-    ollamaSection.hidden = !esOllama;
-    apiSection.hidden = esOllama;
-    if (!esOllama && _cfg) {
-      const ps = (_cfg.providers_status || {})[provider] || {};
-      apiModelInput.value = ps.model || "";
-      apiKeyStatus.innerHTML = ps.has_key
+  let _cfg = null;       // última config recibida del servidor
+  let _loading = false;  // evitar cargas simultáneas
+
+  // ── Renderizar UI a partir de _cfg ───────────────────────────────
+  function _render() {
+    if (!_cfg) return;
+    const provider = _cfg.provider;
+    const ps = _cfg.providers_status || {};
+
+    // Radios: marcar proveedor activo
+    document.querySelectorAll('input[name="settings-provider"]').forEach(r => {
+      r.checked = r.value === provider;
+    });
+
+    // Indicadores ✓/✗ de API keys
+    ["anthropic", "openai", "gemini"].forEach(p => {
+      const ind = document.getElementById(`settings-key-${p}`);
+      if (!ind) return;
+      const ok = (ps[p] || {}).has_key;
+      ind.textContent = ok ? "✓" : "✗";
+      ind.style.color = ok ? "var(--sn-ok)" : "var(--sn-danger)";
+    });
+
+    // Actualizar lista de modelos Ollama si la tenemos
+    if (_cfg.available_models?.length) {
+      MODELOS.ollama = _cfg.available_models;
+    }
+
+    // Poblar selector con el proveedor activo
+    _poblarModelos(provider, _cfg.model);
+  }
+
+  // ── Poblar el selector de modelos para un proveedor ─────────────
+  function _poblarModelos(provider, modelActual) {
+    const ps = (_cfg?.providers_status || {})[provider] || {};
+    const modelos = provider === "ollama"
+      ? (MODELOS.ollama.length ? MODELOS.ollama : (modelActual ? [modelActual] : []))
+      : MODELOS[provider] || [];
+
+    modelSel.innerHTML = "";
+
+    if (provider === "ollama" && !modelos.length) {
+      modelSel.innerHTML = '<option value="">Ollama no responde</option>';
+      modelSel.disabled = true;
+      keyStatus.textContent = "";
+    } else {
+      modelSel.disabled = false;
+      modelos.forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = m; opt.textContent = m;
+        if (m === modelActual) opt.selected = true;
+        modelSel.appendChild(opt);
+      });
+      // Opción personalizada para proveedores cloud
+      if (provider !== "ollama") {
+        const optCustom = document.createElement("option");
+        optCustom.value = "__custom__";
+        optCustom.textContent = "Otro…";
+        modelSel.appendChild(optCustom);
+        // Si el modelo actual no está en la lista preset, seleccionar "Otro…"
+        if (modelActual && !modelos.includes(modelActual)) {
+          modelSel.value = "__custom__";
+          modelCustom.value = modelActual;
+        }
+      }
+      // Si nada quedó seleccionado, seleccionar el primero
+      if (!modelSel.value && modelos.length) modelSel.value = modelos[0];
+    }
+
+    _toggleCustomInput();
+
+    // Estado de API key
+    if (provider === "ollama") {
+      keyStatus.textContent = "";
+    } else {
+      const ok = ps.has_key;
+      keyStatus.innerHTML = ok
         ? ico("check", 10) + " API key configurada"
         : "⚠ API key no configurada en .env";
-      apiKeyStatus.style.color = ps.has_key ? "var(--sn-ok)" : "var(--sn-warn)";
+      keyStatus.style.color = ok ? "var(--sn-ok)" : "var(--sn-warn)";
     }
   }
 
-  async function _cargar() {
-    status.textContent = "Cargando…";
-    sel.innerHTML = "";
-    try {
-      _cfg = await apiFetch("/api/settings");
-      // Marcar radio del proveedor activo
-      document.querySelectorAll('input[name="settings-provider"]').forEach(r => {
-        r.checked = r.value === _cfg.provider;
-      });
-      // Indicadores de API key en los labels
-      const ps = _cfg.providers_status || {};
-      ["anthropic", "openai", "gemini"].forEach(p => {
-        const ind = document.getElementById(`settings-key-${p}`);
-        if (!ind) return;
-        const ok = (ps[p] || {}).has_key;
-        ind.textContent = ok ? "✓" : "✗";
-        ind.style.color = ok ? "var(--sn-ok)" : "var(--sn-danger)";
-        ind.title = ok ? "API key configurada" : "API key no encontrada en .env";
-      });
-      // Sección activa
-      _mostrarSeccion(_cfg.provider);
-      // Poblar select de Ollama
-      if ((ps.ollama || {}).connected === false || !_cfg.available_models.length) {
-        sel.innerHTML = `<option value="${esc(_cfg.model || "")}">${esc(_cfg.model || "sin modelos")}</option>`;
-        if (_cfg.provider === "ollama") status.textContent = "Ollama no responde";
-        else status.textContent = "";
-      } else {
-        _cfg.available_models.forEach(m => {
-          const opt = document.createElement("option");
-          opt.value = m; opt.textContent = m;
-          if (m === _cfg.model) opt.selected = true;
-          sel.appendChild(opt);
-        });
-        status.textContent = "";
-      }
-    } catch(e) { status.textContent = "Error: " + e.message; }
+  function _toggleCustomInput() {
+    const custom = modelSel.value === "__custom__";
+    modelCustom.style.display = custom ? "block" : "none";
+    if (custom && !modelCustom.value) modelCustom.focus();
   }
 
-  btn.addEventListener("click", async () => {
-    const visible = !panel.hidden;
-    if (visible) { panel.hidden = true; btn.classList.remove("active"); return; }
-    panel.hidden = false; btn.classList.add("active");
-    await _cargar();
-  });
-
-  cerrar.addEventListener("click", () => { panel.hidden = true; btn.classList.remove("active"); });
-
-  // Cambio de proveedor: actualizar sección visible
-  document.querySelectorAll('input[name="settings-provider"]').forEach(r => {
-    r.addEventListener("change", () => { if (r.checked) _mostrarSeccion(r.value); });
-  });
-
-  // Guardar
-  guardar.addEventListener("click", async () => {
-    const selectedProvider = document.querySelector('input[name="settings-provider"]:checked')?.value;
-    if (!selectedProvider) return;
-    const model = selectedProvider === "ollama"
-      ? sel.value
-      : apiModelInput.value.trim();
-    status.textContent = "Guardando…";
+  // ── Cargar configuración del servidor (no bloqueante) ────────────
+  async function _cargar() {
+    if (_loading) return;
+    _loading = true;
     try {
-      const body = { provider: selectedProvider };
-      if (model) body.model = model;
-      const r = await apiFetch("/api/settings", { method: "PATCH", body: JSON.stringify(body) });
-      if (_cfg) _cfg.provider = r.provider;
+      _cfg = await apiFetch("/api/settings");
+      _render();
+      status.textContent = "";
+    } catch(e) {
+      status.textContent = "Error al cargar configuración";
+    } finally {
+      _loading = false;
+    }
+  }
+
+  // ── Abrir / cerrar panel ─────────────────────────────────────────
+  btn.addEventListener("click", () => {
+    if (!panel.hidden) { _cerrar(); return; }
+    // Abrir inmediatamente
+    panel.hidden = false;
+    btn.classList.add("active");
+    // Renderizar con cache si existe, luego actualizar en segundo plano
+    if (_cfg) _render();
+    _cargar();  // no se awaita — actualiza en background
+  });
+
+  function _cerrar() {
+    panel.hidden = true;
+    btn.classList.remove("active");
+  }
+
+  cerrar.addEventListener("click", _cerrar);
+
+  // Cerrar al clic fuera
+  document.addEventListener("click", e => {
+    if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) {
+      _cerrar();
+    }
+  });
+
+  // ── Cambio de proveedor ──────────────────────────────────────────
+  document.querySelectorAll('input[name="settings-provider"]').forEach(r => {
+    r.addEventListener("change", () => {
+      if (!r.checked) return;
+      const ps = (_cfg?.providers_status || {})[r.value] || {};
+      _poblarModelos(r.value, ps.model || "");
+    });
+  });
+
+  // Cambio en el selector de modelo
+  modelSel.addEventListener("change", _toggleCustomInput);
+
+  // ── Guardar ──────────────────────────────────────────────────────
+  guardar.addEventListener("click", async () => {
+    const provider = document.querySelector('input[name="settings-provider"]:checked')?.value;
+    if (!provider) return;
+    const model = modelSel.value === "__custom__"
+      ? modelCustom.value.trim()
+      : modelSel.value;
+    if (!model) { status.textContent = "Elige un modelo"; return; }
+    status.textContent = "Guardando…";
+    guardar.disabled = true;
+    try {
+      const r = await apiFetch("/api/settings", {
+        method: "PATCH",
+        body: JSON.stringify({ provider, model }),
+      });
+      if (_cfg) { _cfg.provider = r.provider; _cfg.model = r.model; }
       status.innerHTML = ico("check", 12) + " Guardado";
       setTimeout(() => { status.textContent = ""; }, 2000);
-    } catch(e) { status.textContent = "Error: " + e.message; }
-  });
-
-  // Cerrar al hacer clic fuera
-  document.addEventListener("click", e => {
-    if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) {
-      panel.hidden = true; btn.classList.remove("active");
+    } catch(e) {
+      status.textContent = "Error: " + e.message;
+    } finally {
+      guardar.disabled = false;
     }
   });
 }
@@ -1446,49 +2057,393 @@ function initFichaModal() {
 
 // ── Re-procesar desde la biblioteca ─────────────────────────────────
 
-async function reprocesarDesdeLibreria(slug) {
-  const titulo = slug.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
-  const ok = confirm(
-    `¿Re-procesar «${titulo}»?\n\n` +
-    `El LLM volverá a analizar el texto. Los conceptos y relaciones ya existentes se conservarán; los nuevos que encuentre se añadirán al grafo.`
-  );
-  if (!ok) return;
-  try {
-    await apiFetch(`/api/extracciones/${encodeURIComponent(slug)}/procesar`,
-      { method: "POST", body: JSON.stringify({ force: true }) });
-    const exts = await apiFetch("/api/extracciones");
-    renderBiblioteca(exts);
-    _arrancarPolling();
-  } catch(e) { alert("Error al iniciar re-extracción: " + e.message); }
+let _reproSlug        = null;  // slug actual del diálogo reprocesar
+let _reproEs          = null;  // EventSource SSE activo
+let _reproPoll        = null;  // intervalo de polling de progreso
+let _reproTerminado   = false; // true cuando la extracción finalizó
+
+function _reproAbrirModal(slug) {
+  _reproSlug      = slug;
+  _reproEs        = null;
+  _reproPoll      = null;
+  _reproTerminado = false;
+
+  const titulo = slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+  // Resetear a estado confirmar
+  document.getElementById("repro-confirm-titulo").textContent = `¿Re-procesar «${titulo}»?`;
+  document.getElementById("repro-estado-confirm").hidden = false;
+  document.getElementById("repro-estado-proc").hidden    = true;
+  document.getElementById("repro-estado-fin").hidden     = true;
+
+  document.getElementById("repro-btn-ok").hidden      = false;
+  document.getElementById("repro-btn-cancelar").hidden = false;
+  document.getElementById("repro-btn-cerrar").hidden   = true;
+
+  document.getElementById("repro-modal").hidden = false;
 }
 
+function _reproLimpiar() {
+  if (_reproEs)   { _reproEs.close(); _reproEs = null; }
+  if (_reproPoll) { clearInterval(_reproPoll); _reproPoll = null; }
+}
+
+function _reproCerrar() {
+  _reproLimpiar();
+  document.getElementById("repro-modal").hidden = true;
+  if (_reproTerminado) {
+    // Refrescar la biblioteca tras un reprocesar exitoso
+    apiFetch("/api/extracciones").then(exts => {
+      renderBiblioteca(exts);
+      _arrancarPolling();
+    }).catch(() => {});
+  }
+  _reproSlug = null;
+}
+
+function _reproIniciar() {
+  const slug = _reproSlug;
+  if (!slug) return;
+
+  // Ocultar confirm, mostrar procesando
+  document.getElementById("repro-estado-confirm").hidden = true;
+  document.getElementById("repro-estado-proc").hidden    = false;
+  document.getElementById("repro-btn-ok").hidden         = true;
+  document.getElementById("repro-btn-cancelar").hidden   = true;
+  document.getElementById("repro-btn-cerrar").hidden     = true;
+
+  const logPre      = document.getElementById("repro-log");
+  const faseEl      = document.getElementById("repro-fase");
+  const tokensEl    = document.getElementById("repro-tokens");
+  const progressEl  = document.getElementById("repro-progress-inner");
+  const btnDetener  = document.getElementById("repro-btn-detener");
+
+  logPre.textContent = "";
+  logPre.classList.add("rec-log-pre--active");
+  faseEl.textContent  = "Iniciando…";
+  tokensEl.textContent = "";
+
+  // POST para arrancar el reproceso
+  apiFetch(`/api/extracciones/${encodeURIComponent(slug)}/procesar`,
+    { method: "POST", body: JSON.stringify({ force: true }) })
+  .catch(err => {
+    _reproMostrarFin(`Error al iniciar: ${err.message}`, false);
+    return;
+  });
+
+  // Conectar SSE para log en tiempo real
+  const es = new EventSource(`/api/extracciones/${encodeURIComponent(slug)}/stream`);
+  _reproEs = es;
+
+  es.onmessage = ev => {
+    const d = JSON.parse(ev.data);
+    if (d.chunk) {
+      logPre.textContent = (logPre.textContent + d.chunk).slice(-12000);
+      logPre.scrollTop   = logPre.scrollHeight;
+    }
+    if (typeof d.tokens === "number" && d.tokens > 0) {
+      tokensEl.textContent = `${d.tokens} tokens`;
+    }
+    if (d.done) {
+      _reproEs = null;
+      es.close();
+      _reproFinalizarProceso(d.estado);
+    }
+  };
+  es.onerror = () => {
+    if (_reproEs) { _reproEs = null; es.close(); }
+    // Leer estado real antes de cerrar
+    apiFetch("/api/extracciones").then(exts => {
+      const ext = exts.find(x => x.slug === slug);
+      _reproFinalizarProceso(ext?.estado);
+    }).catch(() => _reproFinalizarProceso(null));
+  };
+
+  // Polling para barra de progreso y fase
+  _reproPoll = setInterval(async () => {
+    try {
+      const exts = await apiFetch("/api/extracciones");
+      const ext  = exts.find(x => x.slug === slug);
+      if (!ext) return;
+
+      const pct     = ext.porcentaje || 0;
+      const tokens  = ext.tokens || 0;
+      const elapsed = ext.elapsed || 0;
+      const fase    = ext.fase_extraccion;
+
+      // Barra de progreso: indeterminada → determinada cuando hay pct
+      if (pct > 0) {
+        progressEl.className = "repro-progress-determinate";
+        progressEl.style.width = `${pct}%`;
+      } else {
+        progressEl.className = "repro-progress-indeterminate";
+        progressEl.style.width = "";
+      }
+
+      // Fase
+      let faseStr;
+      if (fase === "leyendo")            faseStr = "Leyendo texto…";
+      else if (fase === "guardando")     faseStr = "Guardando…";
+      else if (fase === "cargando_modelo") faseStr = "Cargando modelo en memoria…";
+      else if (tokens === 0 && elapsed < 10) faseStr = "Iniciando…";
+      else if (tokens > 0)               faseStr = "Generando…";
+      else                               faseStr = "Esperando al modelo…";
+      faseEl.textContent = faseStr;
+
+      if (tokens > 0) tokensEl.textContent = `${tokens} tokens`;
+
+      if (!ext.procesando && !_reproTerminado) _reproFinalizarProceso(ext.estado);
+    } catch(_) {}
+  }, 600);
+
+  // Botón Detener
+  btnDetener.disabled  = false;
+  btnDetener.textContent = "Detener";
+  btnDetener.onclick = async () => {
+    btnDetener.disabled    = true;
+    btnDetener.textContent = "Deteniendo…";
+    _reproLimpiar();
+    try {
+      await apiFetch(`/api/extracciones/${encodeURIComponent(slug)}/procesar`, { method: "DELETE" });
+    } catch(_) {}
+    logPre.classList.remove("rec-log-pre--active");
+    _reproMostrarFin("Re-procesamiento detenido.", false);
+  };
+}
+
+function _reproFinalizarProceso(estado) {
+  if (_reproTerminado) return;
+  _reproTerminado = true;
+  _reproLimpiar();
+
+  const logPre = document.getElementById("repro-log");
+  if (logPre) logPre.classList.remove("rec-log-pre--active");
+
+  const esError    = estado && (estado.startsWith("error:") || estado === "cancelado");
+  const esCancelado = estado === "cancelado";
+
+  const progressEl = document.getElementById("repro-progress-inner");
+  if (progressEl) {
+    progressEl.className = esError ? "repro-progress-determinate" : "repro-progress-determinate";
+    progressEl.style.width = esError ? "0%" : "100%";
+  }
+  const faseEl = document.getElementById("repro-fase");
+  if (faseEl) faseEl.textContent = esError ? "Error" : "Completado";
+
+  // Pequeño delay para que el usuario vea el estado final
+  setTimeout(() => {
+    document.getElementById("repro-estado-proc").hidden = true;
+    if (esCancelado) {
+      _reproMostrarFin("Procesamiento cancelado.", false);
+    } else if (esError) {
+      const detalle = estado.replace(/^error:/, "").trim();
+      _reproMostrarFin(`Error al procesar: ${detalle || "revisa la configuración del LLM"}`, false);
+    } else {
+      _reproMostrarFin("El texto ha sido re-procesado correctamente. Los nuevos conceptos y relaciones han sido añadidos al grafo.", true);
+    }
+  }, 600);
+}
+
+function _reproMostrarFin(msg, exito) {
+  document.getElementById("repro-estado-confirm").hidden = true;
+  document.getElementById("repro-estado-proc").hidden    = true;
+  document.getElementById("repro-estado-fin").hidden     = false;
+  document.getElementById("repro-fin-msg").textContent   = msg;
+  document.getElementById("repro-btn-ok").hidden         = true;
+  document.getElementById("repro-btn-cancelar").hidden   = true;
+  document.getElementById("repro-btn-cerrar").hidden     = false;
+}
+
+function reprocesarDesdeLibreria(slug) {
+  _reproAbrirModal(slug);
+}
+
+function _initReproModal() {
+  document.getElementById("repro-modal-cerrar").addEventListener("click", _reproCerrar);
+  document.getElementById("repro-modal-bg").addEventListener("click",    _reproCerrar);
+  document.getElementById("repro-btn-cancelar").addEventListener("click", _reproCerrar);
+  document.getElementById("repro-btn-cerrar").addEventListener("click",   _reproCerrar);
+  document.getElementById("repro-btn-ok").addEventListener("click",       _reproIniciar);
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !document.getElementById("repro-modal").hidden) _reproCerrar();
+  });
+}
+document.addEventListener("DOMContentLoaded", _initReproModal);
+
 // ════════════════════════════════════════════════════════════════════════
-// Tab: Texto original
+// Tab: Texto (editor MD → HTML)
 // ════════════════════════════════════════════════════════════════════════
+
+let _textoData = null;   // datos cargados del API: { texto, es_editado, revisiones, … }
+let _textoModoEdicion = false;
 
 async function initTexto() {
-  const wrap = document.getElementById("texto-wrap");
-  const metaEl = document.getElementById("texto-meta");
-  const contenidoEl = document.getElementById("texto-contenido");
+  const metaEl       = document.getElementById("texto-meta");
+  const renderEl     = document.getElementById("texto-render");
+  const editorEl     = document.getElementById("texto-editor");
+  const bannerEl     = document.getElementById("texto-desync-banner");
+  const badgeEl      = document.getElementById("texto-revisiones-badge");
+  const historialEl  = document.getElementById("texto-historial");
+  const listaEl      = document.getElementById("texto-historial-lista");
+  const btnEditar    = document.getElementById("btn-texto-editar");
+  const btnGuardar   = document.getElementById("btn-texto-guardar");
+  const btnCancelar  = document.getElementById("btn-texto-cancelar");
 
-  contenidoEl.textContent = "Cargando…";
+  renderEl.innerHTML = `<span class="muted">Cargando…</span>`;
+  _textoModoEdicion = false;
+
   try {
-    const data = await apiFetch(`/api/transcripts/${encodeURIComponent(state.slug)}`);
-    const m = state.validacion?.metadatos;
-    const cita = m ? buildCita(m) : "";
-    metaEl.innerHTML = cita
-      ? `<div class="texto-ficha"><span class="campo-etiq">Fuente</span> <em>${esc(cita)}</em></div>`
-      : `<div class="texto-ficha muted" style="font-size:var(--sn-fs-xs)">Sin ficha bibliográfica —
-           <button class="btn-inline" id="btn-abrir-ficha-texto">${ico("edit-2")} Añadir</button></div>`;
-    contenidoEl.textContent = data.texto;
-
-    document.getElementById("btn-abrir-ficha-texto")?.addEventListener("click", () => {
-      abrirFichaModal(state.slug);
-    });
+    _textoData = await apiFetch(`/api/transcripts/${encodeURIComponent(state.slug)}`);
   } catch(e) {
-    contenidoEl.textContent = "No se pudo cargar el transcript: " + e.message;
+    renderEl.innerHTML = `<span class="muted">No se pudo cargar el texto: ${esc(e.message)}</span>`;
+    return;
+  }
+
+  // ── Metadatos / cita ──────────────────────────────────────────────
+  const m = state.validacion?.metadatos;
+  const cita = m ? buildCita(m) : "";
+  metaEl.innerHTML = cita
+    ? `<div class="texto-ficha"><span class="campo-etiq">Fuente</span> <em>${esc(cita)}</em></div>`
+    : `<div class="texto-ficha muted" style="font-size:var(--sn-fs-xs)">Sin ficha bibliográfica —
+         <button class="btn-inline" id="btn-abrir-ficha-texto">${ico("edit-2")} Añadir</button></div>`;
+  document.getElementById("btn-abrir-ficha-texto")?.addEventListener("click", () => {
+    abrirFichaModal(state.slug);
+  });
+
+  _renderTextoLectura();
+  _renderTextoDesync();
+  _renderTextoRevisiones();
+
+  const textoWrap = document.getElementById("texto-wrap");
+
+  function _entrarEdicion() {
+    _textoModoEdicion = true;
+    editorEl.value = _textoData.texto;
+    editorEl.hidden = false;
+    renderEl.hidden = false;          // visible como preview en vivo
+    textoWrap.classList.add("editando");
+    btnEditar.hidden = true;
+    btnGuardar.hidden = false;
+    btnCancelar.hidden = false;
+    historialEl.open = false;
+    editorEl.focus();
+    // Live preview: actualizar render mientras se escribe
+    editorEl.oninput = () => _renderDesdeEditor();
+  }
+
+  function _salirEdicion() {
+    _textoModoEdicion = false;
+    editorEl.hidden = true;
+    editorEl.oninput = null;
+    textoWrap.classList.remove("editando");
+    renderEl.hidden = false;
+    btnEditar.hidden = false;
+    btnGuardar.hidden = true;
+    btnCancelar.hidden = true;
+  }
+
+  function _renderDesdeEditor() {
+    const texto = editorEl.value;
+    if (window._marked) {
+      renderEl.innerHTML = window._marked.parse(texto);
+    } else {
+      renderEl.innerHTML = texto
+        .split(/\n{2,}/)
+        .map(p => `<p>${esc(p.trim()).replace(/\n/g, "<br>")}</p>`)
+        .join("");
+    }
+  }
+
+  // ── Botón Editar ──────────────────────────────────────────────────
+  btnEditar.onclick = _entrarEdicion;
+
+  // ── Botón Cancelar ────────────────────────────────────────────────
+  btnCancelar.onclick = () => {
+    _salirEdicion();
+    _renderTextoLectura();  // restaurar render original
+  };
+
+  // ── Botón Guardar ─────────────────────────────────────────────────
+  btnGuardar.onclick = async () => {
+    const textoNuevo = editorEl.value;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = "Guardando…";
+    try {
+      const res = await apiFetch(`/api/transcripts/${encodeURIComponent(state.slug)}`, {
+        method: "PATCH",
+        body: JSON.stringify({ texto: textoNuevo }),
+      });
+      // Actualizar datos locales
+      _textoData.revisiones = [
+        ..._textoData.revisiones,
+        { fecha: new Date().toISOString(), nota_autor: null }
+      ];
+      _textoData.texto = textoNuevo;
+      _textoData.es_editado = true;
+      if (res.texto_desincronizado_desde) {
+        _textoData.texto_desincronizado_desde = res.texto_desincronizado_desde;
+      }
+
+      // Volver a modo lectura
+      _salirEdicion();
+      _renderTextoLectura();
+      _renderTextoDesync();
+      _renderTextoRevisiones();
+    } catch(e) {
+      alert("Error al guardar: " + e.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = "Guardar";
+    }
+  };
+
+  function _renderTextoLectura() {
+    // Renderizar MD → HTML usando marked si está disponible, texto plano en caso contrario
+    const texto = _textoData.texto || "";
+    if (window._marked) {
+      renderEl.innerHTML = window._marked.parse(texto);
+    } else {
+      // Fallback: párrafos separados por doble salto + escapado
+      renderEl.innerHTML = texto
+        .split(/\n{2,}/)
+        .map(p => `<p>${esc(p.trim()).replace(/\n/g, "<br>")}</p>`)
+        .join("");
+    }
+  }
+
+  function _renderTextoDesync() {
+    const desync = _textoData.texto_desincronizado_desde;
+    bannerEl.hidden = !desync;
+    if (desync) {
+      const fecha = new Date(desync).toLocaleString("es", { dateStyle: "short", timeStyle: "short" });
+      document.getElementById("texto-desync-msg").textContent =
+        `El texto fue editado el ${fecha}. El grafo puede no reflejar la versión actual.`;
+    }
+  }
+
+  function _renderTextoRevisiones() {
+    const revs = _textoData.revisiones || [];
+    badgeEl.hidden = revs.length === 0;
+    if (revs.length > 0) {
+      badgeEl.textContent = `${revs.length} revisión${revs.length !== 1 ? "es" : ""}`;
+      badgeEl.hidden = false;
+    }
+    historialEl.hidden = revs.length === 0;
+    listaEl.innerHTML = [...revs].reverse().map((r, i) => {
+      const fecha = new Date(r.fecha).toLocaleString("es", { dateStyle: "short", timeStyle: "short" });
+      const nota = r.nota_autor ? ` — <em>${esc(r.nota_autor)}</em>` : "";
+      return `<li class="texto-rev-item"><span class="muted">${fecha}</span>${nota}</li>`;
+    }).join("");
   }
 }
+
+// Cargar marked.js de forma diferida (solo cuando se usa el tab de texto)
+(async () => {
+  try {
+    const { marked } = await import("https://cdn.jsdelivr.net/npm/marked@12/+esm");
+    window._marked = { parse: marked };
+  } catch(_) { /* fallback a párrafos planos */ }
+})();
 
 // ════════════════════════════════════════════════════════════════════════
 // Grafos personales
@@ -1588,6 +2543,11 @@ async function abrirGrafoPersonal(slug) {
 
   await recargarGP();
   gpBindSidebarListeners();
+
+  // Favicon: minimapa del grafo personal abierto
+  const svg = await _construirMallaSVG(gpState.grafoVis?.nodes, gpState.grafoVis?.links, FAVICON_S, FAVICON_OPTS);
+  if (svg) _aplicarFaviconHref(_svgAFaviconHref(svg));
+  else _aplicarFaviconDefault();
 }
 
 async function recargarGP() {

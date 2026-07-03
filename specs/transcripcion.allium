@@ -86,7 +86,14 @@ entity Transcripcion {
         extraida -> validada
         validada -> publicada
         terminal: publicada
+        -- Nota: el estado nunca retrocede aunque el texto sea editado.
+        -- Ver edicion-texto.allium para el modelo de edición y re-extracción.
     }
+
+    -- Historial de ediciones (ver edicion-texto.allium)
+    revisiones: List<edicion/RevisionTexto>              -- crece con cada EditarTextoTranscripcion
+    texto_desincronizado_desde: Timestamp?               -- null si el texto coincide con la última extracción
+    fragmentos_invalidos: Boolean                        -- true si texto_crudo cambió tras la última normalización
 }
 
 ------------------------------------------------------------

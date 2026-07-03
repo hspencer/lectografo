@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     # Modelos remotos (defaults razonables)
     anthropic_model: str = "claude-opus-4-6"
     openai_model: str = "gpt-4o"
-    gemini_model: str = "gemini-1.5-pro"
+    gemini_model: str = "gemini-2.0-flash"
 
     # Ollama local
     ollama_endpoint: str = "http://localhost:11434"
@@ -42,12 +42,8 @@ class Settings(BaseSettings):
             raise ValueError(f"PROVIDER='{self.provider}' no reconocido. Opciones: {validos}")
         if self.provider == "ollama" and not self.ollama_model:
             raise ValueError("OLLAMA_MODEL debe estar definido cuando PROVIDER=ollama")
-        if self.provider == "anthropic" and not self.anthropic_api_key:
-            raise ValueError("ANTHROPIC_API_KEY debe estar definido cuando PROVIDER=anthropic")
-        if self.provider == "openai" and not self.openai_api_key:
-            raise ValueError("OPENAI_API_KEY debe estar definido cuando PROVIDER=openai")
-        if self.provider == "gemini" and not self.gemini_api_key:
-            raise ValueError("GEMINI_API_KEY debe estar definido cuando PROVIDER=gemini")
+        # Las API keys se validan al momento de usar el LLM, no al arrancar,
+        # para que el servidor pueda iniciarse aunque la key aún no esté en memoria.
         return self
 
 

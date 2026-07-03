@@ -21,6 +21,7 @@ venv/
 .DS_Store
 .vscode/
 .idea/
+.claude/
 *.swp
 
 # Audios descargados (no se versionan; solo los .txt/.vtt resultantes)

@@ -11,6 +11,11 @@ const REL_PALETTE = [
   "#2a6da1","#7b4899","#c07030","#166e5a","#ae2d13","#2a6e40","#8a6012","#5c5049","#3d6b6b"
 ];
 
+// Colores leídos de los tokens del sistema (con fallback si no están definidos aún)
+const _cs = getComputedStyle(document.documentElement);
+const FIELD_COLOR = (_cs.getPropertyValue("--sn-field") || "#f4f2ed").trim() || "#f4f2ed";
+const NOVA_COLOR  = (_cs.getPropertyValue("--sn-nova")  || "#ae2d13").trim() || "#ae2d13";
+
 // Tamaños de fuente en pantalla (px screen-constant)
 const BASE_NODE_PX = 15;   // nodo: tamaño objetivo en pantalla
 const BASE_LINK_PX = 10;   // arista: tamaño objetivo en pantalla
@@ -60,12 +65,22 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
   const g = svg.append("g");
   let nodeGroups;
   let linkLabelTexts;  // para sincronizar tamaño de fuente al hacer zoom
+  let currentK = 1;    // último factor de zoom conocido
+
+  // Factor con el que el halo de foco debe escalar para verse screen-constant,
+  // igual que el texto (que se recalcula en px absolutos, no en unidades de grafo).
+  function haloScale() {
+    return Math.min(24, Math.max(11, BASE_NODE_PX / currentK)) / BASE_NODE_PX;
+  }
 
   function syncFontSize(k) {
+    currentK = k;
     if (!nodeGroups) return;
     // Nodos: screen-constant entre 11–24px
     const nodePx = Math.min(24, Math.max(11, BASE_NODE_PX / k));
     nodeGroups.select("text").attr("font-size", nodePx.toFixed(1) + "px");
+    nodeGroups.select("circle.focus-halo")
+      .attr("r", n => (Math.max(n._hw||34, n._hh||12)+8) * haloScale());
     // Labels de arista: screen-constant entre 7–16px
     if (linkLabelTexts) {
       const lnkPx = Math.min(16, Math.max(7, BASE_LINK_PX / k));
@@ -88,8 +103,7 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
   const linkLines = gLinks.selectAll("line")
     .data(links).join("line")
       .attr("stroke",           l => relColor(l.tipo || "_"))
-      .attr("stroke-width",     l => l.investigador ? 1.2 : 1.4)
-      .attr("stroke-dasharray", l => l.investigador ? "5,3" : null)
+      .attr("stroke-width",     l => l.investigador ? 1.1 : 1.3)
       .attr("stroke-opacity",  l => linkOpac(l))
       .attr("marker-end",      l => `url(#ae-${sid(l.tipo || "_")})`)
       .attr("marker-start",    l => l.bidireccional ? `url(#as-${sid(l.tipo || "_")})` : null);
@@ -112,7 +126,7 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
           .style("font-stretch","75%")
           .attr("fill", relColor(l.tipo || "_"))
           .attr("paint-order","stroke")
-          .attr("stroke","#fcfbf7").attr("stroke-width","3.5px");
+          .attr("stroke",FIELD_COLOR).attr("stroke-width","3.5px").attr("stroke-linejoin","round");
         _renderTspans(t, l._cachedLines);
       });
 
@@ -131,9 +145,17 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     .data(nodes).join("g").attr("class","node")
       .attr("cursor","pointer")
       .call(drag)
-      .on("click",(ev,d)=>{ ev.stopPropagation(); onSelect(d); hlNode(d); });
+      .on("click",(ev,d)=>{ ev.stopPropagation(); onSelect(d); })
+      .on("mouseenter",(ev,d)=>{ hoverId = d.id; render(computeHoverFocus(d.id), false); })
+      .on("mouseleave",()=>{ hoverId = null; render(computeFocus(activePath), true); });
 
   nodeGroups.append("rect").attr("rx",2).attr("ry",2);
+  // Halo circular que marca el concepto seleccionado (foco persistente)
+  nodeGroups.append("circle")
+    .attr("class","focus-halo")
+    .attr("fill", "color-mix(in srgb, " + NOVA_COLOR + " 12%, transparent)")
+    .attr("stroke", NOVA_COLOR).attr("stroke-width", 1.2)
+    .attr("opacity", 0).attr("pointer-events","none");
   nodeGroups.append("text")
     .attr("text-anchor","middle").attr("dominant-baseline","middle")
     .attr("font-size","15px").attr("font-weight","440")
@@ -141,6 +163,9 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     .style("font-stretch","75%")
     .attr("letter-spacing","0.07em")
     .attr("pointer-events","none")
+    // Halo de "papel" tras el texto: lo separa del enjambre de líneas del fondo
+    .attr("paint-order","stroke")
+    .attr("stroke", FIELD_COLOR).attr("stroke-width","4px").attr("stroke-linejoin","round")
     .text(n => { const l = n.label || n.id; return (l.length > 30 ? l.slice(0,28)+"…" : l).toUpperCase(); });
 
   // Medir texto y dimensionar rect de colisión
@@ -160,15 +185,63 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       .attr("fill","transparent").attr("stroke","none")
       .attr("x", n=>-(n._hw||34)).attr("y", n=>-(n._hh||12))
       .attr("width", n=>(n._hw||34)*2).attr("height", n=>(n._hh||12)*2);
+    sel.select("circle.focus-halo")
+      .attr("r", n=>(Math.max(n._hw||34, n._hh||12)+8) * haloScale());
     sel.select("text")
       .attr("fill", NODE_COLOR)
-      .attr("fill-opacity", n => nodeTOp(n));
+      .attr("fill-opacity", n => nodeTOp(n))
+      .attr("stroke-opacity", n => nodeTOp(n));
   }
 
-  function hlNode(selected) {
+  // ── Foco: selección persistente (clic/ruta) e interina (hover) ────────
+  // Un solo renderer atenúa lo ajeno al foco; se reutiliza para ambos casos
+  // así el hover nunca deja el grafo en un estado visual distinto del que
+  // tenía antes de pasar el mouse.
+  let activePath = [];  // [{nodeId, linkId}] — foco persistente (navegación)
+  let hoverId    = null;
+
+  function computeFocus(path) {
+    const nodeIds = new Set(path.map(p => p.nodeId));
+    const linkIds = new Set(path.map(p => p.linkId).filter(Boolean));
+    const focoId  = path.length ? path[path.length - 1].nodeId : null;
+    return { nodeIds, linkIds, focoId, activo: path.length > 0 };
+  }
+
+  function computeHoverFocus(id) {
+    const nodeIds = new Set([id]);
+    const linkIds = new Set();
+    links.forEach(l => {
+      const sId = l.source.id ?? l.source, tId = l.target.id ?? l.target;
+      if (sId === id || tId === id) { linkIds.add(l.id); nodeIds.add(sId); nodeIds.add(tId); }
+    });
+    return { nodeIds, linkIds, focoId: id, activo: true };
+  }
+
+  function render({ nodeIds, linkIds, focoId, activo }, persistente) {
     nodeGroups.select("text")
-      .attr("fill-opacity", n => n.id === selected?.id ? 1.0 : nodeTOp(n))
-      .attr("font-weight",  n => n.id === selected?.id ? "600" : "440");
+      .attr("fill-opacity",   n => !activo ? nodeTOp(n) : n.id === focoId ? 1.0 : nodeIds.has(n.id) ? 0.9 : 0.15)
+      .attr("stroke-opacity", n => !activo ? nodeTOp(n) : n.id === focoId ? 1.0 : nodeIds.has(n.id) ? 0.9 : 0.15)
+      .attr("fill",        n => (persistente && activo && n.id === focoId) ? NOVA_COLOR : NODE_COLOR)
+      .attr("font-weight", n => !activo ? "440"
+        : n.id === focoId ? "700"
+        : nodeIds.has(n.id) ? "600"
+        : "440");
+
+    nodeGroups.select("circle.focus-halo")
+      .attr("opacity", n => (persistente && activo && n.id === focoId) ? 1 : 0);
+
+    linkLines
+      .attr("stroke-opacity", l => !activo ? linkOpac(l) : (linkIds.has(l.id) ? 0.95 : 0.06))
+      .attr("stroke-width",   l => activo && linkIds.has(l.id) ? 2.2 : (l.investigador ? 1.1 : 1.3));
+
+    linkLabels.select("text")
+      .attr("fill-opacity", l => !activo ? 1 : (linkIds.has(l.id) ? 1 : 0.1));
+  }
+
+  // path: [{ nodeId, linkId }] en orden; linkId null para el primer paso.
+  function highlightPath(path = []) {
+    activePath = path;
+    if (hoverId == null) render(computeFocus(activePath), true);
   }
 
   // ── Botón Ajustar ─────────────────────────────────────────────────────
@@ -180,14 +253,24 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
 
   // ── Simulación ────────────────────────────────────────────────────────
   const D = Math.min(W, H);
+
+  // Inicializar posiciones cerca del centro para evitar el efecto de "alejarse"
+  nodes.forEach((n, i) => {
+    if (n.x == null || n.y == null) {
+      const angle = (i / Math.max(nodes.length, 1)) * 2 * Math.PI;
+      const r = D * 0.15;
+      n.x = W / 2 + r * Math.cos(angle);
+      n.y = H / 2 + r * Math.sin(angle);
+    }
+  });
+
   _sim = d3.forceSimulation(nodes)
-    .force("link",    d3.forceLink(links).id(d=>d.id).distance(D * 0.28).strength(0.25))
-    .force("charge",  d3.forceManyBody().strength(-D * 2.0))
-    .force("center",  d3.forceCenter(W/2, H/2).strength(0.05))
+    .force("link",    d3.forceLink(links).id(d=>d.id).distance(D * 0.22).strength(0.3))
+    .force("charge",  d3.forceManyBody().strength(-300))
+    .force("center",  d3.forceCenter(W/2, H/2).strength(0.3))
     .force("collide", forceRectCollide(20, 16))
-    .alphaDecay(0.016)
-    .on("tick", tick)
-    .on("end",  () => fitView(svg, g, zoom, W, H));
+    .alphaDecay(0.022)
+    .on("tick", tick);
 
   // Re-medir tras cargar fuentes (IBM Plex real vs. fallback)
   document.fonts.ready.then(() => {
@@ -256,6 +339,7 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     relColorScale: relColor,
     relTypes,
     updateVisuals,
+    highlightPath,
     fitView: () => fitView(svg, g, zoom, W, H),
   };
 }
@@ -292,7 +376,7 @@ function fitView(svg, g, zoom, W, H) {
 // ── Atributos visuales ────────────────────────────────────────────────
 
 function nodeTOp(_n) { return 0.92; }
-function linkOpac(_l) { return 0.65; }
+function linkOpac(l) { return l.investigador ? 0.28 : 0.42; }
 
 /** Caracteres por línea según distancia entre nodos en px. */
 function _charsForDist(distPx) {

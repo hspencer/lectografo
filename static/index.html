@@ -4,11 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lectógrafo</title>
+  <link rel="icon" id="favicon" type="image/svg+xml" href="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/sistema/tokens.css">
   <link rel="stylesheet" href="/style.css">
+  <!-- Pin "three" a una única instancia: grafo3d.js y 3d-force-graph deben
+       compartir el mismo módulo THREE, o el WebGL scene graph se rompe. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.183.2",
+      "three/": "https://esm.sh/three@0.183.2/"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -127,43 +138,76 @@
   <!-- TAB: Mapa (D3 force graph)                                    -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="tab-mapa" class="tab-panel" hidden>
+
+    <!-- ── Grafo (raíz de la navegación) + columnas de conceptos ────── -->
     <div id="grafo-wrap">
-      <svg id="grafo-svg"></svg>
-      <div id="grafo-controles">
-        <button id="btn-fit" class="btn btn-neutro small">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-          Ajustar
-        </button>
-        <button id="btn-reconectar" class="btn btn-neutro small" hidden title="Conectar nodos sueltos">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
-            <line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/>
-            <line x1="5" y1="19" x2="19" y2="19"/>
-          </svg>
-          Reconectar
-        </button>
-        <details id="leyenda-wrap">
-          <summary class="leyenda-summary">Relaciones</summary>
-          <div id="leyenda-tipos"></div>
-        </details>
+      <div id="grafo-canvas">
+        <svg id="grafo-svg"></svg>
+        <div id="grafo-3d" hidden></div>
+        <div id="grafo-controles">
+          <button id="btn-fit" class="btn btn-neutro small">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ajustar
+          </button>
+          <button id="btn-modo3d" class="btn btn-neutro small" title="Alternar vista 2D/3D">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span id="btn-modo3d-label">3D</span>
+          </button>
+          <button id="btn-reconectar" class="btn btn-neutro small" hidden title="Conectar nodos sueltos">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+              <line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/>
+              <line x1="5" y1="19" x2="19" y2="19"/>
+            </svg>
+            Reconectar
+          </button>
+          <button id="btn-consolidar" class="btn btn-neutro small" hidden title="Fusionar conceptos duplicados">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M18 3v12a3 3 0 0 1-3 3H3"/>
+            </svg>
+            Consolidar
+          </button>
+          <details id="leyenda-wrap">
+            <summary class="leyenda-summary">Relaciones</summary>
+            <div id="leyenda-tipos"></div>
+          </details>
+        </div>
       </div>
-    </div>
-    <aside id="panel-nodo" hidden>
-      <button id="btn-cerrar-panel" title="Cerrar">×</button>
-      <div id="panel-nodo-content"></div>
-    </aside>
-    <!-- Panel de reconexión -->
-    <aside id="panel-reconexion" hidden>
+
+      <div id="nav-cols"></div>
+
+      <!-- Panel de reconexión -->
+      <aside id="panel-reconexion" hidden>
       <div id="panel-reconexion-header">
-        <strong>Propuestas de conexión</strong>
-        <button id="btn-cerrar-reconexion" title="Cerrar">×</button>
+        <div id="panel-reconexion-header-text">
+          <strong id="panel-reconexion-titulo">Reconexión</strong>
+          <div id="panel-reconexion-desc"></div>
+        </div>
+        <button id="btn-cerrar-reconexion" title="Cerrar panel">×</button>
       </div>
       <div id="panel-reconexion-content"></div>
       <div id="panel-reconexion-footer">
-        <button id="btn-confirmar-reconexion" class="btn btn-aceptar small">Confirmar</button>
-        <button id="btn-cancelar-reconexion" class="btn btn-neutro small">Cancelar</button>
+        <button id="btn-confirmar-reconexion" class="btn btn-aceptar small">Añadir al grafo</button>
+        <button id="btn-cancelar-reconexion" class="btn btn-neutro small">Descartar</button>
       </div>
-    </aside>
+      </aside>
+
+      <!-- Panel de consolidación de sinónimos -->
+      <aside id="panel-consolidacion" hidden>
+      <div id="panel-consolidacion-header">
+        <div id="panel-consolidacion-header-text">
+          <strong id="panel-consolidacion-titulo">Consolidación</strong>
+          <div id="panel-consolidacion-desc"></div>
+        </div>
+        <button id="btn-cerrar-consolidacion" title="Cerrar panel">×</button>
+      </div>
+      <div id="panel-consolidacion-content"></div>
+      <div id="panel-consolidacion-footer">
+        <button id="btn-confirmar-consolidacion" class="btn btn-aceptar small">Fusionar</button>
+        <button id="btn-cancelar-consolidacion" class="btn btn-neutro small">Descartar</button>
+      </div>
+      </aside>
+    </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
@@ -231,12 +275,42 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- TAB: Texto original                                            -->
+  <!-- TAB: Texto original (editable)                                 -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="tab-texto" class="tab-panel" hidden>
     <div id="texto-wrap">
       <div id="texto-meta"></div>
-      <pre id="texto-contenido"></pre>
+
+      <!-- Toolbar del editor -->
+      <div id="texto-toolbar">
+        <div id="texto-toolbar-left">
+          <button id="btn-texto-editar" class="btn btn-neutro small">Editar</button>
+          <button id="btn-texto-guardar" class="btn btn-aceptar small" hidden>Guardar</button>
+          <button id="btn-texto-cancelar" class="btn btn-neutro small" hidden>Cancelar</button>
+        </div>
+        <div id="texto-toolbar-right">
+          <span id="texto-revisiones-badge" class="muted" hidden></span>
+        </div>
+      </div>
+
+      <!-- Aviso de desincronización -->
+      <div id="texto-desync-banner" hidden>
+        <span id="texto-desync-msg"></span>
+      </div>
+
+      <!-- Contenedor split: lectura | edición -->
+      <div id="texto-split">
+        <!-- Modo lectura / preview derecho -->
+        <div id="texto-render"></div>
+        <!-- Modo edición: textarea izquierdo -->
+        <textarea id="texto-editor" hidden></textarea>
+      </div>
+
+      <!-- Historial de revisiones -->
+      <details id="texto-historial" hidden>
+        <summary id="texto-historial-titulo">Historial de revisiones</summary>
+        <ul id="texto-historial-lista"></ul>
+      </details>
     </div>
   </div>
 
@@ -289,6 +363,48 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Modal: Re-procesar                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="repro-modal" hidden>
+    <div id="repro-modal-bg"></div>
+    <div id="repro-modal-box">
+      <div id="repro-modal-header">
+        <h3 id="repro-modal-titulo">Re-procesar</h3>
+        <button id="repro-modal-cerrar" title="Cerrar">×</button>
+      </div>
+      <div id="repro-modal-body">
+        <!-- Estado: confirmar -->
+        <div id="repro-estado-confirm">
+          <p id="repro-confirm-titulo" class="repro-confirm-titulo"></p>
+          <p class="repro-confirm-aviso">El LLM volverá a analizar el texto. Los conceptos y relaciones ya existentes se conservarán; los nuevos que encuentre se añadirán al grafo.</p>
+        </div>
+        <!-- Estado: procesando -->
+        <div id="repro-estado-proc" hidden>
+          <div class="repro-progress-wrap">
+            <div id="repro-progress-inner" class="repro-progress-indeterminate"></div>
+          </div>
+          <div class="repro-status-row">
+            <span class="rec-log-dot"></span>
+            <span id="repro-fase">Iniciando…</span>
+            <span id="repro-tokens" class="rec-token-count"></span>
+            <button id="repro-btn-detener" class="btn btn-neutro small rec-detener-btn">Detener</button>
+          </div>
+          <pre class="rec-log-pre rec-log-pre--active" id="repro-log"></pre>
+        </div>
+        <!-- Estado: finalizado / error -->
+        <div id="repro-estado-fin" hidden>
+          <p id="repro-fin-msg" class="muted"></p>
+        </div>
+      </div>
+      <div id="repro-modal-footer">
+        <button id="repro-btn-ok" class="btn btn-aceptar">Re-procesar</button>
+        <button id="repro-btn-cancelar" class="btn btn-neutro">Cancelar</button>
+        <button id="repro-btn-cerrar" class="btn btn-neutro" hidden>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
   <!-- Panel: Settings (proveedor LLM)                              -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="settings-panel" hidden>
@@ -323,17 +439,11 @@
         </div>
       </div>
 
-      <div id="settings-ollama-section" class="campo" style="margin-top:var(--sn-s-3)">
-        <span class="campo-etiq">Modelo local</span>
-        <div id="settings-model-wrap" style="margin-top:var(--sn-s-2)">
-          <select id="settings-model-select" class="edit-input" style="width:100%"></select>
-        </div>
-      </div>
-
-      <div id="settings-api-section" class="campo" style="margin-top:var(--sn-s-3)" hidden>
+      <div id="settings-model-section" class="campo" style="margin-top:var(--sn-s-3)">
         <span class="campo-etiq">Modelo</span>
-        <input id="settings-api-model" class="edit-input" style="width:100%;margin-top:var(--sn-s-2)" placeholder="ej. claude-opus-4-6">
-        <div id="settings-api-key-status" class="muted" style="font-size:var(--sn-fs-xs);margin-top:var(--sn-s-1)"></div>
+        <select id="settings-model-sel" class="edit-input" style="width:100%;margin-top:var(--sn-s-2)"></select>
+        <input id="settings-model-custom" class="edit-input" style="width:100%;margin-top:var(--sn-s-2);display:none" placeholder="nombre del modelo">
+        <div id="settings-key-status" style="font-size:var(--sn-fs-xs);margin-top:var(--sn-s-1)"></div>
       </div>
 
       <div style="margin-top:var(--sn-s-3);display:flex;align-items:center;gap:var(--sn-s-2)">

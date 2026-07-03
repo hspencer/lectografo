@@ -1,6 +1,6 @@
 """
 Implementación del contrato EvaluadorLLM para Google Gemini.
-Usa el SDK `google-generativeai` con streaming.
+Usa el SDK `google-genai` con streaming.
 """
 import threading
 
@@ -11,29 +11,23 @@ from src.llm.base import EvaluadorLLM
 class GeminiLLM(EvaluadorLLM):
 
     def __init__(self):
-        import google.generativeai as genai
-        genai.configure(api_key=settings.gemini_api_key)
-        self._genai = genai
+        from google import genai
+        self._client = genai.Client(api_key=settings.gemini_api_key)
         self.model_name = settings.gemini_model
 
     def invocar(self, prompt_sistema: str, texto: str, on_token=None, on_texto=None, should_cancel=None) -> str:
-        import google.generativeai as genai
-        from google.generativeai.types import GenerationConfig
+        from google.genai import types
 
         fragmentos: list[str] = []
         tokens_recibidos = 0
         _cancelado = threading.Event()
 
         user_content = texto.strip() if texto.strip() else "Procede según las instrucciones."
-        # Gemini: sistema + usuario como prompt combinado
         prompt_completo = f"{prompt_sistema}\n\n---\n\n{user_content}"
 
-        model = genai.GenerativeModel(
-            model_name=self.model_name,
-            generation_config=GenerationConfig(
-                temperature=0.1,
-                response_mime_type="application/json",
-            ),
+        config = types.GenerateContentConfig(
+            temperature=0.1,
+            response_mime_type="application/json",
         )
 
         def _watchdog():
@@ -46,7 +40,11 @@ class GeminiLLM(EvaluadorLLM):
             threading.Thread(target=_watchdog, daemon=True).start()
 
         try:
-            for chunk in model.generate_content(prompt_completo, stream=True):
+            for chunk in self._client.models.generate_content_stream(
+                model=self.model_name,
+                contents=prompt_completo,
+                config=config,
+            ):
                 if _cancelado.is_set() or (should_cancel and should_cancel()):
                     raise InterruptedError("Extracción cancelada por el usuario")
                 text = chunk.text if hasattr(chunk, "text") and chunk.text else ""

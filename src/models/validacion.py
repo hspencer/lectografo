@@ -8,6 +8,13 @@ from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field
 
+
+class RevisionTexto(BaseModel):
+    """Snapshot inmutable del texto antes de una edición. Ver edicion-texto.allium."""
+    texto_anterior: str
+    fecha: datetime = Field(default_factory=datetime.utcnow)
+    nota_autor: Optional[str] = None
+
 from src.models.extraccion import ResultadoExtraccion
 
 
@@ -106,8 +113,18 @@ class EstadoValidacion(BaseModel):
     # Relaciones añadidas manualmente por el investigador (no provienen del LLM)
     relaciones_investigador: list[dict] = Field(default_factory=list)
 
+    # Fusión de conceptos duplicados/sinónimos: id absorbido → id canónico.
+    # materializar_desde_validacion omite el Nodo del absorbido, redirige sus
+    # relaciones al canónico y traslada su label a sinonimos_consolidados.
+    conceptos_fusionados: dict[str, str] = Field(default_factory=dict)
+
     # Metadatos editoriales del texto fuente
     metadatos: MetadatosTexto = Field(default_factory=MetadatosTexto)
+
+    # Edición de texto fuente (ver edicion-texto.allium)
+    texto_editado: Optional[str] = None                           # None = usar archivo original
+    revisiones_texto: list[RevisionTexto] = Field(default_factory=list)
+    texto_desincronizado_desde: Optional[datetime] = None         # None = en sync
 
     # ── Proyecciones ──────────────────────────────────────────────────
 

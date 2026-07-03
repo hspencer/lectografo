@@ -1,16 +1,20 @@
 -- allium: 3
 -- getYourStuffTogether.allium
 
--- Scope: deteccion y resolucion de nodos sueltos en un grafo ya construido.
--- Un nodo suelto es aquel que no participa en ninguna Relacion del grafo.
+-- Scope: deteccion y resolucion de nodos desconectados en un grafo ya construido.
+-- Un nodo desconectado es aquel que no pertenece a la componente conexa
+-- principal (la mayor) del grafo. Esto incluye tanto nodos aislados de grado 0
+-- como clusters completos de varios nodos que estan conectados entre si pero
+-- no con la masa principal del grafo.
 -- Esta funcion propone conexiones via LLM y las somete al investigador
 -- para su seleccion y edicion antes de formalizarlas en el grafo.
 --
 -- El nombre "getYourStuffTogether" es el nombre canonico en el proyecto.
 --
 -- Includes:
---   - Deteccion de nodos sin ninguna relacion en el grafo existente
---   - Invocacion del LLM con el grafo como contexto comprimido y las citas de los nodos sueltos
+--   - Deteccion de nodos fuera de la componente principal del grafo existente
+--   - Invocacion del LLM con el grafo como contexto comprimido y las citas de los nodos desconectados
+--   - Filtrado de las propuestas del LLM para conservar solo las que reducen el numero de componentes conexas
 --   - Presentacion de propuestas editables pre-seleccionadas al investigador
 --   - Materializacion de las conexiones aceptadas como Relacion en el grafo
 --
@@ -27,7 +31,8 @@ use "./extraccion.allium" as extraccion
 ------------------------------------------------------------
 
 -- Una conexion que el LLM propone entre dos nodos del grafo,
--- donde al menos uno de los extremos es un nodo suelto.
+-- donde al menos uno de los extremos estaba desconectado (fuera de la
+-- componente principal) al iniciar la ejecucion de reconexion.
 entity ConexionPropuesta {
     id: String
     ejecucion: EjecucionReconexion
@@ -37,8 +42,8 @@ entity ConexionPropuesta {
     tipo: extraccion/TipoRelacion
     confianza: Decimal                     -- 0.0 a 1.0
 
-    al_menos_un_suelto: suelto_en(origen, ejecucion.grafo)
-                     or suelto_en(destino, ejecucion.grafo)
+    al_menos_un_desconectado: desconectado_en(origen, ejecucion.grafo)
+                           or desconectado_en(destino, ejecucion.grafo)
 }
 
 -- Estado de una propuesta dentro de la sesion de revision del investigador.
@@ -103,7 +108,7 @@ entity EjecucionReconexion {
     estado: en_curso | completada | fallida
     razon_falla: String? when estado = fallida
 
-    nodos_sueltos: List<grafo/Nodo>         -- snapshot de los nodos sueltos al momento de iniciar
+    nodos_desconectados: List<grafo/Nodo>   -- snapshot de los nodos fuera de la componente principal al momento de iniciar
 
     transitions estado {
         en_curso -> completada
@@ -117,14 +122,15 @@ entity EjecucionReconexion {
 ------------------------------------------------------------
 
 -- El boton "getYourStuffTogether" (icono: anillo de nodos) es visible
--- en la interfaz del grafo unicamente cuando hay nodos sueltos.
+-- en la interfaz del grafo unicamente cuando hay nodos desconectados,
+-- es decir, cuando el grafo tiene mas de una componente conexa.
 -- Desaparece cuando el grafo queda completamente conexo.
 
 rule BotonReconexionVisible {
     when: InvestigadorVisualizaGrafo(g)
 
     ensures:
-        if nodos_sueltos(g).count > 0
+        if nodos_desconectados(g).count > 0
         then AccionGetYourStuffTogetherDisponible(grafo: g)
         else AccionGetYourStuffTogetherOculta(grafo: g)
 }
@@ -136,11 +142,11 @@ rule BotonReconexionVisible {
 rule IniciarReconexion {
     when: InvestigadorActivaGetYourStuffTogether(g)
 
-    requires: nodos_sueltos(g).count > 0
+    requires: nodos_desconectados(g).count > 0
     requires: proveedor_activo.api_key_presente = true or proveedor_activo.es_local = true
     requires: proveedor_activo.es_local = false or proveedor_activo.endpoint != null
 
-    let sueltos = nodos_sueltos(g)
+    let desconectados = nodos_desconectados(g)
 
     ensures: EjecucionReconexion.created(
         grafo: g,
@@ -148,20 +154,22 @@ rule IniciarReconexion {
         prompt: prompt_reconexion(),        -- black box: carga el prompt especifico de reconexion
         iniciada_en: now,
         estado: en_curso,
-        nodos_sueltos: sueltos
+        nodos_desconectados: desconectados
     )
 
     @guidance
         -- El LLM recibe:
         --   (a) el grafo existente serializado como contexto comprimido
         --       (nodos con label + descripcion, relaciones con etiqueta);
-        --   (b) las citas directas de los nodos sueltos;
+        --   (b) las citas directas de los nodos desconectados;
         --   (c) la transcripcion completa si su longitud cabe en el limite del prompt,
         --       omitida en caso contrario.
         -- El grafo ya es la compresion semantica del texto original; la transcripcion
         -- completa es un enriquecimiento opcional, no el contexto primario.
-        -- El LLM puede proponer conexiones entre nodos sueltos y nodos ya conectados,
-        -- y tambien entre dos nodos sueltos entre si.
+        -- El LLM puede proponer conexiones entre un nodo desconectado y un nodo de la
+        -- componente principal, y tambien entre dos nodos desconectados entre si.
+        -- ver src/pipeline/grafo.py::nodos_desconectados y
+        --     src/app.py::iniciar_reconexion
 }
 
 ------------------------------------------------------------
@@ -173,6 +181,14 @@ rule ReconexionLLMCompleta {
 
     requires: ejecucion.estado = en_curso
 
+    -- Solo se conservan las conexiones que reducen el numero de componentes
+    -- conexas: si ambos extremos ya estan en la misma componente, la conexion
+    -- es redundante (una arista interna que no reconecta nada) y se descarta
+    -- antes de que llegue al investigador. Ver la @guidance mas abajo.
+    let conexiones_utiles = filtrar_conexiones_que_reducen_componentes(
+        ejecucion.grafo, conexiones_propuestas
+    )
+
     ensures:
         ejecucion.estado = completada
         ejecucion.finalizada_en = now
@@ -183,7 +199,7 @@ rule ReconexionLLMCompleta {
             iniciada_en: now,
             estado: en_revision
         )
-        for cp in conexiones_propuestas:
+        for cp in conexiones_utiles:
             let conexion = ConexionPropuesta.created(
                 id: "cp_" + cp.id,
                 ejecucion: ejecucion,
@@ -204,8 +220,31 @@ rule ReconexionLLMCompleta {
         SesionReconexionLista(sesion: sesion)
 
     @guidance
-        -- El investigador ve una lista de frases editables con checkboxes,
-        -- todas marcadas por defecto. Puede:
+        -- Filtrado por reduccion de componentes (filtrar_conexiones_que_reducen_componentes):
+        -- una propuesta del LLM solo es util si sus dos extremos pertenecen a
+        -- componentes conexas distintas en el momento de aplicarla; unirlos reduce
+        -- en uno el numero de componentes del grafo. Si ambos extremos ya estan en
+        -- la misma componente, aceptar la conexion solo agregaria una arista interna
+        -- redundante mientras los clusters realmente aislados siguen aislados: se
+        -- descarta y nunca se muestra al investigador.
+        -- El filtrado es un proceso ordenado y con estado (no un predicado estatico):
+        --   1. Se construye Union-Find sobre las componentes actuales del grafo.
+        --   2. Se recorren las propuestas en orden de confianza descendente.
+        --   3. Se conserva una propuesta solo si en ese punto sus extremos estan en
+        --      componentes distintas; al conservarla se fusionan (union) esas dos
+        --      componentes, de modo que las siguientes se evaluan contra el estado ya
+        --      actualizado. Cuando varias propuestas compiten por unir el mismo par de
+        --      componentes, sobrevive la de mayor confianza.
+        -- Este orden greedy produce exactamente el conjunto de conexiones necesario
+        -- para minimizar el numero de componentes, sin redundancias.
+        -- Conectar dos nodos desconectados entre si (sin tocar la componente principal)
+        -- SI se conserva cuando es el mejor puente disponible: reduce el total de
+        -- componentes en uno, aunque el subgrafo resultante siga separado de la masa
+        -- principal (ver la pregunta abierta resuelta al respecto).
+        -- ver src/pipeline/reconexion.py::filtrar_conexiones_que_reducen_componentes
+        --
+        -- Tras el filtrado, el investigador ve una lista de frases editables con
+        -- checkboxes, todas marcadas por defecto. Puede:
         --   - desmarcar las propuestas que no quiere aceptar,
         --   - editar el texto de las que decide conservar,
         --   - confirmar la seleccion completa de una vez.
@@ -224,7 +263,7 @@ rule ReconexionLLMFallida {
 
     @guidance
         -- Un fallo no modifica el grafo. El boton sigue visible si quedan
-        -- nodos sueltos y el investigador puede reintentar.
+        -- nodos desconectados y el investigador puede reintentar.
 }
 
 ------------------------------------------------------------
@@ -263,14 +302,14 @@ rule InvestigadorConfirmaReconexion {
         ReconexionCompleta(
             grafo: sesion.grafo,
             conexiones_agregadas: sesion.aceptadas.count,
-            nodos_sueltos_restantes: nodos_sueltos(sesion.grafo).count
+            nodos_desconectados_restantes: nodos_desconectados(sesion.grafo).count
         )
 
     @guidance
-        -- Si tras la confirmacion quedan nodos sueltos (porque el investigador
-        -- rechazo todas las propuestas para alguno de ellos, o el LLM no
-        -- propuso conexion para ese nodo), el boton vuelve a aparecer
-        -- automaticamente segun la regla BotonReconexionVisible.
+        -- Si tras la confirmacion quedan nodos desconectados (porque el investigador
+        -- rechazo todas las propuestas para alguno de ellos, o el LLM no propuso una
+        -- conexion util para reincorporar ese cluster a la componente principal), el
+        -- boton vuelve a aparecer automaticamente segun la regla BotonReconexionVisible.
 }
 
 rule InvestigadorCancelaSesion {
@@ -280,17 +319,32 @@ rule InvestigadorCancelaSesion {
 
     ensures:
         sesion.estado = cancelada
-        -- El grafo no se modifica. El boton sigue visible si quedan nodos sueltos.
+        -- El grafo no se modifica. El boton sigue visible si quedan nodos desconectados.
 }
 
 ------------------------------------------------------------
 -- Invariantes
 ------------------------------------------------------------
 
-invariant ConexionTieneAlMenosUnExtremoSuelto {
+-- Toda ConexionPropuesta toca al menos un nodo que estaba desconectado
+-- (fuera de la componente principal) al iniciar la ejecucion. Una conexion
+-- entre dos nodos ambos dentro de la componente principal no reconecta nada.
+invariant ConexionTieneAlMenosUnExtremoDesconectado {
     for cp in ConexionPropuesta:
-        suelto_en(cp.origen, cp.ejecucion.grafo)
-        or suelto_en(cp.destino, cp.ejecucion.grafo)
+        desconectado_en(cp.origen, cp.ejecucion.grafo)
+        or desconectado_en(cp.destino, cp.ejecucion.grafo)
+}
+
+-- Ninguna ConexionPropuesta materializada une dos nodos que ya estaban en la
+-- misma componente conexa: seria una arista redundante que no reduce el numero
+-- de componentes del grafo. Esta es la parte estatica, comprobable en un unico
+-- instante, de la regla de reduccion de componentes. La logica greedy ordenada
+-- que la produce (Union-Find sobre confianza descendente) vive en el filtro
+-- filtrar_conexiones_que_reducen_componentes; ver la @guidance de
+-- ReconexionLLMCompleta y src/pipeline/reconexion.py.
+invariant ConexionReduceComponentes {
+    for cp in ConexionPropuesta:
+        not mismo_componente(cp.origen, cp.destino, cp.ejecucion.grafo)
 }
 
 invariant PropuestaPerteneceASuEjecucion {
@@ -307,11 +361,20 @@ invariant ConfianzaEnRango {
 -- Preguntas abiertas
 ------------------------------------------------------------
 
-open question "El LLM recibe las citas de TODOS los nodos sueltos en un solo prompt, o un prompt por nodo suelto? Para grafos grandes con muchos nodos sueltos, un prompt unico puede superar el limite."
+open question "El LLM recibe las citas de TODOS los nodos desconectados en un solo prompt, o un prompt por nodo/cluster? Para grafos grandes con muchos nodos desconectados, un prompt unico puede superar el limite."
 
 open question "Si el investigador cancela la sesion, se pueden recuperar las propuestas descartadas o se pierden definitivamente?"
 
-open question "Cuando dos nodos sueltos quedan conectados entre si pero no con el resto del grafo, el boton vuelve a aparecer. Deberia el sistema advertir explicitamente que el subgrafo formado sigue siendo un componente aislado?"
+-- RESUELTA: "Cuando dos nodos desconectados quedan conectados entre si pero no con
+-- el resto del grafo, el boton vuelve a aparecer. Deberia el sistema advertir que el
+-- subgrafo formado sigue siendo un componente aislado?"
+--   Conectar dos nodos desconectados entre si esta explicitamente permitido por el
+--   filtro filtrar_conexiones_que_reducen_componentes cuando es el mejor puente
+--   disponible por confianza: reduce el total de componentes en uno, aunque el
+--   subgrafo resultante siga separado de la componente principal. No se emite una
+--   advertencia especial: el boton reaparece via BotonReconexionVisible mientras
+--   nodos_desconectados(g).count > 0, que es la senal correcta y suficiente de que
+--   el grafo aun no es conexo. El investigador puede volver a ejecutar la reconexion.
 
 open question "El prompt de reconexion es el mismo que el de extraccion con contexto adicional, o es un prompt separado disenado especificamente para la tarea de reconexion?"
 
@@ -319,12 +382,33 @@ open question "El prompt de reconexion es el mismo que el de extraccion con cont
 -- Funciones deferred
 ------------------------------------------------------------
 
-deferred nodos_sueltos(g: grafo/Grafo) -> List<grafo/Nodo>
-    -- Devuelve los nodos del grafo que no aparecen como origen ni destino
-    -- en ninguna Relacion con estado_validacion != rechazada.
+deferred nodos_desconectados(g: grafo/Grafo) -> List<grafo/Nodo>
+    -- Devuelve todos los nodos que NO pertenecen a la componente conexa principal
+    -- (la mayor) del grafo. Incluye tanto nodos aislados de grado 0 como clusters
+    -- completos de varios nodos conectados entre si pero no con la masa principal.
+    -- Se calcula sobre el grafo tratado como no dirigido.
+    -- ver src/pipeline/grafo.py::nodos_desconectados
+    --     (usa grafo/Grafo.componentes_conexas, ver src/models/grafo.py)
 
-deferred suelto_en(nodo: grafo/Nodo, g: grafo/Grafo) -> Boolean
-    -- True si el nodo no participa en ninguna Relacion del grafo.
+deferred desconectado_en(nodo: grafo/Nodo, g: grafo/Grafo) -> Boolean
+    -- True si el nodo esta fuera de la componente conexa principal del grafo,
+    -- es decir, si nodo pertenece a nodos_desconectados(g).
+
+deferred mismo_componente(a: grafo/Nodo, b: grafo/Nodo, g: grafo/Grafo) -> Boolean
+    -- True si los nodos a y b pertenecen a la misma componente conexa del grafo
+    -- (tratado como no dirigido). Se apoya en grafo/Grafo.componentes_conexas.
+    -- ver src/models/grafo.py::componentes_conexas / es_conexo
+
+deferred filtrar_conexiones_que_reducen_componentes(
+    g: grafo/Grafo, conexiones: List<ConexionPropuesta>
+) -> List<ConexionPropuesta>
+    -- Descarta las conexiones cuyos dos extremos ya estan en la misma componente
+    -- conexa: aceptarlas no reduciria el numero de grafos inconexos, solo agregaria
+    -- una arista interna redundante. Aplica Union-Find sobre las componentes actuales
+    -- y recorre las conexiones en orden de confianza descendente, conservando solo las
+    -- que en ese punto unen componentes distintas (cada una fusiona sus componentes,
+    -- asi que las siguientes se evaluan contra el estado ya actualizado).
+    -- ver src/pipeline/reconexion.py::filtrar_conexiones_que_reducen_componentes
 
 deferred construir_contexto_grafo(g: grafo/Grafo) -> String
     -- Serializa el grafo como texto comprimido apto para un prompt LLM:

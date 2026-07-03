@@ -48,3 +48,4 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto antes ni después:
 - Asegúrate de que cada concepto desconectado quede integrado al grafo principal a través de al menos una conexión.
 - No propongas más de 3 conexiones por concepto desconectado.
 - Prioriza conexiones al grafo principal sobre conexiones entre conceptos desconectados.
+- El objetivo real es **reducir el número de componentes desconectadas del grafo**, no simplemente mencionar un concepto desconectado. Una conexión entre dos conceptos que ya están conectados entre sí (aunque sea indirectamente, por un camino de varias relaciones) no aporta nada y será descartada automáticamente — no gastes propuestas ahí.

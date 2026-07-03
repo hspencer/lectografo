@@ -18,6 +18,7 @@ use "./extraccion.allium" as extraccion
 use "./validacion.allium" as validacion
 use "./grafo.allium" as grafo
 use "./extraccion-incremental.allium" as extraccionIncremental
+use "./edicion-texto.allium" as edicion
 
 ------------------------------------------------------------
 -- Actores
@@ -125,8 +126,16 @@ surface PanelValidacion {
 }
 
 ------------------------------------------------------------
--- Surface: visualizacion del grafo
+-- Surface: mapa topológico (force-directed)
 ------------------------------------------------------------
+
+-- NOTA: Esta surface fue la vista principal hasta que se comprobó que con
+-- grafos de más de ~15 nodos las frases de relación (frase_completa) son
+-- completamente ilegibles: los labels se superponen, los arcos se cruzan y
+-- no existe punto de entrada natural para la lectura. El mapa se mantiene
+-- como vista de TOPOLOGÍA (estructura global, densidad, bucles), no como
+-- superficie de lectura semántica. La navegación léxica vive en
+-- NavegadorDendrograma.
 
 surface VisualizacionGrafo {
     facing investigador: Investigador
@@ -157,16 +166,139 @@ surface VisualizacionGrafo {
 
     provides:
         InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
+        InvestigadorEligeNodoComoRaiz(nodo)
+            -- Pivota al NavegadorDendrograma centrado en este nodo.
+            -- Única acción de lectura disponible desde el mapa.
 
     related:
+        NavegadorDendrograma(grafo)
         PanelValidacion(grafo.transcripcion)
 
     contracts:
         demands Codec
 
     @guidance
-        -- La visualizacion usa D3 force-directed por defecto. El
-        -- investigador puede arrastrar nodos para reorganizar.
+        -- Usar como referencia topológica, no como herramienta de lectura.
+        -- El investigador puede arrastrar nodos y hacer zoom, pero la
+        -- legibilidad se degrada con densidad alta. Para leer el argumento
+        -- del texto, redirigir a NavegadorDendrograma.
+}
+
+------------------------------------------------------------
+-- Surface: navegador dendrograma — "el viñedo del texto"
+------------------------------------------------------------
+
+-- La superficie primaria de lectura semántica del grafo.
+-- Invierte la jerarquía del mapa: la FRASE DE RELACIÓN (frase_completa) es
+-- el elemento principal de cada rama; el nodo es el destino de esa frase.
+-- Leer el árbol equivale a leer las proposiciones del texto en cadena:
+--   "FUEGO —[todo es transformación de]→ LOGOS —[gobierna]→ COSMOS"
+--
+-- El investigador elige un nodo raíz y el árbol se bifurca desde ahí.
+-- Los ciclos se muestran como referencias colapsadas; no se expanden para
+-- evitar explosión combinatoria. La profundidad es configurable.
+
+-- NodoEnContexto representa un nodo tal y como aparece en el recorrido:
+-- con la frase que lo conecta a su padre, la dirección y su posición.
+value NodoEnContexto {
+    nodo: grafo/Nodo
+    relacion_entrada: grafo/Relacion?      -- null solo para la raíz
+    frase_entrada: String?                 -- relacion_entrada.frase_completa
+                                           -- la "frase oculta" que se revela al navegar
+    direccion_entrada: saliente | entrante | nula
+                                           -- saliente: padre→este; entrante: este→padre
+                                           -- Las relaciones bidireccionales se muestran
+                                           -- una sola vez con indicador ↔ (relacion_entrada.bidireccional)
+    profundidad: Integer                   -- 0 = raíz
+    es_referencia_ciclica: Boolean         -- ya aparece como ancestro en esta rama → no expandir
+                                           -- Un mismo nodo puede ser raíz en otra Perspectiva
+    es_nodo_de_bucle: Boolean              -- pertenece a algún Bucle del grafo (semántico, no de traversal)
+    expandido: Boolean                     -- el investigador abrió esta rama
+}
+
+-- Perspectiva representa un árbol independiente con su propia raíz y profundidad.
+-- El investigador puede abrir múltiples perspectivas simultáneas del mismo grafo.
+value Perspectiva {
+    id: String
+    raiz: grafo/Nodo
+    profundidad: Integer        -- 1..6; ajustable con slider por perspectiva
+    arbol: List<NodoEnContexto>
+}
+
+surface NavegadorDendrograma {
+    facing investigador: Investigador
+    context grafo: grafo/Grafo
+
+    -- Múltiples perspectivas simultáneas; la primera se abre automáticamente
+    -- desde el nodo con mayor out-degree.
+    let perspectivas = PerspectvasActivas(grafo)     -- inicialmente una
+
+    exposes:
+        grafo.titulo
+        for p in perspectivas:
+            p.id
+            p.raiz.label
+            p.raiz.descripcion_corta
+            p.profundidad
+            -- El árbol completo de esta perspectiva
+            for nec in p.arbol:
+                nec.nodo.label
+                nec.nodo.descripcion_corta
+                nec.nodo.tipos
+                nec.frase_entrada              -- proposición completa; el corazón del texto
+                nec.relacion_entrada.tipo
+                nec.relacion_entrada.bidireccional
+                nec.direccion_entrada
+                nec.profundidad
+                nec.es_referencia_ciclica
+                nec.es_nodo_de_bucle
+                nec.expandido
+
+    provides:
+        InvestigadorAbrePerspectiva(grafo, nodo)
+            -- Abre una nueva perspectiva centrada en nodo.
+            -- Cualquier nodo visible en cualquier perspectiva puede ser raíz.
+        InvestigadorCierraPerspectiva(perspectiva)
+            when perspectivas.count > 1
+            -- Se puede cerrar cualquier perspectiva salvo la última.
+        InvestigadorAjustaProfundidad(perspectiva, nueva_profundidad)
+            -- Slider 1–6 por perspectiva; recalcula el árbol inmediatamente.
+        InvestigadorExpandeRama(nodo_en_contexto)
+            when not nodo_en_contexto.es_referencia_ciclica
+             and not nodo_en_contexto.expandido
+        InvestigadorColapsaRama(nodo_en_contexto)
+            when nodo_en_contexto.expandido
+        InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
+
+    related:
+        VisualizacionGrafo(grafo)
+            -- Vista de topología global; accesible desde toggle en la misma pestaña
+        PanelValidacion(grafo.transcripcion)
+
+    @guarantee FrasesSiempreLegibles
+        -- Cada rama del árbol muestra frase_completa de la relación que la
+        -- conecta con su nodo padre. La frase es siempre el elemento
+        -- dominante, independientemente del número total de nodos del grafo.
+
+    @guarantee CiclosNoProducenExplosion
+        -- Un nodo que ya aparece como ancestro directo en la misma rama se
+        -- representa como referencia colapsada. No se expande.
+        -- Un nodo ya visitado en OTRA rama puede expandirse de nuevo.
+
+    @guarantee DireccionYBidireccionalidadVisibles
+        -- La dirección de cada relación (→ saliente, ← entrante, ↔ bidireccional)
+        -- es visible como indicador tipográfico en cada rama.
+        -- Una relación bidireccional aparece UNA SOLA VEZ; nunca se duplica.
+
+    @guarantee BuclesSemanticosDistinguibles
+        -- Los nodos que participan en un Bucle detectado por el LLM se
+        -- muestran con color diferente al de nodos no-bucle, distinguiéndolos
+        -- visualmente de los artefactos de traversal (es_referencia_ciclica).
+
+    @guarantee PerspectividadSimultanea
+        -- El investigador puede tener abiertas N perspectivas del mismo grafo.
+        -- Cada perspectiva tiene su propia raíz, profundidad y estado de expansión.
+        -- Las perspectivas no comparten estado entre sí.
 }
 
 ------------------------------------------------------------
@@ -321,6 +453,56 @@ surface ConfiguracionProveedor {
 }
 
 ------------------------------------------------------------
+-- Surface: editor de texto fuente
+------------------------------------------------------------
+
+surface EditorTexto {
+    -- Permite al investigador leer y editar el texto_crudo de una Transcripcion
+    -- en cualquier estado. El texto se muestra renderizado como HTML
+    -- (interpretando la sintaxis Markdown/txt del texto_crudo).
+    facing investigador: Investigador
+    context transcripcion: transcripcion/Transcripcion
+
+    exposes:
+        transcripcion.titulo
+        transcripcion.estado
+        transcripcion.texto_crudo                       -- como fuente del renderizado HTML
+        transcripcion.texto_desincronizado_desde        -- null o timestamp de la última edición divergente
+        transcripcion.fragmentos_invalidos
+        transcripcion.revisiones                        -- historial completo de revisiones
+        for rev in transcripcion.revisiones:
+            rev.fecha
+            rev.nota_autor
+            -- texto_anterior disponible bajo demanda (puede ser voluminoso)
+
+    provides:
+        InvestigadorEditaTexto(transcripcion, texto_nuevo, nota?)
+            -- Siempre disponible, en cualquier estado.
+        InvestigadorSolicitaReNormalizacion(transcripcion)
+            when transcripcion.fragmentos_invalidos = true
+        InvestigadorConsultaRevision(revision)
+            -- Muestra el texto_anterior completo de una revisión concreta.
+
+    @guarantee TextoSiempreEditable
+        -- InvestigadorEditaTexto está disponible independientemente del
+        -- estado de la transcripcion. No existe bloqueo por estado.
+
+    @guarantee HistorialNoEsDestructivo
+        -- Ninguna acción en esta surface elimina revisiones existentes.
+        -- El historial sólo crece; nunca se trunca.
+
+    @guarantee DesincronizacionVisible
+        -- Si texto_desincronizado_desde != null, la surface lo señala
+        -- visiblemente antes de que el investigador pueda lanzar
+        -- una nueva extracción.
+
+    related:
+        PanelBiblioteca
+            when transcripcion.fragmentos_invalidos = false
+                and transcripcion.estado = normalizada
+}
+
+------------------------------------------------------------
 -- Surface: panel de biblioteca (vista principal)
 ------------------------------------------------------------
 
@@ -374,6 +556,42 @@ deferred NodosParcialesDeSesion(sesion: extraccionIncremental/SesionExtraccionIn
 deferred RelacionesParcialesdeSesion(sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Relacion>
     -- Proyecta las relaciones detectadas hasta ahora en el grafo en construcción.
 
+------------------------------------------------------------
+-- Deferred: NavegadorDendrograma
+------------------------------------------------------------
+
+deferred NodoRaizActiva(grafo: grafo/Grafo) -> grafo/Nodo
+    -- Devuelve el nodo con mayor out-degree (suma de salientes + entrantes).
+    -- En caso de empate, el primero en orden de creacion.
+
+deferred PerspectvasActivas(grafo: grafo/Grafo) -> List<Perspectiva>
+    -- Devuelve las perspectivas abiertas por el investigador en esta sesión.
+    -- Estado en memoria; no persiste entre sesiones.
+    -- Al abrir el grafo, contiene una única perspectiva desde NodoRaizActiva.
+
+deferred ProyectarArbol(
+    grafo: grafo/Grafo,
+    raiz: grafo/Nodo,
+    profundidad_max: Integer
+) -> List<NodoEnContexto>
+    -- Recorrido DFS desde raiz hasta profundidad_max.
+    -- Incluye tanto relaciones SALIENTES (padre es origen) como ENTRANTES (padre es destino).
+    -- Una relación bidireccional aparece UNA SOLA VEZ: como saliente desde el lado que
+    -- inicia el recorrido, con relacion_entrada.bidireccional = true.
+    -- Cycle detection es PATH-LOCAL: un nodo ya en la ruta de ancestros directos
+    -- → es_referencia_ciclica = true y no se expande.
+    -- Un mismo nodo puede expandirse en distintas ramas si no es ancestro directo en esa rama.
+    -- es_nodo_de_bucle = true si el nodo aparece en algún Bucle del grafo.
+    -- Orden de los hijos: primero salientes, luego entrantes; dentro de cada grupo,
+    -- orden de creacion de la relacion.
+
+config {
+    profundidad_dendrograma: Integer = 3
+    -- Profundidad inicial del árbol de expansión.
+    -- 2 = solo vecinos directos (poco contexto).
+    -- 3 = vecinos y sus vecinos (equilibrio recomendado).
+    -- 4+ = potencialmente abrumador con grafos densos.
+}
 
 ------------------------------------------------------------
 -- Preguntas abiertas
@@ -387,6 +605,28 @@ open question "VisualizacionGrafoEnConstruccion: ¿la frase actualmente en proce
 
 open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstruccion cierra y muestra el grafo parcial hasta ese punto, o vuelve a PanelBiblioteca?"
 
+-- DECISIÓN RESUELTA: NavegadorDendrograma incluye relaciones SALIENTES y ENTRANTES
+-- desde cada nodo padre. Las salientes se listan primero; las entrantes después.
+
+-- DECISIÓN RESUELTA: Las relaciones bidireccionales aparecen UNA SOLA VEZ con
+-- el indicador ↔. No se duplican.
+
+-- DECISIÓN RESUELTA: El investigador puede tener MÚLTIPLES perspectivas simultáneas.
+-- Cada perspectiva es una columna independiente con su propia raíz y profundidad.
+-- Se pueden abrir desde cualquier nodo visible. La última perspectiva no se puede cerrar.
+
+-- DECISIÓN RESUELTA: Los nodos que pertenecen a un Bucle semántico detectado por el
+-- LLM se muestran con color distinto (amber/warning). Los artefactos de traversal
+-- (es_referencia_ciclica) se muestran colapsados con icono ↺. Son categorías distintas.
+
+-- DECISIÓN RESUELTA: La profundidad se ajusta con un SLIDER EN TIEMPO REAL por
+-- perspectiva (rango 1–6). El árbol se recalcula inmediatamente al mover el slider.
+
 -- DECISIÓN RESUELTA: El investigador selecciona el modelo Ollama de una lista
 -- consultada en tiempo real al endpoint /api/tags de Ollama. El panel de
 -- configuración muestra los modelos instalados y guarda la selección en .env.
+
+-- DECISIÓN RESUELTA: La visualización force-directed (VisualizacionGrafo) se
+-- mantiene como vista de topología secundaria. La superficie de lectura primaria
+-- pasa a ser NavegadorDendrograma, donde la frase_completa de cada relación es
+-- el elemento dominante de cada rama del árbol.

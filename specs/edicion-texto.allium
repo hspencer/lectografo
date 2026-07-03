@@ -1,0 +1,186 @@
+-- allium: 3
+-- edicion-texto.allium
+--
+-- Scope: edición del texto fuente de una Transcripcion en cualquier punto
+-- de su ciclo de vida. Cubre el historial de revisiones, la señalización de
+-- desincronización con la extracción previa y la re-normalización explícita.
+--
+-- Includes:
+--   - Valor RevisionTexto (snapshot inmutable de cada edición)
+--   - Campos de tracking añadidos a Transcripcion (revisiones, desincronizacion)
+--   - Regla de edición de texto (siempre permitida, sin cambio de estado)
+--   - Regla de re-normalización tras edición
+--   - Comportamiento de re-extracción con preservación de contexto previo
+--   - Surface EditorTexto (renderizado Markdown → HTML)
+--
+-- Excludes:
+--   - Renderizado concreto del Markdown (detalle de implementación)
+--   - Edición de nodos y relaciones del grafo (vive en grafo.allium)
+--   - Edición de metadatos bibliográficos (InvestigadorEditaMetadatos en surfaces.allium)
+--
+-- Dependencies: transcripcion.allium, extraccion.allium, grafo.allium
+
+use "./transcripcion.allium" as transcripcion
+use "./grafo.allium" as grafo
+
+------------------------------------------------------------
+-- RevisionTexto
+------------------------------------------------------------
+
+value RevisionTexto {
+    -- Snapshot inmutable del estado del texto en el momento previo a una edición.
+    -- Una vez creada, una RevisionTexto no se modifica.
+
+    texto_anterior: String          -- contenido completo del texto_crudo antes de la edicion
+    fecha: Timestamp                -- momento exacto del guardado
+    nota_autor: String?             -- anotación libre del investigador sobre el cambio
+
+    no_vacia: length(texto_anterior) > 0
+}
+
+------------------------------------------------------------
+-- Extensión de Transcripcion
+------------------------------------------------------------
+
+-- Los siguientes campos se añaden a transcripcion/Transcripcion:
+--
+--   revisiones: List<RevisionTexto>
+--       Historial ordenado cronológicamente de todas las ediciones.
+--       La primera entrada es la más antigua. La lista nace vacía y crece
+--       con cada llamada a EditarTextoTranscripcion.
+--
+--   texto_desincronizado_desde: Timestamp?
+--       null  →  el texto_crudo coincide con el texto que produjo la
+--               última extraccion (o el texto nunca fue extraído).
+--       valor →  timestamp de la última edición realizada cuando el estado
+--               era extraida, validada o publicada. Señala que el grafo
+--               y las decisiones pueden no reflejar el texto actual.
+--
+--   fragmentos_invalidos: Boolean
+--       true cuando el texto_crudo fue editado y los fragmentos normalizados
+--       están desactualizados respecto al texto vigente.
+
+------------------------------------------------------------
+-- Regla principal: editar texto
+------------------------------------------------------------
+
+rule EditarTextoTranscripcion {
+    when: InvestigadorEditaTexto(transcripcion, texto_nuevo, nota?)
+
+    requires: length(texto_nuevo) > 0
+
+    let revision = RevisionTexto(
+        texto_anterior: transcripcion.texto_crudo,
+        fecha: now,
+        nota_autor: nota
+    )
+
+    ensures:
+        transcripcion.texto_crudo             = texto_nuevo
+        transcripcion.revisiones              = transcripcion.revisiones + [revision]
+        transcripcion.fragmentos              = []          -- invalida la normalización previa
+        transcripcion.fragmentos_invalidos    = true
+        if transcripcion.estado in {extraida, validada, publicada}:
+            transcripcion.texto_desincronizado_desde = now
+
+    @guidance
+        -- El estado de la transcripcion NO cambia: el investigador decide
+        -- explícitamente si volver a normalizar y/o re-extraer.
+        -- Los fragmentos se invalidan porque son derivados del texto_crudo.
+        -- La extracción previa (nodos, relaciones, decisiones de validacion)
+        -- permanece intacta hasta que el investigador ejecute una nueva extracción.
+}
+
+------------------------------------------------------------
+-- Re-normalización tras edición
+------------------------------------------------------------
+
+rule ReNormalizarTextoEditado {
+    -- Permite re-normalizar el texto en cualquier estado siempre que haya
+    -- habido una edicion que dejó los fragmentos obsoletos.
+    when: InvestigadorSolicitaReNormalizacion(transcripcion)
+
+    requires: transcripcion.fragmentos_invalidos = true
+
+    let fragmentos_nuevos = particionar_y_limpiar(
+        transcripcion.texto_crudo,
+        transcripcion.tiene_timestamps
+    )
+
+    ensures:
+        transcripcion.fragmentos           = fragmentos_nuevos
+        transcripcion.fragmentos_invalidos = false
+        -- El estado NO retrocede: si era 'extraida', sigue siendo 'extraida'.
+        -- texto_desincronizado_desde permanece hasta que se complete una nueva extracción.
+
+    @guidance
+        -- particionar_y_limpiar es la misma caja negra de transcripcion.allium.
+        -- Tras re-normalizar, el investigador puede lanzar una nueva extracción
+        -- incremental desde surfaces.allium / PanelBiblioteca.
+}
+
+------------------------------------------------------------
+-- Preservación de contexto en re-extracción
+------------------------------------------------------------
+
+rule ReExtraerPreservandoContexto {
+    -- Cuando el investigador re-extrae un texto ya extraído, el grafo y
+    -- las decisiones de validación previas no se descartan automáticamente.
+    -- Solo se eliminan si el investigador edita o borra nodos explícitamente.
+    when: NuevaExtraccionSobreGrafoExistente(transcripcion)
+
+    requires: transcripcion.estado in {extraida, validada, publicada}
+    requires: exists grafo/Grafo{transcripcion: transcripcion}
+    requires: transcripcion.fragmentos_invalidos = false  -- debe haberse re-normalizado primero
+
+    let grafo_previo = grafo/Grafo{transcripcion: transcripcion}
+
+    ensures:
+        -- Los nodos, relaciones y bucles del grafo_previo se conservan.
+        -- La nueva extracción genera nuevos ConceptoPropuesto y RelacionPropuesta
+        -- que se suman como PuntoDecision adicionales al flujo de validación.
+        -- El investigador decide qué conservar y qué descartar nodo a nodo.
+        NuevaExtraccionLanzada(transcripcion: transcripcion, grafo_preexistente: grafo_previo)
+        transcripcion.texto_desincronizado_desde = null    -- el texto y la extracción vuelven a sincronizarse
+
+    @guidance
+        -- La preservación de contexto permite ediciones menores del texto
+        -- (correcciones tipográficas, ajustes de puntuación) sin perder
+        -- el trabajo interpretativo previo.
+        -- Los nodos del grafo_previo que ya no encuentren soporte en el
+        -- nuevo texto quedan marcados como candidatos a revisión, pero
+        -- no se eliminan automáticamente.
+}
+
+------------------------------------------------------------
+-- Invariantes
+------------------------------------------------------------
+
+invariant HistorialOrdenadoCronologicamente {
+    for t in transcripcion/Transcripcion:
+        for i in 1..(t.revisiones.count - 1):
+            t.revisiones[i-1].fecha <= t.revisiones[i].fecha
+}
+
+invariant DesincronizacionImplicaEstadoAvanzado {
+    for t in transcripcion/Transcripcion:
+        t.texto_desincronizado_desde != null implies
+            t.estado in {extraida, validada, publicada}
+}
+
+invariant FragmentosInvalidosImplicaListaVacia {
+    for t in transcripcion/Transcripcion:
+        t.fragmentos_invalidos = true implies t.fragmentos = []
+}
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "¿El investigador puede etiquetar una revisión con un tipo ('corrección menor', 'reescritura sustancial')? ¿O la nota_autor es suficiente para ese propósito?"
+
+open question "¿El sistema permite restaurar una revisión anterior como texto_crudo activo (deshacer una edición), o el historial es solo de lectura?"
+
+open question "Cuando nodos del grafo_previo 'ya no encuentran soporte en el nuevo texto', ¿cómo se determina eso — por análisis del LLM en la nueva extracción, o por ausencia de referencias en los nuevos fragmentos?"
+
+open question "¿La señal de desincronización (texto_desincronizado_desde) se limpia también si el investigador re-extrae sin re-normalizar primero? ¿O re-normalizar es un prerrequisito obligatorio para re-extraer?"

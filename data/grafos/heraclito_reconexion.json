@@ -1,0 +1,72 @@
+{
+  "id": "rec_8202d300",
+  "slug": "heraclito",
+  "propuestas": [
+    {
+      "id": "pr_000",
+      "conexion": {
+        "id": "cp_000",
+        "origen_id": "c_439",
+        "destino_id": "c_001",
+        "frase": "la obscuridad del pensar caracteriza el pensamiento de Heráclito",
+        "tipo": "caracteriza",
+        "confianza": 0.95
+      },
+      "frase_editada": "la obscuridad del pensar caracteriza el pensamiento de Heráclito",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_001",
+      "conexion": {
+        "id": "cp_006",
+        "origen_id": "c_459",
+        "destino_id": "c_001",
+        "frase": "Heráclito caracteriza la insensatez como apartamiento intencional del Logos",
+        "tipo": "caracteriza en",
+        "confianza": 0.9
+      },
+      "frase_editada": "Heráclito caracteriza la insensatez como apartamiento intencional del Logos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_002",
+      "conexion": {
+        "id": "cp_002",
+        "origen_id": "c_450",
+        "destino_id": "c_018",
+        "frase": "la representación es la forma metafísica moderna de pensar el ser",
+        "tipo": "constituye",
+        "confianza": 0.88
+      },
+      "frase_editada": "la representación es la forma metafísica moderna de pensar el ser",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_003",
+      "conexion": {
+        "id": "cp_004",
+        "origen_id": "c_452",
+        "destino_id": "c_019",
+        "frase": "la síntesis es un momento del Logos que une y trae conjuntamente",
+        "tipo": "momento de",
+        "confianza": 0.82
+      },
+      "frase_editada": "la síntesis es un momento del Logos que une y trae conjuntamente",
+      "seleccionada": true,
+      "estado": "aceptada"
+    }
+  ],
+  "estado": "completada",
+  "razon_falla": null,
+  "iniciada_en": "2026-07-03T00:37:38.071456",
+  "completada_en": "2026-07-03T00:37:46.492814",
+  "nodos_sueltos_ids": [
+    "c_439",
+    "c_450",
+    "c_452",
+    "c_459"
+  ]
+}

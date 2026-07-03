@@ -35,6 +35,7 @@
 --   grafo.allium                  -> estructura persistente y publicacion
 --   grafos-personales.allium      -> mapas libres del investigador
 --   surfaces.allium               -> contratos de UI e integracion LLM
+--   edicion-texto.allium          -> edicion del texto fuente y revision historica
 
 use "./transcripcion.allium" as transcripcion
 use "./extraccion.allium" as extraccion
@@ -43,6 +44,7 @@ use "./validacion.allium" as validacion
 use "./grafo.allium" as grafo
 use "./grafos-personales.allium" as personal
 use "./surfaces.allium" as surfaces
+use "./edicion-texto.allium" as edicion
 
 ------------------------------------------------------------
 -- Configuracion del modulo

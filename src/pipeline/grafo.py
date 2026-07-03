@@ -74,4 +74,13 @@ def serializar_para_d3(grafo: Grafo, decisiones_por_nodo: dict | None = None) ->
             link["investigador"] = True
         links.append(link)
 
-    return {"nodes": nodes, "links": links}
+    bucles = []
+    for b in grafo.bucles:
+        bucles.append({
+            "id":       b.id,
+            "nodo_ids": b.nodo_ids,
+            "descripcion": b.descripcion,
+            "tipo":     b.tipo,
+        })
+
+    return {"nodes": nodes, "links": links, "bucles": bucles}

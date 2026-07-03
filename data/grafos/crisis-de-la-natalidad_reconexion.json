@@ -1,16 +1,87 @@
 {
-  "id": "rec_9db51c76",
+  "id": "rec_d619934c",
   "slug": "crisis-de-la-natalidad",
-  "propuestas": [],
-  "estado": "procesando",
+  "propuestas": [
+    {
+      "id": "pr_000",
+      "conexion": {
+        "id": "cp_000",
+        "origen_id": "c_007",
+        "destino_id": "c_001",
+        "frase": "El desplome de la fecundidad amenaza el financiamiento del sistema público.",
+        "tipo": "amenaza financiera",
+        "confianza": 0.95
+      },
+      "frase_editada": "El desplome de la fecundidad amenaza el financiamiento del sistema público.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_001",
+      "conexion": {
+        "id": "cp_001",
+        "origen_id": "c_013",
+        "destino_id": "c_001",
+        "frase": "La población sigue creciendo temporalmente a pesar de las tasas por debajo del reemplazo.",
+        "tipo": "explicación estadística",
+        "confianza": 0.85
+      },
+      "frase_editada": "La población sigue creciendo temporalmente a pesar de las tasas por debajo del reemplazo.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_002",
+      "conexion": {
+        "id": "cp_002",
+        "origen_id": "c_015",
+        "destino_id": "c_002",
+        "frase": "La imposibilidad de alcanzar la tasa de reemplazo sin inmigración genera esta trampa política.",
+        "tipo": "causa estructural",
+        "confianza": 0.8
+      },
+      "frase_editada": "La imposibilidad de alcanzar la tasa de reemplazo sin inmigración genera esta trampa política.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_003",
+      "conexion": {
+        "id": "cp_003",
+        "origen_id": "c_009",
+        "destino_id": "c_007",
+        "frase": "El descontento social por el sistema público deriva en un incremento del voto a la derecha radicalizada.",
+        "tipo": "consecuencia política",
+        "confianza": 0.85
+      },
+      "frase_editada": "El descontento social por el sistema público deriva en un incremento del voto a la derecha radicalizada.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_004",
+      "conexion": {
+        "id": "cp_004",
+        "origen_id": "c_008",
+        "destino_id": "c_002",
+        "frase": "La inmigración se propone para compensar el déficit de reemplazo demográfico.",
+        "tipo": "solución propuesta",
+        "confianza": 0.9
+      },
+      "frase_editada": "La inmigración se propone para compensar el déficit de reemplazo demográfico.",
+      "seleccionada": true,
+      "estado": "aceptada"
+    }
+  ],
+  "estado": "completada",
   "razon_falla": null,
-  "iniciada_en": "2026-06-29T20:57:59.105535",
-  "completada_en": null,
+  "iniciada_en": "2026-06-30T17:11:36.642864",
+  "completada_en": "2026-06-30T17:17:49.658779",
   "nodos_sueltos_ids": [
     "c_007",
-    "c_008",
-    "c_015",
     "c_013",
+    "c_015",
+    "c_008",
     "c_009"
   ]
 }
