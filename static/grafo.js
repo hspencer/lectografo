@@ -43,23 +43,31 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
   const relColor  = d3.scaleOrdinal(REL_PALETTE).domain(relTypes);
 
   // ── Defs: marcadores de flecha ────────────────────────────────────────
+  // Un marcador por arista (no por tipo de relación): así cada cabeza de
+  // flecha puede atenuarse en sincronía con su línea sin afectar a otras
+  // aristas del mismo color/tipo.
   const defs = svg.append("defs");
-  const sid  = t => t.replace(/[^a-z0-9]/gi, "_");
+  const bidirLinks = links.filter(l => l.bidireccional);
 
-  relTypes.forEach(t => {
-    const c   = relColor(t);
-    const key = sid(t);
-    defs.append("marker")
-      .attr("id", `ae-${key}`).attr("viewBox","0 -5 10 10")
+  const arrowEndMarkers = defs.selectAll("marker.ae")
+    .data(links, l => l.id).join("marker")
+      .attr("class","ae").attr("id", l => `ae-${l.id}`)
+      .attr("viewBox","0 -5 10 10")
       .attr("refX",10).attr("refY",0).attr("markerWidth",5).attr("markerHeight",5)
-      .attr("orient","auto")
-      .append("path").attr("d","M0,-5L10,0L0,5").attr("fill",c);
-    defs.append("marker")
-      .attr("id", `as-${key}`).attr("viewBox","0 -5 10 10")
+      .attr("orient","auto");
+  arrowEndMarkers.append("path").attr("d","M0,-5L10,0L0,5")
+    .attr("fill", l => relColor(l.tipo || "_"))
+    .attr("fill-opacity", l => linkOpac(l));
+
+  const arrowStartMarkers = defs.selectAll("marker.as")
+    .data(bidirLinks, l => l.id).join("marker")
+      .attr("class","as").attr("id", l => `as-${l.id}`)
+      .attr("viewBox","0 -5 10 10")
       .attr("refX",0).attr("refY",0).attr("markerWidth",5).attr("markerHeight",5)
-      .attr("orient","auto-start-reverse")
-      .append("path").attr("d","M0,-5L10,0L0,5").attr("fill",c);
-  });
+      .attr("orient","auto-start-reverse");
+  arrowStartMarkers.append("path").attr("d","M0,-5L10,0L0,5")
+    .attr("fill", l => relColor(l.tipo || "_"))
+    .attr("fill-opacity", l => linkOpac(l));
 
   // ── Contenedor con zoom ───────────────────────────────────────────────
   const g = svg.append("g");
@@ -105,8 +113,8 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       .attr("stroke",           l => relColor(l.tipo || "_"))
       .attr("stroke-width",     l => l.investigador ? 1.1 : 1.3)
       .attr("stroke-opacity",  l => linkOpac(l))
-      .attr("marker-end",      l => `url(#ae-${sid(l.tipo || "_")})`)
-      .attr("marker-start",    l => l.bidireccional ? `url(#as-${sid(l.tipo || "_")})` : null);
+      .attr("marker-end",      l => `url(#ae-${l.id})`)
+      .attr("marker-start",    l => l.bidireccional ? `url(#as-${l.id})` : null);
 
   // Labels de arista: el ancho de línea se calcula dinámicamente en tick()
   const linkLabels = gLbls.selectAll("g.link-label")
@@ -158,7 +166,7 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     .attr("opacity", 0).attr("pointer-events","none");
   nodeGroups.append("text")
     .attr("text-anchor","middle").attr("dominant-baseline","middle")
-    .attr("font-size","15px").attr("font-weight","440")
+    .attr("font-size","15px").attr("font-weight","500")
     .attr("font-family","'IBM Plex Sans Condensed','IBM Plex Sans',sans-serif")
     .style("font-stretch","75%")
     .attr("letter-spacing","0.07em")
@@ -222,20 +230,37 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       .attr("fill-opacity",   n => !activo ? nodeTOp(n) : n.id === focoId ? 1.0 : nodeIds.has(n.id) ? 0.9 : 0.15)
       .attr("stroke-opacity", n => !activo ? nodeTOp(n) : n.id === focoId ? 1.0 : nodeIds.has(n.id) ? 0.9 : 0.15)
       .attr("fill",        n => (persistente && activo && n.id === focoId) ? NOVA_COLOR : NODE_COLOR)
-      .attr("font-weight", n => !activo ? "440"
+      .attr("font-weight", n => !activo ? "500"
         : n.id === focoId ? "700"
         : nodeIds.has(n.id) ? "600"
-        : "440");
+        : "500");
 
     nodeGroups.select("circle.focus-halo")
       .attr("opacity", n => (persistente && activo && n.id === focoId) ? 1 : 0);
 
+    const linkFocusOpacity = l => !activo ? linkOpac(l) : (linkIds.has(l.id) ? 0.95 : 0.06);
+
     linkLines
-      .attr("stroke-opacity", l => !activo ? linkOpac(l) : (linkIds.has(l.id) ? 0.95 : 0.06))
+      .attr("stroke-opacity", linkFocusOpacity)
       .attr("stroke-width",   l => activo && linkIds.has(l.id) ? 2.2 : (l.investigador ? 1.1 : 1.3));
 
+    // Las cabezas de flecha son marcadores en <defs>: no heredan la opacidad
+    // de la línea que las referencia, hay que atenuarlas explícitamente.
+    arrowEndMarkers.select("path").attr("fill-opacity", linkFocusOpacity);
+    arrowStartMarkers.select("path").attr("fill-opacity", linkFocusOpacity);
+
     linkLabels.select("text")
-      .attr("fill-opacity", l => !activo ? 1 : (linkIds.has(l.id) ? 1 : 0.1));
+      .attr("fill-opacity",   l => !activo ? 1 : (linkIds.has(l.id) ? 1 : 0.1))
+      .attr("stroke-opacity", l => !activo ? 1 : (linkIds.has(l.id) ? 1 : 0.1));
+
+    // Elevar lo enfocado por encima de sus hermanos atenuados: sin esto, una
+    // arista/etiqueta apagada que quedó después en el orden del DOM puede
+    // pintarse encima de una arista enfocada y taparla visualmente.
+    if (activo) {
+      linkLines.filter(l => linkIds.has(l.id)).raise();
+      linkLabels.filter(l => linkIds.has(l.id)).raise();
+      nodeGroups.filter(n => nodeIds.has(n.id)).raise();
+    }
   }
 
   // path: [{ nodeId, linkId }] en orden; linkId null para el primer paso.
@@ -333,6 +358,8 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       const l = n.label||n.id; return (l.length>30 ? l.slice(0,28)+"…" : l).toUpperCase();
     });
     linkLines.attr("stroke-opacity", l => linkOpac(l));
+    arrowEndMarkers.select("path").attr("fill-opacity", l => linkOpac(l));
+    arrowStartMarkers.select("path").attr("fill-opacity", l => linkOpac(l));
   }
 
   return {

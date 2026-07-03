@@ -23,7 +23,7 @@ SITIO   = RAIZ / "sitio"
 STATIC  = RAIZ / "static"
 DOCS    = RAIZ / "docs"
 
-ASSETS_ESTATICOS = ["grafo.js", "grafo3d.js", "style.css", "sistema/tokens.css"]
+ASSETS_ESTATICOS = ["grafo.js", "grafo3d.js", "navcols.js", "style.css", "sistema/tokens.css"]
 PAGINAS           = ["index.html", "index.js", "visor.html", "visor.js"]
 
 

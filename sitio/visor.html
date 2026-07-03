@@ -21,23 +21,6 @@
   <style>
     body { min-height: 100vh; display: flex; flex-direction: column; }
     #grafo-wrap { flex: 1; min-height: 0; }
-
-    #panel-nodo {
-      position: absolute; top: var(--sn-s-3); right: var(--sn-s-3);
-      width: 280px; max-width: calc(100% - 2 * var(--sn-s-3));
-      max-height: calc(100% - 2 * var(--sn-s-3));
-      overflow-y: auto;
-      background: var(--sn-paper); border: var(--sn-hair);
-      border-radius: var(--sn-radius-l); box-shadow: var(--sn-lift);
-      padding: var(--sn-s-4);
-      display: flex; flex-direction: column; gap: var(--sn-s-2);
-    }
-    #panel-nodo h3 { margin: 0; font-size: var(--sn-fs-m); }
-    #panel-nodo .cita { font-style: italic; color: var(--sn-ink-soft); }
-    #panel-nodo-cerrar {
-      align-self: flex-end; border: none; background: none;
-      cursor: pointer; color: var(--sn-ink-soft); font-size: 1.1em;
-    }
   </style>
 </head>
 <body>
@@ -65,14 +48,9 @@
           <div id="leyenda-tipos"></div>
         </details>
       </div>
-
-      <aside id="panel-nodo" hidden>
-        <button id="panel-nodo-cerrar" title="Cerrar">×</button>
-        <h3 id="panel-nodo-label"></h3>
-        <p id="panel-nodo-desc"></p>
-        <p id="panel-nodo-cita" class="cita" hidden></p>
-      </aside>
     </div>
+
+    <div id="nav-cols"></div>
   </div>
 
   <script type="module" src="./visor.js"></script>
