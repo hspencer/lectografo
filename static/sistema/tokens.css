@@ -214,7 +214,7 @@
 	--sn-measure: 64rem;     /* medida de lectura de la hoja */
 	--sn-shell:   88rem;     /* ancho máximo del conjunto */
 	--sn-ctl:     2.4rem;    /* altura común de controles */
-	--sn-header-h: 3.5rem;
+	--sn-header-h: 2.75rem;
 
 	/* Forma y materia */
 	--sn-radius-s: 2px;

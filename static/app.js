@@ -18,10 +18,8 @@ const state = {
 const tabsInit = new Set();
 const conceptosState  = { sort:{ col:"menciones", dir:"desc" }, filtroTipo:"todos", busqueda:"" };
 const relacionesState = { sort:{ col:"confianza",  dir:"desc" }, filtroTipo:"todos", busqueda:"" };
-const decisionesState = { filtroTipo:"todos" };
 let conceptosListeners = false;
 let relacionesListeners = false;
-let decisionesListeners = false;
 
 // ════════════════════════════════════════════════════════════════════════
 // Helpers
@@ -77,7 +75,6 @@ async function initTab(nombre) {
   if (nombre==="mapa")        await initMapa();
   if (nombre==="conceptos")   await initConceptos();
   if (nombre==="relaciones")  await initRelaciones();
-  if (nombre==="decisiones")  await initDecisiones();
   if (nombre==="texto")       await initTexto();
 }
 
@@ -611,10 +608,6 @@ async function cargarValidacion(slug) {
 // ════════════════════════════════════════════════════════════════════════
 function renderTopbar() {
   document.getElementById("transcripcion-titulo").textContent = state.validacion.titulo;
-  // Badge de decisiones pendientes
-  const pendientes = (state.validacion.decisiones || []).filter(d => d.estado === "pendiente").length;
-  const badge = document.getElementById("badge-decisiones");
-  if (badge) { badge.textContent = pendientes; badge.hidden = pendientes === 0; }
 }
 
 function buildCita(m) {
@@ -1461,165 +1454,6 @@ function renderPanelSesion(cfg, sesion) {
   if (btnCer) btnCer.onclick = () => { panel.hidden = true; };
 }
 
-// ════════════════════════════════════════════════════════════════════════
-// Tab: Decisiones
-// ════════════════════════════════════════════════════════════════════════
-
-const TIPO_DECISION_LABELS = {
-  sinonimia:         "Sinónimos",
-  bidireccionalidad: "Bidireccional",
-  confirmar_bucle:   "Bucle",
-  confianza_baja:    "Confianza baja",
-  metalenguaje:      "Metalenguaje",
-  promocion_de_tipo: "Tipo ambiguo",
-};
-
-async function initDecisiones() {
-  if (!state.validacion) state.validacion = await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}`);
-  renderDecisiones();
-  if (!decisionesListeners) {
-    decisionesListeners = true;
-    document.getElementById("btn-siguiente-pendiente").addEventListener("click", () => {
-      const el = document.querySelector(".dec-card[data-estado='pendiente']");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  }
-  // Filtros por tipo
-  const tipos = [...new Set((state.validacion.decisiones || []).map(d => d.tipo))].sort();
-  const fe = document.getElementById("filtros-dec-tipo");
-  fe.innerHTML = `<button class="tipo-filtro-btn active" data-tipo="todos">Todas</button>` +
-    tipos.map(t => `<button class="tipo-filtro-btn" data-tipo="${esc(t)}">${esc(TIPO_DECISION_LABELS[t] || t)}</button>`).join("");
-  fe.querySelectorAll(".tipo-filtro-btn").forEach(b => b.addEventListener("click", () => {
-    fe.querySelectorAll(".tipo-filtro-btn").forEach(x => x.classList.remove("active"));
-    b.classList.add("active");
-    decisionesState.filtroTipo = b.dataset.tipo;
-    renderDecisiones();
-  }));
-}
-
-function renderDecisiones() {
-  const decisiones = state.validacion?.decisiones || [];
-  const nById = Object.fromEntries((state.grafo?.nodes || []).map(n => [n.id, n]));
-
-  // Badge en tab
-  const pendientes = decisiones.filter(d => d.estado === "pendiente").length;
-  const badge = document.getElementById("badge-decisiones");
-  if (badge) { badge.textContent = pendientes; badge.hidden = pendientes === 0; }
-
-  let rows = decisiones;
-  if (decisionesState.filtroTipo !== "todos") rows = rows.filter(d => d.tipo === decisionesState.filtroTipo);
-
-  const lista = document.getElementById("decisiones-lista");
-  if (!lista) return;
-  if (rows.length === 0) { lista.innerHTML = `<p class="muted" style="padding:24px">No hay decisiones en este filtro.</p>`; return; }
-
-  lista.innerHTML = rows.map(d => {
-    const labelTipo = TIPO_DECISION_LABELS[d.tipo] || d.tipo;
-    const resuelta = d.estado === "resuelta";
-    const diferida = d.estado === "diferida";
-    const pendiente = d.estado === "pendiente";
-
-    // Contexto: conceptos implicados
-    const ctxConceptos = (d.conceptos_implicados_ids || [])
-      .map(id => nById[id]?.label || id)
-      .map(l => `<span class="tag">${esc(l)}</span>`)
-      .join(" ");
-
-    // Extra para sinonimia: input de label
-    const extraSinonimia = d.tipo === "sinonimia" && !resuelta
-      ? `<div style="margin-top:8px"><label class="campo-etiq">Label canónico</label>
-         <input class="edit-input dec-label-input" data-did="${esc(d.id)}"
-                value="${esc(d.label_canonico_propuesto || "")}"
-                placeholder="Label canónico (opcional)" style="width:260px"></div>`
-      : (d.label_resolucion ? `<div class="muted" style="font-size:11px;margin-top:4px">Label: ${esc(d.label_resolucion)}</div>` : "");
-
-    // Extra para promocion_de_tipo: selector
-    const extraTipo = d.tipo === "promocion_de_tipo" && !resuelta
-      ? `<div style="margin-top:8px"><label class="campo-etiq">Tipo elegido</label>
-         <select class="edit-select dec-tipo-select" data-did="${esc(d.id)}" style="width:180px">
-           <option value="">— elegir —</option>
-           <option value="primitivo">Primitivo</option>
-           <option value="derivado">Derivado</option>
-           <option value="metalenguaje">Metalenguaje</option>
-         </select></div>`
-      : (d.nota_resolucion && d.tipo === "promocion_de_tipo"
-          ? `<div class="muted" style="font-size:11px;margin-top:4px">Tipo: ${esc(d.nota_resolucion)}</div>` : "");
-
-    const botonesAccion = !resuelta
-      ? `<div class="dec-acciones">
-           <button class="btn btn-aceptar small dec-btn-aceptar" data-did="${esc(d.id)}">Aceptar</button>
-           <button class="btn btn-modificar small dec-btn-modificar" data-did="${esc(d.id)}">Modificar</button>
-           <button class="btn btn-rechazar small dec-btn-rechazar" data-did="${esc(d.id)}">Rechazar</button>
-           ${pendiente ? `<button class="btn btn-diferir small dec-btn-diferir" data-did="${esc(d.id)}">Diferir</button>` : ""}
-           ${diferida  ? `<button class="btn btn-neutro small dec-btn-reanudar" data-did="${esc(d.id)}">Reanudar</button>` : ""}
-         </div>`
-      : `<div class="dec-acciones">
-           <span class="tag ${d.resolucion}">${esc(d.resolucion || "")}</span>
-           <button class="btn btn-neutro small dec-btn-reanudar" data-did="${esc(d.id)}">Reabrir</button>
-         </div>`;
-
-    return `<div class="dec-card" data-did="${esc(d.id)}" data-estado="${esc(d.estado)}">
-      <div class="dec-header">
-        <span class="tag dec-tipo-tag">${esc(labelTipo)}</span>
-        <span class="dec-estado ${d.estado}">${esc(d.estado)}</span>
-      </div>
-      <div class="dec-pregunta">${esc(d.pregunta)}</div>
-      ${ctxConceptos ? `<div class="dec-ctx">${ctxConceptos}</div>` : ""}
-      <div class="dec-rec muted">${esc(d.recomendacion_llm || "")}</div>
-      ${extraSinonimia}
-      ${extraTipo}
-      ${botonesAccion}
-    </div>`;
-  }).join("");
-
-  // Bind eventos
-  lista.querySelectorAll(".dec-btn-aceptar").forEach(btn => btn.addEventListener("click", () =>
-    resolverDecision(btn.dataset.did, "aceptada", null,
-      lista.querySelector(`.dec-label-input[data-did="${btn.dataset.did}"]`)?.value?.trim() || null)
-  ));
-  lista.querySelectorAll(".dec-btn-rechazar").forEach(btn => btn.addEventListener("click", () =>
-    resolverDecision(btn.dataset.did, "rechazada")
-  ));
-  lista.querySelectorAll(".dec-btn-modificar").forEach(btn => btn.addEventListener("click", () => {
-    // Para modificar: aceptar con el label editado (sinonimia) o tipo elegido (promocion_de_tipo)
-    const labelInput = lista.querySelector(`.dec-label-input[data-did="${btn.dataset.did}"]`);
-    const tipoSelect = lista.querySelector(`.dec-tipo-select[data-did="${btn.dataset.did}"]`);
-    const nota = tipoSelect?.value || null;
-    const labelVal = labelInput?.value?.trim() || null;
-    resolverDecision(btn.dataset.did, "modificada", nota, labelVal);
-  }));
-  lista.querySelectorAll(".dec-btn-diferir").forEach(btn => btn.addEventListener("click", () =>
-    resolverDecision(btn.dataset.did, "diferida")
-  ));
-  lista.querySelectorAll(".dec-btn-reanudar").forEach(btn => btn.addEventListener("click", () =>
-    reanudarDecision(btn.dataset.did)
-  ));
-}
-
-async function resolverDecision(did, resolucion, nota=null, label_resolucion=null) {
-  try {
-    await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/decisiones/${encodeURIComponent(did)}/resolver`, {
-      method: "POST",
-      body: JSON.stringify({ resolucion, nota, label_resolucion }),
-    });
-    state.validacion = await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}`);
-    // Invalidar mapa, conceptos y miniatura
-    tabsInit.delete("mapa"); tabsInit.delete("conceptos");
-    state.grafo = null;
-    if (state.slug) delete _miniGrafoCache[state.slug];
-    renderDecisiones();
-  } catch(e) { alert("Error: " + e.message); }
-}
-
-async function reanudarDecision(did) {
-  try {
-    await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/decisiones/${encodeURIComponent(did)}/reanudar`, {
-      method: "POST", body: "{}",
-    });
-    state.validacion = await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}`);
-    renderDecisiones();
-  } catch(e) { alert("Error: " + e.message); }
-}
 
 // ════════════════════════════════════════════════════════════════════════
 // Tab: Conceptos

@@ -28,6 +28,13 @@ const DIM_OPACITY   = 0.12;
 const FULL_OPACITY  = 1.0;
 const REST_OPACITY  = 0.9;
 
+// Tamaño de los labels: screen-constant (no atenuado por distancia/zoom),
+// igual que el texto 2D. Sin esto, un sprite normal se encoge con la
+// perspectiva hasta ser ilegible en cuanto el grafo se aleja de cámara.
+const FOV_DEG          = 50; // default de three-render-objects/3d-force-graph
+const LABEL_PX_NORMAL  = 26; // alto en px de pantalla, pastilla incluida
+const LABEL_PX_FOCUS   = 30;
+
 let _graph = null; // instancia activa, para poder limpiar al alternar 2D/3D
 
 export function destroyGrafo3D() {
@@ -47,6 +54,14 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
 
   const relTypes = [...new Set(links.map(l => l.tipo || "_"))];
   const relColor = d3.scaleOrdinal(REL_PALETTE).domain(relTypes);
+
+  // Alto del contenedor: base para convertir "px de pantalla deseados" en
+  // la escala de mundo que un sprite con sizeAttenuation:false necesita.
+  let viewportH = container.clientHeight || 600;
+  function worldScalePerPx() {
+    const fovRad = FOV_DEG * Math.PI / 180;
+    return (2 * Math.tan(fovRad / 2)) / viewportH;
+  }
 
   // ── Sprites de texto: pastilla de "papel" + label, análogo al halo 2D ──
   function labelText(n) {
@@ -95,10 +110,16 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
-    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    // sizeAttenuation:false → tamaño en pantalla constante, sin importar la
+    // distancia a cámara ni el zoom. Evita que el texto se vuelva ilegible
+    // al alejarse (pedido explícito: nunca más chico que ~8px, y aquí lo
+    // fijamos bastante por encima de ese piso para que se lea cómodo).
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, sizeAttenuation: false });
     const sprite = new THREE.Sprite(material);
-    const worldScale = canvas.width / (dpr * 14);
-    sprite.scale.set(worldScale, worldScale * (canvas.height / canvas.width), 1);
+    const pxH = bold ? LABEL_PX_FOCUS : LABEL_PX_NORMAL;
+    const pxW = pxH * (canvas.width / canvas.height);
+    const perPx = worldScalePerPx();
+    sprite.scale.set(pxW * perPx, pxH * perPx, 1);
     return sprite;
   }
 
@@ -121,7 +142,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
     ctx.stroke();
 
     const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, opacity: 0 });
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, opacity: 0, sizeAttenuation: false });
     const sprite = new THREE.Sprite(material);
     sprite.renderOrder = 0;
     sprite.scale.set(worldSize, worldSize, 1);
@@ -252,10 +273,17 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
 
   _graph = graph;
 
-  // Ajustar tamaño al contenedor y reaccionar a cambios (paneles, resize)
+  // Ajustar tamaño al contenedor y reaccionar a cambios (paneles, resize).
+  // viewportH alimenta worldScalePerPx(): si cambia, los sprites screen-
+  // constant deben recalcularse o quedan mal calibrados tras el resize.
   function resize() {
     const w = container.clientWidth, h = container.clientHeight;
-    if (w > 0 && h > 0) graph.width(w).height(h);
+    if (w <= 0 || h <= 0) return;
+    graph.width(w).height(h);
+    if (Math.abs(h - viewportH) > 2) {
+      viewportH = h;
+      nodes.forEach(rebuildSprites);
+    }
   }
   resize();
   const ro = new ResizeObserver(resize);

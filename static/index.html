@@ -7,7 +7,7 @@
   <link rel="icon" id="favicon" type="image/svg+xml" href="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/sistema/tokens.css">
   <link rel="stylesheet" href="/style.css">
   <!-- Pin "three" a una única instancia: grafo3d.js y 3d-force-graph deben
@@ -35,7 +35,6 @@
       <button class="tab-btn" data-tab="mapa">Mapa</button>
       <button class="tab-btn" data-tab="conceptos">Conceptos</button>
       <button class="tab-btn" data-tab="relaciones">Relaciones</button>
-      <button class="tab-btn" data-tab="decisiones">Decisiones <span id="badge-decisiones" class="badge" hidden></span></button>
       <button class="tab-btn" data-tab="texto">Texto</button>
     </nav>
 
@@ -258,19 +257,6 @@
         </thead>
         <tbody id="relaciones-tbody"></tbody>
       </table>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- TAB: Decisiones                                                -->
-  <!-- ══════════════════════════════════════════════════════════════ -->
-  <div id="tab-decisiones" class="tab-panel" hidden>
-    <div class="tabla-toolbar" style="gap:8px;flex-wrap:wrap">
-      <div id="filtros-dec-tipo" style="display:flex;gap:4px;flex-wrap:wrap"></div>
-      <button id="btn-siguiente-pendiente" class="btn btn-neutro small">↓ Siguiente pendiente</button>
-    </div>
-    <div class="tabla-scroll">
-      <div id="decisiones-lista"></div>
     </div>
   </div>
 
