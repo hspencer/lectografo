@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" data-sn-theme="light" data-trio="plex">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lectógrafo — Mapa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./sistema/tokens.css">
+  <link rel="stylesheet" href="./style.css">
+  <!-- Pin "three" a una única instancia, igual que en static/index.html -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.183.2",
+      "three/": "https://esm.sh/three@0.183.2/"
+    }
+  }
+  </script>
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    #grafo-wrap { flex: 1; min-height: 0; }
+
+    #panel-nodo {
+      position: absolute; top: var(--sn-s-3); right: var(--sn-s-3);
+      width: 280px; max-width: calc(100% - 2 * var(--sn-s-3));
+      max-height: calc(100% - 2 * var(--sn-s-3));
+      overflow-y: auto;
+      background: var(--sn-paper); border: var(--sn-hair);
+      border-radius: var(--sn-radius-l); box-shadow: var(--sn-lift);
+      padding: var(--sn-s-4);
+      display: flex; flex-direction: column; gap: var(--sn-s-2);
+    }
+    #panel-nodo h3 { margin: 0; font-size: var(--sn-fs-m); }
+    #panel-nodo .cita { font-style: italic; color: var(--sn-ink-soft); }
+    #panel-nodo-cerrar {
+      align-self: flex-end; border: none; background: none;
+      cursor: pointer; color: var(--sn-ink-soft); font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+
+  <header id="topbar">
+    <div id="topbar-left">
+      <a id="btn-biblioteca" class="btn-back" href="./index.html">← Biblioteca</a>
+      <span id="app-name">Lectógrafo</span>
+      <span id="grafo-titulo" class="muted"></span>
+    </div>
+  </header>
+
+  <div id="grafo-wrap">
+    <div id="grafo-canvas">
+      <svg id="grafo-svg"></svg>
+      <div id="grafo-3d" hidden></div>
+
+      <div id="grafo-controles">
+        <button id="btn-fit" class="btn btn-neutro small">Ajustar</button>
+        <button id="btn-modo3d" class="btn btn-neutro small" title="Alternar vista 2D/3D">
+          <span id="btn-modo3d-label">3D</span>
+        </button>
+        <details id="leyenda-wrap">
+          <summary class="leyenda-summary">Leyenda</summary>
+          <div id="leyenda-tipos"></div>
+        </details>
+      </div>
+
+      <aside id="panel-nodo" hidden>
+        <button id="panel-nodo-cerrar" title="Cerrar">×</button>
+        <h3 id="panel-nodo-label"></h3>
+        <p id="panel-nodo-desc"></p>
+        <p id="panel-nodo-cita" class="cita" hidden></p>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module" src="./visor.js"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 PY     := .venv/bin/python
 GRAFOS := data/grafos
 
-.PHONY: run run-stable extraer actualizar reset estado ayuda
+.PHONY: run run-stable extraer actualizar publicar reset estado ayuda
 
 # ── Servidor ──────────────────────────────────────────────────────────────────
 # --reload reinicia el servidor al guardar archivos Python (mata extracciones en curso)
@@ -29,6 +29,12 @@ ifndef TEXTO
 	$(error Falta TEXTO. Uso: make actualizar TEXTO=transcripts/archivo.txt)
 endif
 	$(PY) actualizar.py $(TEXTO) $(if $(DEBUG),--debug,)
+
+# ── Publicación estática ──────────────────────────────────────────────────────
+# Genera docs/ (visor de solo lectura) a partir de los grafos ya validados.
+# El deploy real a GitHub Pages ocurre vía Actions al pushear a main.
+publicar:
+	$(PY) publicar.py
 
 # ── Estado ───────────────────────────────────────────────────────────────────
 estado:
@@ -60,6 +66,7 @@ ayuda:
 	@echo "  make extraer TEXTO=… DEBUG=1       Igual pero vuelca el raw del LLM"
 	@echo "  make actualizar TEXTO=transcripts/… Re-extrae preservando validación previa"
 	@echo "  make actualizar TEXTO=… DEBUG=1    Igual pero vuelca el raw del LLM"
+	@echo "  make publicar                      Genera docs/ (visor estático) desde los grafos validados"
 	@echo "  make estado                        Lista transcripts y extracciones"
 	@echo "  make reset                         Borra toda la base de datos (pide confirmación)"
 	@echo ""

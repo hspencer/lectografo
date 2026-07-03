@@ -32,3 +32,6 @@ transcripts/*.mp4
 
 # Backups temporales
 *.bak
+
+# Sitio estático generado por publicar.py (build artifact, no se versiona)
+/docs/

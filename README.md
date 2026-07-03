@@ -1,8 +1,6 @@
 # Lectógrafo
 
-Sistema local y soberano para extraer y visualizar grafos conceptuales desde transcripciones de analisis filosoficos.
-
-Lecto- (lectura, texto, lo legible) + -grafo (trazar, representar): "lo que grafica la lectura". El sistema pasa del texto lineal a una topologia de conceptos. Originalmente llamado Llull en referencia a Ramon Llull (1232-1316), pionero de las maquinas combinatorias para razonar sobre conceptos.
+Lecto- (lectura, texto, lo legible) + -grafo (trazar, representar): "lo que grafica la lectura". Sistema local y soberano para extraer y visualizar grafos conceptuales desde transcripciones de analisis filosoficos.
 
 ## Que hace
 
@@ -16,7 +14,7 @@ Lecto- (lectura, texto, lo legible) + -grafo (trazar, representar): "lo que graf
 8. Permite crear y editar grafos personales del investigador, independientes de cualquier transcripcion.
 9. Permite anotar, exportar y publicar versiones inmutables del grafo.
 
-## Filosofia de diseno
+## Filosofia de diseño
 
 - **Local y soberano:** los datos viven en el repo. Sin servicios SaaS de almacenamiento ni base de datos.
 - **Multi-provider para el LLM:** Anthropic, OpenAI o Gemini se eligen en `.env`. Sin default.
@@ -121,6 +119,22 @@ Sin persistencia las extracciones se pierden al reiniciar el contenedor.
 
 > Nota: los proveedores LLM remotos (Anthropic, OpenAI, Gemini) requieren que
 > el servidor tenga acceso a internet. Ollama necesita correr en el mismo host.
+
+### Visor estático en GitHub Pages
+
+Para compartir los grafos ya validados sin exponer la app completa (ni sus
+claves LLM), `publicar.py` genera un sitio estático de solo lectura en
+`docs/`: una biblioteca con los grafos publicables (cualquier slug con
+`{slug}_validacion.json`) y un visor 2D/3D por grafo, reusando
+`static/grafo.js` / `static/grafo3d.js` sin depender de la API.
+
+```bash
+make publicar        # genera docs/ localmente, para previsualizar
+```
+
+El deploy real ocurre vía `.github/workflows/deploy-pages.yml` al pushear a
+`main` (o manualmente desde la pestaña Actions). Paso único de configuración
+en GitHub: **Settings → Pages → Source: GitHub Actions**.
 
 ## Notas al pie
 
