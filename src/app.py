@@ -1908,6 +1908,44 @@ async def cancelar_extraccion(slug: str):
     return {"ok": True}
 
 
+@app.delete("/api/extracciones/{slug}")
+def resetear_extraccion(slug: str):
+    """Des-procesa un texto: borra el grafo completo (extracción + validación +
+    sesiones) pero conserva el archivo de transcript en disco."""
+    _TAREAS.pop(slug, None)
+    sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",
+               "_consolidacion.json", "_metadatos.json"]
+    eliminados = []
+    for suf in sufijos:
+        p = GRAFOS / f"{slug}{suf}"
+        if p.exists():
+            p.unlink()
+            eliminados.append(p.name)
+    if not eliminados:
+        raise HTTPException(404, f"No hay datos de extracción para '{slug}'")
+    return {"ok": True, "eliminados": eliminados}
+
+
+@app.delete("/api/transcripts/{slug}")
+def eliminar_texto_completo(slug: str):
+    """Elimina completamente un texto: grafo + transcript.
+    Irreversible: borra el archivo fuente de disco."""
+    # Primero resetear el grafo
+    _TAREAS.pop(slug, None)
+    sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",
+               "_consolidacion.json", "_metadatos.json"]
+    for suf in sufijos:
+        p = GRAFOS / f"{slug}{suf}"
+        if p.exists():
+            p.unlink()
+    # Luego borrar el transcript
+    ruta = _ruta_transcript(slug)
+    if ruta is None:
+        raise HTTPException(404, f"No se encontró transcript para '{slug}'")
+    ruta.unlink()
+    return {"ok": True, "eliminado": ruta.name}
+
+
 # ── Transcripts (lectura y edición del texto fuente) ─────────────────────────
 
 @app.get("/api/transcripts/{slug}")

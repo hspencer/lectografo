@@ -965,10 +965,12 @@ tbody tr:hover td { background: var(--sn-sunk); }
 }
 
 .bib-card-footer {
-  display: flex; align-items: center; gap: var(--sn-s-2);
+  display: flex; align-items: center; gap: var(--sn-s-2); flex-wrap: wrap;
   padding: var(--sn-s-1) var(--sn-s-3);
   border-top: var(--sn-hair); background: var(--sn-sunk);
 }
+.bib-btn-desprocesar { margin-left: auto; }
+.bib-btn-borrar { }
 
 .bib-sin-ficha {
   font-size: var(--sn-fs-xs); opacity: .5; font-style: italic;
