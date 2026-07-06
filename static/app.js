@@ -2308,8 +2308,11 @@ const gpState = {
   grafo: null,           // datos completos del GrafoPersonal
   grafoVis: null,        // { nodes, links } para D3
   nodoSeleccionado: null,
-  gpUpdate: null,        // fn updateVisuals de initGrafo
+  gpUpdate: null,        // fn updateVisuals de initGrafo/initGrafo3D
+  gpHighlight: null,     // fn highlightPath (solo 3D)
   gpFit: null,
+  gpDestroy: null,       // fn destroy() del renderer 3D activo
+  modo3d: false,
   textoFuenteSlug: null, // slug del texto fuente seleccionado para autocomplete
   textoFuenteNodes: [],  // nodos del texto fuente (para pool de autocomplete)
 };
@@ -2583,11 +2586,6 @@ function gpBindSidebarListeners() {
     });
   }
 
-  // Ajustar vista
-  document.getElementById("btn-gp-fit").onclick = () => {
-    if (gpState.gpFit) gpState.gpFit();
-  };
-
   // Cerrar panel
   document.getElementById("btn-gp-cerrar-panel").onclick = () => {
     document.getElementById("gp-panel").hidden = true;
@@ -2624,22 +2622,50 @@ function renderConceptosSidebar() {
   });
 }
 
-// ── Canvas D3 ────────────────────────────────────────────────────────
+// ── Canvas 2D/3D ─────────────────────────────────────────────────────
 
 async function renderGPCanvas() {
   const svgEl = document.getElementById("gp-svg");
+  const el3d  = document.getElementById("gp-3d");
   const vacio = document.getElementById("gp-canvas-vacio");
-  const { nodes, links } = gpState.grafoVis;
+  if (!svgEl || !el3d) return;
 
+  const { nodes, links } = gpState.grafoVis;
   vacio.hidden = nodes.length > 0;
+
+  // Destruir renderer anterior si existe
+  gpState.gpDestroy?.();
+  gpState.gpDestroy = null;
 
   if (!nodes.length) { d3ClearGPSvg(svgEl); return; }
 
-  // Importar y reusar initGrafo con los datos del grafo personal
-  const { initGrafo } = await import("./grafo.js");
-  const { updateVisuals, fitView } = initGrafo(svgEl, { nodes, links }, gpOnNodoSeleccionado);
-  gpState.gpUpdate = updateVisuals;
-  gpState.gpFit = fitView;
+  if (gpState.modo3d) {
+    svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
+    const { initGrafo3D } = await import("./grafo3d.js");
+    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, { nodes, links }, gpOnNodoSeleccionado);
+    gpState.gpUpdate    = updateVisuals;
+    gpState.gpHighlight = highlightPath;
+    gpState.gpFit       = fitView;
+    gpState.gpDestroy   = destroy;
+  } else {
+    svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
+    const { initGrafo } = await import("./grafo.js");
+    const { updateVisuals, fitView } = initGrafo(svgEl, { nodes, links }, gpOnNodoSeleccionado);
+    gpState.gpUpdate    = updateVisuals;
+    gpState.gpHighlight = null;
+    gpState.gpFit       = fitView;
+  }
+
+  // Botones de control
+  document.getElementById("btn-gp-fit").onclick = () => gpState.gpFit?.();
+
+  const btnModo3d = document.getElementById("btn-gp-modo3d");
+  const lblModo3d = document.getElementById("btn-gp-modo3d-label");
+  if (btnModo3d) {
+    btnModo3d.classList.toggle("active", gpState.modo3d);
+    if (lblModo3d) lblModo3d.textContent = gpState.modo3d ? "2D" : "3D";
+    btnModo3d.onclick = () => { gpState.modo3d = !gpState.modo3d; renderGPCanvas(); };
+  }
 }
 
 function d3ClearGPSvg(svgEl) {

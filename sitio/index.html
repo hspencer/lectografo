@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lectógrafo — Grafos publicados</title>
+  <title>Lectógrafo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -13,8 +13,8 @@
     /* Layout mínimo propio del sitio publicado — no toca static/style.css */
     body { min-height: 100vh; }
     #vista-biblioteca { display: block !important; }
-    #biblioteca-header p { max-width: 60ch; }
     a.bib-card { text-decoration: none; color: inherit; }
+    .bib-card-meta { font-size: var(--sn-fs-xs); color: var(--sn-ink-soft); opacity: .7; }
   </style>
 </head>
 <body>
@@ -22,14 +22,11 @@
   <header id="topbar">
     <div id="topbar-left">
       <span id="app-name">Lectógrafo</span>
-      <span class="muted">Grafos publicados</span>
     </div>
   </header>
 
   <div id="vista-biblioteca">
-    <div id="biblioteca-header">
-      <p class="muted">Mapas conceptuales extraídos de transcripciones y validados por el investigador. Visor de solo lectura.</p>
-    </div>
+    <div id="biblioteca-header"></div>
     <div id="biblioteca-grid"></div>
     <p id="biblioteca-vacio" class="muted" hidden>Todavía no hay grafos publicados.</p>
   </div>
