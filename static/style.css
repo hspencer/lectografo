@@ -476,9 +476,9 @@ kbd {
   gap: var(--sn-s-2);
 }
 .nav-col-raiz {
-  font-size: var(--sn-fs-base);
+  font-size: var(--sn-fs-sm);
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--sn-ink);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -551,7 +551,8 @@ kbd {
 }
 
 .panel-seccion {
-  padding: var(--sn-s-3) var(--sn-s-5); border-bottom: 1px solid var(--sn-hairline-soft);
+  padding: var(--sn-s-2) var(--sn-s-4); border-bottom: 1px solid var(--sn-hairline-soft);
+  font-size: var(--sn-fs-xs);
 }
 .panel-seccion:last-child { border-bottom: none; }
 .panel-seccion .campo { margin-bottom: var(--sn-s-3); }
@@ -651,6 +652,7 @@ details[open] > .panel-rel-grupo-hdr::before { transform: rotate(90deg); }
   padding: var(--sn-s-2) var(--sn-s-3); margin-bottom: var(--sn-s-2);
 }
 .panel-anotacion .cita { font-size: var(--sn-fs-xs); }
+.panel-seccion .cita { font-size: var(--sn-fs-xs); }
 
 /* ── Conceptos & Relaciones tabs ─────────────────────────────────── */
 #tab-conceptos,
@@ -969,9 +971,6 @@ tbody tr:hover td { background: var(--sn-sunk); }
   padding: var(--sn-s-1) var(--sn-s-3);
   border-top: var(--sn-hair); background: var(--sn-sunk);
 }
-.bib-btn-desprocesar { margin-left: auto; }
-.bib-btn-borrar { }
-
 .bib-sin-ficha {
   font-size: var(--sn-fs-xs); opacity: .5; font-style: italic;
 }
@@ -1207,6 +1206,40 @@ tbody tr:hover td { background: var(--sn-sunk); }
   border: 1px solid var(--sn-hairline);
   border-radius: var(--sn-radius);
   overflow-y: auto;
+}
+
+/* ── Zona de peligro ─────────────────────────────────────────────── */
+#texto-zona-peligro {
+  margin-top: var(--sn-s-8);
+  border-top: 1px solid color-mix(in srgb, var(--sn-rechazar, #c0392b) 25%, transparent);
+}
+#texto-zona-peligro-titulo {
+  font-size: var(--sn-fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sn-rechazar, #c0392b) 60%, var(--sn-ink-soft));
+  cursor: pointer; user-select: none;
+  padding: var(--sn-s-3) 0;
+  list-style: none;
+}
+#texto-zona-peligro-titulo::-webkit-details-marker { display: none; }
+#texto-zona-peligro[open] #texto-zona-peligro-titulo { margin-bottom: var(--sn-s-3); }
+#texto-zona-peligro-body {
+  display: flex; flex-direction: column; gap: var(--sn-s-4);
+  padding-bottom: var(--sn-s-6);
+}
+.texto-accion-peligro {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sn-s-4);
+  padding: var(--sn-s-3) var(--sn-s-4);
+  background: var(--sn-sunk);
+  border: var(--sn-hair);
+  border-radius: var(--sn-radius);
+}
+.texto-accion-peligro p.muted {
+  font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
+  margin: var(--sn-s-1) 0 0;
+}
+.texto-accion-peligro button {
+  flex-shrink: 0;
 }
 
 /* ── Historial de revisiones ─────────────────────────────────────── */

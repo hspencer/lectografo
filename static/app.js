@@ -287,8 +287,6 @@ function renderBiblioteca(exts) {
       <div class="bib-card-footer">
         <button class="btn-inline bib-btn-ficha" data-slug="${esc(e.slug)}" title="Editar ficha bibliográfica">${ico("edit-2")} Ficha</button>
         <button class="btn-inline danger bib-btn-repro" data-slug="${esc(e.slug)}" title="Re-extraer con el LLM">${ico("refresh-cw")} Re-procesar</button>
-        <button class="btn-inline bib-btn-desprocesar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" title="Borrar grafo, conservar texto">${ico("x-circle")} Des-procesar</button>
-        <button class="btn-inline danger bib-btn-borrar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" title="Eliminar texto y grafo completamente">${ico("trash-2")} Borrar</button>
       </div>
     </div>`;
   }).join("");
@@ -311,32 +309,6 @@ function renderBiblioteca(exts) {
   // Re-procesar
   grid.querySelectorAll(".bib-btn-repro").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); reprocesarDesdeLibreria(btn.dataset.slug); })
-  );
-
-  // Des-procesar (borra grafo, conserva texto)
-  grid.querySelectorAll(".bib-btn-desprocesar").forEach(btn =>
-    btn.addEventListener("click", async e => {
-      e.stopPropagation();
-      const { slug, titulo } = btn.dataset;
-      if (!confirm(`¿Des-procesar "${titulo}"?\nSe borrará el grafo extraído. El texto fuente se conserva y podrás volver a procesarlo.`)) return;
-      try {
-        await apiFetch(`/api/extracciones/${encodeURIComponent(slug)}`, { method: "DELETE" });
-        await mostrarBiblioteca();
-      } catch(err) { alert("Error al des-procesar: " + err.message); }
-    })
-  );
-
-  // Borrar completamente (grafo + texto)
-  grid.querySelectorAll(".bib-btn-borrar").forEach(btn =>
-    btn.addEventListener("click", async e => {
-      e.stopPropagation();
-      const { slug, titulo } = btn.dataset;
-      if (!confirm(`¿Eliminar completamente "${titulo}"?\nSe borrará el texto fuente y todo su grafo. Esta acción es irreversible.`)) return;
-      try {
-        await apiFetch(`/api/transcripts/${encodeURIComponent(slug)}`, { method: "DELETE" });
-        await mostrarBiblioteca();
-      } catch(err) { alert("Error al eliminar: " + err.message); }
-    })
   );
 
   // Toggle log panel
@@ -2258,6 +2230,25 @@ async function initTexto() {
       btnGuardar.disabled = false;
       btnGuardar.textContent = "Guardar";
     }
+  };
+
+  // ── Zona de peligro ───────────────────────────────────────────────
+  document.getElementById("btn-texto-desprocesar").onclick = async () => {
+    const titulo = state.validacion?.titulo || state.slug;
+    if (!confirm(`¿Des-procesar "${titulo}"?\nSe borrará el grafo extraído. El texto fuente se conserva y podrás volver a procesarlo.`)) return;
+    try {
+      await apiFetch(`/api/extracciones/${encodeURIComponent(state.slug)}`, { method: "DELETE" });
+      await mostrarBiblioteca();
+    } catch(e) { alert("Error: " + e.message); }
+  };
+
+  document.getElementById("btn-texto-borrar").onclick = async () => {
+    const titulo = state.validacion?.titulo || state.slug;
+    if (!confirm(`¿Eliminar completamente "${titulo}"?\nSe borrará el texto y su grafo de forma permanente. Esta acción no tiene vuelta atrás.`)) return;
+    try {
+      await apiFetch(`/api/transcripts/${encodeURIComponent(state.slug)}`, { method: "DELETE" });
+      await mostrarBiblioteca();
+    } catch(e) { alert("Error: " + e.message); }
   };
 
   function _renderTextoLectura() {
