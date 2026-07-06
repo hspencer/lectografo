@@ -1,0 +1,388 @@
+{
+  "id": "rec_7453a72d",
+  "slug": "arte-y-poesia",
+  "propuestas": [
+    {
+      "id": "pr_000",
+      "conexion": {
+        "id": "cp_000",
+        "origen_id": "c_013",
+        "destino_id": "c_015",
+        "frase": "la fenomenología es el método base de la ontología",
+        "tipo": "es fundamento de",
+        "confianza": 0.95
+      },
+      "frase_editada": "la fenomenología es el método base de la ontología",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_001",
+      "conexion": {
+        "id": "cp_008",
+        "origen_id": "c_040",
+        "destino_id": "c_012",
+        "frase": "la instauración es la esencia del arte como puesta-en-operación de la verdad",
+        "tipo": "define la esencia de",
+        "confianza": 0.94
+      },
+      "frase_editada": "la instauración es la esencia del arte como puesta-en-operación de la verdad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_002",
+      "conexion": {
+        "id": "cp_015",
+        "origen_id": "c_048",
+        "destino_id": "c_054",
+        "frase": "Hólderlin vive en el tiempo de indigencia donde los dioses han huido",
+        "tipo": "pertenece al tiempo de",
+        "confianza": 0.94
+      },
+      "frase_editada": "Hólderlin vive en el tiempo de indigencia donde los dioses han huido",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_003",
+      "conexion": {
+        "id": "cp_004",
+        "origen_id": "c_021",
+        "destino_id": "c_050",
+        "frase": "los dioses se manifiestan a través de signos que el poeta interpreta",
+        "tipo": "se comunican mediante",
+        "confianza": 0.93
+      },
+      "frase_editada": "los dioses se manifiestan a través de signos que el poeta interpreta",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_004",
+      "conexion": {
+        "id": "cp_006",
+        "origen_id": "c_039",
+        "destino_id": "c_001",
+        "frase": "el ser-creado es la esencia que distingue la obra de arte de otros productos",
+        "tipo": "caracteriza",
+        "confianza": 0.93
+      },
+      "frase_editada": "el ser-creado es la esencia que distingue la obra de arte de otros productos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_005",
+      "conexion": {
+        "id": "cp_014",
+        "origen_id": "c_048",
+        "destino_id": "c_006",
+        "frase": "Hólderlin es el poeta que poetiza sobre la esencia de la poesía misma",
+        "tipo": "ejemplifica",
+        "confianza": 0.93
+      },
+      "frase_editada": "Hólderlin es el poeta que poetiza sobre la esencia de la poesía misma",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_006",
+      "conexion": {
+        "id": "cp_028",
+        "origen_id": "c_058",
+        "destino_id": "c_006",
+        "frase": "la palabra esencial es el medio a través del cual la poesía nombra y revela el ser",
+        "tipo": "es medio de",
+        "confianza": 0.93
+      },
+      "frase_editada": "la palabra esencial es el medio a través del cual la poesía nombra y revela el ser",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_007",
+      "conexion": {
+        "id": "cp_033",
+        "origen_id": "c_061",
+        "destino_id": "c_002",
+        "frase": "la verdad del ser es la verdad auténtica en que se funda toda decisión sobre el arte",
+        "tipo": "fundamenta",
+        "confianza": 0.93
+      },
+      "frase_editada": "la verdad del ser es la verdad auténtica en que se funda toda decisión sobre el arte",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_008",
+      "conexion": {
+        "id": "cp_003",
+        "origen_id": "c_021",
+        "destino_id": "c_049",
+        "frase": "los dioses son nombrados originalmente por el poeta",
+        "tipo": "son objeto de",
+        "confianza": 0.92
+      },
+      "frase_editada": "los dioses son nombrados originalmente por el poeta",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_009",
+      "conexion": {
+        "id": "cp_023",
+        "origen_id": "c_055",
+        "destino_id": "c_006",
+        "frase": "habitar poéticamente la tierra es modo fundamental de morada instaurado por la poesía",
+        "tipo": "es fundamentado por",
+        "confianza": 0.92
+      },
+      "frase_editada": "habitar poéticamente la tierra es modo fundamental de morada instaurado por la poesía",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_010",
+      "conexion": {
+        "id": "cp_030",
+        "origen_id": "c_059",
+        "destino_id": "c_040",
+        "frase": "la donación es característica de la instauración poética que funda nuevos mundos",
+        "tipo": "caracteriza",
+        "confianza": 0.92
+      },
+      "frase_editada": "la donación es característica de la instauración poética que funda nuevos mundos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_011",
+      "conexion": {
+        "id": "cp_035",
+        "origen_id": "c_062",
+        "destino_id": "c_064",
+        "frase": "la metafísica es el marco desde el cual Hegel reflexiona sobre la esencia del arte",
+        "tipo": "es marco de",
+        "confianza": 0.92
+      },
+      "frase_editada": "la metafísica es el marco desde el cual Hegel reflexiona sobre la esencia del arte",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_012",
+      "conexion": {
+        "id": "cp_039",
+        "origen_id": "c_065",
+        "destino_id": "c_048",
+        "frase": "el poeta existe en el entre ontológico entre los dioses y los hombres",
+        "tipo": "es ámbito de existencia de",
+        "confianza": 0.92
+      },
+      "frase_editada": "el poeta existe en el entre ontológico entre los dioses y los hombres",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_013",
+      "conexion": {
+        "id": "cp_020",
+        "origen_id": "c_053",
+        "destino_id": "c_043",
+        "frase": "la existencia humana se fundamenta en el diálogo",
+        "tipo": "se funda en",
+        "confianza": 0.91
+      },
+      "frase_editada": "la existencia humana se fundamenta en el diálogo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_014",
+      "conexion": {
+        "id": "cp_025",
+        "origen_id": "c_056",
+        "destino_id": "c_053",
+        "frase": "la libertad de decisión es lo que fundamenta la existencia humana",
+        "tipo": "fundamenta",
+        "confianza": 0.91
+      },
+      "frase_editada": "la libertad de decisión es lo que fundamenta la existencia humana",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_015",
+      "conexion": {
+        "id": "cp_002",
+        "origen_id": "c_015",
+        "destino_id": "c_001",
+        "frase": "la ontología investiga el ser que se manifiesta en la obra de arte",
+        "tipo": "se aplica a",
+        "confianza": 0.9
+      },
+      "frase_editada": "la ontología investiga el ser que se manifiesta en la obra de arte",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_016",
+      "conexion": {
+        "id": "cp_005",
+        "origen_id": "c_037",
+        "destino_id": "c_007",
+        "frase": "la artesanía es confección de útiles, distinta de la creación artística",
+        "tipo": "produce",
+        "confianza": 0.9
+      },
+      "frase_editada": "la artesanía es confección de útiles, distinta de la creación artística",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_017",
+      "conexion": {
+        "id": "cp_010",
+        "origen_id": "c_041",
+        "destino_id": "c_008",
+        "frase": "el saber en la contemplación es estar decidido dentro de la lucha de la verdad",
+        "tipo": "constituye",
+        "confianza": 0.9
+      },
+      "frase_editada": "el saber en la contemplación es estar decidido dentro de la lucha de la verdad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_018",
+      "conexion": {
+        "id": "cp_019",
+        "origen_id": "c_052",
+        "destino_id": "c_040",
+        "frase": "lo permanente es lo que los poetas instauran contra lo fugaz",
+        "tipo": "es objeto de",
+        "confianza": 0.9
+      },
+      "frase_editada": "lo permanente es lo que los poetas instauran contra lo fugaz",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_019",
+      "conexion": {
+        "id": "cp_027",
+        "origen_id": "c_057",
+        "destino_id": "c_056",
+        "frase": "la necesidad es lo que la libertad del poeta aprehende y sostiene",
+        "tipo": "es aprehendida por",
+        "confianza": 0.9
+      },
+      "frase_editada": "la necesidad es lo que la libertad del poeta aprehende y sostiene",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_020",
+      "conexion": {
+        "id": "cp_038",
+        "origen_id": "c_064",
+        "destino_id": "c_012",
+        "frase": "Hegel expresa la proposición occidental sobre el arte como cosa del pasado",
+        "tipo": "reflexiona sobre la esencia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "Hegel expresa la proposición occidental sobre el arte como cosa del pasado",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_021",
+      "conexion": {
+        "id": "cp_018",
+        "origen_id": "c_051",
+        "destino_id": "c_006",
+        "frase": "la palabra poética es interpretación de la voz del pueblo",
+        "tipo": "interpreta",
+        "confianza": 0.89
+      },
+      "frase_editada": "la palabra poética es interpretación de la voz del pueblo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_022",
+      "conexion": {
+        "id": "cp_037",
+        "origen_id": "c_063",
+        "destino_id": "c_006",
+        "frase": "la poesía no es mera manifestación cultural sino algo más fundamental que la sustenta",
+        "tipo": "trasciende",
+        "confianza": 0.89
+      },
+      "frase_editada": "la poesía no es mera manifestación cultural sino algo más fundamental que la sustenta",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_023",
+      "conexion": {
+        "id": "cp_013",
+        "origen_id": "c_042",
+        "destino_id": "c_018",
+        "frase": "la techne abre el ente en su apariencia y presencia",
+        "tipo": "revela",
+        "confianza": 0.88
+      },
+      "frase_editada": "la techne abre el ente en su apariencia y presencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_024",
+      "conexion": {
+        "id": "cp_032",
+        "origen_id": "c_060",
+        "destino_id": "c_002",
+        "frase": "la realidad occidental transformada en objetividad no es verdad en sentido poético",
+        "tipo": "es distinta de",
+        "confianza": 0.85
+      },
+      "frase_editada": "la realidad occidental transformada en objetividad no es verdad en sentido poético",
+      "seleccionada": true,
+      "estado": "aceptada"
+    }
+  ],
+  "estado": "completada",
+  "razon_falla": null,
+  "iniciada_en": "2026-07-06T15:56:03.668828",
+  "completada_en": "2026-07-06T15:56:33.844528",
+  "nodos_sueltos_ids": [
+    "c_013",
+    "c_014",
+    "c_015",
+    "c_021",
+    "c_037",
+    "c_039",
+    "c_040",
+    "c_041",
+    "c_042",
+    "c_048",
+    "c_050",
+    "c_051",
+    "c_052",
+    "c_053",
+    "c_054",
+    "c_055",
+    "c_056",
+    "c_057",
+    "c_058",
+    "c_059",
+    "c_060",
+    "c_061",
+    "c_062",
+    "c_063",
+    "c_064",
+    "c_065"
+  ]
+}

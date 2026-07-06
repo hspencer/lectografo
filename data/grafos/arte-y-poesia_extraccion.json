@@ -1,0 +1,1972 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "obra de arte",
+      "tipo": "primitivo",
+      "descripcion": "Entidad estética fundamental que es el objeto primario de investigación de Heidegger. Posee tanto dimensiones materiales (tierra) como espirituales (mundo). La obra no es completa por sí sola sino que existe dentro de relaciones que la integran a un mundo específico.",
+      "sinonimos_candidatos": [
+        "obra artística",
+        "creación artística"
+      ],
+      "menciones": 47,
+      "confianza": 0.98,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La obra de arte pone de manifiesto un mundo"
+    },
+    {
+      "id": "c_002",
+      "label": "verdad",
+      "tipo": "primitivo",
+      "descripcion": "Para Heidegger, propiedad del ser mismo y no solo del conocimiento enunciado en proposiciones. Tiene sentido ontológico y de autenticidad. Se manifiesta en la obra de arte como no-ocultación (aletheia) del ente. La verdad existe como lucha entre alumbramiento y ocultación.",
+      "sinonimos_candidatos": [
+        "aletheia",
+        "desocultación",
+        "autenticidad"
+      ],
+      "menciones": 28,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "En la obra de arte se ha puesto en operación la verdad del ente."
+    },
+    {
+      "id": "c_003",
+      "label": "tierra",
+      "tipo": "primitivo",
+      "descripcion": "Designa la materia prima natural de la que están hechas todas las obras de arte. Tiene carácter femenino, es hermética, irracional y resiste la penetración científica. En la obra, la tierra se mantiene como lo auto-ocultante en contraste con el mundo.",
+      "sinonimos_candidatos": [
+        "materia prima",
+        "naturaleza",
+        "madre tierra"
+      ],
+      "menciones": 16,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La roca llega a soportar y a reposar, y así llega a ser por primera vez roca"
+    },
+    {
+      "id": "c_004",
+      "label": "mundo",
+      "tipo": "primitivo",
+      "descripcion": "No es el conjunto de cosas existentes ni un objeto contemplable, sino la conciencia que se enciende como luz para el hombre sobre su existencia. Es la atmósfera espiritual concreta de un pueblo, época o momento histórico. Se abre y se proyecta a través de la obra de arte.",
+      "sinonimos_candidatos": [
+        "atmósfera espiritual",
+        "contexto histórico",
+        "conciencia histórica"
+      ],
+      "menciones": 19,
+      "confianza": 0.93,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El mundo es la conciencia que se enciende como una luz para dar cuenta al hombre de su existencia"
+    },
+    {
+      "id": "c_005",
+      "label": "creación",
+      "tipo": "primitivo",
+      "descripcion": "Acto fundamental mediante el cual la obra llega a ser. Su esencia se explica por la esencia de la obra, no al contrario. La creación es identificada con la verdad y resulta ser objetivada permanentemente en la obra como modo de ser.",
+      "sinonimos_candidatos": [
+        "hacer artístico",
+        "acto creador",
+        "devenir de la obra"
+      ],
+      "menciones": 12,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El devenir de la obra, su llegar a ser por medio de la creación, es un modo del acontecer de la verdad"
+    },
+    {
+      "id": "c_006",
+      "label": "poesía",
+      "tipo": "primitivo",
+      "descripcion": "En sentido lato, es la categoría primordial del habla. Se origina en el habla y a su vez hace posible el lenguaje. Es la instauración de la verdad por la palabra. Todo arte es poesía en su esencia. Caracterizada como 'la más inocente de todas las ocupaciones' pero también como acto trascendente.",
+      "sinonimos_candidatos": [
+        "Dichtung",
+        "lenguaje primitivo",
+        "instauración"
+      ],
+      "menciones": 18,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La poesía es el lenguaje primitivo de un pueblo histórico"
+    },
+    {
+      "id": "c_007",
+      "label": "útil",
+      "tipo": "primitivo",
+      "descripcion": "Objeto fabricado por el hombre con función instrumental. Su esencia radica en el 'ser de confianza' (Verlässlichkeit) más que en el servir para algo. Se examina a través del cuadro de Van Gogh de zapatos viejos de campesino como medio para comprender la diferencia entre cosa, útil y obra de arte.",
+      "sinonimos_candidatos": [
+        "herramienta",
+        "instrumento",
+        "objeto funcional"
+      ],
+      "menciones": 11,
+      "confianza": 0.87,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la esencia radica no en el servir para algo, sino en lo que llama 'ser de confianza'"
+    },
+    {
+      "id": "c_008",
+      "label": "contemplación",
+      "tipo": "primitivo",
+      "descripcion": "Acto imprescindible para que la obra sea obra en su plenitud. Solo en la contemplación la obra se da en su ser-creada como real. Introduce el dualismo sujeto-objeto que Heidegger intenta suprimirse, aunque es inevitable en el fenómeno artístico.",
+      "sinonimos_candidatos": [
+        "percepción artística",
+        "experiencia estética",
+        "mirada contemplativa"
+      ],
+      "menciones": 9,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Dejar que una obra 'sea obra' es lo que lanzamos la contemplación de la obra"
+    },
+    {
+      "id": "c_009",
+      "label": "habla",
+      "tipo": "primitivo",
+      "descripcion": "Para Heidegger, no es solo instrumento de comunicación sino expresión de la conciencia humana. Solo hay conciencia en cuanto existe la posibilidad del habla y de crear lenguaje. El dar nombre a las cosas permite al hombre ser consciente del mundo y de sí mismo.",
+      "sinonimos_candidatos": [
+        "lenguaje",
+        "palabra",
+        "capacidad de nombrar"
+      ],
+      "menciones": 13,
+      "confianza": 0.89,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El habla 'es el más peligroso de todos los bienes', puesto que es la conciencia del ser"
+    },
+    {
+      "id": "c_010",
+      "label": "lucha (mundo y tierra)",
+      "tipo": "primitivo",
+      "descripcion": "Relación fundamental en la obra de arte entre dos fuerzas antagónicas. El mundo tiende a hacerse patente y exponerse a la luz, mientras la tierra tiende a retraerse y auto-ocultarse. Esta lucha es objetivada de modo permanente en la obra como si quedara congelado el conflicto del artista entre materia inerte y voluntad espiritual.",
+      "sinonimos_candidatos": [
+        "tensión de fuerzas",
+        "conflicto creativo",
+        "antagonismo"
+      ],
+      "menciones": 8,
+      "confianza": 0.86,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la obra de arte el mundo y la tierra sostienen una lucha porque son elementos antagónicos"
+    },
+    {
+      "id": "c_011",
+      "label": "esencia",
+      "tipo": "primitivo",
+      "descripcion": "Lo que es algo, cómo es. El origen de algo es la fuente de su esencia. En el contexto del ensayo, se investiga la esencia del arte, la obra, la poesía y la verdad como conceptos fundamentales que fundamentan la investigación estética.",
+      "sinonimos_candidatos": [
+        "naturaleza fundamental",
+        "quididad"
+      ],
+      "menciones": 12,
+      "confianza": 0.84,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "ORIGEN significa aquí aquello de donde una cosa procede y por cuyo medio es lo que es y como es"
+    },
+    {
+      "id": "c_012",
+      "label": "arte",
+      "tipo": "primitivo",
+      "descripcion": "Categoría fundamental que es el origen último del artista y la obra. Su realidad se manifiesta en las obras y artistas concretos. Es el factor que determina tanto la creación como la existencia histórica de un pueblo.",
+      "sinonimos_candidatos": [],
+      "menciones": 22,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el artista y la obra son cada uno en sí y en su recíproca relación, por virtud de un tercero, que es lo primordial, a saber, el arte"
+    },
+    {
+      "id": "c_013",
+      "label": "fenomenología",
+      "tipo": "primitivo",
+      "descripcion": "Método filosófico adoptado por Heidegger que consiste en describir simplemente sin teoría filosófica alguna. Se combina con la hermenéutica en la práctica efectiva de investigación. Basada en la premisa de que no hay nada tras del fenómeno.",
+      "sinonimos_candidatos": [
+        "descripción fenomenológica"
+      ],
+      "menciones": 5,
+      "confianza": 0.8,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "adopta un método que es el fenomenológico, puesto que consiste, como dice el autor, en describir simplemente un útil 'sin teoría filosófica alguna'"
+    },
+    {
+      "id": "c_014",
+      "label": "hermenéutica",
+      "tipo": "primitivo",
+      "descripcion": "Método de interpretación entremezclado con la fenomenología en la investigación de Heidegger. Complementa la mera descripción al buscar significados más profundos y ocultos en los fenómenos artísticos.",
+      "sinonimos_candidatos": [
+        "interpretación"
+      ],
+      "menciones": 4,
+      "confianza": 0.78,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "encontrará entremezciadas la descripción con la interpretación, la fenomenología con la hermenéutica"
+    },
+    {
+      "id": "c_015",
+      "label": "ontología",
+      "tipo": "primitivo",
+      "descripcion": "Disciplina fundamental de la filosofía de Heidegger que investiga el ser. La ontología es fenomenología. Se aplica a la comprensión de la obra de arte como ente y a la verdad como propiedad del ser mismo.",
+      "sinonimos_candidatos": [
+        "filosofía del ser",
+        "teoría del ente"
+      ],
+      "menciones": 6,
+      "confianza": 0.82,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Toda ontología es fenomenología, porque no hay nada tras del fenómeno"
+    },
+    {
+      "id": "c_016",
+      "label": "artista",
+      "tipo": "primitivo",
+      "descripcion": "Creador de la obra de arte. Es origen de la obra, pero a su vez es constituido como tal por la obra. Su actividad técnica es determinada por la esencia de la creación, no al revés. El artista posee capacidades visionarias que penetran profundamente en la verdad de las cosas.",
+      "sinonimos_candidatos": [
+        "creador",
+        "maestro"
+      ],
+      "menciones": 13,
+      "confianza": 0.86,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El artista es el origen de la obra. La obra es el origen del artista. Ninguno es sin el otro."
+    },
+    {
+      "id": "c_017",
+      "label": "ocultación (ocultamiento)",
+      "tipo": "primitivo",
+      "descripcion": "Tendencia fundamental de la tierra y del ser a mantenerse oculto. La verdad existe como contraposición entre alumbramiento y ocultación. Lo oculto caracteriza tanto a la tierra como a ciertos aspectos del ser que resisten la revelación.",
+      "sinonimos_candidatos": [
+        "disimulo",
+        "veladura",
+        "retracción"
+      ],
+      "menciones": 9,
+      "confianza": 0.83,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La verdad está en cuanto tal en la contraposición del alumbramiento y las dos clases de ocultación"
+    },
+    {
+      "id": "c_018",
+      "label": "ente",
+      "tipo": "primitivo",
+      "descripcion": "Lo que es, lo existente. En el contexto de la estética de Heidegger, el ente se desocultadora la obra de arte. Se distinguen interpretaciones del ente: como cosa, como útil (materia-forma) y como obra de arte. El ente en totalidad se revela en la obra.",
+      "sinonimos_candidatos": [
+        "ser",
+        "lo existente",
+        "realidad"
+      ],
+      "menciones": 11,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "En la obra de arte se ha puesto en operación la verdad del ente."
+    },
+    {
+      "id": "c_019",
+      "label": "materia",
+      "tipo": "primitivo",
+      "descripcion": "Componente material de la obra de arte extraído de la naturaleza. Tiene valor propio dentro de la unidad estética, no es solo 'revestimiento cósico'. Su rehabilitación como elemento esencial rectifica prejuicios idealistas que subestiman lo material en favor de lo espiritual.",
+      "sinonimos_candidatos": [
+        "sustancia material",
+        "elemento material"
+      ],
+      "menciones": 7,
+      "confianza": 0.81,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la materia no es simplemente un 'revestimiento cósico' de la obra de arte, sino que tiene dentro de su unidad estética un valor propio"
+    },
+    {
+      "id": "c_020",
+      "label": "historia (historicidad)",
+      "tipo": "primitivo",
+      "descripcion": "Dimensión existencial del hombre y los pueblos. El arte es factor determinante en la existencia histórica. La poesía es fundamento que soporta la historia. Heidegger ve la modernidad como período donde el arte ha perdido su rol histórico originario.",
+      "sinonimos_candidatos": [
+        "devenir histórico",
+        "existencia histórica",
+        "temporalidad histórica"
+      ],
+      "menciones": 10,
+      "confianza": 0.84,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Siempre que el arte acontece... se produce en la historia un empuje y ésta comienza o recomienza"
+    },
+    {
+      "id": "c_021",
+      "label": "dios (divinidad)",
+      "tipo": "primitivo",
+      "descripcion": "En la teoría de Hólderlin-Heidegger, los dioses son seres que hablan mediante signos. El poeta es mediador entre los dioses y los hombres, interpretando sus signos. La poesía es acto de dar nombre original a los dioses.",
+      "sinonimos_candidatos": [
+        "lo divino",
+        "deidad"
+      ],
+      "menciones": 6,
+      "confianza": 0.75,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Poetizar es dar nombre original a los dioses"
+    },
+    {
+      "id": "c_022",
+      "label": "origen",
+      "tipo": "primitivo",
+      "descripcion": "Aquello de donde una cosa procede y por cuyo medio es lo que es. Concepto fundamental para investigar tanto el arte como sus manifestaciones. La pregunta por el origen de la obra de arte se convierte en la pregunta por la esencia del arte.",
+      "sinonimos_candidatos": [
+        "fuente",
+        "procedencia",
+        "principio"
+      ],
+      "menciones": 8,
+      "confianza": 0.83,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "ORIGEN significa aquí aquello de donde una cosa procede y por cuyo medio es lo que es"
+    },
+    {
+      "id": "c_023",
+      "label": "círculo",
+      "tipo": "primitivo",
+      "descripcion": "La estructura circular del pensamiento y la experiencia, donde el paso de la obra al arte y del arte a la obra forma un círculo; metáfora del movimiento reflexivo necesario para acceder a la verdad",
+      "sinonimos_candidatos": [
+        "movimiento circular",
+        "estructura cíclica"
+      ],
+      "menciones": 3,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "debemos completar el curso del círculo... cada paso aislado que intentamos gira en este círculo"
+    },
+    {
+      "id": "c_024",
+      "label": "cosa (cosidad)",
+      "tipo": "primitivo",
+      "descripcion": "Entidad fundamental del ser; caracterizada por su modo de ser espontáneo y que descansa en sí mismo; se busca comprender su esencia distintiva",
+      "sinonimos_candidatos": [
+        "ente",
+        "lo cósico"
+      ],
+      "menciones": 25,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "¿Qué es entonces, en verdad, la cosa, en tanto que es una cosa? Cuando así preguntamos queremos llegar a conocer al ser cosa (cosidad) de la cosa"
+    },
+    {
+      "id": "c_025",
+      "label": "forma",
+      "tipo": "primitivo",
+      "descripcion": "Estructura y organización de la materia; en el útil, predetermina la elección y el tipo de materia según su funcionalidad",
+      "sinonimos_candidatos": [
+        "estructura",
+        "configuración"
+      ],
+      "menciones": 10,
+      "confianza": 0.87,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la forma determina el ordenamiento de la materia... predetermina en cada caso, la elección y la clase de la materia"
+    },
+    {
+      "id": "c_026",
+      "label": "ser de confianza",
+      "tipo": "primitivo",
+      "descripcion": "La esencia más profunda del útil, aquello en lo cual descansa el servir para algo; relación fundamental entre el útil y el mundo de quien lo usa",
+      "sinonimos_candidatos": [
+        "confiabilidad",
+        "fiabilidad esencial"
+      ],
+      "menciones": 4,
+      "confianza": 0.82,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Vamos a llamarlo el 'ser de confianza'. En virtud de él, hace la labriega caso, por intermedio de este útil, a la silenciosa llamada de la tierra"
+    },
+    {
+      "id": "c_027",
+      "label": "pensamiento",
+      "tipo": "primitivo",
+      "descripcion": "La actividad reflexiva que busca la verdad; el pensamiento como 'oficio' que ronda en círculos; la meditación sobre el ser",
+      "sinonimos_candidatos": [
+        "reflexión",
+        "meditación"
+      ],
+      "menciones": 6,
+      "confianza": 0.83,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "quedar en él es la fiesta del pensamiento, en el supuesto de que el pensamiento sea un oficio"
+    },
+    {
+      "id": "c_028",
+      "label": "habitualidad",
+      "tipo": "primitivo",
+      "descripcion": "El desgaste y la obliteración del ser del útil a través del uso repetido; lo cósico se retrae en lo meramente útil",
+      "sinonimos_candidatos": [
+        "costumbre",
+        "uso gastado"
+      ],
+      "menciones": 2,
+      "confianza": 0.75,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la desgastada habitualidad del útil avanza entonces como la única forma de ser... el mero servir para algo"
+    },
+    {
+      "id": "c_029",
+      "label": "cosa",
+      "tipo": "primitivo",
+      "descripcion": "Entidad con carácter de cosidad; mera coseidad. Los conceptos de cosa tradicionales no bastan para captar la obra de arte. La cosa es distinta del útil y de la obra.",
+      "sinonimos_candidatos": [
+        "cosidad"
+      ],
+      "menciones": 9,
+      "confianza": 0.87,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "lo que tiene de cosa la obra, los conceptos de cosa dominantes no bastan"
+    },
+    {
+      "id": "c_030",
+      "label": "ocultación",
+      "tipo": "primitivo",
+      "descripcion": "Doble modo de rehusarse: negarse y disimularse. Estructura esencial de la verdad; la ocultación como ocultamiento es constitutiva de la desocultación. Pertenece a la luz como su origen permanente.",
+      "sinonimos_candidatos": [
+        "ocultamiento",
+        "disimularse",
+        "negarse"
+      ],
+      "menciones": 19,
+      "confianza": 0.93,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La ocultación puede ser un negarse o un disimularse"
+    },
+    {
+      "id": "c_031",
+      "label": "lucha",
+      "tipo": "primitivo",
+      "descripcion": "Enfrentamiento esencial entre mundo y tierra en el que cada contendiente se levanta en auto-afirmación de su esencia. No es discordia destructiva sino elevación mutua a mayor autenticidad.",
+      "sinonimos_candidatos": [],
+      "menciones": 15,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La oposición entre el mundo y la tierra es una lucha"
+    },
+    {
+      "id": "c_032",
+      "label": "reposo",
+      "tipo": "primitivo",
+      "descripcion": "Concentración íntima del movimiento; estado de máxima movilidad que incluye el movimiento. El reposo de la obra en sí consiste en costear la lucha entre mundo y tierra.",
+      "sinonimos_candidatos": [],
+      "menciones": 7,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "en la intimidad de la lucha tiene su esencia el reposo de la obra que reposa en sí"
+    },
+    {
+      "id": "c_033",
+      "label": "desocultación",
+      "tipo": "primitivo",
+      "descripcion": "Traducción de aletheia; acontecimiento de iluminación del ente. La verdad como desocultación que acontece en la obra a través de la lucha entre alumbramiento y ocultación.",
+      "sinonimos_candidatos": [
+        "aletheia",
+        "verdad"
+      ],
+      "menciones": 12,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Llamamos la tierra aquello a lo que la obra se fetrae y a lo que hace sobresalir"
+    },
+    {
+      "id": "c_034",
+      "label": "historia",
+      "tipo": "primitivo",
+      "descripcion": "Destino histórico de un pueblo; ámbito donde caen las decisiones esenciales. La mundanización acontece donde se determinan las decisiones históricas.",
+      "sinonimos_candidatos": [
+        "historicidad"
+      ],
+      "menciones": 5,
+      "confianza": 0.8,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El mundo se mundaniza ahí donde caen las decisiones esenciales de nuestra historia"
+    },
+    {
+      "id": "c_035",
+      "label": "belleza",
+      "tipo": "primitivo",
+      "descripcion": "Brillo puesto en la obra; modo de ser la verdad. La luz que alumbra el ser que se auto-oculta pone su brillo en la obra como belleza.",
+      "sinonimos_candidatos": [],
+      "menciones": 2,
+      "confianza": 0.78,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El brillo puesto en la obra es lo bello. La belleza es un modo de ser la verdad"
+    },
+    {
+      "id": "c_036",
+      "label": "dios",
+      "tipo": "primitivo",
+      "descripcion": "Presencia llamada a la patencia por la obra; lo sagrado que se abre en la construcción. En el templo está presente el dios; la dignidad y esplendor en que se manifiesta.",
+      "sinonimos_candidatos": [
+        "divinidad"
+      ],
+      "menciones": 7,
+      "confianza": 0.82,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Mediante el templo está en él presente el dios"
+    },
+    {
+      "id": "c_037",
+      "label": "artesanía",
+      "tipo": "primitivo",
+      "descripcion": "Confección de útiles. Notable juego del lenguaje que no crea ninguna obra. Producción de cosas para su servicio funcional.",
+      "sinonimos_candidatos": [],
+      "menciones": 8,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la artesanía — notable juego del lenguaje— no crea ninguna obra"
+    },
+    {
+      "id": "c_038",
+      "label": "desgarradura",
+      "tipo": "primitivo",
+      "descripcion": "La apertura, el corte que abre la lucha entre mundo y tierra en la obra. Se reestablece en la tierra para ser fijada en la forma. Conjunción unitaria.",
+      "sinonimos_candidatos": [],
+      "menciones": 11,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La verdad sólo se instala como lucha en un ente que se produce, de modo que abre la lucha en ese ente, es decir, desgarrándolo"
+    },
+    {
+      "id": "c_039",
+      "label": "ser-creado",
+      "tipo": "primitivo",
+      "descripcion": "La característica esencial de la obra que la distingue de otros productos. Es la verdad fijada en la forma a través de la desgarradura. Se manifiesta como el empuje de 'que es'.",
+      "sinonimos_candidatos": [],
+      "menciones": 11,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El ser-creado de la obra quiere decir fijada la verdad en la forma"
+    },
+    {
+      "id": "c_040",
+      "label": "instauración",
+      "tipo": "primitivo",
+      "descripcion": "Triple sentido de la esencia del arte: ofrecimiento, fundación y comienzo. La puesta-en-operación de la verdad que es histórica.",
+      "sinonimos_candidatos": [],
+      "menciones": 12,
+      "confianza": 0.89,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La esencia del arte, en la que especialmente descansan la obra de arte y el artista, es el ponerse en operación la verdad. La esencia poetizante del arte"
+    },
+    {
+      "id": "c_041",
+      "label": "saber",
+      "tipo": "primitivo",
+      "descripcion": "En la contemplación, el saber es estar decidido dentro de la lucha. No es mero conocimiento sino extático abandonarse a la desocultación. Haber visto en sentido griego.",
+      "sinonimos_candidatos": [],
+      "menciones": 10,
+      "confianza": 0.87,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La contemplación de la obra significa estar dentro de la patencia del ente que acontece en la obra. Pero la estancia dentro de la contemplación es un saber"
+    },
+    {
+      "id": "c_042",
+      "label": "techne",
+      "tipo": "primitivo",
+      "descripcion": "Palabra griega para arte y artesanía que significa saber experimentado, no ejecución práctica. Abre el ente en su apariencia a su presencia.",
+      "sinonimos_candidatos": [
+        "técnica"
+      ],
+      "menciones": 5,
+      "confianza": 0.82,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La palabra téchnè nunca significa en general una especie de ejecución práctica, sino que nombra, más bien, una especie de saber"
+    },
+    {
+      "id": "c_043",
+      "label": "diálogo",
+      "tipo": "primitivo",
+      "descripcion": "La esencia del habla; somos un diálogo desde que el tiempo es; condición de la historia y de la existencia humana; acontece en la respuesta a la invocación de los dioses",
+      "sinonimos_candidatos": [],
+      "menciones": 11,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Nosotros los hombres somos un diálogo. El ser del hombre se funda en el habla; pero ésta acontece primero en el diálogo."
+    },
+    {
+      "id": "c_044",
+      "label": "ser",
+      "tipo": "primitivo",
+      "descripcion": "Lo que debe ser puesto al descubierto para que aparezca el ente; nunca es un ente; se manifiesta en el acontecimiento de la verdad; lo que se instaura mediante la poesía",
+      "sinonimos_candidatos": [],
+      "menciones": 13,
+      "confianza": 0.94,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El ser debe ponerse al descubierto para que aparezca el ente."
+    },
+    {
+      "id": "c_045",
+      "label": "tiempo",
+      "tipo": "primitivo",
+      "descripcion": "Lo que se desgarra en presente, pasado y futuro; condición de la historia y el diálogo; tiempo de indigencia en que han huido los dioses y viene el que vendrá",
+      "sinonimos_candidatos": [],
+      "menciones": 11,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Hasta que por primera vez 'el tiempo que se desgarra' irrumpe en presente, pasado y futuro"
+    },
+    {
+      "id": "c_046",
+      "label": "peligro",
+      "tipo": "primitivo",
+      "descripcion": "Característica esencial de la poesía y el habla; la amenaza del ser por el ente; posibilidad de perder el ser; estar expuesto a los relámpagos de Dios",
+      "sinonimos_candidatos": [],
+      "menciones": 8,
+      "confianza": 0.88,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el habla es 'el más peligroso de los bienes'"
+    },
+    {
+      "id": "c_047",
+      "label": "inocencia",
+      "tipo": "primitivo",
+      "descripcion": "Apariencia externa de la poesía; cualidad de ser inofensiva e ineficaz externamente; aspecto protector que permite la realización de la obra peligrosa",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 0.8,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la poesía 'la más inocente de todas las ocupaciones'"
+    },
+    {
+      "id": "c_048",
+      "label": "Hólderlin",
+      "tipo": "primitivo",
+      "descripcion": "Poeta alemán elegido como ejemplo de aquel que poetiza sobre la propia esencia de la poesía; el poeta del poeta; representa la esencia histórica de la poesía en tiempo de indigencia",
+      "sinonimos_candidatos": [],
+      "menciones": 35,
+      "confianza": 0.98,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Hólderlin es para nosotros en sentido extraordinario el poeta del poeta."
+    },
+    {
+      "id": "c_049",
+      "label": "nombrar",
+      "tipo": "primitivo",
+      "descripcion": "Acción esencial de la poesía; dar nombre original a los dioses y la esencia de las cosas; no es asignar un nombre a lo ya conocido sino revelar por primera vez el ser del ente",
+      "sinonimos_candidatos": [
+        "denominación"
+      ],
+      "menciones": 8,
+      "confianza": 0.91,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el poeta, al decir la palabra esencial, nombra con esta denominación, por primera vez, al ente por lo que es"
+    },
+    {
+      "id": "c_050",
+      "label": "signo",
+      "tipo": "primitivo",
+      "descripcion": "Mensaje de los dioses que el poeta debe sorprender e interpretar; primera manifestación de la voluntad divina en el mundo",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 0.78,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El dicho de los poetas consiste en sorprender estos signos para luego transmitirlos a su pueblo."
+    },
+    {
+      "id": "c_051",
+      "label": "voz del pueblo",
+      "tipo": "primitivo",
+      "descripcion": "Las leyendas mediante las cuales un pueblo hace memoria de su pertenencia a los entes en totalidad; necesita de intérpretes poéticos para expresar lo sagrado",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.75,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La palabra poética sólo es igualmente la interpretación de la 'voz del pueblo'."
+    },
+    {
+      "id": "c_052",
+      "label": "permanente",
+      "tipo": "primitivo",
+      "descripcion": "Lo que debe ser detenido y sustentado contra lo fugaz; lo que los poetas instauran; lo sencillo extraído de lo complicado; medida contra lo desmedido",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Mas lo permanente lo instauran los poetas"
+    },
+    {
+      "id": "c_053",
+      "label": "existencia",
+      "tipo": "primitivo",
+      "descripcion": "La razón de ser del hombre; fundamentada en el diálogo y la poesía; establecida cuando los dioses vienen a la palabra; existencia histórica",
+      "sinonimos_candidatos": [],
+      "menciones": 8,
+      "confianza": 0.89,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la existencia del hombre adquiere una relación firme y se establece en una razón de ser"
+    },
+    {
+      "id": "c_054",
+      "label": "indigencia",
+      "tipo": "primitivo",
+      "descripcion": "Característica del tiempo histórico en que vivió Hólderlin; doble carencia: los dioses han huido y el que viene aún no llega; tiempo rico pero de penuria",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.8,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Es el tiempo de los dioses que han huido y del dios que vendrá. Es el tiempo de indigencia"
+    },
+    {
+      "id": "c_055",
+      "label": "morada",
+      "tipo": "primitivo",
+      "descripcion": "La manera como el hombre habita la tierra; fundamentada en la poesía; no es alcanzada por el esfuerzo humano sino es donada",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.8,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "'Habitar poéticamente' significa estar en la presencia de los dioses y ser tocado por la esencia cercana de las cosas."
+    },
+    {
+      "id": "c_056",
+      "label": "libertad",
+      "tipo": "primitivo",
+      "descripcion": "Libertad de la decisión en que se fundamenta la existencia humana; libertad de los poetas que no es arbitrariedad sino suprema necesidad",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.78,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Ciertamente toda instauración queda como una donación libre... Pero esta libertad no es una arbitrariedad"
+    },
+    {
+      "id": "c_057",
+      "label": "necesidad",
+      "tipo": "primitivo",
+      "descripcion": "Lo necesario aprehendido por la libertad; característica suprema de la libertad del poeta; lo que sustenta junto con la aspiración más alta",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.75,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Esta aprehende lo necesario y se mantiene vinculada a una aspiración más alta."
+    },
+    {
+      "id": "c_058",
+      "label": "palabra",
+      "tipo": "primitivo",
+      "descripcion": "Medio de la poesía; la palabra esencial que nombra y revela el ser; puede ser pura u oculta; debe mantenerse en apariencia creada por ella misma",
+      "sinonimos_candidatos": [],
+      "menciones": 15,
+      "confianza": 0.92,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la palabra esencial no ofrece nunca inmediatamente la garantía de que es una palabra esencial"
+    },
+    {
+      "id": "c_059",
+      "label": "donación",
+      "tipo": "primitivo",
+      "descripcion": "Caractérica de la instauración poética; libre don que funda y establece; no es mérito sino regalo de los dioses y el ser",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 0.83,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Que la existencia es 'poética' en su fundamento quiere decir, igualmente, que el estar instaurada no es un mérito, sino una donación."
+    },
+    {
+      "id": "c_060",
+      "label": "realidad",
+      "tipo": "primitivo",
+      "descripcion": "En la historia del ser occidental: transformación de la actualitas en realidad; lo que es palpable y ruidoso pero no es la verdad en sentido poético",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.72,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La realidad se convierte en objetividad"
+    },
+    {
+      "id": "c_061",
+      "label": "verdad del ser",
+      "tipo": "primitivo",
+      "descripcion": "La verdad auténtica en sentido ontológico; aquello en que se funda toda decisión sobre la esencia del arte; pertenece al pensamiento occidental desde los griegos",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 0.86,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Si la decisión sobre la proposición se falla, cuando se falle, tiene que serlo por esta verdad del ente y sobre ella."
+    },
+    {
+      "id": "c_062",
+      "label": "metafísica",
+      "tipo": "primitivo",
+      "descripcion": "Punto de vista desde el cual Hegel reflexiona sobre la esencia del arte en Occidente; marco dentro del cual se piensa la verdad del ente",
+      "sinonimos_candidatos": [],
+      "menciones": 1,
+      "confianza": 0.68,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "En la más comprensiva reflexión sobre la esencia del arte que posee el Occidente, porque está pensada desde el punto de vista de la metafísica"
+    },
+    {
+      "id": "c_063",
+      "label": "cultura",
+      "tipo": "primitivo",
+      "descripcion": "La poesía no es una mera manifestación de la cultura ni expresión del alma de la cultura; es algo más fundamental",
+      "sinonimos_candidatos": [],
+      "menciones": 1,
+      "confianza": 0.6,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La poesía no es un adorno que acompaña la existencia humana... menos aún la mera 'expresión' del 'alma de la cultura'"
+    },
+    {
+      "id": "c_064",
+      "label": "Hegel",
+      "tipo": "primitivo",
+      "descripcion": "Filósofo cuya estética expresa una proposición sobre el arte como cosa del pasado; marca el pensamiento occidental sobre el arte; su proposición requiere decisión",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 0.83,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "No se puede uno zafar de esta proposición y de todo lo que está tras de ella argumentando contra Hegel"
+    },
+    {
+      "id": "c_065",
+      "label": "entre",
+      "tipo": "primitivo",
+      "descripcion": "El espacio ontológico donde existe el poeta; entre los dioses y los hombres; el ámbito donde se decide quién es el hombre",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.79,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El poeta mismo está entre aquéllos, los dioses, y éste, el pueblo. Es un 'proyectado fuera', fuera en aquel entre"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "pone_en_operación",
+      "etiqueta": "En la obra de arte se ha puesto en operación la verdad del ente",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "En la obra de arte se ha puesto en operación la verdad del ente.",
+      "matiz": "La obra es el medio mediante el cual la verdad se actualiza y se manifiesta",
+      "contexto": "Conclusión fundamental sobre la función ontológica del arte"
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "está_hecha_de",
+      "etiqueta": "Todas las obras de arte están hechas de eso que se llama la materia prima",
+      "bidireccional": true,
+      "confianza": 0.91,
+      "frase_completa": "Todas las obras de arte están hechas de eso que se llama la materia prima",
+      "matiz": "La obra requiere materia extraída de la naturaleza para su materialización",
+      "contexto": "Relación material fundamental entre obra y tierra"
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_001",
+      "destino_id": "c_004",
+      "tipo": "abre",
+      "etiqueta": "La obra de arte pone de manifiesto un mundo",
+      "bidireccional": true,
+      "confianza": 0.92,
+      "frase_completa": "La obra de arte pone de manifiesto un mundo",
+      "matiz": "La obra proyecta una luz que revela y constituye un mundo concreto",
+      "contexto": "La obra como reveladora del mundo que la rodea"
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_003",
+      "destino_id": "c_010",
+      "tipo": "entra_en_conflicto_con",
+      "etiqueta": "el mundo y la tierra sostienen una lucha porque son elementos antagónicos",
+      "bidireccional": true,
+      "confianza": 0.9,
+      "frase_completa": "en la obra de arte el mundo y la tierra sostienen una lucha porque son elementos antagónicos",
+      "matiz": "El mundo tiende a exponerse mientras la tierra tiende a ocultarse",
+      "contexto": "Estructura fundamental de la obra de arte"
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_002",
+      "destino_id": "c_017",
+      "tipo": "existe_como_contraposición_con",
+      "etiqueta": "La verdad está en cuanto tal en la contraposición del alumbramiento y las dos clases de ocultación",
+      "bidireccional": true,
+      "confianza": 0.88,
+      "frase_completa": "La verdad está en cuanto tal en la contraposición del alumbramiento y las dos clases de ocultación",
+      "matiz": "La verdad no es simple transparencia sino tensión entre revelación y ocultamiento",
+      "contexto": "Estructura ontológica de la verdad"
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_005",
+      "destino_id": "c_002",
+      "tipo": "es_identificada_con",
+      "etiqueta": "la creación es identificada con la verdad",
+      "bidireccional": true,
+      "confianza": 0.85,
+      "frase_completa": "el devenir de la obra, su llegar a ser por medio de la creación, es un modo del acontecer de la verdad",
+      "matiz": "La creación artística es manifestación del acontecer de la verdad",
+      "contexto": "Equivalencia ontológica entre creación y verdad"
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_006",
+      "destino_id": "c_009",
+      "tipo": "se_origina_en",
+      "etiqueta": "La poesía se origina en el habla",
+      "bidireccional": false,
+      "confianza": 0.89,
+      "frase_completa": "La poesía se origina en el habla",
+      "matiz": "El habla es el fundamento a partir del cual emerge la poesía",
+      "contexto": "Fundamentación de la poesía en el lenguaje"
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_006",
+      "destino_id": "c_009",
+      "tipo": "hace_posible",
+      "etiqueta": "la poesía misma hace posible el lenguaje",
+      "bidireccional": false,
+      "confianza": 0.87,
+      "frase_completa": "la poesía misma hace posible el lenguaje",
+      "matiz": "La poesía no solo surge del habla sino que la constituye originariamente",
+      "contexto": "Relación recíproca entre poesía y lenguaje"
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_007",
+      "destino_id": "c_001",
+      "tipo": "se_diferencia_de",
+      "etiqueta": "discernir las diferencias esenciales y los puntos comunes entre la cosa, el útil y la obra de arte",
+      "bidireccional": true,
+      "confianza": 0.84,
+      "frase_completa": "La cuestión para Heidegger es discernir las diferencias esenciales y los puntos comunes entre la cosa, el útil y la obra de arte",
+      "matiz": "La obra de arte se distingue del útil pero comparte algunas características",
+      "contexto": "Investigación ontológica de las diferentes interpretaciones del ente"
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_008",
+      "destino_id": "c_001",
+      "tipo": "actualiza_el_ser_de",
+      "etiqueta": "solo en la contemplación la obra se da en su ser-creada como real",
+      "bidireccional": false,
+      "confianza": 0.86,
+      "frase_completa": "Únicamente en la contemplación la obra se da en su ser-creada como real",
+      "matiz": "La contemplación es necesaria para que la obra alcance su plenitud ontológica",
+      "contexto": "Rol imprescindible del contemplador en la manifestación de la obra"
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_009",
+      "destino_id": "c_004",
+      "tipo": "posibilita_la_existencia_de",
+      "etiqueta": "solo donde hay habla puede haber mundo",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "solo donde hay habla puede haber mundo y solo donde hay mundo hay historia",
+      "matiz": "El habla es condición necesaria para la existencia del mundo histórico",
+      "contexto": "Fundamentación del mundo en el habla"
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_012",
+      "destino_id": "c_016",
+      "tipo": "tiene_como_origen_a",
+      "etiqueta": "el artista y la obra son por virtud de un tercero, que es lo primordial, a saber, el arte",
+      "bidireccional": true,
+      "confianza": 0.89,
+      "frase_completa": "el artista y la obra son cada uno en sí y en su recíproca relación, por virtud de un tercero, que es lo primordial, a saber, el arte",
+      "matiz": "El arte es el tercero originario que fundamenta tanto al artista como a la obra",
+      "contexto": "Relación triádica fundamental en la ontología del arte"
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_012",
+      "destino_id": "c_001",
+      "tipo": "tiene_como_origen_a",
+      "etiqueta": "el arte es el origen de modo aún distinto del artista y sobre todo de la obra",
+      "bidireccional": true,
+      "confianza": 0.88,
+      "frase_completa": "el arte es el origen de modo aún distinto del artista y sobre todo de la obra",
+      "matiz": "El arte es origen de forma única y anterior a ambos",
+      "contexto": "Jerarquía ontológica de arte, artista y obra"
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_016",
+      "destino_id": "c_001",
+      "tipo": "es_el_origen_de",
+      "etiqueta": "El artista es el origen de la obra",
+      "bidireccional": true,
+      "confianza": 0.91,
+      "frase_completa": "El artista es el origen de la obra. La obra es el origen del artista.",
+      "matiz": "Relación cíclica donde cada uno fundamenta al otro",
+      "contexto": "Estructura circular de la causalidad artística"
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_001",
+      "destino_id": "c_020",
+      "tipo": "es_factor_determinante_en",
+      "etiqueta": "el arte es un factor en el despertar de la conciencia histórica de un pueblo",
+      "bidireccional": true,
+      "confianza": 0.82,
+      "frase_completa": "el arte ha sido y sigue siendo un factor en el despertar de la conciencia histórica de un pueblo",
+      "matiz": "El arte tiene función constitutiva en la existencia histórica",
+      "contexto": "Rol histórico y social del arte"
+    },
+    {
+      "id": "r_016",
+      "origen_id": "c_011",
+      "destino_id": "c_022",
+      "tipo": "se_fundamenta_en_el_concepto_de",
+      "etiqueta": "Lo que es algo, cómo es, lo llamamos su esencia. El origen de algo es la fuente de su esencia.",
+      "bidireccional": true,
+      "confianza": 0.86,
+      "frase_completa": "Lo que es algo, cómo es, lo llamamos su esencia. El origen de algo es la fuente de su esencia.",
+      "matiz": "La esencia está fundamentada en el origen como su fuente constitutiva",
+      "contexto": "Definición de conceptos fundamentales"
+    },
+    {
+      "id": "r_017",
+      "origen_id": "c_019",
+      "destino_id": "c_001",
+      "tipo": "tiene_valor_propio_dentro_de",
+      "etiqueta": "la materia tiene dentro de su unidad estética un valor propio",
+      "bidireccional": true,
+      "confianza": 0.83,
+      "frase_completa": "la materia no es simplemente un 'revestimiento cósico' de la obra de arte, sino que tiene dentro de su unidad estética un valor propio",
+      "matiz": "Lo material no es accesorio sino esencial en la constitución estética",
+      "contexto": "Rehabilitación de lo material en la estética"
+    },
+    {
+      "id": "r_018",
+      "origen_id": "c_013",
+      "destino_id": "c_014",
+      "tipo": "se_combina_con",
+      "etiqueta": "la descripción con la interpretación, la fenomenología con la hermenéutica",
+      "bidireccional": true,
+      "confianza": 0.81,
+      "frase_completa": "encontrará entremezcladas la descripción con la interpretación, la fenomenología con la hermenéutica",
+      "matiz": "Los dos métodos se fusionan en la práctica investigativa",
+      "contexto": "Metodología de investigación de Heidegger"
+    },
+    {
+      "id": "r_019",
+      "origen_id": "c_002",
+      "destino_id": "c_010",
+      "tipo": "existe_como",
+      "etiqueta": "La verdad existe solo como la lucha entre alumbramiento y ocultación",
+      "bidireccional": false,
+      "confianza": 0.87,
+      "frase_completa": "La verdad existe solo como la lucha entre alumbramiento y ocultación, en la interacción de mundo y tierra",
+      "matiz": "La verdad es identificada con la lucha fundamental de la obra de arte",
+      "contexto": "Identificación de verdad con conflicto creativo"
+    },
+    {
+      "id": "r_020",
+      "origen_id": "c_006",
+      "destino_id": "c_002",
+      "tipo": "instauración_de",
+      "etiqueta": "la poesía es instauración por la palabra y en la palabra",
+      "bidireccional": false,
+      "confianza": 0.84,
+      "frase_completa": "la poesía es instauración por la palabra y en la palabra",
+      "matiz": "La poesía es el acto mediante el cual la verdad se fija y se establece",
+      "contexto": "Función ontológica de la poesía"
+    },
+    {
+      "id": "r_021",
+      "origen_id": "c_023",
+      "destino_id": "c_001",
+      "tipo": "estructura_fundamental_de",
+      "etiqueta": "el paso principal de la obra al arte, y el de éste a la obra",
+      "bidireccional": true,
+      "confianza": 0.88,
+      "frase_completa": "No sólo es un círculo el paso principal de la obra al arte, y el de éste a la obra",
+      "matiz": "mutua determinación",
+      "contexto": null
+    },
+    {
+      "id": "r_022",
+      "origen_id": "c_001",
+      "destino_id": "c_024",
+      "tipo": "es_fundamentalmente",
+      "etiqueta": "La obra de arte es en verdad una cosa confeccionada",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "La obra de arte es en verdad una cosa confeccionada, pero dice algo otro de lo que es la mera cosa",
+      "matiz": "ambigüedad ontológica",
+      "contexto": null
+    },
+    {
+      "id": "r_023",
+      "origen_id": "c_024",
+      "destino_id": "c_019",
+      "tipo": "está_compuesta_de",
+      "etiqueta": "la cosa es materia conformada",
+      "bidireccional": false,
+      "confianza": 0.82,
+      "frase_completa": "La cosa es una materia formada",
+      "matiz": "estructura tradicional",
+      "contexto": null
+    },
+    {
+      "id": "r_024",
+      "origen_id": "c_019",
+      "destino_id": "c_025",
+      "tipo": "se_une_con",
+      "etiqueta": "una materia está unida con una forma",
+      "bidireccional": true,
+      "confianza": 0.87,
+      "frase_completa": "La consistencia, consiste en que una materia está unida con una forma",
+      "matiz": "composición fundamental",
+      "contexto": null
+    },
+    {
+      "id": "r_025",
+      "origen_id": "c_025",
+      "destino_id": "c_007",
+      "tipo": "determina_en",
+      "etiqueta": "la forma determina el ordenamiento de la materia",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "la forma determina el ordenamiento de la materia... predetermina en cada caso, la elección y la clase de la materia",
+      "matiz": "en el contexto del útil",
+      "contexto": null
+    },
+    {
+      "id": "r_026",
+      "origen_id": "c_007",
+      "destino_id": "c_026",
+      "tipo": "descansa_fundamentalmente_en",
+      "etiqueta": "El reposo del útil que reposa en sí estriba en el ser de confianza",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "El reposo del útil que reposa en sí estriba en el ser de confianza",
+      "matiz": "esencia profunda del útil",
+      "contexto": null
+    },
+    {
+      "id": "r_027",
+      "origen_id": "c_026",
+      "destino_id": "c_004",
+      "tipo": "abre_acceso_a",
+      "etiqueta": "En virtud del ser de confianza, está la labriega segura de su mundo",
+      "bidireccional": false,
+      "confianza": 0.84,
+      "frase_completa": "en virtud del ser de confianza del útil, está la labriega segura de su mundo",
+      "matiz": "mediación existencial",
+      "contexto": null
+    },
+    {
+      "id": "r_028",
+      "origen_id": "c_026",
+      "destino_id": "c_003",
+      "tipo": "conecta_con",
+      "etiqueta": "hace la labriega caso, por intermedio de este útil, a la silenciosa llamada de la tierra",
+      "bidireccional": false,
+      "confianza": 0.8,
+      "frase_completa": "hace la labriega caso, por intermedio de este útil, a la silenciosa llamada de la tierra",
+      "matiz": "mediación de relación",
+      "contexto": null
+    },
+    {
+      "id": "r_029",
+      "origen_id": "c_002",
+      "destino_id": "c_017",
+      "tipo": "opuesto_a",
+      "etiqueta": "el estado de no ocultación opuesto a la ocultación",
+      "bidireccional": true,
+      "confianza": 0.86,
+      "frase_completa": "El estado de no ocultación de los entes es lo que llamaban los griegos aletheia",
+      "matiz": "relación fundamental",
+      "contexto": null
+    },
+    {
+      "id": "r_030",
+      "origen_id": "c_007",
+      "destino_id": "c_024",
+      "tipo": "se_diferencia_de",
+      "etiqueta": "el útil ocupa posición intermedia respecto a la cosa",
+      "bidireccional": true,
+      "confianza": 0.81,
+      "frase_completa": "El útil tiene una peculiar posición intermedia entre la cosa y la obra",
+      "matiz": "transición ontológica",
+      "contexto": null
+    },
+    {
+      "id": "r_031",
+      "origen_id": "c_005",
+      "destino_id": "c_007",
+      "tipo": "produce",
+      "etiqueta": "la creación produce el útil",
+      "bidireccional": false,
+      "confianza": 0.78,
+      "frase_completa": "El ente que está subordinado a esta utilidad es siempre el producto de una confección",
+      "matiz": "acto productivo",
+      "contexto": null
+    },
+    {
+      "id": "r_032",
+      "origen_id": "c_018",
+      "destino_id": "c_011",
+      "tipo": "posee",
+      "etiqueta": "el ente tiene una esencia",
+      "bidireccional": false,
+      "confianza": 0.87,
+      "frase_completa": "Para encontrar la esencia del arte que realmente está en la obra... ¿Qué es entonces, en verdad, la cosa, en tanto que es una cosa?",
+      "matiz": "investigación ontológica",
+      "contexto": null
+    },
+    {
+      "id": "r_033",
+      "origen_id": "c_027",
+      "destino_id": "c_011",
+      "tipo": "busca",
+      "etiqueta": "el pensamiento busca la esencia",
+      "bidireccional": false,
+      "confianza": 0.82,
+      "frase_completa": "Debemos volvernos al ente mismo para pensar en su ser",
+      "matiz": "actividad reflexiva",
+      "contexto": null
+    },
+    {
+      "id": "r_034",
+      "origen_id": "c_012",
+      "destino_id": "c_002",
+      "tipo": "realiza",
+      "etiqueta": "el arte pone en operación la verdad",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "La esencia del arte sería, pues, ésta: el ponerse en operación la verdad del ente",
+      "matiz": "definición esencial",
+      "contexto": null
+    },
+    {
+      "id": "r_035",
+      "origen_id": "c_019",
+      "destino_id": "c_011",
+      "tipo": "determina_la_esencia_de",
+      "etiqueta": "la materia no es determinación originaria de la cosidad",
+      "bidireccional": false,
+      "confianza": 0.75,
+      "frase_completa": "Materia y forma no son en ningún caso determinaciones originales de la cosidad de la mera cosa",
+      "matiz": "rechazo de tradición",
+      "contexto": null
+    },
+    {
+      "id": "r_036",
+      "origen_id": "c_001",
+      "destino_id": "c_024",
+      "tipo": "excede_a",
+      "etiqueta": "la obra dice algo otro de lo que es la mera cosa",
+      "bidireccional": false,
+      "confianza": 0.83,
+      "frase_completa": "La obra de arte es en verdad una cosa confeccionada, pero dice algo otro de lo que es la mera cosa",
+      "matiz": "trascendencia",
+      "contexto": null
+    },
+    {
+      "id": "r_037",
+      "origen_id": "c_028",
+      "destino_id": "c_017",
+      "tipo": "expresa",
+      "etiqueta": "la habitualidad es obliteración del ser",
+      "bidireccional": false,
+      "confianza": 0.77,
+      "frase_completa": "Así es como el ser mismo del útil entra en obliteración... Tal obliteración del ser del útil es el desaparecer del ser de confianza",
+      "matiz": "degradación ontológica",
+      "contexto": null
+    },
+    {
+      "id": "r_038",
+      "origen_id": "c_020",
+      "destino_id": "c_002",
+      "tipo": "caracteriza",
+      "etiqueta": "la verdad es histórica",
+      "bidireccional": false,
+      "confianza": 0.72,
+      "frase_completa": "¿Puede en general acontecer la verdad y ser así histórica?",
+      "matiz": "pregunta abierta",
+      "contexto": null
+    },
+    {
+      "id": "r_039",
+      "origen_id": "c_006",
+      "destino_id": "c_001",
+      "tipo": "es_ejemplo_de",
+      "etiqueta": "la poesía es una obra de arte",
+      "bidireccional": false,
+      "confianza": 0.84,
+      "frase_completa": "Los himnos de Hólderlin... Los cuartetos de Beethoven... poema de C. F. Meyer",
+      "matiz": "ejemplificación",
+      "contexto": null
+    },
+    {
+      "id": "r_040",
+      "origen_id": "c_022",
+      "destino_id": "c_019",
+      "tipo": "es_origen_común_de",
+      "etiqueta": "material y forma proceden de un origen más hondo",
+      "bidireccional": false,
+      "confianza": 0.79,
+      "frase_completa": "Material y forma y la distinción de ambos, son ellos mismos de un origen más hondo",
+      "matiz": "arqueología conceptual",
+      "contexto": null
+    },
+    {
+      "id": "r_041",
+      "origen_id": "c_022",
+      "destino_id": "c_012",
+      "tipo": "pertenece_a",
+      "etiqueta": "el origen del arte está en la verdad",
+      "bidireccional": false,
+      "confianza": 0.7,
+      "frase_completa": "para meditar en el origen de este saber y su arrogancia... la esencia del arte",
+      "matiz": "investigación prospectiva",
+      "contexto": null
+    },
+    {
+      "id": "r_042",
+      "origen_id": "c_016",
+      "destino_id": "c_001",
+      "tipo": "crea",
+      "etiqueta": "el artista es quien crea la obra de arte",
+      "bidireccional": false,
+      "confianza": 0.81,
+      "frase_completa": "¿Y no es esto cósico en la obra lo que el artista hace propiamente con su oficio?",
+      "matiz": "autoría creativa",
+      "contexto": null
+    },
+    {
+      "id": "r_043",
+      "origen_id": "c_027",
+      "destino_id": "c_023",
+      "tipo": "realiza_mediante",
+      "etiqueta": "el pensamiento completa el círculo",
+      "bidireccional": false,
+      "confianza": 0.8,
+      "frase_completa": "Por lo tanto, debemos completar el curso del círculo... quedar en él es la fiesta del pensamiento",
+      "matiz": "actividad reflexiva cíclica",
+      "contexto": null
+    },
+    {
+      "id": "r_044",
+      "origen_id": "c_001",
+      "destino_id": "c_004",
+      "tipo": "establece",
+      "etiqueta": "establecer un mundo",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "Ser obra significa establecer un mundo",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_045",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "hace",
+      "etiqueta": "hechura de la tierra",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "Al establecer la obra un mundo y hacer la tierra, instiga a la lucha",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_046",
+      "origen_id": "c_004",
+      "destino_id": "c_003",
+      "tipo": "lucha_con",
+      "etiqueta": "se funda en / intenta sublimar",
+      "bidireccional": true,
+      "confianza": 0.93,
+      "frase_completa": "El mundo se funda en la tierra y la tierra irrumpe en el mundo",
+      "matiz": "antagonismo esencial sin separación",
+      "contexto": null
+    },
+    {
+      "id": "r_047",
+      "origen_id": "c_031",
+      "destino_id": "c_004",
+      "tipo": "opera_entre",
+      "etiqueta": "lucha entre mundo y tierra",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "La oposición entre el mundo y la tierra es una lucha",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_048",
+      "origen_id": "c_031",
+      "destino_id": "c_003",
+      "tipo": "opera_entre",
+      "etiqueta": "lucha entre mundo y tierra",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "La oposición entre el mundo y la tierra es una lucha",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_049",
+      "origen_id": "c_001",
+      "destino_id": "c_031",
+      "tipo": "sostiene_/_realiza",
+      "etiqueta": "pelear esta lucha",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "La obra realiza esta lucha estableciendo un mundo y haciendo la tierra",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_050",
+      "origen_id": "c_002",
+      "destino_id": "c_030",
+      "tipo": "está_dominada_por",
+      "etiqueta": "la ocultación como estructura esencial",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "La esencia de la verdad, es decir, la desocultación, está dominada por un rehusarse en el modo de ta doble ocultación",
+      "matiz": "la verdad es en su esencia no-verdad",
+      "contexto": null
+    },
+    {
+      "id": "r_051",
+      "origen_id": "c_001",
+      "destino_id": "c_032",
+      "tipo": "posee",
+      "etiqueta": "reposo que descansa en sí",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "En la intimidad de la lucha tiene su esencia el reposo de la obra que reposa en sí",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_052",
+      "origen_id": "c_001",
+      "destino_id": "c_007",
+      "tipo": "se_diferencia_de",
+      "etiqueta": "no es útil",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "Pero la obra no es ningún útil, provisto además de un valor estético",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_053",
+      "origen_id": "c_001",
+      "destino_id": "c_029",
+      "tipo": "se_diferencia_de",
+      "etiqueta": "no es mera cosa",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "el cimiento de cosa con el que quisimos captar la más patente realidad de la obra, no pertenece de ese modo a la obra",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_054",
+      "origen_id": "c_019",
+      "destino_id": "c_001",
+      "tipo": "en_la_obra_no_se_gasta_sino",
+      "etiqueta": "sobresale en la patencia",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "el templo, al establecer un mundo, no hace que la materia se consuma, sino ante todo que sobresalga en la patencia",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_055",
+      "origen_id": "c_003",
+      "destino_id": "c_019",
+      "tipo": "es_/_se_manifiesta_como",
+      "etiqueta": "tierra hace sobresalir la materia",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "Llamamos la tierra aquello a lo que la obra se fetrae y a lo que hace sobresalir",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_056",
+      "origen_id": "c_005",
+      "destino_id": "c_001",
+      "tipo": "pertenece_esencialmente_a",
+      "etiqueta": "ser-creado",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "Lo que tiene de obra la obra consiste en su ser-creada por el artista",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_057",
+      "origen_id": "c_012",
+      "destino_id": "c_001",
+      "tipo": "se_realiza_en",
+      "etiqueta": "arte se realiza en obra",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "El arte se realiza en la obra de arte",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_058",
+      "origen_id": "c_012",
+      "destino_id": "c_002",
+      "tipo": "es_el_poner_en_operación_de",
+      "etiqueta": "poner en operación la verdad",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "El arte es el ponerse en operación la verdad",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_059",
+      "origen_id": "c_022",
+      "destino_id": "c_001",
+      "tipo": "de_la_obra_de_arte_es",
+      "etiqueta": "origen de la obra",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "El origen de la obra del arte y del artista es el arte",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_060",
+      "origen_id": "c_022",
+      "destino_id": "c_012",
+      "tipo": "de",
+      "etiqueta": "origen del arte",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "El origen de la obra del arte y del artista es el arte",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_061",
+      "origen_id": "c_036",
+      "destino_id": "c_001",
+      "tipo": "es_llamado_a_la_presencia_en",
+      "etiqueta": "el dios está presente en la obra",
+      "bidireccional": false,
+      "confianza": 0.86,
+      "frase_completa": "Mediante el templo está en él presente el dios",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_062",
+      "origen_id": "c_004",
+      "destino_id": "c_034",
+      "tipo": "abre_el_ámbito_de",
+      "etiqueta": "decide en historia",
+      "bidireccional": false,
+      "confianza": 0.82,
+      "frase_completa": "El mundo se mundaniza ahí donde caen las decisiones esenciales de nuestra historia",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_063",
+      "origen_id": "c_004",
+      "destino_id": "c_026",
+      "tipo": "proporciona",
+      "etiqueta": "ser de confianza",
+      "bidireccional": false,
+      "confianza": 0.78,
+      "frase_completa": "Por su ser de confianza el útil da a este mundo una particular necesidad y cercanía",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_064",
+      "origen_id": "c_030",
+      "destino_id": "c_002",
+      "tipo": "constituye",
+      "etiqueta": "doble ocultación: negarse y disimularse",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "La ocultación puede ser un negarse o un disimularse",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_065",
+      "origen_id": "c_033",
+      "destino_id": "c_002",
+      "tipo": "es",
+      "etiqueta": "desocultación es verdad",
+      "bidireccional": true,
+      "confianza": 0.93,
+      "frase_completa": "La verdad es la esencia de lo verdadero. Pensamos recordando la palabra de los griegos dAdera..como la desocultación del ente",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_066",
+      "origen_id": "c_033",
+      "destino_id": "c_018",
+      "tipo": "acontecimiento_de",
+      "etiqueta": "iluminación del ente",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "la desocultación del ente",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_067",
+      "origen_id": "c_005",
+      "destino_id": "c_001",
+      "tipo": "depende_esencialmente_de",
+      "etiqueta": "la esencia de la creación depende de la esencia de la obra",
+      "bidireccional": true,
+      "confianza": 0.94,
+      "frase_completa": "Aun cuando el ser-creado de la obra hace referencia a la creación, sin embargo, el ser-creado de la obra así como la creación deben determinarse por el ser-obra de la obra",
+      "matiz": "La creación necesita de la obra para ser comprendida en su esencia",
+      "contexto": null
+    },
+    {
+      "id": "r_068",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "instala",
+      "etiqueta": "en ella está en operación la verdad",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "En vista de la delimitación lograda de la esencia de la obra, según la cual en ella está en operación la verdad",
+      "matiz": "La obra es el lugar donde la verdad acontece",
+      "contexto": null
+    },
+    {
+      "id": "r_069",
+      "origen_id": "c_002",
+      "destino_id": "c_031",
+      "tipo": "es",
+      "etiqueta": "La verdad es la lucha primordial",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "La verdad es la lucha primordial en que, cada vez de una manera, se conquista lo patente",
+      "matiz": "La verdad en su esencia es contienda entre fuerzas opuestas",
+      "contexto": null
+    },
+    {
+      "id": "r_070",
+      "origen_id": "c_031",
+      "destino_id": "c_003",
+      "tipo": "lucha_con",
+      "etiqueta": "lucha entre mundo y tierra",
+      "bidireccional": true,
+      "confianza": 0.94,
+      "frase_completa": "La verdad se arreglará en la obra como esa lucha de mundo y tierra",
+      "matiz": "La contienda fundamental es entre lo que abre (mundo) y lo que se oculta (tierra)",
+      "contexto": null
+    },
+    {
+      "id": "r_071",
+      "origen_id": "c_031",
+      "destino_id": "c_004",
+      "tipo": "lucha_con",
+      "etiqueta": "lucha entre mundo y tierra",
+      "bidireccional": true,
+      "confianza": 0.94,
+      "frase_completa": "La verdad se arreglará en la obra como esa lucha de mundo y tierra",
+      "matiz": "Lucha fundamental entre lo abierto y lo hermético",
+      "contexto": null
+    },
+    {
+      "id": "r_072",
+      "origen_id": "c_033",
+      "destino_id": "c_002",
+      "tipo": "es_esencia_de",
+      "etiqueta": "desocultación del ente es la verdad",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "La esencia del saber, para el pensamiento griego, descansa en la théa, o sea en la desocultación del ente",
+      "matiz": "Para los griegos, la verdad es desocultación",
+      "contexto": null
+    },
+    {
+      "id": "r_073",
+      "origen_id": "c_033",
+      "destino_id": "c_030",
+      "tipo": "contrasta_con",
+      "etiqueta": "desocultación versus ocultación",
+      "bidireccional": true,
+      "confianza": 0.94,
+      "frase_completa": "La verdad está en cuanto tal en la contraposición del alumbramiento y las dos clases de ocultación",
+      "matiz": "La verdad constituye la tensión entre lo revelado y lo oculto",
+      "contexto": null
+    },
+    {
+      "id": "r_074",
+      "origen_id": "c_002",
+      "destino_id": "c_025",
+      "tipo": "se_fija_en",
+      "etiqueta": "la verdad se fija en la forma",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "El ser-creado de la obra quiere decir fijada la verdad en la forma",
+      "matiz": "La forma es lo que confina y estabiliza la verdad en la obra",
+      "contexto": null
+    },
+    {
+      "id": "r_075",
+      "origen_id": "c_025",
+      "destino_id": "c_038",
+      "tipo": "conforma",
+      "etiqueta": "la forma es la desgarradura conformada",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "La lucha llevada a la desgarradura y de este modo reestablecida en la tierra y así fijada es la forma",
+      "matiz": "La forma estructura y articula la ruptura abierta",
+      "contexto": null
+    },
+    {
+      "id": "r_076",
+      "origen_id": "c_005",
+      "destino_id": "c_008",
+      "tipo": "requiere",
+      "etiqueta": "la creación requiere la contemplación",
+      "bidireccional": true,
+      "confianza": 0.92,
+      "frase_completa": "Si una obra no puede ser sin ser creada, pues necesita esencialmente los creadores, tampoco puede lo creado mismo llegar a ser existente sin la contemplación",
+      "matiz": "Creación y contemplación son mutuamente necesarias",
+      "contexto": null
+    },
+    {
+      "id": "r_077",
+      "origen_id": "c_008",
+      "destino_id": "c_001",
+      "tipo": "permite_ser",
+      "etiqueta": "únicamente en la contemplación, la obra se da como real",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "Únicamente en la contemplación, la obra se da en su ser-creatura como real",
+      "matiz": "La obra requiere ser contemplada para alcanzar su realidad",
+      "contexto": null
+    },
+    {
+      "id": "r_078",
+      "origen_id": "c_005",
+      "destino_id": "c_007",
+      "tipo": "se_distingue_de",
+      "etiqueta": "creación versus confección del útil",
+      "bidireccional": true,
+      "confianza": 0.94,
+      "frase_completa": "Así como es fácil distinguir la creación de la obra y la confección del útil, así es difícil perseguir ambas clases de producción",
+      "matiz": "La creación produce obra; la confección produce útil",
+      "contexto": null
+    },
+    {
+      "id": "r_079",
+      "origen_id": "c_007",
+      "destino_id": "c_002",
+      "tipo": "no_instala",
+      "etiqueta": "la confección del útil nunca es de inmediato un operar el acontecimiento de la verdad",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "Al contrario, la confección del útil nunca es de inmediato un operar el acontecimiento de la verdad",
+      "matiz": "El útil no pone-en-operación la verdad como lo hace la obra",
+      "contexto": null
+    },
+    {
+      "id": "r_080",
+      "origen_id": "c_016",
+      "destino_id": "c_005",
+      "tipo": "realiza",
+      "etiqueta": "el artista es quien crea",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Por eso el artista es un texnitns, no porque es también un artesano",
+      "matiz": "El artista es definido por su acto de creación",
+      "contexto": null
+    },
+    {
+      "id": "r_081",
+      "origen_id": "c_012",
+      "destino_id": "c_002",
+      "tipo": "es_poner-en-operación",
+      "etiqueta": "el arte es poner-en-operación la verdad",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "El arte es poner en la obra la verdad",
+      "matiz": "Esencia del arte definida por su relación con la verdad",
+      "contexto": null
+    },
+    {
+      "id": "r_082",
+      "origen_id": "c_012",
+      "destino_id": "c_006",
+      "tipo": "es",
+      "etiqueta": "el arte es en esencia poesía",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Todo arte es como dejar acontecer el advenimiento de la verdad del ente en cuanto tal, y por lo mismo es en esencia Poesía",
+      "matiz": "La poesía es la esencia común de todas las artes",
+      "contexto": null
+    },
+    {
+      "id": "r_083",
+      "origen_id": "c_006",
+      "destino_id": "c_009",
+      "tipo": "se_realiza_en",
+      "etiqueta": "la poesía más originaria es el habla",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "la poesía, en sentido restringido, es la Poesía más originaria en sentido esencial",
+      "matiz": "El lenguaje es el lugar originario de la poesía",
+      "contexto": null
+    },
+    {
+      "id": "r_084",
+      "origen_id": "c_009",
+      "destino_id": "c_018",
+      "tipo": "lleva_a_lo_manifiesto",
+      "etiqueta": "el habla lleva primero al ente a lo manifiesto",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "el lenguaje es el que lleva primero al ente como ente a lo manifiesto",
+      "matiz": "El lenguaje es lo que abre la patencia del ente",
+      "contexto": null
+    },
+    {
+      "id": "r_085",
+      "origen_id": "c_006",
+      "destino_id": "c_044",
+      "tipo": "instaura",
+      "etiqueta": "La poesía es instauración",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "La poesía es instauración por la palabra y en la palabra",
+      "matiz": "La poesía es la acción de instituir el ser mediante la palabra",
+      "contexto": "Definición fundamental de la esencia de la poesía"
+    },
+    {
+      "id": "r_086",
+      "origen_id": "c_044",
+      "destino_id": "c_033",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "El ser acontece como desocultación",
+      "bidireccional": false,
+      "confianza": 0.92,
+      "frase_completa": "La verdad es la desocultación del ente en cuanto al. La verdad es la verdad del ser.",
+      "matiz": "El ser es lo que se desoculta en el acontecimiento de la verdad",
+      "contexto": "Caracterización ontológica de la verdad"
+    },
+    {
+      "id": "r_087",
+      "origen_id": "c_033",
+      "destino_id": "c_035",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "La desocultación se manifiesta como belleza",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Cuando la verdad se pone en la obra se manifiesta. El manifestarse es, como este ser de la verdad en la obra y como obra, la belleza.",
+      "matiz": "La belleza es el modo de manifestación de la verdad en la obra",
+      "contexto": "Relación entre verdad, obra y belleza"
+    },
+    {
+      "id": "r_088",
+      "origen_id": "c_009",
+      "destino_id": "c_043",
+      "tipo": "acontece_primariamente_en",
+      "etiqueta": "El habla acontece en el diálogo",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "el habla sólo es esencial como diálogo",
+      "matiz": "El diálogo es la forma esencial del habla",
+      "contexto": "Caracterización del habla en su esencia"
+    },
+    {
+      "id": "r_089",
+      "origen_id": "c_043",
+      "destino_id": "c_036",
+      "tipo": "es_respuesta_a_la_invocación_de",
+      "etiqueta": "El diálogo responde a los dioses",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "Pero los dioses sólo pueden venir a la palabra cuando ellos mismos nos invocan, y estamos bajo su invocación.",
+      "matiz": "El diálogo humano es fundamentalmente respuesta a la invocación divina",
+      "contexto": "Relación entre diálogo y divinidad"
+    },
+    {
+      "id": "r_090",
+      "origen_id": "c_043",
+      "destino_id": "c_045",
+      "tipo": "es_contemporáneo_con",
+      "etiqueta": "El diálogo y la historia son equiprimordiales",
+      "bidireccional": true,
+      "confianza": 0.89,
+      "frase_completa": "Ser un diálogo y ser histórico son ambos igualmente antiguos, se pertenecen uno al otro y son lo mismo.",
+      "matiz": "Diálogo e historia son cooriginarios",
+      "contexto": "Fundamentación de la historia en el diálogo"
+    },
+    {
+      "id": "r_091",
+      "origen_id": "c_006",
+      "destino_id": "c_049",
+      "tipo": "realiza_mediante",
+      "etiqueta": "La poesía realiza el nombrar esencial",
+      "bidireccional": false,
+      "confianza": 0.93,
+      "frase_completa": "el poeta, al decir la palabra esencial, nombra con esta denominación, por primera vez, al ente por lo que es",
+      "matiz": "El nombrar poético es la acción de revelar el ente por primera vez",
+      "contexto": "Caracterización de la acción poética"
+    },
+    {
+      "id": "r_092",
+      "origen_id": "c_049",
+      "destino_id": "c_036",
+      "tipo": "nominación_de",
+      "etiqueta": "Se nombran originalmente los dioses",
+      "bidireccional": false,
+      "confianza": 0.91,
+      "frase_completa": "Poetizar es el dar nombre original a los dioses.",
+      "matiz": "La poesía es la nominación que hace venir a los dioses a la palabra",
+      "contexto": "Función poética de la nominación divina"
+    },
+    {
+      "id": "r_093",
+      "origen_id": "c_009",
+      "destino_id": "c_046",
+      "tipo": "es_caracterizado_como",
+      "etiqueta": "El habla es el bien más peligroso",
+      "bidireccional": false,
+      "confianza": 0.94,
+      "frase_completa": "se le ha dado al hombre el más peligroso de los bienes, el lenguaje",
+      "matiz": "El habla es peligroso porque abre la posibilidad del error y la pérdida del ser",
+      "contexto": "Caracterización de la esencia del habla"
+    },
+    {
+      "id": "r_094",
+      "origen_id": "c_009",
+      "destino_id": "c_047",
+      "tipo": "también_es",
+      "etiqueta": "El habla es el bien más inocente",
+      "bidireccional": false,
+      "confianza": 0.88,
+      "frase_completa": "la poesía 'la más inocente de todas las ocupaciones'",
+      "matiz": "Paradoja: el habla es al mismo tiempo peligroso e inocente",
+      "contexto": "Caracterización paradójica de la esencia de la poesía"
+    },
+    {
+      "id": "r_095",
+      "origen_id": "c_046",
+      "destino_id": "c_047",
+      "tipo": "convive_con",
+      "etiqueta": "El peligro y la inocencia coexisten",
+      "bidireccional": true,
+      "confianza": 0.87,
+      "frase_completa": "la poesía es la obra más peligrosa y a la vez 'la más inocente de las ocupaciones'",
+      "matiz": "La esencia de la poesía solo es concebida cuando se unifican ambas determinaciones",
+      "contexto": "Síntesis de las dos caracterizaciones aparentemente contradictorias"
+    }
+  ],
+  "bucles": [],
+  "metalenguaje": []
+}
