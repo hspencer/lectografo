@@ -31,6 +31,7 @@ class RelacionInvestigador(BaseModel):
     tipo: str
     etiqueta: str
     bidireccional: bool = False
+    cita: Optional[CitaPasaje] = None
     creada_en: datetime = Field(default_factory=datetime.utcnow)
 
 

@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from src.config import settings
 from src.models.extraccion import ResultadoExtraccion
@@ -48,7 +48,7 @@ from src.persistencia.grafo_personal import (
 )
 from src.models.grafo_personal import (
     GrafoPersonal, ConceptoInvestigador as ConceptoGP,
-    RelacionInvestigador as RelacionGP,
+    RelacionInvestigador as RelacionGP, CitaPasaje,
 )
 
 app = FastAPI(title="Lectógrafo", docs_url="/api/docs")
@@ -1561,6 +1561,7 @@ def obtener_grafo_personal_vis(slug: str):
             "etiqueta":      r.etiqueta,
             "bidireccional": r.bidireccional,
             "confianza":     1.0,
+            "cita":          r.cita.model_dump() if r.cita else None,
         }
         for r in grafo.relaciones
     ]
@@ -1570,6 +1571,7 @@ def obtener_grafo_personal_vis(slug: str):
 class NuevoConceptoGPPayload(BaseModel):
     label: str
     definicion: Optional[str] = None
+    citas: list[CitaPasaje] = Field(default_factory=list)
 
 
 @app.post("/api/grafos-personales/{slug}/conceptos")
@@ -1581,7 +1583,7 @@ def agregar_concepto_gp(slug: str, payload: NuevoConceptoGPPayload):
         raise HTTPException(404, f"Grafo personal '{slug}' no encontrado")
     grafo = cargar_gp(slug, GRAFOS)
     cid = f"ci_{str(uuid.uuid4())[:8]}"
-    concepto = ConceptoGP(id=cid, label=payload.label, definicion=payload.definicion)
+    concepto = ConceptoGP(id=cid, label=payload.label, definicion=payload.definicion, citas=payload.citas)
     grafo.conceptos_propios.append(concepto)
     from datetime import datetime
     grafo.actualizado_en = datetime.utcnow()
@@ -1638,6 +1640,7 @@ class NuevaRelacionGPPayload(BaseModel):
     tipo: str
     etiqueta: str
     bidireccional: bool = False
+    cita: Optional[CitaPasaje] = None
 
 
 @app.post("/api/grafos-personales/{slug}/relaciones")
@@ -1663,6 +1666,7 @@ def agregar_relacion_gp(slug: str, payload: NuevaRelacionGPPayload):
         tipo=payload.tipo,
         etiqueta=payload.etiqueta,
         bidireccional=payload.bidireccional,
+        cita=payload.cita,
     ))
     from datetime import datetime
     grafo.actualizado_en = datetime.utcnow()

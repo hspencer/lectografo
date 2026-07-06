@@ -7118,7 +7118,7 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-07-03T01:34:03.248553",
-  "actualizado_en": "2026-07-03T02:26:00.336129",
+  "actualizado_en": "2026-07-06T14:05:00.954639",
   "conceptos_editados": {
     "c_001": {
       "label": "Sociedad unidimensional"
@@ -8147,6 +8147,1230 @@
       "destino_id": "c_107",
       "tipo": "correlato_de",
       "etiqueta": "contrapartida estructural de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_eb458671",
+      "origen_id": "c_061",
+      "destino_id": "c_001",
+      "tipo": "manifestación contemporánea de",
+      "etiqueta": "la sociedad industrial avanzada realiza históricamente la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c644999c",
+      "origen_id": "c_356",
+      "destino_id": "c_014",
+      "tipo": "fundamento material de",
+      "etiqueta": "el modo de producción como factor histórico determina la estructura de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9bdef35a",
+      "origen_id": "c_138",
+      "destino_id": "c_135",
+      "tipo": "condición material de",
+      "etiqueta": "la acumulación primitiva de capital es prerequisito para la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_70a73ba8",
+      "origen_id": "c_144",
+      "destino_id": "c_146",
+      "tipo": "forma histórica de",
+      "etiqueta": "la administración total violenta implementa el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_aef85e30",
+      "origen_id": "c_164",
+      "destino_id": "c_184",
+      "tipo": "manifestación contemporánea de",
+      "etiqueta": "la cultura de masas realiza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f8f43bc8",
+      "origen_id": "c_170",
+      "destino_id": "c_155",
+      "tipo": "práctica contemporánea de",
+      "etiqueta": "la vanguardia artística intenta rescatar el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9ffa24e5",
+      "origen_id": "c_171",
+      "destino_id": "c_170",
+      "tipo": "ejemplo histórico de",
+      "etiqueta": "el Dadaísmo es movimiento que realiza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_79aba70e",
+      "origen_id": "c_172",
+      "destino_id": "c_170",
+      "tipo": "forma artística de",
+      "etiqueta": "el Surrealismo es movimiento que recupera mediante",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e07f40de",
+      "origen_id": "c_179",
+      "destino_id": "c_016",
+      "tipo": "manifestación empírica de",
+      "etiqueta": "la infelicidad bajo conciencia feliz es forma de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b812ad86",
+      "origen_id": "c_182",
+      "destino_id": "c_159",
+      "tipo": "forma de expresión de",
+      "etiqueta": "el conocimiento subversivo se expresa mediante",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_66cac887",
+      "origen_id": "c_186",
+      "destino_id": "c_050",
+      "tipo": "mecanismo psicológico de",
+      "etiqueta": "la identificación de intereses realiza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b18d79f7",
+      "origen_id": "c_192",
+      "destino_id": "c_191",
+      "tipo": "técnica operacional de",
+      "etiqueta": "la fórmula hipnótica realiza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5d5ee65f",
+      "origen_id": "c_194",
+      "destino_id": "c_192",
+      "tipo": "ejemplo de",
+      "etiqueta": "la predicación analítica es forma específica de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_21008943",
+      "origen_id": "c_196",
+      "destino_id": "c_006",
+      "tipo": "fundamentación del",
+      "etiqueta": "el pensamiento bidimensional es expresión teórica del",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_aac4474d",
+      "origen_id": "c_197",
+      "destino_id": "c_206",
+      "tipo": "técnica esencial de",
+      "etiqueta": "la mediación conceptual es operación fundamental de la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_08d72c5f",
+      "origen_id": "c_201",
+      "destino_id": "c_221",
+      "tipo": "propiedad definitoria de",
+      "etiqueta": "la inmunidad contra la contradicción caracteriza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7738cd38",
+      "origen_id": "c_202",
+      "destino_id": "c_203",
+      "tipo": "negación de",
+      "etiqueta": "la supresión de la historia reprime el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bce99a3f",
+      "origen_id": "c_203",
+      "destino_id": "c_204",
+      "tipo": "fundamento de",
+      "etiqueta": "la memoria como capacidad de disociación es base para la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d9de381c",
+      "origen_id": "c_216",
+      "destino_id": "c_223",
+      "tipo": "manifestación histórica de",
+      "etiqueta": "el lenguaje stalinista es ejemplo de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e00c2996",
+      "origen_id": "c_217",
+      "destino_id": "c_201",
+      "tipo": "realización de",
+      "etiqueta": "el cierre del lenguaje produce",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7611b36a",
+      "origen_id": "c_218",
+      "destino_id": "c_217",
+      "tipo": "materialización de",
+      "etiqueta": "las tautologías son forma específica de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7de3b238",
+      "origen_id": "c_222",
+      "destino_id": "c_201",
+      "tipo": "consecuencia de",
+      "etiqueta": "el bloqueo de la dialéctica es resultado de la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_59e6a552",
+      "origen_id": "c_224",
+      "destino_id": "c_223",
+      "tipo": "operacionalización de",
+      "etiqueta": "las técnicas de manipulación y control son características de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cd7dcbe4",
+      "origen_id": "c_235",
+      "destino_id": "c_050",
+      "tipo": "mecanismo de",
+      "etiqueta": "la coordinación mental con la realidad establece",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9e1d6791",
+      "origen_id": "c_236",
+      "destino_id": "c_238",
+      "tipo": "precondición de",
+      "etiqueta": "la traducción a términos operacionales produce",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_372a6518",
+      "origen_id": "c_242",
+      "destino_id": "c_197",
+      "tipo": "operaciones de",
+      "etiqueta": "la abstracción y generalización son formas de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1c8c7e87",
+      "origen_id": "c_246",
+      "destino_id": "c_243",
+      "tipo": "diferencia fundamental en",
+      "etiqueta": "el exceso de significado resulta de la diferencia entre",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a61a949e",
+      "origen_id": "c_251",
+      "destino_id": "c_252",
+      "tipo": "aplicación disciplinar de",
+      "etiqueta": "la sociología industrial es manifestación de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cc7267e8",
+      "origen_id": "c_257",
+      "destino_id": "c_262",
+      "tipo": "efecto de",
+      "etiqueta": "la referencia objetiva particular resulta de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7d23e30c",
+      "origen_id": "c_264",
+      "destino_id": "c_262",
+      "tipo": "efecto extremo de",
+      "etiqueta": "la desaparición del colectivo es resultado de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4d1d6c30",
+      "origen_id": "c_269",
+      "destino_id": "c_286",
+      "tipo": "desarrollo sistemático de",
+      "etiqueta": "la lógica formal es sistematización de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_90cab870",
+      "origen_id": "c_270",
+      "destino_id": "c_271",
+      "tipo": "definición del",
+      "etiqueta": "la verdad es condición de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dbc0c09b",
+      "origen_id": "c_085",
+      "destino_id": "c_021",
+      "tipo": "manifestación técnica de",
+      "etiqueta": "el sistema de máquinas integradas expresa la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bcebfc38",
+      "origen_id": "c_277",
+      "destino_id": "c_051",
+      "tipo": "condición ontológica para",
+      "etiqueta": "la verdadera libertad requiere transformación radical que realice",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fd51f254",
+      "origen_id": "c_451",
+      "destino_id": "c_011",
+      "tipo": "condición material de",
+      "etiqueta": "el tiempo libre abierto por automatización es base para la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_55e52d91",
+      "origen_id": "c_104",
+      "destino_id": "c_069",
+      "tipo": "mecanismo de perpetuación de",
+      "etiqueta": "la carrera de armamentos tecnológica organiza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ad358364",
+      "origen_id": "c_142",
+      "destino_id": "c_021",
+      "tipo": "realización social de",
+      "etiqueta": "el proceso mecanizado como transformación social impone la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_935ce279",
+      "origen_id": "c_091",
+      "destino_id": "c_048",
+      "tipo": "mecanismo de",
+      "etiqueta": "el círculo vicioso de administración realiza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6f67e0ba",
+      "origen_id": "c_140",
+      "destino_id": "c_141",
+      "tipo": "resistencia a través de",
+      "etiqueta": "las formas pretecnológicas y preburguesas ejercen",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f1a02d6a",
+      "origen_id": "c_143",
+      "destino_id": "c_142",
+      "tipo": "condición previa de",
+      "etiqueta": "la desacralización de valores es requisito para el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_92f85565",
+      "origen_id": "c_145",
+      "destino_id": "c_029",
+      "tipo": "manifestación de",
+      "etiqueta": "el neocolonialismo es forma contemporánea de la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_51ab4aec",
+      "origen_id": "c_149",
+      "destino_id": "c_137",
+      "tipo": "condición material de",
+      "etiqueta": "la revolución social y reforma agraria son prerequisitos de la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ef0f90fa",
+      "origen_id": "c_152",
+      "destino_id": "c_128",
+      "tipo": "agentes históricos de",
+      "etiqueta": "los productores inmediatos con oportunidad de autodeterminación realizan la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_50789668",
+      "origen_id": "c_154",
+      "destino_id": "c_163",
+      "tipo": "expresión histórica de",
+      "etiqueta": "la alienación artística caracteriza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7736d87b",
+      "origen_id": "c_155",
+      "destino_id": "c_006",
+      "tipo": "realización artística de",
+      "etiqueta": "el Gran Rechazo en el arte es forma de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d39c134d",
+      "origen_id": "c_156",
+      "destino_id": "c_165",
+      "tipo": "requiere desarrollo de",
+      "etiqueta": "la sublimación preserva la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bba207b6",
+      "origen_id": "c_158",
+      "destino_id": "c_155",
+      "tipo": "operacionalización teatral de",
+      "etiqueta": "el efecto de distanciamiento brechtiano realiza técnicamente el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_696916c7",
+      "origen_id": "c_160",
+      "destino_id": "c_167",
+      "tipo": "manifestación como",
+      "etiqueta": "la libido ahorro por mecanización se ve reducida en su",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_53061533",
+      "origen_id": "c_161",
+      "destino_id": "c_004",
+      "tipo": "mecanismo de",
+      "etiqueta": "el principio de placer absorbido por la sociedad realiza la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bac223f8",
+      "origen_id": "c_166",
+      "destino_id": "c_160",
+      "tipo": "expresión libre de",
+      "etiqueta": "el erotismo polimorfo es forma de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_78916be4",
+      "origen_id": "c_173",
+      "destino_id": "c_167",
+      "tipo": "reducción de",
+      "etiqueta": "la sexualidad localizada es resultado represivo de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6e8b7ceb",
+      "origen_id": "c_174",
+      "destino_id": "c_188",
+      "tipo": "estructura lingüística que fundamenta",
+      "etiqueta": "el sistema proposicional tradicional es base del",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_011fbfec",
+      "origen_id": "c_181",
+      "destino_id": "c_166",
+      "tipo": "base histórica para",
+      "etiqueta": "el paisaje de experiencia libidinal es condición de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5c1ebe15",
+      "origen_id": "c_183",
+      "destino_id": "c_039",
+      "tipo": "objeto de",
+      "etiqueta": "lo ausente nombrado por el lenguaje poético es",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4b8bd045",
+      "origen_id": "c_185",
+      "destino_id": "c_020",
+      "tipo": "especificación contemporánea de",
+      "etiqueta": "la conversión en mercancía es forma de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b0d1dad9",
+      "origen_id": "c_187",
+      "destino_id": "c_090",
+      "tipo": "condición psicológica de",
+      "etiqueta": "la ausencia de culpa es requisito para la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bd68d56c",
+      "origen_id": "c_191",
+      "destino_id": "c_055",
+      "tipo": "operacionalización lingüística de",
+      "etiqueta": "la identificación autoritaria es forma de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_684d5fb6",
+      "origen_id": "c_193",
+      "destino_id": "c_192",
+      "tipo": "estrategia de",
+      "etiqueta": "el lenguaje oratorio-ritual utiliza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ebff4849",
+      "origen_id": "c_195",
+      "destino_id": "c_194",
+      "tipo": "técnica que intensifica",
+      "etiqueta": "la contracción sintáctica refuerza el efecto de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2ef06875",
+      "origen_id": "c_198",
+      "destino_id": "c_214",
+      "tipo": "referencia gramatical de",
+      "etiqueta": "la sustancia como categoría ontológica se expresa en el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7be831be",
+      "origen_id": "c_204",
+      "destino_id": "c_215",
+      "tipo": "actividad propia de",
+      "etiqueta": "la concreción histórica requiere el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9cf6e351",
+      "origen_id": "c_205",
+      "destino_id": "c_197",
+      "tipo": "técnica fundamentada en",
+      "etiqueta": "el lenguaje del conocimiento opera mediante",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_84f64174",
+      "origen_id": "c_208",
+      "destino_id": "c_212",
+      "tipo": "caracterizada por",
+      "etiqueta": "la crítica conservadora y liberal mantiene",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_be0b045f",
+      "origen_id": "c_209",
+      "destino_id": "c_225",
+      "tipo": "materialización de",
+      "etiqueta": "la conducta lingüística expresa y refuerza mecanismos de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a31fc083",
+      "origen_id": "c_210",
+      "destino_id": "c_191",
+      "tipo": "técnica que realiza",
+      "etiqueta": "la familiaridad falsa produce",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_45fabae4",
+      "origen_id": "c_219",
+      "destino_id": "c_218",
+      "tipo": "aplicación política de",
+      "etiqueta": "el código penal funciona mediante",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dae05d2a",
+      "origen_id": "c_220",
+      "destino_id": "c_221",
+      "tipo": "resistencia a",
+      "etiqueta": "la oposición comunista libertaria lucha contra la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_64d9043f",
+      "origen_id": "c_226",
+      "destino_id": "c_209",
+      "tipo": "causa estructural de",
+      "etiqueta": "la reducción de formas lingüísticas determina",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2d1e784a",
+      "origen_id": "c_227",
+      "destino_id": "c_205",
+      "tipo": "medio de acceso a",
+      "etiqueta": "el vocabulario trascendente expresa",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7c836f1e",
+      "origen_id": "c_230",
+      "destino_id": "c_234",
+      "tipo": "manifestación de",
+      "etiqueta": "la publicidad converge con",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_aacdec0e",
+      "origen_id": "c_233",
+      "destino_id": "c_230",
+      "tipo": "lenguaje compartido de",
+      "etiqueta": "los símbolos políticos se intercambian mediante",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_169863c5",
+      "origen_id": "c_241",
+      "destino_id": "c_243",
+      "tipo": "caracterización de",
+      "etiqueta": "el concepto tiene",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3c2f4b73",
+      "origen_id": "c_247",
+      "destino_id": "c_303",
+      "tipo": "fuente de",
+      "etiqueta": "la tensión entre concepto y hecho genera",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ff3f694c",
+      "origen_id": "c_248",
+      "destino_id": "c_288",
+      "tipo": "afirmación de",
+      "etiqueta": "la realidad de lo universal es",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a8964f1f",
+      "origen_id": "c_249",
+      "destino_id": "c_247",
+      "tipo": "efecto de",
+      "etiqueta": "la falsa concreción resulta de la separación del concepto de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_207496ca",
+      "origen_id": "c_254",
+      "destino_id": "c_251",
+      "tipo": "especialización de",
+      "etiqueta": "las relaciones humanas como campo son extensión de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bf56a4e8",
+      "origen_id": "c_256",
+      "destino_id": "c_261",
+      "tipo": "portadores de",
+      "etiqueta": "los términos vagos mantienen el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0574478a",
+      "origen_id": "c_259",
+      "destino_id": "c_198",
+      "tipo": "manifestación gramatical de",
+      "etiqueta": "el sujeto de la proposición expresa la noción de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0959b566",
+      "origen_id": "c_260",
+      "destino_id": "c_256",
+      "tipo": "ejemplo de",
+      "etiqueta": "el adjetivo relacional es",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fa0ce211",
+      "origen_id": "c_263",
+      "destino_id": "c_243",
+      "tipo": "anulación de",
+      "etiqueta": "la abolición de la transitividad destruye",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1323589f",
+      "origen_id": "c_265",
+      "destino_id": "c_250",
+      "tipo": "transformación mediante",
+      "etiqueta": "el caso particular susceptible de tratamiento es objeto de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_be804750",
+      "origen_id": "c_027",
+      "destino_id": "c_091",
+      "tipo": "sometimiento a través de",
+      "etiqueta": "los intelectuales y técnicos quedan atrapados en el",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7dfd6523",
+      "origen_id": "c_139",
+      "destino_id": "c_145",
+      "tipo": "resultado estructural de",
+      "etiqueta": "la necesidad de rápida industrialización genera la amenaza de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d6743c61",
+      "origen_id": "c_146",
+      "destino_id": "c_086",
+      "tipo": "versión extrema de",
+      "etiqueta": "el sistema terrorista de acumulación reproduce la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_00f78197",
+      "origen_id": "c_148",
+      "destino_id": "c_137",
+      "tipo": "estrategia de",
+      "etiqueta": "la política planificada alternativa realiza concretamente la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dbdf85e3",
+      "origen_id": "c_150",
+      "destino_id": "c_147",
+      "tipo": "realización de",
+      "etiqueta": "el progreso autónomo confirma que",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c5caf911",
+      "origen_id": "c_151",
+      "destino_id": "c_148",
+      "tipo": "herramienta para",
+      "etiqueta": "la tecnología fragmentaria y gradual es medio de implementación de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_da0c5d34",
+      "origen_id": "c_153",
+      "destino_id": "c_100",
+      "tipo": "realización en",
+      "etiqueta": "el trabajo hacia gratificación es expresión de la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b19a5aac",
+      "origen_id": "c_162",
+      "destino_id": "c_006",
+      "tipo": "forma lingüística de",
+      "etiqueta": "el lenguaje mágico-ritual como racionalidad negativa expresa la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8adc0694",
+      "origen_id": "c_163",
+      "destino_id": "c_039",
+      "tipo": "medio histórico de",
+      "etiqueta": "la alta cultura preserva el impulso de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6d1ef100",
+      "origen_id": "c_168",
+      "destino_id": "c_169",
+      "tipo": "sublimación represiva del",
+      "etiqueta": "la agresividad manipulable es forma de canalización del",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fc6ba244",
+      "origen_id": "c_176",
+      "destino_id": "c_184",
+      "tipo": "integración mediante",
+      "etiqueta": "los Béatniks son forma de rechazo absorbida en el proceso de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0592930e",
+      "origen_id": "c_178",
+      "destino_id": "c_055",
+      "tipo": "institucionalizador de",
+      "etiqueta": "el superego en la sublimación funciona como mecanismo de",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d9a290da",
+      "origen_id": "c_189",
+      "destino_id": "c_181",
+      "tipo": "realidad histórica que sustenta",
+      "etiqueta": "el mundo pretecnológico es",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5217fcad",
+      "origen_id": "c_137",
+      "destino_id": "c_040",
+      "tipo": "realización alternativa de",
+      "etiqueta": "la confluencia de industrialización y liberación constituiría",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_80789d79",
+      "origen_id": "c_141",
+      "destino_id": "c_144",
+      "tipo": "precipita",
+      "etiqueta": "la resistencia de costumbres pretecnológicas provoca como respuesta la",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5fc5e0d5",
+      "origen_id": "c_147",
+      "destino_id": "c_148",
+      "tipo": "materialización mediante",
+      "etiqueta": "la tradición pretecnológica como fuente de progreso requiere",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_701989a0",
+      "origen_id": "c_298",
+      "destino_id": "c_269",
+      "tipo": "establece",
+      "etiqueta": "el Organon aristotélico establece el sistema de lógica formal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9dc73a9f",
+      "origen_id": "c_301",
+      "destino_id": "c_269",
+      "tipo": "es forma de",
+      "etiqueta": "el silogismo es forma básica de razonamiento en lógica formal aristotélica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_93ff9f88",
+      "origen_id": "c_297",
+      "destino_id": "c_270",
+      "tipo": "es opuesto a",
+      "etiqueta": "la falsedad es opuesto a verdad como condición del ser",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_25cceb97",
+      "origen_id": "c_299",
+      "destino_id": "c_286",
+      "tipo": "es término de",
+      "etiqueta": "el logos apofántico es término empleado por Aristóteles para designar proposición",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fe49c3eb",
+      "origen_id": "c_326",
+      "destino_id": "c_359",
+      "tipo": "es proceso de",
+      "etiqueta": "la cuantificación es proceso fundamental de ciencia moderna galileana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_96b67798",
+      "origen_id": "c_276",
+      "destino_id": "c_277",
+      "tipo": "limita",
+      "etiqueta": "la necesidad limita la libertad en filosofía clásica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a4f541d0",
+      "origen_id": "c_285",
+      "destino_id": "c_206",
+      "tipo": "mantiene",
+      "etiqueta": "la lógica dialéctica de Platón mantiene apertura de términos y ambigüedad metodológica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1c7c3947",
+      "origen_id": "c_290",
+      "destino_id": "c_291",
+      "tipo": "se une con",
+      "etiqueta": "la teoría se une inseparablemente con práctica en lógica dialéctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_661cbeb5",
+      "origen_id": "c_327",
+      "destino_id": "c_326",
+      "tipo": "es consecuencia de",
+      "etiqueta": "la eliminación de causas finales es consecuencia de cuantificación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_242faf1a",
+      "origen_id": "c_160",
+      "destino_id": "c_010",
+      "tipo": "es manifestación de",
+      "etiqueta": "la libido es energía del instinto de vida que es deserotizada por la mecanización",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4e03ef35",
+      "origen_id": "c_278",
+      "destino_id": "c_276",
+      "tipo": "es quien",
+      "etiqueta": "el esclavo es quien dedica su vida a satisfacer necesidades materiales",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5b29542e",
+      "origen_id": "c_283",
+      "destino_id": "c_188",
+      "tipo": "formaliza dentro de",
+      "etiqueta": "la proposición formaliza el juicio dialéctico dentro de lógica proposicional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_21e6d0da",
+      "origen_id": "c_306",
+      "destino_id": "c_303",
+      "tipo": "expresa",
+      "etiqueta": "la negatividad interior es cualidad específica que expresa carácter contradictorio",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a7d71308",
+      "origen_id": "c_317",
+      "destino_id": "c_001",
+      "tipo": "es mecanismo de",
+      "etiqueta": "la transformación de la oposición negativa en positiva es mecanismo de sociedad unidimensional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_80539d04",
+      "origen_id": "c_337",
+      "destino_id": "c_336",
+      "tipo": "resulta de",
+      "etiqueta": "la pérdida del carácter objetable resulta de desintegración de sustancia objetiva",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7c30a6da",
+      "origen_id": "c_339",
+      "destino_id": "c_340",
+      "tipo": "suspende juicio en",
+      "etiqueta": "la filosofía científica contemporánea suspende juicio metodológicamente",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dc32e15a",
+      "origen_id": "c_342",
+      "destino_id": "c_343",
+      "tipo": "opera como",
+      "etiqueta": "el ser como instrumento opera como a priori tecnológico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_32d6dea5",
+      "origen_id": "c_287",
+      "destino_id": "c_270",
+      "tipo": "se contrasta con",
+      "etiqueta": "la apariencia como lo que parece ser se contrasta con verdad como ser real",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bd73f5ce",
+      "origen_id": "c_304",
+      "destino_id": "c_206",
+      "tipo": "determina estructura de",
+      "etiqueta": "el objeto del pensamiento dialéctico en su concreción histórica determina estructura dialéctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_12725f82",
+      "origen_id": "c_308",
+      "destino_id": "c_290",
+      "tipo": "domina",
+      "etiqueta": "el filósofo en filosofía clásica domina teoría pura y práctica guiada por ella",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e56124ea",
+      "origen_id": "c_330",
+      "destino_id": "c_327",
+      "tipo": "es resultado de",
+      "etiqueta": "la separación de valores de realidad es resultado de método científico que separa verdadero de bueno",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_15650437",
+      "origen_id": "c_340",
+      "destino_id": "c_342",
+      "tipo": "reemplaza",
+      "etiqueta": "la suspensión del juicio metodológica reemplaza pregunta metafísica con funcional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8b38d803",
+      "origen_id": "c_275",
+      "destino_id": "c_006",
+      "tipo": "es forma de",
+      "etiqueta": "el logos como forma de negación es forma de pensamiento crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_72451678",
+      "origen_id": "c_281",
+      "destino_id": "c_414",
+      "tipo": "es dimensión de",
+      "etiqueta": "la potencialidad es dimensión del ser en relación potencialidad-actualidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_66e00425",
+      "origen_id": "c_314",
+      "destino_id": "c_021",
+      "tipo": "vincula",
+      "etiqueta": "la dominación del hombre por hombre vincula razón pre-tecnológica con racionalidad tecnológica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_869c8f12",
+      "origen_id": "c_324",
+      "destino_id": "c_021",
+      "tipo": "funde en",
+      "etiqueta": "el control social contemporáneo funde racionalidad técnica con manipulación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a544c0ca",
+      "origen_id": "c_332",
+      "destino_id": "c_333",
+      "tipo": "debilita",
+      "etiqueta": "la falta de validez lógica de valores debilita la oposición a realidad establecida",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_74d41a6e",
+      "origen_id": "c_341",
+      "destino_id": "c_354",
+      "tipo": "realiza",
+      "etiqueta": "la transformación de naturaleza como instrumentación realiza esencia de la técnica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_88dc9917",
+      "origen_id": "c_217",
+      "destino_id": "c_008",
+      "tipo": "constituye",
+      "etiqueta": "el cierre del lenguaje constituye una forma extrema de universo del discurso",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dea2f34a",
+      "origen_id": "c_240",
+      "destino_id": "c_061",
+      "tipo": "opera dentro de",
+      "etiqueta": "la investigación empírica opera dentro de la sociedad industrial avanzada sin cuestionar sus fundamentos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ac0f7950",
+      "origen_id": "c_272",
+      "destino_id": "c_271",
+      "tipo": "es opuesto a",
+      "etiqueta": "lo negativo como potencialidad y amenaza es opuesto al ser",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8e85e9de",
+      "origen_id": "c_300",
+      "destino_id": "c_374",
+      "tipo": "es forma de",
+      "etiqueta": "el símbolo en lógica formal es signo funcional vacío como concepto operacional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_25ce78df",
+      "origen_id": "c_312",
+      "destino_id": "c_284",
+      "tipo": "es concepto en",
+      "etiqueta": "la causa final en filosofía aristotélica es concepto que desaparece en lógica formal moderna",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f92d5f1e",
+      "origen_id": "c_315",
+      "destino_id": "c_314",
+      "tipo": "reemplaza",
+      "etiqueta": "el orden objetivo de las cosas reemplaza dependencia personal directa",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_21d07526",
+      "origen_id": "c_320",
+      "destino_id": "c_014",
+      "tipo": "es paradoja de",
+      "etiqueta": "el aparato que frustra su propio propósito es paradoja fundamental de totalidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b489aec5",
+      "origen_id": "c_336",
+      "destino_id": "c_335",
+      "tipo": "acompaña",
+      "etiqueta": "la desaparición de sustancia objetiva acompaña disolución en relaciones lógicas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2180bf4f",
+      "origen_id": "c_266",
+      "destino_id": "c_250",
+      "tipo": "es resultado de",
+      "etiqueta": "la cura terapéutica es resultado de conceptos operacionales y terapéuticos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c70a233d",
+      "origen_id": "c_284",
+      "destino_id": "c_303",
+      "tipo": "desarrolla",
+      "etiqueta": "la ontología desarrolla estudio de la contradicción como elemento de ser",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c1a41b9f",
+      "origen_id": "c_313",
+      "destino_id": "c_275",
+      "tipo": "revive",
+      "etiqueta": "Husserl revive la idea de logos apofántico subrayando su propósito crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4fa16d60",
+      "origen_id": "c_319",
+      "destino_id": "c_050",
+      "tipo": "naturaliza como",
+      "etiqueta": "la ideología de productividad racional naturaliza destrucción como manipulación de necesidades",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cdbc936a",
+      "origen_id": "c_323",
+      "destino_id": "c_007",
+      "tipo": "tiene doble significado en",
+      "etiqueta": "la racionalización tiene doble significado en racionalidad tecnológica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2404e85e",
+      "origen_id": "c_232",
+      "destino_id": "c_069",
+      "tipo": "se incrementa en",
+      "etiqueta": "el poder de los políticos profesionales se incrementa en sociedad de movilización total",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b059c63a",
+      "origen_id": "c_280",
+      "destino_id": "c_281",
+      "tipo": "es evolución histórica de",
+      "etiqueta": "la potencialidad y actualidad evolucionan históricamente como idea",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b4564161",
+      "origen_id": "c_289",
+      "destino_id": "c_040",
+      "tipo": "expresa",
+      "etiqueta": "el imperativo categórico expresa necesidad de cambio cualitativo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_830f58bb",
+      "origen_id": "c_309",
+      "destino_id": "c_206",
+      "tipo": "es resultado de",
+      "etiqueta": "la intuición como forma de conocimiento en filosofía clásica es resultado de mediación conceptual dialéctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f9c1a0a9",
+      "origen_id": "c_316",
+      "destino_id": "c_014",
+      "tipo": "caracteriza",
+      "etiqueta": "la organización equivocada de la sociedad rechaza alternativas al ser totalitaria",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_32a91d59",
+      "origen_id": "c_322",
+      "destino_id": "c_362",
+      "tipo": "es perpetuado mediante",
+      "etiqueta": "la lucha por existencia es proceso perpetuado y cientifizado mediante dominación de naturaleza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7bed574b",
+      "origen_id": "c_325",
+      "destino_id": "c_359",
+      "tipo": "tiene dirección de",
+      "etiqueta": "la ciencia pura tiene dirección inherente instrumentalista característica de ciencia galileana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_82a396c9",
+      "origen_id": "c_267",
+      "destino_id": "c_226",
+      "tipo": "persisten como obstáculos a",
+      "etiqueta": "los remanentes del pasado persisten como obstáculos a pesar de reducción de formas lingüísticas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d413c246",
+      "origen_id": "c_311",
+      "destino_id": "c_051",
+      "tipo": "es base para",
+      "etiqueta": "la esencia como verdadera naturaleza es base para libertad verdadera",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e6ac5cd1",
+      "origen_id": "c_321",
+      "destino_id": "c_315",
+      "tipo": "estructura",
+      "etiqueta": "la dinámica de negativo en positivo estructura orden objetivo de las cosas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_91852a01",
+      "origen_id": "c_335",
+      "destino_id": "c_338",
+      "tipo": "tiende hacia",
+      "etiqueta": "la disolución en relaciones lógicas tiende hacia realidad de ideas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a7ca8e63",
+      "origen_id": "c_302",
+      "destino_id": "c_021",
+      "tipo": "es base histórica de",
+      "etiqueta": "el control como capacidad de poder mediante conceptos universales es base histórica de dominación racional-técnica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c7b9520e",
+      "origen_id": "c_292",
+      "destino_id": "c_001",
+      "tipo": "es precedente histórico de",
+      "etiqueta": "la sociedad basada en esclavitud forma base histórica de filosofía clásica que examina la unidimensionalidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cd2e863b",
+      "origen_id": "c_329",
+      "destino_id": "c_345",
+      "tipo": "reproduce",
+      "etiqueta": "la pretensión de neutralidad científica reproduce problema cartesiano res cogitans y res extensa",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2d5d6506",
+      "origen_id": "c_331",
+      "destino_id": "c_408",
+      "tipo": "exponen",
+      "etiqueta": "los ideales humanitarios no perturban el orden pero exponen verdad del arte",
       "bidireccional": false
     }
   ],

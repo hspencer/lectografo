@@ -102,7 +102,12 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       syncFontSize(ev.transform.k);
     });
   svg.call(zoom).on("dblclick.zoom", null);
-  svg.on("click", () => onSelect(null));
+  // Clic en fondo vacío → deseleccionar. El guard .closest evita falsas
+  // deselecciones si el evento logra propagarse desde un nodo.
+  svg.on("click", (ev) => {
+    if (ev.target.closest?.(".node")) return;
+    onSelect(null);
+  });
 
   // ── Aristas ───────────────────────────────────────────────────────────
   const gLinks = g.append("g").attr("class","links");
@@ -153,7 +158,15 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     .data(nodes).join("g").attr("class","node")
       .attr("cursor","pointer")
       .call(drag)
-      .on("click",(ev,d)=>{ ev.stopPropagation(); onSelect(d); })
+      // Detección de clic vía pointerdown/pointerup: fiable aunque D3 drag llame
+      // preventDefault() en pointerdown (lo que suprime el evento `click`).
+      .on("pointerdown", (ev, d) => { d._pdx = ev.clientX; d._pdy = ev.clientY; })
+      .on("pointerup",   (ev, d) => {
+        if (d._pdx == null) return;
+        const dist = Math.hypot(ev.clientX - d._pdx, ev.clientY - d._pdy);
+        d._pdx = d._pdy = null;
+        if (dist < 8) { ev.stopPropagation(); onSelect(d); }
+      })
       .on("mouseenter",(ev,d)=>{ hoverId = d.id; render(computeHoverFocus(d.id), false); })
       .on("mouseleave",()=>{ hoverId = null; render(computeFocus(activePath), true); });
 
@@ -402,8 +415,8 @@ function fitView(svg, g, zoom, W, H) {
 
 // ── Atributos visuales ────────────────────────────────────────────────
 
-function nodeTOp(_n) { return 0.92; }
-function linkOpac(l) { return l.investigador ? 0.28 : 0.42; }
+function nodeTOp(_n) { return 1.0; }
+function linkOpac(l) { return l.investigador ? 0.5 : 0.8; }
 
 /** Caracteres por línea según distancia entre nodos en px. */
 function _charsForDist(distPx) {

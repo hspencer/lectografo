@@ -4,15 +4,15 @@
   "descripcion": "Formas de resistencia",
   "conceptos_propios": [
     {
-      "id": "ci_8fdd4505",
-      "label": "La labor del Diseño",
-      "definicion": "la tarea que la sociedad le encomienda o espera de él",
+      "id": "ci_f9a22e7b",
+      "label": "La función del diseño",
+      "definicion": null,
       "citas": [],
-      "creado_en": "2026-07-03T02:31:41.220673",
-      "actualizado_en": "2026-07-03T02:31:45.171853"
+      "creado_en": "2026-07-06T14:13:45.190347",
+      "actualizado_en": "2026-07-06T14:13:45.190354"
     }
   ],
   "relaciones": [],
   "creado_en": "2026-07-03T02:31:19.020600",
-  "actualizado_en": "2026-07-03T02:31:45.171869"
+  "actualizado_en": "2026-07-06T14:13:45.190369"
 }

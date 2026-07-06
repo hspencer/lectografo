@@ -40,7 +40,11 @@ async function init() {
   document.getElementById("grafo-titulo").textContent = state.grafo.titulo || slug;
 
   state.navCols = initNavCols(document.getElementById("nav-cols"), {
-    onCerrar: () => refrescarHighlight(),
+    onCerrar: id => {
+      const idx = parseInt(id.replace("col-", ""), 10);
+      state.path = state.path.slice(0, idx);
+      refrescarHighlight();
+    },
   });
 
   document.getElementById("btn-fit").onclick = () => state.grafoFit?.();

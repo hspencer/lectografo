@@ -563,6 +563,22 @@ kbd {
 }
 .panel-seccion-header { display: flex; align-items: center; gap: var(--sn-s-2); margin-bottom: var(--sn-s-3); }
 
+/* ── Sección colapsable: <details class="panel-seccion"> ─────────── */
+summary.panel-seccion-summary {
+  cursor: pointer; list-style: none; user-select: none;
+  display: flex; align-items: center; gap: var(--sn-s-1);
+  margin-bottom: 0;
+}
+summary.panel-seccion-summary::-webkit-details-marker { display: none; }
+summary.panel-seccion-summary::marker { display: none; }
+summary.panel-seccion-summary::before {
+  content: "›"; font-size: 0.9rem; line-height: 1;
+  display: inline-block; transition: transform 0.15s;
+  color: var(--sn-ink-faint); flex-shrink: 0;
+}
+details[open] > summary.panel-seccion-summary::before { transform: rotate(90deg); }
+details[open] > summary.panel-seccion-summary { margin-bottom: var(--sn-s-3); }
+
 /* ── Grupo colapsable de relaciones (por dirección) ──────────────── */
 .panel-rel-grupo { border-radius: var(--sn-radius-m); }
 .panel-rel-grupo-hdr {
@@ -1323,6 +1339,11 @@ tbody tr:hover td { background: var(--sn-sunk); }
   font-size: var(--sn-fs-xs); margin-top: var(--sn-s-1); line-height: 1.4;
 }
 
+#gp-texto-fuente-wrap {
+  padding: var(--sn-s-3) var(--sn-s-4);
+  border-bottom: var(--sn-hair);
+}
+
 #gp-conceptos-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: var(--sn-s-3) var(--sn-s-4) var(--sn-s-2);
@@ -1633,3 +1654,49 @@ hr.divider  { border: none; border-top: 1px solid var(--sn-hairline-soft); margi
 #contenido::-webkit-scrollbar-thumb,
 .tabla-scroll::-webkit-scrollbar-thumb,
 .nav-col-body::-webkit-scrollbar-thumb { background: var(--sn-hairline); border-radius: var(--sn-radius-pill); }
+
+/* ── Autocomplete dropdown (grafos personales) ───────────────────── */
+.gp-ac-dropdown {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  z-index: 300;
+  background: var(--sn-paper);
+  border: var(--sn-hair);
+  border-radius: var(--sn-radius);
+  box-shadow: var(--sn-lift);
+  list-style: none;
+  padding: var(--sn-s-1) 0;
+  margin: 2px 0 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.gp-ac-item {
+  padding: var(--sn-s-2) var(--sn-s-3);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+.gp-ac-item:hover,
+.gp-ac-item.active {
+  background: color-mix(in srgb, var(--sn-nova) 6%, transparent);
+}
+.gp-ac-item-label {
+  font-size: var(--sn-fs-xs);
+  font-weight: 600;
+  color: var(--sn-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gp-ac-item-meta {
+  font-size: 10px;
+  color: var(--sn-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

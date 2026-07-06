@@ -1,1752 +1,892 @@
 {
-  "id": "rec_c2e8a709",
+  "id": "rec_c94765c8",
   "slug": "el-hombre-unidimensional",
   "propuestas": [
     {
       "id": "pr_000",
       "conexion": {
-        "id": "cp_000",
-        "origen_id": "c_006",
-        "destino_id": "c_001",
-        "frase": "se opone fundamentalmente a la lógica de integración de",
-        "tipo": "antagonismo_crítico",
-        "confianza": 0.95
+        "id": "cp_066",
+        "origen_id": "c_298",
+        "destino_id": "c_269",
+        "frase": "el Organon aristotélico establece el sistema de lógica formal",
+        "tipo": "establece",
+        "confianza": 0.96
       },
-      "frase_editada": "se opone fundamentalmente a la lógica de integración de",
+      "frase_editada": "el Organon aristotélico establece el sistema de lógica formal",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_001",
       "conexion": {
-        "id": "cp_016",
-        "origen_id": "c_015",
-        "destino_id": "c_014",
-        "frase": "tensiones insalvables que caracterizan",
-        "tipo": "constitutiva_de",
-        "confianza": 0.92
+        "id": "cp_069",
+        "origen_id": "c_301",
+        "destino_id": "c_269",
+        "frase": "el silogismo es forma básica de razonamiento en lógica formal aristotélica",
+        "tipo": "es forma de",
+        "confianza": 0.96
       },
-      "frase_editada": "tensiones insalvables que caracterizan",
+      "frase_editada": "el silogismo es forma básica de razonamiento en lógica formal aristotélica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_002",
       "conexion": {
-        "id": "cp_046",
-        "origen_id": "c_060",
-        "destino_id": "c_001",
-        "frase": "forma exhaustiva de",
-        "tipo": "extensión_de",
-        "confianza": 0.92
+        "id": "cp_065",
+        "origen_id": "c_297",
+        "destino_id": "c_270",
+        "frase": "la falsedad es opuesto a verdad como condición del ser",
+        "tipo": "es opuesto a",
+        "confianza": 0.95
       },
-      "frase_editada": "forma exhaustiva de",
+      "frase_editada": "la falsedad es opuesto a verdad como condición del ser",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_003",
       "conexion": {
-        "id": "cp_010",
-        "origen_id": "c_005",
-        "destino_id": "c_001",
-        "frase": "aceptación de la realidad que fundamenta",
-        "tipo": "condición_de",
-        "confianza": 0.91
+        "id": "cp_067",
+        "origen_id": "c_299",
+        "destino_id": "c_286",
+        "frase": "el logos apofántico es término empleado por Aristóteles para designar proposición",
+        "tipo": "es término de",
+        "confianza": 0.95
       },
-      "frase_editada": "aceptación de la realidad que fundamenta",
+      "frase_editada": "el logos apofántico es término empleado por Aristóteles para designar proposición",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_004",
       "conexion": {
-        "id": "cp_019",
-        "origen_id": "c_020",
-        "destino_id": "c_019",
-        "frase": "manifestación específica de",
-        "tipo": "forma_de",
-        "confianza": 0.91
+        "id": "cp_089",
+        "origen_id": "c_326",
+        "destino_id": "c_359",
+        "frase": "la cuantificación es proceso fundamental de ciencia moderna galileana",
+        "tipo": "es proceso de",
+        "confianza": 0.95
       },
-      "frase_editada": "manifestación específica de",
+      "frase_editada": "la cuantificación es proceso fundamental de ciencia moderna galileana",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_005",
       "conexion": {
-        "id": "cp_015",
-        "origen_id": "c_013",
-        "destino_id": "c_011",
-        "frase": "base biológica que sostiene",
-        "tipo": "fundamento_de",
-        "confianza": 0.9
+        "id": "cp_054",
+        "origen_id": "c_276",
+        "destino_id": "c_277",
+        "frase": "la necesidad limita la libertad en filosofía clásica",
+        "tipo": "limita",
+        "confianza": 0.94
       },
-      "frase_editada": "base biológica que sostiene",
+      "frase_editada": "la necesidad limita la libertad en filosofía clásica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_006",
       "conexion": {
-        "id": "cp_042",
-        "origen_id": "c_048",
-        "destino_id": "c_001",
-        "frase": "proceso que sostiene la estructura de",
-        "tipo": "mecanismo_de",
-        "confianza": 0.9
+        "id": "cp_060",
+        "origen_id": "c_285",
+        "destino_id": "c_206",
+        "frase": "la lógica dialéctica de Platón mantiene apertura de términos y ambigüedad metodológica",
+        "tipo": "mantiene",
+        "confianza": 0.94
       },
-      "frase_editada": "proceso que sostiene la estructura de",
+      "frase_editada": "la lógica dialéctica de Platón mantiene apertura de términos y ambigüedad metodológica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_007",
       "conexion": {
-        "id": "cp_006",
-        "origen_id": "c_018",
-        "destino_id": "c_040",
-        "frase": "realizables mediante transformación radical que constituye",
-        "tipo": "base_de",
-        "confianza": 0.89
+        "id": "cp_063",
+        "origen_id": "c_290",
+        "destino_id": "c_291",
+        "frase": "la teoría se une inseparablemente con práctica en lógica dialéctica",
+        "tipo": "se une con",
+        "confianza": 0.94
       },
-      "frase_editada": "realizables mediante transformación radical que constituye",
+      "frase_editada": "la teoría se une inseparablemente con práctica en lógica dialéctica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_008",
       "conexion": {
-        "id": "cp_011",
-        "origen_id": "c_008",
-        "destino_id": "c_175",
-        "frase": "anulación de alternativas realizada mediante",
-        "tipo": "mecanismo_de",
-        "confianza": 0.89
+        "id": "cp_090",
+        "origen_id": "c_327",
+        "destino_id": "c_326",
+        "frase": "la eliminación de causas finales es consecuencia de cuantificación",
+        "tipo": "es consecuencia de",
+        "confianza": 0.94
       },
-      "frase_editada": "anulación de alternativas realizada mediante",
+      "frase_editada": "la eliminación de causas finales es consecuencia de cuantificación",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_009",
       "conexion": {
-        "id": "cp_017",
-        "origen_id": "c_017",
-        "destino_id": "c_006",
-        "frase": "análisis que desarrolla la capacidad de",
-        "tipo": "promoción_de",
-        "confianza": 0.89
+        "id": "cp_007",
+        "origen_id": "c_160",
+        "destino_id": "c_010",
+        "frase": "la libido es energía del instinto de vida que es deserotizada por la mecanización",
+        "tipo": "es manifestación de",
+        "confianza": 0.93
       },
-      "frase_editada": "análisis que desarrolla la capacidad de",
+      "frase_editada": "la libido es energía del instinto de vida que es deserotizada por la mecanización",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_010",
       "conexion": {
-        "id": "cp_028",
-        "origen_id": "c_029",
-        "destino_id": "c_014",
-        "frase": "expansión constitutiva de",
-        "tipo": "dimensión_de",
-        "confianza": 0.89
+        "id": "cp_055",
+        "origen_id": "c_278",
+        "destino_id": "c_276",
+        "frase": "el esclavo es quien dedica su vida a satisfacer necesidades materiales",
+        "tipo": "es quien",
+        "confianza": 0.93
       },
-      "frase_editada": "expansión constitutiva de",
+      "frase_editada": "el esclavo es quien dedica su vida a satisfacer necesidades materiales",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_011",
       "conexion": {
-        "id": "cp_035",
-        "origen_id": "c_038",
-        "destino_id": "c_050",
-        "frase": "máquinas que operan mediante",
-        "tipo": "instrumento_de",
-        "confianza": 0.89
+        "id": "cp_058",
+        "origen_id": "c_283",
+        "destino_id": "c_188",
+        "frase": "la proposición formaliza el juicio dialéctico dentro de lógica proposicional",
+        "tipo": "formaliza dentro de",
+        "confianza": 0.93
       },
-      "frase_editada": "máquinas que operan mediante",
+      "frase_editada": "la proposición formaliza el juicio dialéctico dentro de lógica proposicional",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_012",
       "conexion": {
-        "id": "cp_062",
-        "origen_id": "c_078",
-        "destino_id": "c_086",
-        "frase": "valor apropiado que constituye",
-        "tipo": "esencia_de",
-        "confianza": 0.89
+        "id": "cp_072",
+        "origen_id": "c_306",
+        "destino_id": "c_303",
+        "frase": "la negatividad interior es cualidad específica que expresa carácter contradictorio",
+        "tipo": "expresa",
+        "confianza": 0.93
       },
-      "frase_editada": "valor apropiado que constituye",
+      "frase_editada": "la negatividad interior es cualidad específica que expresa carácter contradictorio",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_013",
       "conexion": {
-        "id": "cp_083",
-        "origen_id": "c_100",
-        "destino_id": "c_451",
-        "frase": "dimensión de existencia liberada por",
-        "tipo": "efecto_de",
-        "confianza": 0.89
+        "id": "cp_081",
+        "origen_id": "c_317",
+        "destino_id": "c_001",
+        "frase": "la transformación de la oposición negativa en positiva es mecanismo de sociedad unidimensional",
+        "tipo": "es mecanismo de",
+        "confianza": 0.93
       },
-      "frase_editada": "dimensión de existencia liberada por",
+      "frase_editada": "la transformación de la oposición negativa en positiva es mecanismo de sociedad unidimensional",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_014",
       "conexion": {
-        "id": "cp_110",
-        "origen_id": "c_128",
-        "destino_id": "c_011",
-        "frase": "más radical forma de realización de",
-        "tipo": "máxima_expresión_de",
-        "confianza": 0.89
+        "id": "cp_097",
+        "origen_id": "c_337",
+        "destino_id": "c_336",
+        "frase": "la pérdida del carácter objetable resulta de desintegración de sustancia objetiva",
+        "tipo": "resulta de",
+        "confianza": 0.93
       },
-      "frase_editada": "más radical forma de realización de",
+      "frase_editada": "la pérdida del carácter objetable resulta de desintegración de sustancia objetiva",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_015",
       "conexion": {
-        "id": "cp_013",
-        "origen_id": "c_011",
-        "destino_id": "c_059",
-        "frase": "objetivo final que realiza el estado de",
-        "tipo": "realización_de",
-        "confianza": 0.88
+        "id": "cp_098",
+        "origen_id": "c_339",
+        "destino_id": "c_340",
+        "frase": "la filosofía científica contemporánea suspende juicio metodológicamente",
+        "tipo": "suspende juicio en",
+        "confianza": 0.93
       },
-      "frase_editada": "objetivo final que realiza el estado de",
+      "frase_editada": "la filosofía científica contemporánea suspende juicio metodológicamente",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_016",
       "conexion": {
-        "id": "cp_018",
-        "origen_id": "c_019",
-        "destino_id": "c_054",
-        "frase": "proceso que genera estado de",
-        "tipo": "producción_de",
-        "confianza": 0.88
+        "id": "cp_101",
+        "origen_id": "c_342",
+        "destino_id": "c_343",
+        "frase": "el ser como instrumento opera como a priori tecnológico",
+        "tipo": "opera como",
+        "confianza": 0.93
       },
-      "frase_editada": "proceso que genera estado de",
+      "frase_editada": "el ser como instrumento opera como a priori tecnológico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_017",
       "conexion": {
-        "id": "cp_033",
-        "origen_id": "c_034",
-        "destino_id": "c_050",
-        "frase": "incremento material que disimula",
-        "tipo": "cobertura_de",
-        "confianza": 0.88
+        "id": "cp_061",
+        "origen_id": "c_287",
+        "destino_id": "c_270",
+        "frase": "la apariencia como lo que parece ser se contrasta con verdad como ser real",
+        "tipo": "se contrasta con",
+        "confianza": 0.92
       },
-      "frase_editada": "incremento material que disimula",
+      "frase_editada": "la apariencia como lo que parece ser se contrasta con verdad como ser real",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_018",
       "conexion": {
-        "id": "cp_036",
-        "origen_id": "c_040",
-        "destino_id": "c_011",
-        "frase": "transformación fundamental que realizaría",
-        "tipo": "medio_hacia",
-        "confianza": 0.88
+        "id": "cp_071",
+        "origen_id": "c_304",
+        "destino_id": "c_206",
+        "frase": "el objeto del pensamiento dialéctico en su concreción histórica determina estructura dialéctica",
+        "tipo": "determina estructura de",
+        "confianza": 0.92
       },
-      "frase_editada": "transformación fundamental que realizaría",
+      "frase_editada": "el objeto del pensamiento dialéctico en su concreción histórica determina estructura dialéctica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_019",
       "conexion": {
-        "id": "cp_043",
-        "origen_id": "c_055",
-        "destino_id": "c_060",
-        "frase": "proceso psicológico constitutivo de",
-        "tipo": "componente_de",
-        "confianza": 0.88
+        "id": "cp_073",
+        "origen_id": "c_308",
+        "destino_id": "c_290",
+        "frase": "el filósofo en filosofía clásica domina teoría pura y práctica guiada por ella",
+        "tipo": "domina",
+        "confianza": 0.92
       },
-      "frase_editada": "proceso psicológico constitutivo de",
+      "frase_editada": "el filósofo en filosofía clásica domina teoría pura y práctica guiada por ella",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_020",
       "conexion": {
-        "id": "cp_052",
-        "origen_id": "c_067",
-        "destino_id": "c_045",
-        "frase": "confirmación histórica de la falsedad de",
-        "tipo": "demostración_de",
-        "confianza": 0.88
+        "id": "cp_092",
+        "origen_id": "c_330",
+        "destino_id": "c_327",
+        "frase": "la separación de valores de realidad es resultado de método científico que separa verdadero de bueno",
+        "tipo": "es resultado de",
+        "confianza": 0.92
       },
-      "frase_editada": "confirmación histórica de la falsedad de",
+      "frase_editada": "la separación de valores de realidad es resultado de método científico que separa verdadero de bueno",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_021",
       "conexion": {
-        "id": "cp_058",
-        "origen_id": "c_074",
-        "destino_id": "c_064",
-        "frase": "sistema que constituye",
-        "tipo": "ejemplificación_de",
-        "confianza": 0.88
+        "id": "cp_099",
+        "origen_id": "c_340",
+        "destino_id": "c_342",
+        "frase": "la suspensión del juicio metodológica reemplaza pregunta metafísica con funcional",
+        "tipo": "reemplaza",
+        "confianza": 0.92
       },
-      "frase_editada": "sistema que constituye",
+      "frase_editada": "la suspensión del juicio metodológica reemplaza pregunta metafísica con funcional",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_022",
       "conexion": {
-        "id": "cp_020",
-        "origen_id": "c_021",
-        "destino_id": "c_007",
-        "frase": "aplicación concreta de",
-        "tipo": "realización_de",
-        "confianza": 0.87
+        "id": "cp_053",
+        "origen_id": "c_275",
+        "destino_id": "c_006",
+        "frase": "el logos como forma de negación es forma de pensamiento crítico",
+        "tipo": "es forma de",
+        "confianza": 0.91
       },
-      "frase_editada": "aplicación concreta de",
+      "frase_editada": "el logos como forma de negación es forma de pensamiento crítico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_023",
       "conexion": {
-        "id": "cp_027",
-        "origen_id": "c_028",
-        "destino_id": "c_040",
-        "frase": "factor decisivo para la realización de",
-        "tipo": "prerrequisito_de",
-        "confianza": 0.87
+        "id": "cp_057",
+        "origen_id": "c_281",
+        "destino_id": "c_414",
+        "frase": "la potencialidad es dimensión del ser en relación potencialidad-actualidad",
+        "tipo": "es dimensión de",
+        "confianza": 0.91
       },
-      "frase_editada": "factor decisivo para la realización de",
+      "frase_editada": "la potencialidad es dimensión del ser en relación potencialidad-actualidad",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_024",
       "conexion": {
-        "id": "cp_050",
-        "origen_id": "c_064",
-        "destino_id": "c_067",
-        "frase": "integración de tecnología que expresa",
-        "tipo": "manifestación_de",
-        "confianza": 0.87
+        "id": "cp_078",
+        "origen_id": "c_314",
+        "destino_id": "c_021",
+        "frase": "la dominación del hombre por hombre vincula razón pre-tecnológica con racionalidad tecnológica",
+        "tipo": "vincula",
+        "confianza": 0.91
       },
-      "frase_editada": "integración de tecnología que expresa",
+      "frase_editada": "la dominación del hombre por hombre vincula razón pre-tecnológica con racionalidad tecnológica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_025",
       "conexion": {
-        "id": "cp_053",
-        "origen_id": "c_069",
-        "destino_id": "c_001",
-        "frase": "forma contemporánea de",
-        "tipo": "actualización_de",
-        "confianza": 0.87
+        "id": "cp_087",
+        "origen_id": "c_324",
+        "destino_id": "c_021",
+        "frase": "el control social contemporáneo funde racionalidad técnica con manipulación",
+        "tipo": "funde en",
+        "confianza": 0.91
       },
-      "frase_editada": "forma contemporánea de",
+      "frase_editada": "el control social contemporáneo funde racionalidad técnica con manipulación",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_026",
       "conexion": {
-        "id": "cp_059",
-        "origen_id": "c_075",
-        "destino_id": "c_022",
-        "frase": "sujeto histórico transformado por",
-        "tipo": "objeto_de",
-        "confianza": 0.87
+        "id": "cp_094",
+        "origen_id": "c_332",
+        "destino_id": "c_333",
+        "frase": "la falta de validez lógica de valores debilita la oposición a realidad establecida",
+        "tipo": "debilita",
+        "confianza": 0.91
       },
-      "frase_editada": "sujeto histórico transformado por",
+      "frase_editada": "la falta de validez lógica de valores debilita la oposición a realidad establecida",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_027",
       "conexion": {
-        "id": "cp_069",
-        "origen_id": "c_086",
-        "destino_id": "c_002",
-        "frase": "sistema perpetuado mediante",
-        "tipo": "medio_de",
-        "confianza": 0.87
+        "id": "cp_100",
+        "origen_id": "c_341",
+        "destino_id": "c_354",
+        "frase": "la transformación de naturaleza como instrumentación realiza esencia de la técnica",
+        "tipo": "realiza",
+        "confianza": 0.91
       },
-      "frase_editada": "sistema perpetuado mediante",
+      "frase_editada": "la transformación de naturaleza como instrumentación realiza esencia de la técnica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_028",
       "conexion": {
-        "id": "cp_080",
-        "origen_id": "c_097",
-        "destino_id": "c_015",
-        "frase": "incompatibilidad que expresa",
-        "tipo": "manifestación_de",
-        "confianza": 0.87
+        "id": "cp_001",
+        "origen_id": "c_217",
+        "destino_id": "c_008",
+        "frase": "el cierre del lenguaje constituye una forma extrema de universo del discurso",
+        "tipo": "constituye",
+        "confianza": 0.9
       },
-      "frase_editada": "incompatibilidad que expresa",
+      "frase_editada": "el cierre del lenguaje constituye una forma extrema de universo del discurso",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_029",
       "conexion": {
-        "id": "cp_093",
-        "origen_id": "c_110",
-        "destino_id": "c_014",
-        "frase": "forma de contención de contradicciones de",
-        "tipo": "mecanismo_de",
-        "confianza": 0.87
+        "id": "cp_049",
+        "origen_id": "c_240",
+        "destino_id": "c_061",
+        "frase": "la investigación empírica opera dentro de la sociedad industrial avanzada sin cuestionar sus fundamentos",
+        "tipo": "opera dentro de",
+        "confianza": 0.9
       },
-      "frase_editada": "forma de contención de contradicciones de",
+      "frase_editada": "la investigación empírica opera dentro de la sociedad industrial avanzada sin cuestionar sus fundamentos",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_030",
       "conexion": {
-        "id": "cp_099",
-        "origen_id": "c_116",
-        "destino_id": "c_128",
-        "frase": "forma práctica de realizar",
-        "tipo": "operacionalización_de",
-        "confianza": 0.87
+        "id": "cp_052",
+        "origen_id": "c_272",
+        "destino_id": "c_271",
+        "frase": "lo negativo como potencialidad y amenaza es opuesto al ser",
+        "tipo": "es opuesto a",
+        "confianza": 0.9
       },
-      "frase_editada": "forma práctica de realizar",
+      "frase_editada": "lo negativo como potencialidad y amenaza es opuesto al ser",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_031",
       "conexion": {
-        "id": "cp_111",
-        "origen_id": "c_129",
-        "destino_id": "c_128",
-        "frase": "precondiciones materiales para",
-        "tipo": "requisito_de",
-        "confianza": 0.87
+        "id": "cp_068",
+        "origen_id": "c_300",
+        "destino_id": "c_374",
+        "frase": "el símbolo en lógica formal es signo funcional vacío como concepto operacional",
+        "tipo": "es forma de",
+        "confianza": 0.9
       },
-      "frase_editada": "precondiciones materiales para",
+      "frase_editada": "el símbolo en lógica formal es signo funcional vacío como concepto operacional",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_032",
       "conexion": {
-        "id": "cp_008",
-        "origen_id": "c_039",
-        "destino_id": "c_018",
-        "frase": "práctica que busca alcanzar",
-        "tipo": "orientación_hacia",
-        "confianza": 0.86
+        "id": "cp_076",
+        "origen_id": "c_312",
+        "destino_id": "c_284",
+        "frase": "la causa final en filosofía aristotélica es concepto que desaparece en lógica formal moderna",
+        "tipo": "es concepto en",
+        "confianza": 0.9
       },
-      "frase_editada": "práctica que busca alcanzar",
+      "frase_editada": "la causa final en filosofía aristotélica es concepto que desaparece en lógica formal moderna",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_033",
       "conexion": {
-        "id": "cp_025",
-        "origen_id": "c_026",
-        "destino_id": "c_048",
-        "frase": "clase integrada en la estructura de",
-        "tipo": "participante_en",
-        "confianza": 0.86
+        "id": "cp_079",
+        "origen_id": "c_315",
+        "destino_id": "c_314",
+        "frase": "el orden objetivo de las cosas reemplaza dependencia personal directa",
+        "tipo": "reemplaza",
+        "confianza": 0.9
       },
-      "frase_editada": "clase integrada en la estructura de",
+      "frase_editada": "el orden objetivo de las cosas reemplaza dependencia personal directa",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_034",
       "conexion": {
-        "id": "cp_032",
-        "origen_id": "c_033",
-        "destino_id": "c_034",
-        "frase": "estructura que funciona mediante",
-        "tipo": "medio_de",
-        "confianza": 0.86
+        "id": "cp_083",
+        "origen_id": "c_320",
+        "destino_id": "c_014",
+        "frase": "el aparato que frustra su propio propósito es paradoja fundamental de totalidad",
+        "tipo": "es paradoja de",
+        "confianza": 0.9
       },
-      "frase_editada": "estructura que funciona mediante",
+      "frase_editada": "el aparato que frustra su propio propósito es paradoja fundamental de totalidad",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_035",
       "conexion": {
-        "id": "cp_044",
-        "origen_id": "c_058",
-        "destino_id": "c_057",
-        "frase": "método complementario al",
-        "tipo": "complemento_de",
-        "confianza": 0.86
+        "id": "cp_096",
+        "origen_id": "c_336",
+        "destino_id": "c_335",
+        "frase": "la desaparición de sustancia objetiva acompaña disolución en relaciones lógicas",
+        "tipo": "acompaña",
+        "confianza": 0.9
       },
-      "frase_editada": "método complementario al",
+      "frase_editada": "la desaparición de sustancia objetiva acompaña disolución en relaciones lógicas",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_036",
       "conexion": {
-        "id": "cp_047",
-        "origen_id": "c_061",
-        "destino_id": "c_307",
-        "frase": "realización histórica de",
-        "tipo": "ejemplificación_de",
-        "confianza": 0.86
+        "id": "cp_050",
+        "origen_id": "c_266",
+        "destino_id": "c_250",
+        "frase": "la cura terapéutica es resultado de conceptos operacionales y terapéuticos",
+        "tipo": "es resultado de",
+        "confianza": 0.89
       },
-      "frase_editada": "realización histórica de",
+      "frase_editada": "la cura terapéutica es resultado de conceptos operacionales y terapéuticos",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_037",
       "conexion": {
-        "id": "cp_055",
-        "origen_id": "c_071",
-        "destino_id": "c_050",
-        "frase": "mercancías que operan mediante",
-        "tipo": "instrumento_de",
-        "confianza": 0.86
+        "id": "cp_059",
+        "origen_id": "c_284",
+        "destino_id": "c_303",
+        "frase": "la ontología desarrolla estudio de la contradicción como elemento de ser",
+        "tipo": "desarrolla",
+        "confianza": 0.89
       },
-      "frase_editada": "mercancías que operan mediante",
+      "frase_editada": "la ontología desarrolla estudio de la contradicción como elemento de ser",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_038",
       "conexion": {
-        "id": "cp_060",
-        "origen_id": "c_076",
-        "destino_id": "c_048",
-        "frase": "proceso que realiza",
-        "tipo": "manifestación_de",
-        "confianza": 0.86
+        "id": "cp_077",
+        "origen_id": "c_313",
+        "destino_id": "c_275",
+        "frase": "Husserl revive la idea de logos apofántico subrayando su propósito crítico",
+        "tipo": "revive",
+        "confianza": 0.89
       },
-      "frase_editada": "proceso que realiza",
+      "frase_editada": "Husserl revive la idea de logos apofántico subrayando su propósito crítico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_039",
       "conexion": {
-        "id": "cp_067",
-        "origen_id": "c_083",
-        "destino_id": "c_107",
-        "frase": "poder histórico que se erosiona mediante",
-        "tipo": "pérdida_en",
-        "confianza": 0.86
+        "id": "cp_082",
+        "origen_id": "c_319",
+        "destino_id": "c_050",
+        "frase": "la ideología de productividad racional naturaliza destrucción como manipulación de necesidades",
+        "tipo": "naturaliza como",
+        "confianza": 0.89
       },
-      "frase_editada": "poder histórico que se erosiona mediante",
+      "frase_editada": "la ideología de productividad racional naturaliza destrucción como manipulación de necesidades",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_040",
       "conexion": {
-        "id": "cp_073",
-        "origen_id": "c_090",
-        "destino_id": "c_279",
-        "frase": "forma moderna de",
-        "tipo": "transformación_de",
-        "confianza": 0.86
+        "id": "cp_086",
+        "origen_id": "c_323",
+        "destino_id": "c_007",
+        "frase": "la racionalización tiene doble significado en racionalidad tecnológica",
+        "tipo": "tiene doble significado en",
+        "confianza": 0.89
       },
-      "frase_editada": "forma moderna de",
+      "frase_editada": "la racionalización tiene doble significado en racionalidad tecnológica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_041",
       "conexion": {
-        "id": "cp_079",
-        "origen_id": "c_096",
-        "destino_id": "c_015",
-        "frase": "fuerzas potencialmente rupturistas dentro de",
-        "tipo": "antagonismo_latente_en",
-        "confianza": 0.86
+        "id": "cp_048",
+        "origen_id": "c_232",
+        "destino_id": "c_069",
+        "frase": "el poder de los políticos profesionales se incrementa en sociedad de movilización total",
+        "tipo": "se incrementa en",
+        "confianza": 0.88
       },
-      "frase_editada": "fuerzas potencialmente rupturistas dentro de",
+      "frase_editada": "el poder de los políticos profesionales se incrementa en sociedad de movilización total",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_042",
       "conexion": {
-        "id": "cp_102",
-        "origen_id": "c_120",
-        "destino_id": "c_122",
-        "frase": "estructura que permite perpetuar mediante",
-        "tipo": "mecanismo_de",
-        "confianza": 0.86
+        "id": "cp_056",
+        "origen_id": "c_280",
+        "destino_id": "c_281",
+        "frase": "la potencialidad y actualidad evolucionan históricamente como idea",
+        "tipo": "es evolución histórica de",
+        "confianza": 0.88
       },
-      "frase_editada": "estructura que permite perpetuar mediante",
+      "frase_editada": "la potencialidad y actualidad evolucionan históricamente como idea",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_043",
       "conexion": {
-        "id": "cp_104",
-        "origen_id": "c_122",
-        "destino_id": "c_123",
-        "frase": "separación que establece",
-        "tipo": "causa_de",
-        "confianza": 0.86
+        "id": "cp_062",
+        "origen_id": "c_289",
+        "destino_id": "c_040",
+        "frase": "el imperativo categórico expresa necesidad de cambio cualitativo",
+        "tipo": "expresa",
+        "confianza": 0.88
       },
-      "frase_editada": "separación que establece",
+      "frase_editada": "el imperativo categórico expresa necesidad de cambio cualitativo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_044",
       "conexion": {
-        "id": "cp_012",
-        "origen_id": "c_010",
-        "destino_id": "c_013",
-        "frase": "fuerza primitiva que se manifiesta en",
-        "tipo": "manifestación_de",
-        "confianza": 0.85
+        "id": "cp_074",
+        "origen_id": "c_309",
+        "destino_id": "c_206",
+        "frase": "la intuición como forma de conocimiento en filosofía clásica es resultado de mediación conceptual dialéctica",
+        "tipo": "es resultado de",
+        "confianza": 0.88
       },
-      "frase_editada": "fuerza primitiva que se manifiesta en",
+      "frase_editada": "la intuición como forma de conocimiento en filosofía clásica es resultado de mediación conceptual dialéctica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_045",
       "conexion": {
-        "id": "cp_021",
-        "origen_id": "c_022",
-        "destino_id": "c_096",
-        "frase": "tendencia histórica que genera",
-        "tipo": "causa_de",
-        "confianza": 0.85
+        "id": "cp_080",
+        "origen_id": "c_316",
+        "destino_id": "c_014",
+        "frase": "la organización equivocada de la sociedad rechaza alternativas al ser totalitaria",
+        "tipo": "caracteriza",
+        "confianza": 0.87
       },
-      "frase_editada": "tendencia histórica que genera",
+      "frase_editada": "la organización equivocada de la sociedad rechaza alternativas al ser totalitaria",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_046",
       "conexion": {
-        "id": "cp_029",
-        "origen_id": "c_030",
-        "destino_id": "c_015",
-        "frase": "revelación histórica de",
-        "tipo": "manifestación_de",
-        "confianza": 0.85
+        "id": "cp_085",
+        "origen_id": "c_322",
+        "destino_id": "c_362",
+        "frase": "la lucha por existencia es proceso perpetuado y cientifizado mediante dominación de naturaleza",
+        "tipo": "es perpetuado mediante",
+        "confianza": 0.87
       },
-      "frase_editada": "revelación histórica de",
+      "frase_editada": "la lucha por existencia es proceso perpetuado y cientifizado mediante dominación de naturaleza",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_047",
       "conexion": {
-        "id": "cp_039",
-        "origen_id": "c_044",
-        "destino_id": "c_049",
-        "frase": "espacio que opera como",
-        "tipo": "substrato_de",
-        "confianza": 0.85
+        "id": "cp_088",
+        "origen_id": "c_325",
+        "destino_id": "c_359",
+        "frase": "la ciencia pura tiene dirección inherente instrumentalista característica de ciencia galileana",
+        "tipo": "tiene dirección de",
+        "confianza": 0.87
       },
-      "frase_editada": "espacio que opera como",
+      "frase_editada": "la ciencia pura tiene dirección inherente instrumentalista característica de ciencia galileana",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_048",
       "conexion": {
-        "id": "cp_054",
-        "origen_id": "c_070",
-        "destino_id": "c_069",
-        "frase": "factor que mantiene la cohesión de",
-        "tipo": "sustentación_de",
+        "id": "cp_051",
+        "origen_id": "c_267",
+        "destino_id": "c_226",
+        "frase": "los remanentes del pasado persisten como obstáculos a pesar de reducción de formas lingüísticas",
+        "tipo": "persisten como obstáculos a",
         "confianza": 0.85
       },
-      "frase_editada": "factor que mantiene la cohesión de",
+      "frase_editada": "los remanentes del pasado persisten como obstáculos a pesar de reducción de formas lingüísticas",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_049",
       "conexion": {
-        "id": "cp_056",
-        "origen_id": "c_072",
-        "destino_id": "c_279",
-        "frase": "manifestación material de",
-        "tipo": "expresión_de",
+        "id": "cp_075",
+        "origen_id": "c_311",
+        "destino_id": "c_051",
+        "frase": "la esencia como verdadera naturaleza es base para libertad verdadera",
+        "tipo": "es base para",
         "confianza": 0.85
       },
-      "frase_editada": "manifestación material de",
+      "frase_editada": "la esencia como verdadera naturaleza es base para libertad verdadera",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_050",
       "conexion": {
-        "id": "cp_063",
-        "origen_id": "c_079",
-        "destino_id": "c_021",
-        "frase": "forma específica de",
-        "tipo": "ejemplificación_de",
+        "id": "cp_084",
+        "origen_id": "c_321",
+        "destino_id": "c_315",
+        "frase": "la dinámica de negativo en positivo estructura orden objetivo de las cosas",
+        "tipo": "estructura",
         "confianza": 0.85
       },
-      "frase_editada": "forma específica de",
+      "frase_editada": "la dinámica de negativo en positivo estructura orden objetivo de las cosas",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_051",
       "conexion": {
-        "id": "cp_072",
-        "origen_id": "c_089",
-        "destino_id": "c_037",
-        "frase": "forma contemporánea de",
-        "tipo": "expresión_de",
+        "id": "cp_095",
+        "origen_id": "c_335",
+        "destino_id": "c_338",
+        "frase": "la disolución en relaciones lógicas tiende hacia realidad de ideas",
+        "tipo": "tiende hacia",
         "confianza": 0.85
       },
-      "frase_editada": "forma contemporánea de",
+      "frase_editada": "la disolución en relaciones lógicas tiende hacia realidad de ideas",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_052",
       "conexion": {
-        "id": "cp_075",
-        "origen_id": "c_092",
-        "destino_id": "c_093",
-        "frase": "sistema que fundamenta",
-        "tipo": "base_de",
-        "confianza": 0.85
+        "id": "cp_070",
+        "origen_id": "c_302",
+        "destino_id": "c_021",
+        "frase": "el control como capacidad de poder mediante conceptos universales es base histórica de dominación racional-técnica",
+        "tipo": "es base histórica de",
+        "confianza": 0.84
       },
-      "frase_editada": "sistema que fundamenta",
+      "frase_editada": "el control como capacidad de poder mediante conceptos universales es base histórica de dominación racional-técnica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_053",
       "conexion": {
-        "id": "cp_090",
-        "origen_id": "c_107",
-        "destino_id": "c_048",
-        "frase": "consecuencia de",
-        "tipo": "efecto_de",
-        "confianza": 0.85
+        "id": "cp_064",
+        "origen_id": "c_292",
+        "destino_id": "c_001",
+        "frase": "la sociedad basada en esclavitud forma base histórica de filosofía clásica que examina la unidimensionalidad",
+        "tipo": "es precedente histórico de",
+        "confianza": 0.82
       },
-      "frase_editada": "consecuencia de",
+      "frase_editada": "la sociedad basada en esclavitud forma base histórica de filosofía clásica que examina la unidimensionalidad",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_054",
       "conexion": {
-        "id": "cp_094",
-        "origen_id": "c_111",
-        "destino_id": "c_110",
-        "frase": "extensión de",
-        "tipo": "intensificación_de",
-        "confianza": 0.85
+        "id": "cp_091",
+        "origen_id": "c_329",
+        "destino_id": "c_345",
+        "frase": "la pretensión de neutralidad científica reproduce problema cartesiano res cogitans y res extensa",
+        "tipo": "reproduce",
+        "confianza": 0.82
       },
-      "frase_editada": "extensión de",
+      "frase_editada": "la pretensión de neutralidad científica reproduce problema cartesiano res cogitans y res extensa",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_055",
       "conexion": {
-        "id": "cp_098",
-        "origen_id": "c_115",
-        "destino_id": "c_129",
-        "frase": "prerequisito para",
-        "tipo": "condición_de",
-        "confianza": 0.85
-      },
-      "frase_editada": "prerequisito para",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_056",
-      "conexion": {
-        "id": "cp_103",
-        "origen_id": "c_121",
-        "destino_id": "c_126",
-        "frase": "contradicción que exige resolución mediante",
-        "tipo": "requisito_de",
-        "confianza": 0.85
-      },
-      "frase_editada": "contradicción que exige resolución mediante",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_057",
-      "conexion": {
-        "id": "cp_114",
-        "origen_id": "c_132",
-        "destino_id": "c_127",
-        "frase": "obstáculo material a",
-        "tipo": "impedimento_de",
-        "confianza": 0.85
-      },
-      "frase_editada": "obstáculo material a",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_058",
-      "conexion": {
-        "id": "cp_031",
-        "origen_id": "c_032",
-        "destino_id": "c_049",
-        "frase": "paradoja estructural que caracteriza",
-        "tipo": "descripción_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "paradoja estructural que caracteriza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_059",
-      "conexion": {
-        "id": "cp_045",
-        "origen_id": "c_059",
-        "destino_id": "c_023",
-        "frase": "estado que realiza",
-        "tipo": "operacionalización_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "estado que realiza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_060",
-      "conexion": {
-        "id": "cp_061",
-        "origen_id": "c_077",
-        "destino_id": "c_097",
-        "frase": "concepto marxista puesto en cuestión por",
-        "tipo": "desafío_a",
-        "confianza": 0.84
-      },
-      "frase_editada": "concepto marxista puesto en cuestión por",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_061",
-      "conexion": {
-        "id": "cp_065",
-        "origen_id": "c_081",
-        "destino_id": "c_087",
-        "frase": "proceso que integra",
-        "tipo": "realización_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "proceso que integra",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_062",
-      "conexion": {
-        "id": "cp_077",
-        "origen_id": "c_094",
-        "destino_id": "c_048",
-        "frase": "mecanismo que refuerza",
-        "tipo": "refuerzo_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "mecanismo que refuerza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_063",
-      "conexion": {
-        "id": "cp_088",
-        "origen_id": "c_105",
-        "destino_id": "c_104",
-        "frase": "estructura que integra",
-        "tipo": "ejemplificación_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "estructura que integra",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_064",
-      "conexion": {
-        "id": "cp_100",
-        "origen_id": "c_117",
-        "destino_id": "c_128",
-        "frase": "necesaria pero insuficiente para",
-        "tipo": "condición_parcial_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "necesaria pero insuficiente para",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_065",
-      "conexion": {
-        "id": "cp_106",
-        "origen_id": "c_124",
-        "destino_id": "c_123",
-        "frase": "estrato que mantiene",
-        "tipo": "sustentación_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "estrato que mantiene",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_066",
-      "conexion": {
-        "id": "cp_117",
-        "origen_id": "c_136",
-        "destino_id": "c_142",
-        "frase": "población sin socialización en",
-        "tipo": "carencia_de",
-        "confianza": 0.84
-      },
-      "frase_editada": "población sin socialización en",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_067",
-      "conexion": {
-        "id": "cp_014",
-        "origen_id": "c_012",
-        "destino_id": "c_006",
-        "frase": "forma concreta de aplicación dialéctica de",
-        "tipo": "operacionalización_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "forma concreta de aplicación dialéctica de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_068",
-      "conexion": {
-        "id": "cp_023",
-        "origen_id": "c_024",
-        "destino_id": "c_051",
-        "frase": "necesidades orgánicas que realiza",
-        "tipo": "componente_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "necesidades orgánicas que realiza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_069",
-      "conexion": {
-        "id": "cp_034",
-        "origen_id": "c_037",
-        "destino_id": "c_002",
-        "frase": "forma controlada de",
-        "tipo": "manifestación_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "forma controlada de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_070",
-      "conexion": {
-        "id": "cp_051",
-        "origen_id": "c_065",
-        "destino_id": "c_055",
-        "frase": "aplicación a la vida psíquica que refuerza",
-        "tipo": "correlato_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "aplicación a la vida psíquica que refuerza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_071",
-      "conexion": {
-        "id": "cp_057",
-        "origen_id": "c_073",
-        "destino_id": "c_356",
-        "frase": "relación que es subordinada a",
-        "tipo": "determinación_por",
-        "confianza": 0.83
-      },
-      "frase_editada": "relación que es subordinada a",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_072",
-      "conexion": {
-        "id": "cp_066",
-        "origen_id": "c_082",
-        "destino_id": "c_076",
-        "frase": "resultado de",
-        "tipo": "efecto_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "resultado de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_073",
-      "conexion": {
-        "id": "cp_076",
-        "origen_id": "c_093",
-        "destino_id": "c_021",
-        "frase": "proceso histórico que introduce",
-        "tipo": "origen_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "proceso histórico que introduce",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_074",
-      "conexion": {
-        "id": "cp_085",
-        "origen_id": "c_102",
-        "destino_id": "c_069",
-        "frase": "situación que perpetúa",
-        "tipo": "sustentación_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "situación que perpetúa",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_075",
-      "conexion": {
-        "id": "cp_092",
-        "origen_id": "c_109",
-        "destino_id": "c_050",
-        "frase": "estrategia de control mediante",
-        "tipo": "operacionalización_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "estrategia de control mediante",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_076",
-      "conexion": {
-        "id": "cp_096",
-        "origen_id": "c_113",
-        "destino_id": "c_115",
-        "frase": "justificación de",
-        "tipo": "fundamentación_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "justificación de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_077",
-      "conexion": {
-        "id": "cp_105",
-        "origen_id": "c_123",
-        "destino_id": "c_132",
-        "frase": "privilegios que constituyen",
-        "tipo": "base_de",
-        "confianza": 0.83
-      },
-      "frase_editada": "privilegios que constituyen",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_078",
-      "conexion": {
-        "id": "cp_109",
-        "origen_id": "c_127",
-        "destino_id": "c_128",
-        "frase": "forma incompleta de",
-        "tipo": "aproximación_a",
-        "confianza": 0.83
-      },
-      "frase_editada": "forma incompleta de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_079",
-      "conexion": {
-        "id": "cp_037",
-        "origen_id": "c_042",
-        "destino_id": "c_028",
-        "frase": "tarea que posibilita",
-        "tipo": "prerrequisito_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "tarea que posibilita",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_080",
-      "conexion": {
-        "id": "cp_048",
-        "origen_id": "c_062",
-        "destino_id": "c_014",
-        "frase": "capacidad que puede servir tanto a la perpetuación como a la liberación de",
-        "tipo": "recurso_indeterminado_en",
-        "confianza": 0.82
-      },
-      "frase_editada": "capacidad que puede servir tanto a la perpetuación como a la liberación de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_081",
-      "conexion": {
-        "id": "cp_064",
-        "origen_id": "c_080",
-        "destino_id": "c_089",
-        "frase": "mecanismo que produce la apariencia de satisfacción en",
-        "tipo": "efecto_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "mecanismo que produce la apariencia de satisfacción en",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_082",
-      "conexion": {
-        "id": "cp_068",
-        "origen_id": "c_085",
-        "destino_id": "c_074",
-        "frase": "transformación que caracteriza",
-        "tipo": "evolución_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "transformación que caracteriza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_083",
-      "conexion": {
-        "id": "cp_081",
-        "origen_id": "c_098",
-        "destino_id": "c_022",
-        "frase": "fuerza productiva transformada por",
-        "tipo": "objeto_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "fuerza productiva transformada por",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_084",
-      "conexion": {
-        "id": "cp_086",
-        "origen_id": "c_103",
-        "destino_id": "c_062",
-        "frase": "uso destructivo de",
-        "tipo": "desviación_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "uso destructivo de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_085",
-      "conexion": {
-        "id": "cp_101",
-        "origen_id": "c_118",
-        "destino_id": "c_126",
-        "frase": "realización que pospone",
-        "tipo": "aplazamiento_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "realización que pospone",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_086",
-      "conexion": {
-        "id": "cp_113",
-        "origen_id": "c_131",
-        "destino_id": "c_130",
-        "frase": "característica que define",
-        "tipo": "componente_de",
-        "confianza": 0.82
-      },
-      "frase_editada": "característica que define",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_087",
-      "conexion": {
-        "id": "cp_024",
-        "origen_id": "c_025",
-        "destino_id": "c_040",
-        "frase": "movimiento social portador potencial de",
-        "tipo": "agente_de",
-        "confianza": 0.81
-      },
-      "frase_editada": "movimiento social portador potencial de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_088",
-      "conexion": {
-        "id": "cp_038",
-        "origen_id": "c_043",
-        "destino_id": "c_014",
-        "frase": "elección inicial que configura",
-        "tipo": "determinación_de",
-        "confianza": 0.81
-      },
-      "frase_editada": "elección inicial que configura",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_089",
-      "conexion": {
-        "id": "cp_070",
-        "origen_id": "c_087",
-        "destino_id": "c_089",
-        "frase": "proceso que acompaña",
-        "tipo": "correlato_de",
-        "confianza": 0.81
-      },
-      "frase_editada": "proceso que acompaña",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_090",
-      "conexion": {
-        "id": "cp_082",
-        "origen_id": "c_099",
-        "destino_id": "c_098",
-        "frase": "proceso que realiza",
-        "tipo": "manifestación_de",
-        "confianza": 0.81
-      },
-      "frase_editada": "proceso que realiza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_091",
-      "conexion": {
-        "id": "cp_097",
-        "origen_id": "c_114",
-        "destino_id": "c_113",
-        "frase": "forma histórica de",
-        "tipo": "manifestación_de",
-        "confianza": 0.81
-      },
-      "frase_editada": "forma histórica de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_092",
-      "conexion": {
-        "id": "cp_107",
-        "origen_id": "c_125",
-        "destino_id": "c_127",
-        "frase": "característica que permite",
-        "tipo": "condición_de",
-        "confianza": 0.81
-      },
-      "frase_editada": "característica que permite",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_093",
-      "conexion": {
-        "id": "cp_116",
-        "origen_id": "c_135",
-        "destino_id": "c_137",
-        "frase": "proceso que confronta opción de",
-        "tipo": "bifurcación_en",
-        "confianza": 0.81
-      },
-      "frase_editada": "proceso que confronta opción de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_094",
-      "conexion": {
-        "id": "cp_030",
-        "origen_id": "c_031",
-        "destino_id": "c_014",
-        "frase": "mecanismo paradójico que preserva",
-        "tipo": "estabilización_de",
+        "id": "cp_093",
+        "origen_id": "c_331",
+        "destino_id": "c_408",
+        "frase": "los ideales humanitarios no perturban el orden pero exponen verdad del arte",
+        "tipo": "exponen",
         "confianza": 0.8
       },
-      "frase_editada": "mecanismo paradójico que preserva",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_095",
-      "conexion": {
-        "id": "cp_049",
-        "origen_id": "c_063",
-        "destino_id": "c_066",
-        "frase": "espacio que podría desarrollar",
-        "tipo": "condición_de",
-        "confianza": 0.8
-      },
-      "frase_editada": "espacio que podría desarrollar",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_096",
-      "conexion": {
-        "id": "cp_078",
-        "origen_id": "c_095",
-        "destino_id": "c_069",
-        "frase": "sistema que contribuye a",
-        "tipo": "componente_de",
-        "confianza": 0.8
-      },
-      "frase_editada": "sistema que contribuye a",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_097",
-      "conexion": {
-        "id": "cp_089",
-        "origen_id": "c_106",
-        "destino_id": "c_096",
-        "frase": "expresión política de",
-        "tipo": "manifestación_de",
-        "confianza": 0.8
-      },
-      "frase_editada": "expresión política de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_098",
-      "conexion": {
-        "id": "cp_095",
-        "origen_id": "c_112",
-        "destino_id": "c_049",
-        "frase": "realización alternativa de forma",
-        "tipo": "ejemplificación_de",
-        "confianza": 0.8
-      },
-      "frase_editada": "realización alternativa de forma",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_099",
-      "conexion": {
-        "id": "cp_108",
-        "origen_id": "c_126",
-        "destino_id": "c_128",
-        "frase": "posición teórica que debe ceder ante la necesidad de",
-        "tipo": "antagonismo_teórico",
-        "confianza": 0.8
-      },
-      "frase_editada": "posición teórica que debe ceder ante la necesidad de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_100",
-      "conexion": {
-        "id": "cp_115",
-        "origen_id": "c_134",
-        "destino_id": "c_118",
-        "frase": "estrategia de contención dentro de",
-        "tipo": "realización_de",
-        "confianza": 0.8
-      },
-      "frase_editada": "estrategia de contención dentro de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_101",
-      "conexion": {
-        "id": "cp_041",
-        "origen_id": "c_046",
-        "destino_id": "c_277",
-        "frase": "forma histórica de la noción de",
-        "tipo": "realización_de",
-        "confianza": 0.79
-      },
-      "frase_editada": "forma histórica de la noción de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_102",
-      "conexion": {
-        "id": "cp_084",
-        "origen_id": "c_101",
-        "destino_id": "c_015",
-        "frase": "posible manifestación de",
-        "tipo": "expresión_de",
-        "confianza": 0.79
-      },
-      "frase_editada": "posible manifestación de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_103",
-      "conexion": {
-        "id": "cp_112",
-        "origen_id": "c_130",
-        "destino_id": "c_293",
-        "frase": "persistencia transformada de",
-        "tipo": "evolución_de",
-        "confianza": 0.79
-      },
-      "frase_editada": "persistencia transformada de",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_104",
-      "conexion": {
-        "id": "cp_091",
-        "origen_id": "c_108",
-        "destino_id": "c_107",
-        "frase": "contrapartida estructural de",
-        "tipo": "correlato_de",
-        "confianza": 0.76
-      },
-      "frase_editada": "contrapartida estructural de",
+      "frase_editada": "los ideales humanitarios no perturban el orden pero exponen verdad del arte",
       "seleccionada": true,
       "estado": "aceptada"
     }
   ],
   "estado": "completada",
   "razon_falla": null,
-  "iniciada_en": "2026-07-03T01:59:43.940961",
-  "completada_en": "2026-07-03T02:00:48.376126",
+  "iniciada_en": "2026-07-06T14:03:14.322098",
+  "completada_en": "2026-07-06T14:05:00.954605",
   "nodos_sueltos_ids": [
-    "c_006",
-    "c_406",
-    "c_380",
-    "c_250",
-    "c_399",
-    "c_018",
-    "c_401",
-    "c_039",
-    "c_408",
-    "c_005",
-    "c_008",
-    "c_010",
-    "c_011",
-    "c_012",
-    "c_013",
-    "c_015",
-    "c_017",
-    "c_019",
-    "c_020",
-    "c_021",
-    "c_022",
-    "c_023",
-    "c_024",
-    "c_025",
-    "c_026",
-    "c_027",
-    "c_028",
-    "c_029",
-    "c_030",
-    "c_031",
-    "c_032",
-    "c_033",
-    "c_034",
-    "c_037",
-    "c_038",
-    "c_040",
-    "c_042",
-    "c_043",
-    "c_044",
-    "c_045",
-    "c_046",
-    "c_048",
-    "c_055",
-    "c_058",
-    "c_059",
-    "c_060",
-    "c_061",
-    "c_062",
-    "c_063",
-    "c_064",
-    "c_065",
-    "c_067",
-    "c_069",
-    "c_070",
-    "c_071",
-    "c_072",
-    "c_073",
-    "c_074",
-    "c_075",
-    "c_076",
-    "c_077",
-    "c_078",
-    "c_079",
-    "c_080",
-    "c_081",
-    "c_082",
-    "c_083",
-    "c_085",
-    "c_086",
-    "c_087",
-    "c_088",
-    "c_089",
-    "c_090",
-    "c_091",
-    "c_092",
-    "c_093",
-    "c_094",
-    "c_095",
-    "c_096",
-    "c_097",
-    "c_098",
-    "c_099",
-    "c_100",
-    "c_101",
-    "c_102",
-    "c_103",
-    "c_104",
-    "c_105",
-    "c_106",
-    "c_107",
-    "c_108",
-    "c_109",
-    "c_110",
-    "c_111",
-    "c_112",
-    "c_113",
-    "c_114",
-    "c_115",
-    "c_116",
-    "c_117",
-    "c_118",
-    "c_120",
-    "c_121",
-    "c_122",
-    "c_123",
-    "c_124",
-    "c_125",
-    "c_126",
-    "c_127",
-    "c_128",
-    "c_129",
-    "c_130",
-    "c_131",
-    "c_132",
-    "c_134",
-    "c_135",
-    "c_136",
-    "c_137",
-    "c_138",
-    "c_139",
-    "c_140",
-    "c_141",
-    "c_142",
-    "c_143",
-    "c_144",
-    "c_145",
-    "c_146",
-    "c_147",
-    "c_148",
-    "c_149",
-    "c_150",
-    "c_151",
-    "c_152",
-    "c_153",
-    "c_154",
-    "c_155",
-    "c_156",
-    "c_158",
+    "c_201",
+    "c_222",
+    "c_221",
+    "c_217",
+    "c_220",
+    "c_218",
+    "c_219",
     "c_160",
-    "c_161",
-    "c_162",
-    "c_163",
-    "c_164",
-    "c_165",
     "c_166",
     "c_167",
-    "c_168",
-    "c_169",
-    "c_170",
-    "c_171",
-    "c_172",
-    "c_173",
-    "c_174",
-    "c_176",
-    "c_177",
-    "c_178",
-    "c_179",
     "c_181",
-    "c_182",
-    "c_183",
-    "c_184",
-    "c_185",
-    "c_186",
-    "c_187",
-    "c_188",
+    "c_173",
     "c_189",
-    "c_191",
-    "c_192",
-    "c_193",
-    "c_194",
-    "c_195",
-    "c_196",
     "c_197",
-    "c_198",
-    "c_201",
+    "c_242",
+    "c_205",
+    "c_206",
+    "c_227",
     "c_202",
     "c_203",
     "c_204",
-    "c_205",
-    "c_206",
-    "c_208",
-    "c_209",
-    "c_210",
-    "c_211",
-    "c_212",
-    "c_213",
-    "c_214",
     "c_215",
-    "c_216",
-    "c_217",
-    "c_218",
-    "c_219",
-    "c_220",
-    "c_221",
-    "c_222",
-    "c_223",
-    "c_224",
-    "c_225",
-    "c_226",
-    "c_227",
-    "c_230",
-    "c_232",
-    "c_233",
-    "c_234",
-    "c_235",
-    "c_236",
-    "c_238",
-    "c_239",
-    "c_240",
     "c_241",
-    "c_242",
     "c_243",
     "c_246",
+    "c_263",
+    "c_164",
+    "c_184",
+    "c_176",
+    "c_198",
+    "c_214",
+    "c_259",
+    "c_209",
+    "c_226",
+    "c_225",
+    "c_216",
+    "c_223",
+    "c_224",
+    "c_230",
+    "c_233",
+    "c_234",
     "c_247",
-    "c_248",
+    "c_303",
     "c_249",
     "c_251",
     "c_252",
-    "c_253",
     "c_254",
-    "c_255",
     "c_256",
-    "c_257",
-    "c_258",
-    "c_259",
     "c_260",
     "c_261",
+    "c_257",
     "c_262",
-    "c_263",
     "c_264",
-    "c_265",
-    "c_266",
-    "c_267",
+    "c_156",
+    "c_165",
+    "c_168",
+    "c_169",
+    "c_174",
+    "c_188",
+    "c_208",
+    "c_212",
+    "c_236",
+    "c_238",
     "c_269",
+    "c_286",
     "c_270",
     "c_271",
+    "c_232",
+    "c_240",
+    "c_266",
+    "c_267",
     "c_272",
     "c_275",
     "c_276",
-    "c_277",
     "c_278",
     "c_280",
     "c_281",
     "c_283",
     "c_284",
     "c_285",
-    "c_286",
     "c_287",
-    "c_288",
     "c_289",
     "c_290",
     "c_291",
     "c_292",
-    "c_293",
-    "c_296",
     "c_297",
     "c_298",
     "c_299",
     "c_300",
     "c_301",
     "c_302",
-    "c_303",
     "c_304",
-    "c_305",
     "c_306",
-    "c_307",
     "c_308",
     "c_309",
-    "c_310",
     "c_311",
     "c_312",
     "c_313",
@@ -1768,7 +908,6 @@
     "c_331",
     "c_332",
     "c_333",
-    "c_334",
     "c_335",
     "c_336",
     "c_337",
@@ -1783,12 +922,9 @@
     "c_346",
     "c_347",
     "c_348",
-    "c_349",
     "c_351",
-    "c_352",
     "c_353",
     "c_354",
-    "c_356",
     "c_357",
     "c_358",
     "c_359",
@@ -1820,7 +956,6 @@
     "c_391",
     "c_392",
     "c_393",
-    "c_394",
     "c_395",
     "c_407",
     "c_411",
@@ -1829,19 +964,14 @@
     "c_416",
     "c_417",
     "c_418",
-    "c_419",
     "c_420",
     "c_421",
-    "c_423",
     "c_425",
     "c_426",
     "c_427",
-    "c_428",
     "c_429",
-    "c_430",
     "c_431",
     "c_432",
-    "c_433",
     "c_434",
     "c_435",
     "c_436",
@@ -1850,16 +980,11 @@
     "c_439",
     "c_440",
     "c_443",
-    "c_444",
     "c_445",
     "c_447",
     "c_448",
     "c_449",
-    "c_450",
-    "c_451",
     "c_453",
-    "c_454",
-    "c_455",
     "c_457",
     "c_458",
     "c_459",
@@ -1869,7 +994,6 @@
     "c_463",
     "c_464",
     "c_465",
-    "c_466",
     "c_467",
     "c_468",
     "c_469",
@@ -1890,17 +1014,13 @@
     "c_486",
     "c_487",
     "c_488",
-    "c_489",
     "c_490",
     "c_492",
     "c_493",
-    "c_494",
     "c_495",
-    "c_497",
     "c_498",
     "c_499",
     "c_500",
-    "c_501",
     "c_502",
     "c_503",
     "c_504",
@@ -1909,25 +1029,17 @@
     "c_507",
     "c_508",
     "c_510",
-    "c_511",
-    "c_512",
     "c_513",
-    "c_514",
     "c_515",
     "c_516",
-    "c_517",
     "c_518",
-    "c_520",
-    "c_521",
     "c_523",
     "c_524",
-    "c_525",
     "c_526",
     "c_527",
     "c_528",
     "c_529",
     "c_530",
-    "c_531",
     "c_532",
     "c_533",
     "c_534",

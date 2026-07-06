@@ -95,13 +95,24 @@
           <div id="gp-titulo-text" class="gp-titulo"></div>
           <div id="gp-desc-text" class="muted gp-desc"></div>
         </div>
+        <div id="gp-texto-fuente-wrap">
+          <span class="campo-etiq">Texto fuente</span>
+          <select id="gp-texto-fuente" class="edit-select" style="width:100%;margin-top:3px">
+            <option value="">— Ninguno —</option>
+          </select>
+        </div>
         <div id="gp-conceptos-header">
           <span class="campo-etiq">Conceptos</span>
           <button id="btn-gp-add-concepto" class="btn-inline">+ Añadir</button>
         </div>
         <div id="gp-nuevo-concepto-form" hidden>
-          <input id="gp-concepto-label" class="edit-input" placeholder="Label del concepto…" style="width:100%">
+          <div style="position:relative">
+            <input id="gp-concepto-label" class="edit-input" placeholder="Label del concepto…" style="width:100%" autocomplete="off">
+            <ul id="gp-concepto-label-dropdown" class="gp-ac-dropdown" hidden></ul>
+          </div>
           <textarea id="gp-concepto-def" class="panel-nota-input" rows="2" placeholder="Definición (opcional)…" style="margin-top:6px"></textarea>
+          <textarea id="gp-concepto-cita" class="panel-nota-input" rows="2" placeholder="Cita directa (opcional)…" style="margin-top:4px"></textarea>
+          <input id="gp-concepto-fuente" class="edit-input" placeholder="Fuente…" style="width:100%;margin-top:4px">
           <div style="display:flex;gap:6px;margin-top:6px">
             <button id="btn-gp-confirmar-concepto" class="btn btn-aceptar small">Añadir</button>
             <button id="btn-gp-cancelar-concepto"  class="btn btn-neutro small">Cancelar</button>

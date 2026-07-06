@@ -912,8 +912,8 @@ function buildNuevaRelacionHTML(nodo) {
     .filter(n => n.id !== nodo.id)
     .sort((a, b) => a.label.localeCompare(b.label));
 
-  return `<div class="panel-seccion">
-    <div class="panel-seccion-titulo">Vincular con otro concepto</div>
+  return `<details class="panel-seccion">
+    <summary class="panel-seccion-titulo panel-seccion-summary">Vincular con otro concepto</summary>
     <div class="campo">
       <span class="campo-etiq">Concepto destino</span>
       <select id="nr-destino" class="edit-select" style="width:100%">
@@ -938,13 +938,13 @@ function buildNuevaRelacionHTML(nodo) {
     <button id="nr-crear" class="btn btn-aceptar small" style="width:100%;margin-top:4px">
       + Crear relación
     </button>
-  </div>`;
+  </details>`;
 }
 
 function buildAnnotationPanelHTML(nodo) {
   const anotaciones=(state.validacion?.anotaciones||[]).filter(a=>a.objeto_anotado===nodo.id);
-  let h=`<div class="panel-seccion">
-    <div class="panel-seccion-titulo">Anotaciones</div>`;
+  let h=`<details class="panel-seccion"${anotaciones.length ? " open" : ""}>
+    <summary class="panel-seccion-titulo panel-seccion-summary">Anotaciones</summary>`;
   if (anotaciones.length) {
     h+=anotaciones.map(a=>`<div class="panel-anotacion">
       <p class="cita">${esc(a.nota)}</p>
@@ -953,7 +953,7 @@ function buildAnnotationPanelHTML(nodo) {
   }
   h+=`<textarea id="pb-anotacion" class="panel-nota-input" rows="2" placeholder="Añadir nota…" style="margin-top:8px"></textarea>
     <button id="pb-anotar" class="btn btn-neutro small" style="margin-top:6px;width:100%">Guardar nota</button>
-  </div>`;
+  </details>`;
   return h;
 }
 
@@ -2289,6 +2289,9 @@ const gpState = {
   grafoVis: null,        // { nodes, links } para D3
   nodoSeleccionado: null,
   gpUpdate: null,        // fn updateVisuals de initGrafo
+  gpFit: null,
+  textoFuenteSlug: null, // slug del texto fuente seleccionado para autocomplete
+  textoFuenteNodes: [],  // nodos del texto fuente (para pool de autocomplete)
 };
 
 // ── Biblioteca: sección de grafos personales ─────────────────────────
@@ -2398,7 +2401,113 @@ async function recargarGP() {
   renderGPCanvas();
 }
 
+const TIPOS_REL = ["fundamenta","amplifica","especifica","contraposicion","constituye","genera","presupone","evoca","pertenece"];
+
+/**
+ * Autocomplete genérico para inputs de grafos personales.
+ * getPool() → [{ label, meta, onSelect(inputEl) }]
+ * Options: minChars (default 1), showAllOnFocus (default false)
+ */
+function _gpWireAutocomplete(inputEl, dropdownEl, getPool, { minChars = 1, showAllOnFocus = false } = {}) {
+  let activeIdx = -1;
+  let items = [];
+
+  function render(query) {
+    const q = query.toLowerCase().trim();
+    items = (q.length < minChars && !showAllOnFocus)
+      ? []
+      : getPool().filter(p => q.length < 1 || p.label.toLowerCase().includes(q)).slice(0, 12);
+    dropdownEl.innerHTML = items.map((p, i) => `
+      <li class="gp-ac-item${i === activeIdx ? " active" : ""}" data-idx="${i}">
+        <span class="gp-ac-item-label">${esc(p.label)}</span>
+        ${p.meta ? `<span class="gp-ac-item-meta">${esc(p.meta)}</span>` : ""}
+      </li>
+    `).join("");
+    dropdownEl.hidden = items.length === 0;
+    dropdownEl.querySelectorAll(".gp-ac-item").forEach(li => {
+      li.addEventListener("mousedown", e => {
+        e.preventDefault();
+        select(parseInt(li.dataset.idx, 10));
+      });
+    });
+  }
+
+  function select(idx) {
+    if (idx < 0 || idx >= items.length) return;
+    items[idx].onSelect(inputEl);
+    close();
+  }
+
+  function close() {
+    activeIdx = -1;
+    items = [];
+    dropdownEl.hidden = true;
+    dropdownEl.innerHTML = "";
+  }
+
+  inputEl.addEventListener("input", () => { activeIdx = -1; render(inputEl.value); });
+  inputEl.addEventListener("focus", () => {
+    if (showAllOnFocus) render("");
+    else if (inputEl.value.length >= minChars) render(inputEl.value);
+  });
+  inputEl.addEventListener("focusout", () => {
+    setTimeout(() => {
+      if (document.activeElement !== inputEl && !dropdownEl.contains(document.activeElement)) close();
+    }, 80);
+  });
+  inputEl.addEventListener("keydown", e => {
+    if (dropdownEl.hidden) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, items.length - 1);
+      render(inputEl.value);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, 0);
+      render(inputEl.value);
+    } else if (e.key === "Enter" && activeIdx >= 0) {
+      e.preventDefault(); e.stopPropagation();
+      select(activeIdx);
+    } else if (e.key === "Escape") {
+      close();
+    }
+  });
+}
+
 function gpBindSidebarListeners() {
+  // ── Selector de texto fuente ─────────────────────────────────────
+  const selTexto = document.getElementById("gp-texto-fuente");
+  if (selTexto && !selTexto.dataset.wired) {
+    selTexto.dataset.wired = "1";
+    // Poblar con textos disponibles (solo los ya procesados)
+    apiFetch("/api/extracciones").then(lista => {
+      const procesados = lista.filter(e => e.procesado);
+      procesados.forEach(e => {
+        const opt = document.createElement("option");
+        opt.value = e.slug;
+        opt.textContent = e.titulo || e.slug;
+        selTexto.appendChild(opt);
+      });
+      // Pre-seleccionar si ya había un slug cargado en state.grafo
+      if (state.grafo && state.slug && !gpState.textoFuenteSlug) {
+        selTexto.value = state.slug;
+        gpState.textoFuenteSlug = state.slug;
+        gpState.textoFuenteNodes = state.grafo.nodes || [];
+      }
+    }).catch(() => {});
+    selTexto.addEventListener("change", async () => {
+      const slug = selTexto.value;
+      gpState.textoFuenteSlug = slug || null;
+      gpState.textoFuenteNodes = [];
+      if (slug) {
+        try {
+          const datos = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}`);
+          gpState.textoFuenteNodes = datos.nodes || [];
+        } catch { gpState.textoFuenteNodes = []; }
+      }
+    });
+  }
+
   // Botón añadir concepto
   const btnAdd  = document.getElementById("btn-gp-add-concepto");
   const formNew = document.getElementById("gp-nuevo-concepto-form");
@@ -2418,6 +2527,41 @@ function gpBindSidebarListeners() {
     if (e.key === "Enter") { e.preventDefault(); crearConceptoGP(); }
     if (e.key === "Escape") { formNew.hidden = true; }
   });
+
+  // Autocomplete: label del concepto desde texto fuente seleccionado + GP propio
+  if (!inpLabel.dataset.acWired) {
+    inpLabel.dataset.acWired = "1";
+    const inpLabelDrop = document.getElementById("gp-concepto-label-dropdown");
+    _gpWireAutocomplete(inpLabel, inpLabelDrop, () => {
+      const visto = new Set();
+      const pool = [];
+      gpState.textoFuenteNodes.forEach(n => {
+        if (visto.has(n.label.toLowerCase())) return;
+        visto.add(n.label.toLowerCase());
+        pool.push({
+          label: n.label,
+          meta: n.descripcion ? n.descripcion.slice(0, 60) : "desde texto",
+          onSelect: inp => {
+            inp.value = n.label;
+            const defEl = document.getElementById("gp-concepto-def");
+            if (defEl && !defEl.value && n.descripcion) defEl.value = n.descripcion;
+            const citaEl = document.getElementById("gp-concepto-cita");
+            if (citaEl && !citaEl.value && n.cita_directa) citaEl.value = n.cita_directa;
+          },
+        });
+      });
+      (gpState.grafo?.conceptos_propios || []).forEach(c => {
+        if (visto.has(c.label.toLowerCase())) return;
+        visto.add(c.label.toLowerCase());
+        pool.push({
+          label: c.label,
+          meta: c.definicion ? c.definicion.slice(0, 60) : "ya en este grafo",
+          onSelect: inp => { inp.value = c.label; },
+        });
+      });
+      return pool;
+    });
+  }
 
   // Ajustar vista
   document.getElementById("btn-gp-fit").onclick = () => {
@@ -2501,8 +2645,6 @@ function gpOnNodoSeleccionado(nodo) {
     l => l.source === nodo.id || l.target === nodo.id ||
          (l.source?.id === nodo.id) || (l.target?.id === nodo.id)
   );
-  const TIPOS_REL = ["fundamenta","amplifica","especifica","contraposicion","constituye","genera","presupone","evoca","pertenece"];
-
   // Otros conceptos disponibles para relacionar
   const otros = (gpState.grafoVis.nodes || []).filter(n => n.id !== nodo.id);
 
@@ -2522,6 +2664,15 @@ function gpOnNodoSeleccionado(nodo) {
         <span class="campo-etiq">Definición</span>
         <textarea id="gp-edit-def" class="panel-nota-input" rows="3">${esc(c.definicion || "")}</textarea>
       </div>
+      ${c.citas?.length ? `
+      <div style="margin-top:var(--sn-s-2)">
+        <span class="campo-etiq">Citas</span>
+        ${c.citas.map(cit => `
+          <div style="font-size:11px;border-left:2px solid var(--sn-hairline);padding-left:6px;margin-top:4px;color:var(--sn-ink-soft)">
+            "${esc(cit.texto)}"${cit.fuente ? `<span style="display:block;font-style:normal;font-size:10px;margin-top:1px">— ${esc(cit.fuente)}</span>` : ""}
+          </div>
+        `).join("")}
+      </div>` : ""}
       <div style="display:flex;gap:var(--sn-s-2);margin-top:var(--sn-s-2)">
         <button id="gp-btn-save-concepto" class="btn btn-aceptar small">Guardar</button>
         <button id="gp-btn-del-concepto" class="btn btn-rechazar small" title="Eliminar concepto">${ico("trash-2")} Eliminar</button>
@@ -2539,32 +2690,35 @@ function gpOnNodoSeleccionado(nodo) {
         const otroId = esOrigen ? tgtId : srcId;
         const otro = gpState.grafoVis.nodes.find(n => n.id === otroId);
         return `<div class="panel-anotacion" style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-          <div>
+          <div style="flex:1;min-width:0">
             <span class="tag" style="font-size:10px">${esc(r.tipo)}</span>
             <span style="font-size:12px;margin-left:4px">${esOrigen ? "→" : "←"} ${esc(otro?.label || otroId)}</span>
             ${r.etiqueta ? `<div style="font-size:11px;color:var(--sn-ink-soft);font-style:italic">"${esc(r.etiqueta)}"</div>` : ""}
+            ${r.cita?.texto ? `<div style="font-size:10px;color:var(--sn-ink-soft);border-left:2px solid var(--sn-hairline);padding-left:6px;margin-top:3px;white-space:pre-wrap">"${esc(r.cita.texto)}"${r.cita.fuente ? `<span style="display:block;font-style:normal;margin-top:1px">— ${esc(r.cita.fuente)}</span>` : ""}</div>` : ""}
           </div>
-          <button class="btn-inline danger" data-del-rel="${esc(r.id)}" title="Eliminar relación">${ico("x")}</button>
+          <button class="btn-inline danger" data-del-rel="${esc(r.id)}" title="Eliminar relación" style="flex-shrink:0">${ico("x")}</button>
         </div>`;
       }).join("")}
     </div>` : ""}
 
     <!-- Nueva relación -->
     ${otros.length ? `
-    <div class="panel-seccion">
-      <div class="panel-seccion-titulo">Vincular con…</div>
+    <details class="panel-seccion">
+      <summary class="panel-seccion-titulo panel-seccion-summary">Vincular con…</summary>
       <div class="campo">
         <span class="campo-etiq">Concepto destino</span>
-        <select id="gp-nr-destino" class="edit-select" style="width:100%">
-          <option value="">— Seleccionar —</option>
-          ${otros.map(n => `<option value="${esc(n.id)}">${esc(n.label)}</option>`).join("")}
-        </select>
+        <div style="position:relative">
+          <input id="gp-nr-destino-text" class="edit-input" placeholder="Buscar concepto…" autocomplete="off" style="width:100%">
+          <input type="hidden" id="gp-nr-destino">
+          <ul id="gp-nr-destino-dropdown" class="gp-ac-dropdown" hidden></ul>
+        </div>
       </div>
       <div class="campo">
-        <span class="campo-etiq">Tipo</span>
-        <select id="gp-nr-tipo" class="edit-select" style="width:100%">
-          ${TIPOS_REL.map(t => `<option value="${t}">${t}</option>`).join("")}
-        </select>
+        <span class="campo-etiq">Tipo de relación</span>
+        <div style="position:relative">
+          <input id="gp-nr-tipo" class="edit-input" placeholder="Tipo de relación…" autocomplete="off" value="${esc(TIPOS_REL[0])}" style="width:100%">
+          <ul id="gp-nr-tipo-dropdown" class="gp-ac-dropdown" hidden></ul>
+        </div>
       </div>
       <div class="campo">
         <span class="campo-etiq">Etiqueta <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></span>
@@ -2574,9 +2728,14 @@ function gpOnNodoSeleccionado(nodo) {
         <input type="checkbox" id="gp-nr-bidir" style="cursor:pointer">
         <label for="gp-nr-bidir" class="campo-etiq" style="margin-bottom:0;cursor:pointer">Bidireccional ↔</label>
       </div>
+      <div class="campo">
+        <span class="campo-etiq">Cita <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></span>
+        <textarea id="gp-nr-cita" class="panel-nota-input" rows="2" placeholder="Pasaje que fundamenta esta relación…"></textarea>
+        <input id="gp-nr-fuente" class="edit-input" placeholder="Fuente…" style="width:100%;margin-top:4px">
+      </div>
       <button id="gp-btn-crear-relacion" class="btn btn-aceptar small" style="width:100%;margin-top:4px">+ Crear relación</button>
       <div id="gp-nr-error" style="color:var(--sn-danger);font-size:var(--sn-fs-xs);margin-top:4px;display:none">Selecciona un concepto destino.</div>
-    </div>` : ""}
+    </details>` : ""}
   `;
 
   // Listeners del panel
@@ -2597,19 +2756,46 @@ function gpOnNodoSeleccionado(nodo) {
   );
 
   if (otros.length) {
+    // Autocomplete: concepto destino
+    const destinoTextEl = document.getElementById("gp-nr-destino-text");
+    const destinoHiddenEl = document.getElementById("gp-nr-destino");
+    const destinoDropEl   = document.getElementById("gp-nr-destino-dropdown");
+    _gpWireAutocomplete(destinoTextEl, destinoDropEl, () =>
+      (gpState.grafoVis?.nodes || [])
+        .filter(n => n.id !== c.id)
+        .map(n => ({
+          label: n.label, meta: "",
+          onSelect: inp => { inp.value = n.label; destinoHiddenEl.value = n.id; },
+        }))
+    );
+    destinoTextEl.addEventListener("input", () => { destinoHiddenEl.value = ""; });
+
+    // Autocomplete: tipo de relación
+    const tipoEl    = document.getElementById("gp-nr-tipo");
+    const tipoDropEl = document.getElementById("gp-nr-tipo-dropdown");
+    _gpWireAutocomplete(tipoEl, tipoDropEl, () => {
+      const tipos = new Set(TIPOS_REL);
+      (state.grafo?.links || []).forEach(l => { if (l.tipo) tipos.add(l.tipo); });
+      (gpState.grafoVis?.links || []).forEach(l => { if (l.tipo) tipos.add(l.tipo); });
+      return [...tipos].map(t => ({ label: t, meta: "", onSelect: inp => { inp.value = t; } }));
+    }, { showAllOnFocus: true });
+
     document.getElementById("gp-btn-crear-relacion").addEventListener("click", () => {
-      const destino  = document.getElementById("gp-nr-destino").value;
-      const tipo     = document.getElementById("gp-nr-tipo").value;
-      const etiqueta = document.getElementById("gp-nr-etiqueta").value.trim() || tipo;
-      const bidir    = document.getElementById("gp-nr-bidir").checked;
-      const errEl    = document.getElementById("gp-nr-error");
+      const destino    = destinoHiddenEl.value;
+      const tipo       = tipoEl.value.trim() || TIPOS_REL[0];
+      const etiqueta   = document.getElementById("gp-nr-etiqueta").value.trim() || tipo;
+      const bidir      = document.getElementById("gp-nr-bidir").checked;
+      const citaTxt    = document.getElementById("gp-nr-cita").value.trim();
+      const citaFuente = document.getElementById("gp-nr-fuente").value.trim();
+      const cita       = citaTxt ? { texto: citaTxt, fuente: citaFuente || null } : null;
+      const errEl      = document.getElementById("gp-nr-error");
       if (!destino) {
         errEl.style.display = "block";
-        document.getElementById("gp-nr-destino").focus();
+        destinoTextEl.focus();
         return;
       }
       errEl.style.display = "none";
-      gpCrearRelacion(c.id, destino, tipo, etiqueta, bidir);
+      gpCrearRelacion(c.id, destino, tipo, etiqueta, bidir, cita);
     });
   }
 }
@@ -2617,12 +2803,15 @@ function gpOnNodoSeleccionado(nodo) {
 // ── Acciones CRUD ────────────────────────────────────────────────────
 
 async function crearConceptoGP() {
-  const label = document.getElementById("gp-concepto-label").value.trim();
-  const def   = document.getElementById("gp-concepto-def").value.trim() || null;
+  const label     = document.getElementById("gp-concepto-label").value.trim();
+  const def       = document.getElementById("gp-concepto-def").value.trim() || null;
+  const citaTxt   = document.getElementById("gp-concepto-cita")?.value.trim() || "";
+  const citaFuente= document.getElementById("gp-concepto-fuente")?.value.trim() || "";
   if (!label) { document.getElementById("gp-concepto-label").focus(); return; }
+  const citas = citaTxt ? [{ texto: citaTxt, fuente: citaFuente || null }] : [];
   try {
     await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/conceptos`,
-      { method: "POST", body: JSON.stringify({ label, definicion: def }) });
+      { method: "POST", body: JSON.stringify({ label, definicion: def, citas }) });
     document.getElementById("gp-nuevo-concepto-form").hidden = true;
     await recargarGP();
   } catch(e) { alert("Error al crear concepto: " + e.message); }
@@ -2649,10 +2838,10 @@ async function gpEliminarConcepto(cid) {
   } catch(e) { alert("Error al eliminar: " + e.message); }
 }
 
-async function gpCrearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional) {
+async function gpCrearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional, cita = null) {
   try {
     await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/relaciones`,
-      { method: "POST", body: JSON.stringify({ origen_id: origenId, destino_id: destinoId, tipo, etiqueta, bidireccional }) });
+      { method: "POST", body: JSON.stringify({ origen_id: origenId, destino_id: destinoId, tipo, etiqueta, bidireccional, cita }) });
     await recargarGP();
     const updated = gpState.grafoVis.nodes.find(n => n.id === origenId);
     if (updated) gpOnNodoSeleccionado(updated);
@@ -2721,6 +2910,11 @@ function volverBibliotecaDesdeGP() {
   gpState.grafoVis = null;
   gpState.nodoSeleccionado = null;
   gpState.gpUpdate = null;
+  gpState.textoFuenteSlug = null;
+  gpState.textoFuenteNodes = [];
+  // Resetear selector de texto fuente para que no muestre datos de otra sesión
+  const sel = document.getElementById("gp-texto-fuente");
+  if (sel) { sel.value = ""; delete sel.dataset.wired; }
   document.getElementById("gp-nuevo-concepto-form").hidden = true;
   document.getElementById("gp-panel").hidden = true;
   document.getElementById("vista-gp").hidden = true;

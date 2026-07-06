@@ -10017,7 +10017,7 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-07-01T19:17:38.890327",
-  "actualizado_en": "2026-07-03T01:01:15.686205",
+  "actualizado_en": "2026-07-06T13:31:00.981546",
   "conceptos_editados": {
     "c_002": {
       "label": "Lo por-pensar"
@@ -10062,7 +10062,7 @@
       "label": "Medida y desmedida"
     },
     "c_159": {
-      "label": "Ciencia occidental"
+      "label": "Ciencia y Historia occidental"
     },
     "c_164": {
       "label": "Ethos"
@@ -10074,7 +10074,7 @@
       "label": "Logos como facultad racional"
     },
     "c_214": {
-      "label": "Homolegein (ὁμολογεῖν)"
+      "label": "Homologein (ὁμολογεῖν) / Comprensión originaria"
     },
     "c_239": {
       "label": "Escucha obediente al Logos"
@@ -10093,6 +10093,54 @@
     },
     "c_297": {
       "label": "Relación del hombre con ser y ente"
+    },
+    "c_021": {
+      "label": "Aristóteles"
+    },
+    "c_023": {
+      "label": "Categorías (κατηγορία)"
+    },
+    "c_024": {
+      "label": "Colecta (λέγειν / ἡ λέξις)"
+    },
+    "c_034": {
+      "label": "Despejamiento (Lichtung)"
+    },
+    "c_058": {
+      "label": "Fenomenología del espíritu (Hegel)"
+    },
+    "c_076": {
+      "label": "Pensar esencial"
+    },
+    "c_089": {
+      "label": "Zoón (ζῷον)"
+    },
+    "c_103": {
+      "label": "Verdad (aletheia)"
+    },
+    "c_136": {
+      "label": "Legein (λέγειν)"
+    },
+    "c_176": {
+      "label": "Metafísica occidental y moderna"
+    },
+    "c_256": {
+      "label": "Pensamiento presocrático / presocratico"
+    },
+    "c_282": {
+      "label": "Recoger y escoger (fundamentos de la colecta)"
+    },
+    "c_296": {
+      "label": "Esencia del hombre / Ser humano"
+    },
+    "c_318": {
+      "label": "Pensar originario / Originalidad del pensador"
+    },
+    "c_340": {
+      "label": "Logos humano / Logos del hombre"
+    },
+    "c_364": {
+      "label": "Desdoblamiento / Diferencia (ser y ente)"
     }
   },
   "relaciones_editadas": {},
@@ -13073,7 +13121,26 @@
     "c_447": "c_281",
     "c_309": "c_297",
     "c_347": "c_297",
-    "c_377": "c_297"
+    "c_377": "c_297",
+    "c_095": "c_021",
+    "c_248": "c_023",
+    "c_245": "c_024",
+    "c_359": "c_034",
+    "c_253": "c_058",
+    "c_083": "c_076",
+    "c_275": "c_089",
+    "c_396": "c_103",
+    "c_215": "c_136",
+    "c_307": "c_136",
+    "c_163": "c_159",
+    "c_388": "c_176",
+    "c_440": "c_214",
+    "c_224": "c_256",
+    "c_283": "c_282",
+    "c_443": "c_296",
+    "c_063": "c_318",
+    "c_302": "c_340",
+    "c_349": "c_364"
   },
   "metadatos": {
     "titulo": "Heráclito",

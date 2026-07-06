@@ -185,7 +185,7 @@
 
 	/* Escala fluida sobria. --sn-font-scale lo modula la preferencia de
 	   tamaño; --sn-leading es FIJO (cambiarlo desparametriza el baseline). */
-	--sn-font-scale: 1;
+	--sn-font-scale: .85;
 	--sn-leading: 1.61;
 	--sn-leading-table: 1.305;
 
