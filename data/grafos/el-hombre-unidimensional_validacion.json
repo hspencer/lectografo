@@ -7118,7 +7118,7 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-07-03T01:34:03.248553",
-  "actualizado_en": "2026-07-06T14:05:00.954639",
+  "actualizado_en": "2026-07-07T14:52:32.507212",
   "conceptos_editados": {
     "c_001": {
       "label": "Sociedad unidimensional"
@@ -7305,6 +7305,12 @@
     },
     "c_510": {
       "label": "Democracia"
+    },
+    "c_376": {
+      "label": "Sustancia"
+    },
+    "c_312": {
+      "label": "Causa final"
     }
   },
   "relaciones_editadas": {},
@@ -9372,6 +9378,318 @@
       "tipo": "exponen",
       "etiqueta": "los ideales humanitarios no perturban el orden pero exponen verdad del arte",
       "bidireccional": false
+    },
+    {
+      "id": "r_rec_bc2a8408",
+      "origen_id": "c_197",
+      "destino_id": "c_006",
+      "tipo": "es operación fundamental de",
+      "etiqueta": "la mediación conceptual es operación fundamental del pensamiento crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e5174c31",
+      "origen_id": "c_415",
+      "destino_id": "c_416",
+      "tipo": "puede ser",
+      "etiqueta": "la conciencia como síntesis puede ser verdadera o falsa según reflejo de condiciones",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7bcb20ac",
+      "origen_id": "c_206",
+      "destino_id": "c_303",
+      "tipo": "mantiene como elemento necesario",
+      "etiqueta": "la dialéctica mantiene la contradicción como elemento necesario del pensamiento",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_176eea28",
+      "origen_id": "c_391",
+      "destino_id": "c_359",
+      "tipo": "representa ruptura con",
+      "etiqueta": "la ciencia galileana representa ruptura radical con la tradición pre-galileana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_10ba5a70",
+      "origen_id": "c_225",
+      "destino_id": "c_008",
+      "tipo": "realiza",
+      "etiqueta": "el lenguaje como instrumento de control cierra el universo del discurso",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b56e0feb",
+      "origen_id": "c_363",
+      "destino_id": "c_326",
+      "tipo": "realiza",
+      "etiqueta": "las matemáticas aplicadas transforman la causalidad concreta en relaciones cuantificables",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_795c3f22",
+      "origen_id": "c_370",
+      "destino_id": "c_369",
+      "tipo": "privilegiado en",
+      "etiqueta": "el lenguaje ordinario es privilegiado en análisis lingüístico como base de la filosofía",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_911fc4c4",
+      "origen_id": "c_389",
+      "destino_id": "c_390",
+      "tipo": "conserva",
+      "etiqueta": "la autocorrección de la ciencia conserva el mismo a priori formal a pesar de revoluciones",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6b856e06",
+      "origen_id": "c_357",
+      "destino_id": "c_367",
+      "tipo": "abre",
+      "etiqueta": "la técnica como forma universal abre el universo instrumentalista del pensamiento",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b3bfa667",
+      "origen_id": "c_360",
+      "destino_id": "c_387",
+      "tipo": "establece límite a",
+      "etiqueta": "la Lebenswelt como contexto de la ciencia no puede ser trascendida por el método científico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c8879cd4",
+      "origen_id": "c_372",
+      "destino_id": "c_373",
+      "tipo": "es forma de",
+      "etiqueta": "el empirismo terapéutico es forma de empirismo que excluye pensamiento crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_30893d25",
+      "origen_id": "c_378",
+      "destino_id": "c_359",
+      "tipo": "caracteriza",
+      "etiqueta": "la técnica como arte de anticipación caracteriza el proyecto de la ciencia galileana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_826b412c",
+      "origen_id": "c_382",
+      "destino_id": "c_383",
+      "tipo": "es resultado de",
+      "etiqueta": "la experiencia restringida es resultado de la represión que limita el universo del discurso",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_14098628",
+      "origen_id": "c_386",
+      "destino_id": "c_364",
+      "tipo": "caracterizan",
+      "etiqueta": "las relaciones calculables caracterizan la anticipación y proyección del método galileano",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c8949c75",
+      "origen_id": "c_329",
+      "destino_id": "c_330",
+      "tipo": "produce",
+      "etiqueta": "la racionalidad científica neutral produce la separación de valores de realidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_64308ae8",
+      "origen_id": "c_345",
+      "destino_id": "c_346",
+      "tipo": "mantiene",
+      "etiqueta": "la sustancia que se desenvuelve mantiene la tensión del antagonismo objeto-sujeto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_73c85f8d",
+      "origen_id": "c_369",
+      "destino_id": "c_008",
+      "tipo": "reproduce",
+      "etiqueta": "el análisis lingüístico reproduce ideológicamente el universo establecido del discurso",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ce0b9b5d",
+      "origen_id": "c_376",
+      "destino_id": "c_239",
+      "tipo": "es eliminada en",
+      "etiqueta": "la sustancia como categoría ontológica es eliminada en análisis positivista",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_06dd8fc9",
+      "origen_id": "c_381",
+      "destino_id": "c_382",
+      "tipo": "mutilado en",
+      "etiqueta": "el contexto amplio de experiencia es mutilado en experiencia restringida por represión",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_67e1e827",
+      "origen_id": "c_384",
+      "destino_id": "c_326",
+      "tipo": "resisten",
+      "etiqueta": "las cualidades no cuantificables resisten la cuantificación fundamental de la ciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f09fd23d",
+      "origen_id": "c_390",
+      "destino_id": "c_387",
+      "tipo": "establece",
+      "etiqueta": "el a priori formal establece el límite estructural de la ciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ecee0b59",
+      "origen_id": "c_212",
+      "destino_id": "c_205",
+      "tipo": "permite",
+      "etiqueta": "el lenguaje demostrativo permite la mediación conceptual que abre el universo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_97af5d06",
+      "origen_id": "c_347",
+      "destino_id": "c_346",
+      "tipo": "expresa",
+      "etiqueta": "el dualismo cartesiano de res cogitans y res extensa expresa el antagonismo objeto-sujeto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_92eb0d73",
+      "origen_id": "c_353",
+      "destino_id": "c_357",
+      "tipo": "realización de",
+      "etiqueta": "la totalidad del ser como materia prima es realización de la técnica como forma universal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7035601b",
+      "origen_id": "c_377",
+      "destino_id": "c_252",
+      "tipo": "opera mediante",
+      "etiqueta": "la ideología justifica intelectualmente el orden establecido de forma neutral",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_46c4ab01",
+      "origen_id": "c_385",
+      "destino_id": "c_388",
+      "tipo": "permanece bajo",
+      "etiqueta": "el mundo de la percepción permanece inalterado bajo la función estabilizadora de la ciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_15aaef22",
+      "origen_id": "c_344",
+      "destino_id": "c_345",
+      "tipo": "establece",
+      "etiqueta": "el idealismo hegeliano puesto sobre sus pies establece ontología de sustancia que se desenvuelve",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_36b8321d",
+      "origen_id": "c_351",
+      "destino_id": "c_353",
+      "tipo": "deviene",
+      "etiqueta": "la naturaleza bajo la técnica del hombre activo deviene totalidad como materia prima",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b9c4bf5b",
+      "origen_id": "c_368",
+      "destino_id": "c_007",
+      "tipo": "ratifica",
+      "etiqueta": "el positivismo ratifica el pensamiento mediante hechos dentro de racionalidad tecnológica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8ca6c86b",
+      "origen_id": "c_379",
+      "destino_id": "c_381",
+      "tipo": "incluye",
+      "etiqueta": "el mundo empírico real incluye el contexto amplio de experiencia excluido del positivismo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_afd8f5cf",
+      "origen_id": "c_388",
+      "destino_id": "c_387",
+      "tipo": "expresión de",
+      "etiqueta": "la función estabilizadora de la ciencia es expresión de su límite inherente",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b46131bc",
+      "origen_id": "c_411",
+      "destino_id": "c_381",
+      "tipo": "incluye",
+      "etiqueta": "el análisis supralingüístico incluye el contexto amplio de experiencia social e histórica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2ac06cf8",
+      "origen_id": "c_358",
+      "destino_id": "c_364",
+      "tipo": "refleja",
+      "etiqueta": "la evolución del método científico refleja características de anticipación y proyección",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d897a63e",
+      "origen_id": "c_393",
+      "destino_id": "c_429",
+      "tipo": "se relaciona con",
+      "etiqueta": "la validez objetiva del conocimiento se relaciona con capacidad de cambio histórico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e180febb",
+      "origen_id": "c_348",
+      "destino_id": "c_347",
+      "tipo": "contiene negación de",
+      "etiqueta": "el dualismo cartesiano contiene su propia negación anticipatoria",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0361254f",
+      "origen_id": "c_407",
+      "destino_id": "c_215",
+      "tipo": "ejerce poder dentro de",
+      "etiqueta": "la autoridad intelectual define lo correcto dentro del intelecto crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9204b43a",
+      "origen_id": "c_413",
+      "destino_id": "c_206",
+      "tipo": "transformada por",
+      "etiqueta": "la función histórica de la filosofía revelada en la dialéctica transforma la conciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_11470033",
+      "origen_id": "c_392",
+      "destino_id": "c_387",
+      "tipo": "expresa",
+      "etiqueta": "la necesidad de física cualitativa expresa el límite inherente de la ciencia cuantificadora",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_36e74da9",
+      "origen_id": "c_395",
+      "destino_id": "c_040",
+      "tipo": "permitiría",
+      "etiqueta": "el mundo pacificado permitiría ciencia con conceptos esencialmente diferentes",
+      "bidireccional": false
     }
   ],
   "conceptos_fusionados": {
@@ -9472,7 +9790,9 @@
     "c_433": "c_384",
     "c_466": "c_408",
     "c_454": "c_429",
-    "c_514": "c_510"
+    "c_514": "c_510",
+    "c_198": "c_376",
+    "c_327": "c_312"
   },
   "metadatos": {
     "titulo": "El Hombre Unidimensional",

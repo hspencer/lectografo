@@ -75,6 +75,16 @@ async function _renderMiniGrafos(grafos) {
   }
 }
 
+// Igual que buildCita() en static/app.js — cita bibliográfica compacta.
+function buildCita(m) {
+  const partes = [];
+  if (m.autores?.length) partes.push(m.autores.join("; "));
+  if (m.anio)            partes.push(`(${m.anio})`);
+  if (m.titulo)          partes.push(m.titulo);
+  if (m.editorial)       partes.push(m.editorial);
+  return partes.join(". ");
+}
+
 async function init() {
   const grid  = document.getElementById("biblioteca-grid");
   const vacio = document.getElementById("biblioteca-vacio");
@@ -91,18 +101,24 @@ async function init() {
     return;
   }
 
-  grid.innerHTML = grafos.map(g => `
-    <a class="bib-card bib-card-click" href="./visor.html?slug=${encodeURIComponent(g.slug)}">
-      <div class="bib-mini-mapa" data-slug="${esc(g.slug)}"></div>
-      <div class="bib-card-inner">
+  // Mismo markup de card que la biblioteca de la app (static/app.js):
+  // mini-mapa + título + cita bibliográfica (o aviso de "sin ficha").
+  grid.innerHTML = grafos.map(g => {
+    const cita = g.metadatos ? buildCita(g.metadatos) : "";
+    return `
+    <a class="bib-card" href="./visor.html?slug=${encodeURIComponent(g.slug)}">
+      <div class="bib-mini-mapa bib-card-click" data-slug="${esc(g.slug)}"></div>
+      <div class="bib-card-click bib-card-body">
         <div class="bib-card-titulo">${esc(g.titulo)}</div>
+        ${cita
+          ? `<div class="bib-card-cita muted">${esc(cita)}</div>`
+          : `<div class="bib-card-cita muted bib-sin-ficha">Sin ficha bibliográfica</div>`}
         <div class="bib-card-meta">
-          <span>${g.total_nodos} conceptos</span>
-          <span>${g.total_relaciones} relaciones</span>
+          <span class="bib-stats">${g.total_nodos} conceptos · ${g.total_relaciones} relaciones</span>
         </div>
       </div>
-    </a>
-  `).join("");
+    </a>`;
+  }).join("");
 
   requestAnimationFrame(() => _renderMiniGrafos(grafos));
 }

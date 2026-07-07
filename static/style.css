@@ -69,32 +69,15 @@ html, body {
 .tab-btn.active { background: var(--sn-ink); color: var(--sn-paper); }
 
 /* ── Buscador de conceptos (mapa) ─────────────────────────────────── */
-#topbar-search {
-  position: relative;
-  flex-shrink: 0;
-  align-self: center;
+#mapa-buscar-wrap {
+  position: absolute;
+  top: var(--sn-s-4);
+  left: var(--sn-s-4);
+  z-index: 10;
+  pointer-events: auto;
 }
-
-.mapa-buscar-input {
-  height: 26px;
-  padding: 0 var(--sn-s-3);
-  border: var(--sn-hair);
-  border-radius: var(--sn-radius);
-  font-size: var(--sn-fs-xs);
-  font-family: var(--sn-font-text);
-  background: var(--sn-sunk);
-  color: var(--sn-ink);
-  outline: none;
-  width: 180px;
-  transition: border-color var(--sn-dur-1), box-shadow var(--sn-dur-1), width var(--sn-dur-2);
-}
-.mapa-buscar-input:focus {
-  border-color: var(--sn-focus-border);
-  background: var(--sn-paper);
-  box-shadow: var(--sn-focus-ring);
-  width: 240px;
-}
-.mapa-buscar-input::placeholder { color: var(--sn-ink-faint); }
+#mapa-buscar-wrap .buscar-input { width: 200px; }
+#mapa-buscar-wrap .buscar-input:focus { width: 260px; }
 
 .mapa-buscar-dropdown {
   position: absolute;

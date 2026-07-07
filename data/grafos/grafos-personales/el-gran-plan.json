@@ -4,15 +4,57 @@
   "descripcion": "Formas de resistencia",
   "conceptos_propios": [
     {
-      "id": "ci_f9a22e7b",
-      "label": "La función del diseño",
-      "definicion": null,
-      "citas": [],
-      "creado_en": "2026-07-06T14:13:45.190347",
-      "actualizado_en": "2026-07-06T14:13:45.190354"
+      "id": "ci_6e08557a",
+      "label": "ente",
+      "definicion": "Lo que es, lo existente. En el contexto de la estética de Heidegger, el ente se desocultadora la obra de arte. Se distinguen interpretaciones del ente: como cosa, como útil (materia-forma) y como obra de arte. El ente en totalidad se revela en la obra.",
+      "citas": [
+        {
+          "texto": "En la obra de arte se ha puesto en operación la verdad del ente.",
+          "fuente": null
+        }
+      ],
+      "creado_en": "2026-07-06T16:04:57.133214",
+      "actualizado_en": "2026-07-06T16:04:57.133218"
+    },
+    {
+      "id": "ci_9a370893",
+      "label": "Representación compatible",
+      "definicion": "El modo en que el entendimiento corriente opera, siempre uniendo términos que pueden coexistir según la lógica, excluyendo lo paradójico",
+      "citas": [
+        {
+          "texto": "En la obra de arte se ha puesto en operación la verdad del ente.",
+          "fuente": null
+        }
+      ],
+      "creado_en": "2026-07-06T16:05:26.390835",
+      "actualizado_en": "2026-07-06T16:05:26.390845"
+    },
+    {
+      "id": "ci_253b1b04",
+      "label": "Homologein (ὁμολογεῖν) / Comprensión originaria",
+      "definicion": "El entendimiento afirmativo y reafirmativo, el decir lo mismo que otro dice, que constituye el saber propiamente dicho",
+      "citas": [
+        {
+          "texto": "ὁμολογεῖν... decir lo mismo que otro dice",
+          "fuente": null
+        }
+      ],
+      "creado_en": "2026-07-06T23:11:15.928634",
+      "actualizado_en": "2026-07-06T23:11:15.928638"
     }
   ],
-  "relaciones": [],
+  "relaciones": [
+    {
+      "id": "ri_8fd4c3e4",
+      "origen_id": "ci_6e08557a",
+      "destino_id": "ci_9a370893",
+      "tipo": "fundamenta",
+      "etiqueta": "fundamenta",
+      "bidireccional": false,
+      "cita": null,
+      "creada_en": "2026-07-06T16:05:42.625174"
+    }
+  ],
   "creado_en": "2026-07-03T02:31:19.020600",
-  "actualizado_en": "2026-07-06T14:13:45.190369"
+  "actualizado_en": "2026-07-06T23:11:15.928651"
 }

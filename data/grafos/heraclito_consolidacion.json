@@ -1,0 +1,822 @@
+{
+  "id": "cons_529d691c",
+  "slug": "heraclito",
+  "propuestas": [
+    {
+      "id": "pfr_000",
+      "propuesta": {
+        "id": "pf_000",
+        "nodo_canonico_id": "c_007",
+        "nodos_absorbidos_ids": [
+          "c_344"
+        ],
+        "label_canonico": "Contienda (Eris)",
+        "justificacion": "c_344 (Conciencia) no pertenece al mismo concepto. c_007 trata de la contienda como esencia del ser en Heráclito, mientras c_344 es sobre autoconciencia moderna. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Contienda (Eris)",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_001",
+      "propuesta": {
+        "id": "pf_001",
+        "nodo_canonico_id": "c_012",
+        "nodos_absorbidos_ids": [
+          "c_057"
+        ],
+        "label_canonico": "Voluntad de poder",
+        "justificacion": "c_012 (Voluntad de poder según Nietzsche) y c_057 (Voluntad de aparecer en Hegel) son conceptos filosóficos distintos. No son el mismo concepto, aunque ambos hablen de voluntad. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Voluntad de poder",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_002",
+      "propuesta": {
+        "id": "pf_002",
+        "nodo_canonico_id": "c_014",
+        "nodos_absorbidos_ids": [
+          "c_158"
+        ],
+        "label_canonico": "Ocultamiento y desocultamiento (physis)",
+        "justificacion": "c_014 trata del ocultamiento como relación esencial con el surgir, mientras c_158 trata del desocultamiento como estado manifiesto. Son conceptos complementarios pero distintos en la dialéctica heraclitana del ser.",
+        "confianza": 0.0
+      },
+      "label_editado": "Ocultamiento y desocultamiento (physis)",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_003",
+      "propuesta": {
+        "id": "pf_003",
+        "nodo_canonico_id": "c_015",
+        "nodos_absorbidos_ids": [
+          "c_118"
+        ],
+        "label_canonico": "Lógica",
+        "justificacion": "Ambos tratan de la lógica, pero c_015 ofrece una definición neutral como 'doctrina del pensar correcto' mientras c_118 critica específicamente la competencia de la lógica dialéctica para esclarecer el ser. Son aspectos del mismo concepto bajo diferentes perspectivas críticas.",
+        "confianza": 0.75
+      },
+      "label_editado": "Lógica",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_004",
+      "propuesta": {
+        "id": "pf_004",
+        "nodo_canonico_id": "c_018",
+        "nodos_absorbidos_ids": [
+          "c_183"
+        ],
+        "label_canonico": "Metafísica y Física",
+        "justificacion": "c_018 (Metafísica) y c_183 (Física) son epistemes distintas. No son duplicados. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Metafísica y Física",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_005",
+      "propuesta": {
+        "id": "pf_005",
+        "nodo_canonico_id": "c_025",
+        "nodos_absorbidos_ids": [
+          "c_323"
+        ],
+        "label_canonico": "Ente",
+        "justificacion": "c_025 (Ente como distinto del ser) y c_323 (Éter/aire como respiración) son conceptos completamente distintos. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Ente",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_006",
+      "propuesta": {
+        "id": "pf_006",
+        "nodo_canonico_id": "c_028",
+        "nodos_absorbidos_ids": [
+          "c_457"
+        ],
+        "label_canonico": "Pensar occidental / Inicio del pensar occidental",
+        "justificacion": "c_028 es el concepto general de pensar occidental iniciado en los griegos; c_457 es el título específico del curso de 1943. Son variantes del mismo concepto histórico-fundamental.",
+        "confianza": 0.85
+      },
+      "label_editado": "Pensar occidental / Inicio del pensar occidental",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_007",
+      "propuesta": {
+        "id": "pf_007",
+        "nodo_canonico_id": "c_037",
+        "nodos_absorbidos_ids": [
+          "c_460"
+        ],
+        "label_canonico": "Pensadores iniciales / Pensar inicial",
+        "justificacion": "c_037 nombra a los tres pensadores iniciales (Anaximandro, Parménides, Heráclito); c_460 se refiere al pensar de esos primeros pensadores. Conceptos muy cercanos pero distinguibles: uno es sobre los sujetos, otro sobre su pensamiento.",
+        "confianza": 0.65
+      },
+      "label_editado": "Pensadores iniciales / Pensar inicial",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_008",
+      "propuesta": {
+        "id": "pf_008",
+        "nodo_canonico_id": "c_034",
+        "nodos_absorbidos_ids": [
+          "c_289"
+        ],
+        "label_canonico": "Despejamiento (Lichtung)",
+        "justificacion": "c_034 es sobre Lichtung (despejamiento como apertura fundamental); c_289 es sobre pensamientos como contenido mental. Son conceptos distintos. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Despejamiento (Lichtung)",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_009",
+      "propuesta": {
+        "id": "pf_009",
+        "nodo_canonico_id": "c_035",
+        "nodos_absorbidos_ids": [
+          "c_036"
+        ],
+        "label_canonico": "Lo ordinario y lo extraordinario",
+        "justificacion": "c_035 (Lo ordinario) y c_036 (Lo extraordinario) son conceptos complementarios y dialécticamente relacionados en Heráclito: lo extraordinario actúa en lo ordinario. Aunque distintos, forman una pareja conceptual inseparable.",
+        "confianza": 0.65
+      },
+      "label_editado": "Lo ordinario y lo extraordinario",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_010",
+      "propuesta": {
+        "id": "pf_010",
+        "nodo_canonico_id": "c_044",
+        "nodos_absorbidos_ids": [
+          "c_124"
+        ],
+        "label_canonico": "Horno",
+        "justificacion": "c_044 (Horno como lugar ordinario en Heráclito) y c_124 (Adorno como dejar aparecer originario) son conceptos completamente distintos. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Horno",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_011",
+      "propuesta": {
+        "id": "pf_011",
+        "nodo_canonico_id": "c_048",
+        "nodos_absorbidos_ids": [
+          "c_128",
+          "c_147",
+          "c_148",
+          "c_149",
+          "c_211",
+          "c_217",
+          "c_218",
+          "c_254",
+          "c_277",
+          "c_342",
+          "c_345",
+          "c_353",
+          "c_361",
+          "c_366",
+          "c_382",
+          "c_383",
+          "c_386",
+          "c_428",
+          "c_429",
+          "c_430",
+          "c_431",
+          "c_432",
+          "c_433",
+          "c_434",
+          "c_435",
+          "c_454",
+          "c_455"
+        ],
+        "label_canonico": "Fragmentos de Heráclito",
+        "justificacion": "c_048 es la categoría general de fragmentos de Heráclito. Todos los demás nodos (c_128-c_455) son referencias a fragmentos específicos numerados de Heráclito. Los fragmentos específicos son instancias del concepto general, pero la base de datos parece tratarlos como nodos separados. En un grafo bien estructurado, los fragmentos específicos deberían ser referencias o relacionales, no conceptos independientes.",
+        "confianza": 0.4
+      },
+      "label_editado": "Fragmentos de Heráclito",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_012",
+      "propuesta": {
+        "id": "pf_012",
+        "nodo_canonico_id": "c_054",
+        "nodos_absorbidos_ids": [
+          "c_298"
+        ],
+        "label_canonico": "Hombre / Ser-hombre",
+        "justificacion": "c_054 (Hombre en la sentencia heraclitea) y c_298 (Ser-hombre como modo de ser esencial) son perspectivas sobre el mismo concepto fundamental: la naturaleza del hombre. c_298 es más específico sobre la dimensión esencial.",
+        "confianza": 0.75
+      },
+      "label_editado": "Hombre / Ser-hombre",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_013",
+      "propuesta": {
+        "id": "pf_013",
+        "nodo_canonico_id": "c_054",
+        "nodos_absorbidos_ids": [
+          "c_293"
+        ],
+        "label_canonico": "Hombre",
+        "justificacion": "c_054 (Hombre en general) y c_293 (Hombre moderno en su incapacidad) son variantes: una es genérica, otra especifica la condición moderna. Aunque relacionadas, c_293 introduce la determinación histórica que no está en c_054.",
+        "confianza": 0.55
+      },
+      "label_editado": "Hombre",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_014",
+      "propuesta": {
+        "id": "pf_014",
+        "nodo_canonico_id": "c_054",
+        "nodos_absorbidos_ids": [
+          "c_350"
+        ],
+        "label_canonico": "Hombre / Morada del hombre",
+        "justificacion": "c_054 trata del hombre como sujeto; c_350 trata de la morada esencial del hombre en la región del logos. Son aspectos relacionados pero distinguibles.",
+        "confianza": 0.55
+      },
+      "label_editado": "Hombre / Morada del hombre",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_015",
+      "propuesta": {
+        "id": "pf_015",
+        "nodo_canonico_id": "c_054",
+        "nodos_absorbidos_ids": [
+          "c_352"
+        ],
+        "label_canonico": "Hombre / Mirada doble",
+        "justificacion": "c_054 (Hombre) y c_352 (Mirada doble del hombre) son relacionados: uno es el sujeto, otro es su capacidad característica. Distinguibles pero íntimamente conectados.",
+        "confianza": 0.55
+      },
+      "label_editado": "Hombre / Mirada doble",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_016",
+      "propuesta": {
+        "id": "pf_016",
+        "nodo_canonico_id": "c_059",
+        "nodos_absorbidos_ids": [
+          "c_230"
+        ],
+        "label_canonico": "Lo absoluto / Saber absoluto",
+        "justificacion": "c_059 (Lo absoluto como lo que quiere revelarse) y c_230 (Saber absoluto como ciencia en la metafísica) son relacionados pero distinguibles. Uno es el objeto, otro es el tipo de conocimiento. Falso positivo.",
+        "confianza": 0.3
+      },
+      "label_editado": "Lo absoluto / Saber absoluto",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_017",
+      "propuesta": {
+        "id": "pf_017",
+        "nodo_canonico_id": "c_059",
+        "nodos_absorbidos_ids": [
+          "c_372"
+        ],
+        "label_canonico": "Absoluto",
+        "justificacion": "c_059 (Lo absoluto en Hegel como lo que quiere revelarse) y c_372 (Absoluto en metafísica como separado/disuelto) tratan del mismo término bajo diferentes perspectivas históricas (Hegel vs. interpretación general metafísica). Mismo concepto con énfasis distintos.",
+        "confianza": 0.8
+      },
+      "label_editado": "Absoluto",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_018",
+      "propuesta": {
+        "id": "pf_018",
+        "nodo_canonico_id": "c_064",
+        "nodos_absorbidos_ids": [
+          "c_179"
+        ],
+        "label_canonico": "Lo Mismo / Sí-mismo",
+        "justificacion": "c_064 (Lo Mismo que permanece a través de los pensadores) y c_179 (Sí-mismo como lo que retorna en toda reflexión) son distintos: uno es ontológico-histórico, otro es más bien lógico-reflexivo. Falso positivo.",
+        "confianza": 0.2
+      },
+      "label_editado": "Lo Mismo / Sí-mismo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_019",
+      "propuesta": {
+        "id": "pf_019",
+        "nodo_canonico_id": "c_077",
+        "nodos_absorbidos_ids": [
+          "c_442"
+        ],
+        "label_canonico": "Proximidad del ser / Proximidad",
+        "justificacion": "c_077 (Proximidad del ser descubierta por la palabra 'es') y c_442 (Proximidad enigmática del Logos) tratan de la misma experiencia fundamental: la cercanía del ser/Logos al hombre que permanece oculta.",
+        "confianza": 0.85
+      },
+      "label_editado": "Proximidad del ser / Proximidad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_020",
+      "propuesta": {
+        "id": "pf_020",
+        "nodo_canonico_id": "c_078",
+        "nodos_absorbidos_ids": [
+          "c_441"
+        ],
+        "label_canonico": "Comprensión mejor / Incomprensión",
+        "justificacion": "c_078 (Comprensión 'mejor' del tesoro impensable) e c_441 (Incomprensión de los hombres del Logos) son opuestos complementarios, no duplicados. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Comprensión mejor / Incomprensión",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_021",
+      "propuesta": {
+        "id": "pf_021",
+        "nodo_canonico_id": "c_094",
+        "nodos_absorbidos_ids": [
+          "c_197"
+        ],
+        "label_canonico": "Prejuicios",
+        "justificacion": "c_094 (Prejuicios sobre physis y aletheia) y c_197 (Juicio como forma del enunciado en lógica) son conceptos completamente distintos. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Prejuicios",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_022",
+      "propuesta": {
+        "id": "pf_022",
+        "nodo_canonico_id": "c_103",
+        "nodos_absorbidos_ids": [
+          "c_421"
+        ],
+        "label_canonico": "Verdad (aletheia) / Verdad del ser",
+        "justificacion": "c_103 (Verdad como aletheia, no en la lógica sino en la physis) y c_421 (Verdad del ser como desocultamiento) expresan el mismo concepto fundamental de verdad originaria no-metafísica.",
+        "confianza": 0.88
+      },
+      "label_editado": "Verdad (aletheia) / Verdad del ser",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_023",
+      "propuesta": {
+        "id": "pf_023",
+        "nodo_canonico_id": "c_107",
+        "nodos_absorbidos_ids": [
+          "c_292"
+        ],
+        "label_canonico": "Surgimiento",
+        "justificacion": "c_107 (Surgimiento como emergencia continua de la physis) y c_292 (Conocimiento como posibilidad de saber) son conceptos distintos. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Surgimiento",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_024",
+      "propuesta": {
+        "id": "pf_024",
+        "nodo_canonico_id": "c_107",
+        "nodos_absorbidos_ids": [
+          "c_358"
+        ],
+        "label_canonico": "Surgimiento / Recogimiento",
+        "justificacion": "c_107 (Surgimiento/physis) y c_358 (Recogimiento en el logos) son conceptos distintos aunque complementarios en la dialéctica heraclitana. Falso positivo.",
+        "confianza": 0.0
+      },
+      "label_editado": "Surgimiento / Recogimiento",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_025",
+      "propuesta": {
+        "id": "pf_025",
+        "nodo_canonico_id": "c_134",
+        "nodos_absorbidos_ids": [
+          "c_427"
+        ],
+        "label_canonico": "Medida y desmedida",
+        "justificacion": "c_134 define medida (metron) como amplitud abierta/despejamiento, y contrasta con desmedida; c_427 expresa desmedida (hybris) como fuego desenfrenado. Son aspectos de la misma dialéctica ontológica.",
+        "confianza": 0.8
+      },
+      "label_editado": "Medida y desmedida",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_026",
+      "propuesta": {
+        "id": "pf_026",
+        "nodo_canonico_id": "c_141",
+        "nodos_absorbidos_ids": [
+          "c_235"
+        ],
+        "label_canonico": "Lógica originaria / Libertad originaria",
+        "justificacion": "c_141 (Lógica originaria como pensamiento del Logos) y c_235 (Libertad originaria como estar abierto para lo abierto) son conceptos distintos aunque ambos refieren a lo originario. Falso positivo.",
+        "confianza": 0.1
+      },
+      "label_editado": "Lógica originaria / Libertad originaria",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_027",
+      "propuesta": {
+        "id": "pf_027",
+        "nodo_canonico_id": "c_154",
+        "nodos_absorbidos_ids": [
+          "c_276"
+        ],
+        "label_canonico": "Amplitud",
+        "justificacion": "c_154 (Amplitud como interpretación de metron, espacialidad abierta) y c_276 (Amplitud que el Logos profundo señala) tratan del mismo concepto: la amplitud como dimensión de apertura esencial.",
+        "confianza": 0.82
+      },
+      "label_editado": "Amplitud",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_028",
+      "propuesta": {
+        "id": "pf_028",
+        "nodo_canonico_id": "c_173",
+        "nodos_absorbidos_ids": [
+          "c_178",
+          "c_202"
+        ],
+        "label_canonico": "Profundidad / Lo más profundo",
+        "justificacion": "c_173 (Profundidad como dirección del pensar puro), c_178 (Lo más profundo como lo que oculta abriéndose) y c_202 (Profundidad del pensar puro) son variantes del mismo concepto esencial sobre la profundidad característica del ser y el pensar.",
+        "confianza": 0.88
+      },
+      "label_editado": "Profundidad / Lo más profundo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_029",
+      "propuesta": {
+        "id": "pf_029",
+        "nodo_canonico_id": "c_180",
+        "nodos_absorbidos_ids": [
+          "c_204"
+        ],
+        "label_canonico": "Enunciado / Enunciación",
+        "justificacion": "c_180 (Enunciado como proposición/juicio) y c_204 (Enunciación como actividad de enunciar) son el sustantivo y el verbo del mismo proceso. Muy relacionados pero lingüísticamente distintos.",
+        "confianza": 0.75
+      },
+      "label_editado": "Enunciado / Enunciación",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_030",
+      "propuesta": {
+        "id": "pf_030",
+        "nodo_canonico_id": "c_210",
+        "nodos_absorbidos_ids": [
+          "c_267"
+        ],
+        "label_canonico": "Idea (εἶδος)",
+        "justificacion": "c_210 (Idea como perspectiva platónica para pensar el ente) y c_267 (Idea como concepto pensado diversamente por múltiples filósofos) refieren al mismo concepto histórico-filosófico, con c_267 siendo más amplio en su scope histórico.",
+        "confianza": 0.85
+      },
+      "label_editado": "Idea (εἶδος)",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_031",
+      "propuesta": {
+        "id": "pf_031",
+        "nodo_canonico_id": "c_219",
+        "nodos_absorbidos_ids": [
+          "c_264"
+        ],
+        "label_canonico": "Oscuridad",
+        "justificacion": "c_219 (Oscuridad del pensar heraclitano como claridad que se sustenta en sí misma) y c_264 (Oscuridad del asunto mismo) son aspectos relacionados pero distinguibles de la oscuridad. Falso positivo.",
+        "confianza": 0.3
+      },
+      "label_editado": "Oscuridad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_032",
+      "propuesta": {
+        "id": "pf_032",
+        "nodo_canonico_id": "c_238",
+        "nodos_absorbidos_ids": [
+          "c_362"
+        ],
+        "label_canonico": "Preparación para pensar",
+        "justificacion": "c_238 (Preparación para pensar como experiencia del ámbito esencial) y c_362 (Preparación del pensar como camino para el homologein) refieren al mismo concepto fundamental: la disposición necesaria para acceder al pensar originario.",
+        "confianza": 0.82
+      },
+      "label_editado": "Preparación para pensar",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_033",
+      "propuesta": {
+        "id": "pf_033",
+        "nodo_canonico_id": "c_320",
+        "nodos_absorbidos_ids": [
+          "c_390"
+        ],
+        "label_canonico": "Lenguaje / Lenguaje del Ser",
+        "justificacion": "c_320 (Lenguaje como portal/no instrumento) y c_390 (Lenguaje del Ser como decir adecuado al Logos) están muy relacionados: ambos abordan la esencia del lenguaje desde la perspectiva del ser. Mismo concepto con perspectivas complementarias.",
+        "confianza": 0.8
+      },
+      "label_editado": "Lenguaje / Lenguaje del Ser",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_034",
+      "propuesta": {
+        "id": "pf_034",
+        "nodo_canonico_id": "c_328",
+        "nodos_absorbidos_ids": [
+          "c_450"
+        ],
+        "label_canonico": "Representación",
+        "justificacion": "c_328 (Representación intuitiva como aprehender inmediato) y c_450 (Representación en contexto moderno como forma metafísica de pensar el ser) refieren a aspectos distintos de la representación. Falso positivo.",
+        "confianza": 0.25
+      },
+      "label_editado": "Representación",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_035",
+      "propuesta": {
+        "id": "pf_035",
+        "nodo_canonico_id": "c_360",
+        "nodos_absorbidos_ids": [
+          "c_393"
+        ],
+        "label_canonico": "Conexión esencial / Conexión intrínseca",
+        "justificacion": "c_360 (Conexión intrínseca entre contrarios en Heráclito: claro-oscuro, medida-desmedida) y c_393 (Conexión esencial que vincula lo separado) expresan el mismo principio ontológico de interconexión fundamental.",
+        "confianza": 0.84
+      },
+      "label_editado": "Conexión esencial / Conexión intrínseca",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_036",
+      "propuesta": {
+        "id": "pf_036",
+        "nodo_canonico_id": "c_364",
+        "nodos_absorbidos_ids": [
+          "c_376"
+        ],
+        "label_canonico": "Desdoblamiento / Diferencia (ser y ente)",
+        "justificacion": "c_364 trata de la escucha articulada del logos y la distinción en el fragmento 50; c_376 trata del desdoblamiento discrepante del hombre con el ser. Ambos abordan la duplicidad fundamental pero desde ángulos distintos. Falso positivo.",
+        "confianza": 0.2
+      },
+      "label_editado": "Desdoblamiento / Diferencia (ser y ente)",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_037",
+      "propuesta": {
+        "id": "pf_037",
+        "nodo_canonico_id": "c_387",
+        "nodos_absorbidos_ids": [
+          "c_420",
+          "c_445"
+        ],
+        "label_canonico": "Enriquecimiento del Logos",
+        "justificacion": "c_387 (Autoenriquecimiento del Logos cuando está más recogido), c_420 (Enriquecimiento del Logos como acrecentamiento de la recolección originaria) y c_445 (Enriquecimiento del Logos cuando el alma lo escucha obedientemente) refieren al mismo proceso fundamental de crecimiento/enriquecimiento del Logos.",
+        "confianza": 0.88
+      },
+      "label_editado": "Enriquecimiento del Logos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pfr_038",
+      "propuesta": {
+        "id": "pf_038",
+        "nodo_canonico_id": "c_411",
+        "nodos_absorbidos_ids": [
+          "c_418"
+        ],
+        "label_canonico": "Presente originario / Pensar originario",
+        "justificacion": "c_411 (Presente originario como región donde todo hace presencia) y c_418 (Pensar originario que se corresponde con el Logos) son conceptos relacionados pero distinguibles: uno es ontológico, otro epistemológico. Falso positivo.",
+        "confianza": 0.3
+      },
+      "label_editado": "Presente originario / Pensar originario",
+      "seleccionada": true,
+      "estado": "aceptada"
+    }
+  ],
+  "estado": "completada",
+  "razon_falla": null,
+  "iniciada_en": "2026-07-07T02:30:37.227359",
+  "completada_en": "2026-07-07T02:34:13.768966",
+  "candidatos_ids": [
+    "c_005",
+    "c_006",
+    "c_007",
+    "c_344",
+    "c_012",
+    "c_057",
+    "c_014",
+    "c_158",
+    "c_015",
+    "c_118",
+    "c_018",
+    "c_183",
+    "c_025",
+    "c_323",
+    "c_028",
+    "c_037",
+    "c_061",
+    "c_074",
+    "c_076",
+    "c_091",
+    "c_160",
+    "c_237",
+    "c_300",
+    "c_457",
+    "c_460",
+    "c_034",
+    "c_289",
+    "c_035",
+    "c_036",
+    "c_044",
+    "c_124",
+    "c_048",
+    "c_128",
+    "c_147",
+    "c_148",
+    "c_149",
+    "c_211",
+    "c_217",
+    "c_218",
+    "c_254",
+    "c_277",
+    "c_342",
+    "c_345",
+    "c_353",
+    "c_361",
+    "c_366",
+    "c_382",
+    "c_383",
+    "c_386",
+    "c_428",
+    "c_429",
+    "c_430",
+    "c_431",
+    "c_432",
+    "c_433",
+    "c_434",
+    "c_435",
+    "c_454",
+    "c_455",
+    "c_054",
+    "c_293",
+    "c_298",
+    "c_350",
+    "c_352",
+    "c_055",
+    "c_072",
+    "c_075",
+    "c_139",
+    "c_232",
+    "c_234",
+    "c_255",
+    "c_308",
+    "c_321",
+    "c_348",
+    "c_401",
+    "c_419",
+    "c_059",
+    "c_230",
+    "c_372",
+    "c_060",
+    "c_389",
+    "c_062",
+    "c_153",
+    "c_375",
+    "c_064",
+    "c_179",
+    "c_068",
+    "c_145",
+    "c_363",
+    "c_405",
+    "c_406",
+    "c_077",
+    "c_442",
+    "c_078",
+    "c_441",
+    "c_079",
+    "c_137",
+    "c_094",
+    "c_197",
+    "c_098",
+    "c_268",
+    "c_103",
+    "c_203",
+    "c_421",
+    "c_107",
+    "c_292",
+    "c_358",
+    "c_387",
+    "c_420",
+    "c_445",
+    "c_125",
+    "c_233",
+    "c_130",
+    "c_262",
+    "c_310",
+    "c_316",
+    "c_132",
+    "c_201",
+    "c_324",
+    "c_134",
+    "c_427",
+    "c_141",
+    "c_235",
+    "c_154",
+    "c_276",
+    "c_166",
+    "c_290",
+    "c_173",
+    "c_178",
+    "c_202",
+    "c_305",
+    "c_180",
+    "c_204",
+    "c_210",
+    "c_267",
+    "c_219",
+    "c_260",
+    "c_264",
+    "c_222",
+    "c_227",
+    "c_238",
+    "c_362",
+    "c_249",
+    "c_374",
+    "c_257",
+    "c_400",
+    "c_306",
+    "c_397",
+    "c_320",
+    "c_390",
+    "c_328",
+    "c_450",
+    "c_360",
+    "c_393",
+    "c_364",
+    "c_376",
+    "c_411",
+    "c_418"
+  ]
+}

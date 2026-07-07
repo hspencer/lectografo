@@ -10,6 +10,7 @@ const state = {
   grafoUpdate: null,   // fn updateVisuals() exportada por initGrafo/initGrafo3D
   grafoHighlight: null, // fn highlightPath() exportada por initGrafo/initGrafo3D
   grafoCenter: null,   // fn centerOnNode(nodeId) del renderer activo
+  grafoPan:    null,   // fn panBy(dx, dy) del renderer activo
   grafoFit:    null,   // fn fitView() del renderer activo
   grafoDestroy: null,  // fn destroy() del renderer 3D activo (null en modo 2D)
   modo3d:      false,  // vista activa del mapa: 2D (D3/SVG) o 3D (three.js)
@@ -70,8 +71,6 @@ function activarTab(nombre) {
   state.tabActivo = nombre;
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===nombre));
   document.querySelectorAll(".tab-panel").forEach(p=>{ p.hidden = p.id!==`tab-${nombre}`; });
-  const srchWrap = document.getElementById("topbar-search");
-  if (srchWrap) srchWrap.hidden = (nombre !== "mapa");
   if (nombre === "texto" && state.slug) { if (!_textoModoEdicion) initTab("texto"); return; }
   if (!tabsInit.has(nombre) && state.slug) { tabsInit.add(nombre); initTab(nombre); }
 }
@@ -98,6 +97,26 @@ async function init() {
   initNuevoGPForm();
   initFichaModal();
   initSettingsPanel();
+  initMapaArrows();
+}
+
+// Navegación del mapa con flechas del teclado
+function initMapaArrows() {
+  const STEP = 60;
+  document.addEventListener("keydown", ev => {
+    if (state.tabActivo !== "mapa") return;
+    if (!state.grafoPan) return;
+    // No interceptar si el foco está en un campo de texto
+    if (["INPUT","TEXTAREA","SELECT"].includes(ev.target.tagName)) return;
+    let dx = 0, dy = 0;
+    if (ev.key === "ArrowLeft")  dx = -STEP;
+    if (ev.key === "ArrowRight") dx =  STEP;
+    if (ev.key === "ArrowUp")    dy =  STEP;
+    if (ev.key === "ArrowDown")  dy = -STEP;
+    if (!dx && !dy) return;
+    ev.preventDefault();
+    state.grafoPan(dx, dy);
+  });
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -130,6 +149,7 @@ async function mostrarBiblioteca(extData) {
   state.grafoUpdate = null;
   state.grafoHighlight = null;
   state.grafoCenter = null;
+  state.grafoPan = null;
   state.tabActivo = null;
   state.path = [];
   if (state.navCols) { state.navCols.destruir(); state.navCols = null; }
@@ -678,19 +698,21 @@ async function initMapaForce() {
   if (state.modo3d) {
     svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
     const { initGrafo3D } = await import("./grafo3d.js");
-    const { updateVisuals, highlightPath, centerOnNode, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
+    const { updateVisuals, highlightPath, centerOnNode, panBy, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
     state.grafoUpdate    = updateVisuals;
     state.grafoHighlight = highlightPath;
     state.grafoCenter    = centerOnNode;
+    state.grafoPan       = panBy;
     state.grafoFit       = fitView;
     state.grafoDestroy   = destroy;
   } else {
     svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
     const { initGrafo } = await import("./grafo.js");
-    const { relColorScale, relTypes, updateVisuals, highlightPath, centerOnNode, fitView } = initGrafo(svgEl, state.grafo, onNodoSeleccionado);
+    const { relColorScale, relTypes, updateVisuals, highlightPath, centerOnNode, panBy, fitView } = initGrafo(svgEl, state.grafo, onNodoSeleccionado);
     state.grafoUpdate    = updateVisuals;
     state.grafoHighlight = highlightPath;
     state.grafoCenter    = centerOnNode;
+    state.grafoPan       = panBy;
     state.grafoFit       = fitView;
     state.relColor       = relColorScale;
     renderLeyenda(relColorScale, relTypes);
@@ -825,7 +847,7 @@ function buildColHeaderHTML(paso) {
   }
   h += `<div class="nav-col-titlerow">
     <div class="nav-col-raiz">${esc(node.label)}</div>
-    <button class="nav-col-close" title="Cerrar">×</button>
+    <button class="nav-col-close" title="Cerrar" aria-label="Cerrar columna de ${esc(node.label)}">×</button>
   </div>`;
   return h;
 }
@@ -2482,7 +2504,7 @@ function _gpWireAutocomplete(inputEl, dropdownEl, getPool, { minChars = 1, showA
       ? []
       : getPool().filter(p => q.length < 1 || p.label.toLowerCase().includes(q)).slice(0, 12);
     dropdownEl.innerHTML = items.map((p, i) => `
-      <li class="gp-ac-item${i === activeIdx ? " active" : ""}" data-idx="${i}">
+      <li class="gp-ac-item${i === activeIdx ? " active" : ""}" role="option" data-idx="${i}"${i === activeIdx ? ' aria-selected="true"' : ""}>
         <span class="gp-ac-item-label">${esc(p.label)}</span>
         ${p.meta ? `<span class="gp-ac-item-meta">${esc(p.meta)}</span>` : ""}
       </li>

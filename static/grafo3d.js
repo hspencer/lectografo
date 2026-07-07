@@ -341,18 +341,36 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
   function centerOnNode(nodeId) {
     const node = nodes.find(n => n.id === nodeId);
     if (!node || !_graph || node.x == null) return;
-    const dist = 180;
+    // Preservar ángulo y distancia actuales; solo mover el target al nodo
+    const cam = _graph.cameraPosition();
+    const ctrl = _graph.controls();
+    const tgt = ctrl?.target || { x: 0, y: 0, z: 0 };
+    const dx = cam.x - tgt.x, dy = cam.y - tgt.y, dz = cam.z - tgt.z;
     _graph.cameraPosition(
-      { x: node.x, y: node.y, z: node.z + dist },
+      { x: node.x + dx, y: node.y + dy, z: node.z + dz },
       { x: node.x, y: node.y, z: node.z },
       600
     );
+  }
+
+  // Pan programático en espacio de mundo: mueve cámara y target juntos
+  function panBy(dx, dy) {
+    if (!_graph) return;
+    const cam = _graph.cameraPosition();
+    const ctrl = _graph.controls();
+    const tgt = ctrl?.target || { x: 0, y: 0, z: 0 };
+    _graph.cameraPosition(
+      { x: cam.x + dx, y: cam.y + dy, z: cam.z },
+      { x: tgt.x + dx, y: tgt.y + dy, z: tgt.z }
+    );
+    ctrl?.update?.();
   }
 
   return {
     updateVisuals,
     highlightPath,
     centerOnNode,
+    panBy,
     fitView: () => graph.zoomToFit(400, 60),
     destroy: () => { ro.disconnect(); destroyGrafo3D(); },
   };

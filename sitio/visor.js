@@ -14,6 +14,7 @@ const state = {
   grafoDestroy: null,
   grafoFit: null,
   grafoHighlight: null,
+  grafoCenter: null,
   relColor: null,
   navCols: null,
   path: [],   // [{ node, link, dir }] — link/dir describen cómo se llegó a ese paso
@@ -53,6 +54,7 @@ async function init() {
     renderMapa();
   };
 
+  initMapaBuscar();
   renderMapa();
 }
 
@@ -78,16 +80,18 @@ async function renderMapa() {
   state.grafoDestroy = null;
 
   if (state.modo3d) {
-    const { fitView, highlightPath, destroy } = modulo.initGrafo3D(el3d, state.grafo, onNodoSeleccionado);
+    const { fitView, highlightPath, centerOnNode, destroy } = modulo.initGrafo3D(el3d, state.grafo, onNodoSeleccionado);
     state.grafoFit      = fitView;
     state.grafoHighlight = highlightPath;
+    state.grafoCenter   = centerOnNode;
     state.grafoDestroy  = destroy;
     state.relColor      = null;
     document.getElementById("leyenda-tipos").innerHTML = "";
   } else {
-    const { relColorScale, relTypes, highlightPath, fitView } = modulo.initGrafo(svgEl, state.grafo, onNodoSeleccionado);
+    const { relColorScale, relTypes, highlightPath, centerOnNode, fitView } = modulo.initGrafo(svgEl, state.grafo, onNodoSeleccionado);
     state.grafoFit       = fitView;
     state.grafoHighlight = highlightPath;
+    state.grafoCenter    = centerOnNode;
     state.relColor       = relColorScale;
     renderLeyenda(relColorScale, relTypes);
   }
@@ -102,6 +106,93 @@ function renderLeyenda(relColorScale, relTypes) {
       <span>${esc(fmt(t))}</span>
     </div>
   `).join("");
+}
+
+// ── Buscador de conceptos en el mapa (mismo patrón que static/app.js) ──────
+
+function initMapaBuscar() {
+  const inp  = document.getElementById("mapa-buscar");
+  const drop = document.getElementById("mapa-buscar-dropdown");
+  if (!inp || !drop) return;
+
+  wireAutocomplete(inp, drop,
+    () => (state.grafo?.nodes || []).map(n => ({
+      label: n.label,
+      meta:  n.menciones ? `${n.menciones} mens.` : undefined,
+      onSelect: () => {
+        inp.value = "";
+        drop.hidden = true;
+        if (state.grafoCenter) state.grafoCenter(n.id);
+        onNodoSeleccionado(n);
+      },
+    })),
+    { minChars: 1 }
+  );
+}
+
+function wireAutocomplete(inputEl, dropdownEl, getPool, { minChars = 1 } = {}) {
+  let activeIdx = -1;
+  let items = [];
+
+  function render(query) {
+    const q = query.toLowerCase().trim();
+    items = (q.length < minChars)
+      ? []
+      : getPool().filter(p => p.label.toLowerCase().includes(q)).slice(0, 12);
+    dropdownEl.innerHTML = items.map((p, i) => `
+      <li class="gp-ac-item${i === activeIdx ? " active" : ""}" role="option" data-idx="${i}"${i === activeIdx ? ' aria-selected="true"' : ""}>
+        <span class="gp-ac-item-label">${esc(p.label)}</span>
+        ${p.meta ? `<span class="gp-ac-item-meta">${esc(p.meta)}</span>` : ""}
+      </li>
+    `).join("");
+    dropdownEl.hidden = items.length === 0;
+    dropdownEl.querySelectorAll(".gp-ac-item").forEach(li => {
+      li.addEventListener("mousedown", e => {
+        e.preventDefault();
+        select(parseInt(li.dataset.idx, 10));
+      });
+    });
+  }
+
+  function select(idx) {
+    if (idx < 0 || idx >= items.length) return;
+    items[idx].onSelect(inputEl);
+    close();
+  }
+
+  function close() {
+    activeIdx = -1;
+    items = [];
+    dropdownEl.hidden = true;
+    dropdownEl.innerHTML = "";
+  }
+
+  inputEl.addEventListener("input", () => { activeIdx = -1; render(inputEl.value); });
+  inputEl.addEventListener("focus", () => {
+    if (inputEl.value.length >= minChars) render(inputEl.value);
+  });
+  inputEl.addEventListener("focusout", () => {
+    setTimeout(() => {
+      if (document.activeElement !== inputEl && !dropdownEl.contains(document.activeElement)) close();
+    }, 80);
+  });
+  inputEl.addEventListener("keydown", e => {
+    if (dropdownEl.hidden) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, items.length - 1);
+      render(inputEl.value);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, 0);
+      render(inputEl.value);
+    } else if (e.key === "Enter" && activeIdx >= 0) {
+      e.preventDefault(); e.stopPropagation();
+      select(activeIdx);
+    } else if (e.key === "Escape") {
+      close();
+    }
+  });
 }
 
 // ── Navegador de columnas: nodo del grafo → columnas concepto+relaciones ──
@@ -164,7 +255,7 @@ function buildColHeaderHTML(paso) {
   }
   h += `<div class="nav-col-titlerow">
     <div class="nav-col-raiz">${esc(node.label)}</div>
-    <button class="nav-col-close" title="Cerrar">×</button>
+    <button class="nav-col-close" title="Cerrar" aria-label="Cerrar columna de ${esc(node.label)}">×</button>
   </div>`;
   return h;
 }

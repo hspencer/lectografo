@@ -1,935 +1,662 @@
 {
-  "id": "rec_c94765c8",
+  "id": "rec_9070b8c2",
   "slug": "el-hombre-unidimensional",
   "propuestas": [
     {
       "id": "pr_000",
       "conexion": {
-        "id": "cp_066",
-        "origen_id": "c_298",
-        "destino_id": "c_269",
-        "frase": "el Organon aristotélico establece el sistema de lógica formal",
-        "tipo": "establece",
-        "confianza": 0.96
+        "id": "cp_000",
+        "origen_id": "c_197",
+        "destino_id": "c_006",
+        "frase": "la mediación conceptual es operación fundamental del pensamiento crítico",
+        "tipo": "es operación fundamental de",
+        "confianza": 0.95
       },
-      "frase_editada": "el Organon aristotélico establece el sistema de lógica formal",
+      "frase_editada": "la mediación conceptual es operación fundamental del pensamiento crítico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_001",
       "conexion": {
-        "id": "cp_069",
-        "origen_id": "c_301",
-        "destino_id": "c_269",
-        "frase": "el silogismo es forma básica de razonamiento en lógica formal aristotélica",
-        "tipo": "es forma de",
-        "confianza": 0.96
+        "id": "cp_101",
+        "origen_id": "c_415",
+        "destino_id": "c_416",
+        "frase": "la conciencia como síntesis puede ser verdadera o falsa según reflejo de condiciones",
+        "tipo": "puede ser",
+        "confianza": 0.94
       },
-      "frase_editada": "el silogismo es forma básica de razonamiento en lógica formal aristotélica",
+      "frase_editada": "la conciencia como síntesis puede ser verdadera o falsa según reflejo de condiciones",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_002",
       "conexion": {
-        "id": "cp_065",
-        "origen_id": "c_297",
-        "destino_id": "c_270",
-        "frase": "la falsedad es opuesto a verdad como condición del ser",
-        "tipo": "es opuesto a",
-        "confianza": 0.95
+        "id": "cp_002",
+        "origen_id": "c_206",
+        "destino_id": "c_303",
+        "frase": "la dialéctica mantiene la contradicción como elemento necesario del pensamiento",
+        "tipo": "mantiene como elemento necesario",
+        "confianza": 0.93
       },
-      "frase_editada": "la falsedad es opuesto a verdad como condición del ser",
+      "frase_editada": "la dialéctica mantiene la contradicción como elemento necesario del pensamiento",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_003",
       "conexion": {
-        "id": "cp_067",
-        "origen_id": "c_299",
-        "destino_id": "c_286",
-        "frase": "el logos apofántico es término empleado por Aristóteles para designar proposición",
-        "tipo": "es término de",
-        "confianza": 0.95
+        "id": "cp_094",
+        "origen_id": "c_391",
+        "destino_id": "c_359",
+        "frase": "la ciencia galileana representa ruptura radical con la tradición pre-galileana",
+        "tipo": "representa ruptura con",
+        "confianza": 0.93
       },
-      "frase_editada": "el logos apofántico es término empleado por Aristóteles para designar proposición",
+      "frase_editada": "la ciencia galileana representa ruptura radical con la tradición pre-galileana",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_004",
       "conexion": {
-        "id": "cp_089",
-        "origen_id": "c_326",
-        "destino_id": "c_359",
-        "frase": "la cuantificación es proceso fundamental de ciencia moderna galileana",
-        "tipo": "es proceso de",
-        "confianza": 0.95
+        "id": "cp_028",
+        "origen_id": "c_225",
+        "destino_id": "c_008",
+        "frase": "el lenguaje como instrumento de control cierra el universo del discurso",
+        "tipo": "realiza",
+        "confianza": 0.92
       },
-      "frase_editada": "la cuantificación es proceso fundamental de ciencia moderna galileana",
+      "frase_editada": "el lenguaje como instrumento de control cierra el universo del discurso",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_005",
       "conexion": {
-        "id": "cp_054",
-        "origen_id": "c_276",
-        "destino_id": "c_277",
-        "frase": "la necesidad limita la libertad en filosofía clásica",
-        "tipo": "limita",
-        "confianza": 0.94
+        "id": "cp_077",
+        "origen_id": "c_363",
+        "destino_id": "c_326",
+        "frase": "las matemáticas aplicadas transforman la causalidad concreta en relaciones cuantificables",
+        "tipo": "realiza",
+        "confianza": 0.92
       },
-      "frase_editada": "la necesidad limita la libertad en filosofía clásica",
+      "frase_editada": "las matemáticas aplicadas transforman la causalidad concreta en relaciones cuantificables",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_006",
       "conexion": {
-        "id": "cp_060",
-        "origen_id": "c_285",
-        "destino_id": "c_206",
-        "frase": "la lógica dialéctica de Platón mantiene apertura de términos y ambigüedad metodológica",
-        "tipo": "mantiene",
-        "confianza": 0.94
+        "id": "cp_080",
+        "origen_id": "c_370",
+        "destino_id": "c_369",
+        "frase": "el lenguaje ordinario es privilegiado en análisis lingüístico como base de la filosofía",
+        "tipo": "privilegiado en",
+        "confianza": 0.92
       },
-      "frase_editada": "la lógica dialéctica de Platón mantiene apertura de términos y ambigüedad metodológica",
+      "frase_editada": "el lenguaje ordinario es privilegiado en análisis lingüístico como base de la filosofía",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_007",
       "conexion": {
-        "id": "cp_063",
-        "origen_id": "c_290",
-        "destino_id": "c_291",
-        "frase": "la teoría se une inseparablemente con práctica en lógica dialéctica",
-        "tipo": "se une con",
-        "confianza": 0.94
+        "id": "cp_092",
+        "origen_id": "c_389",
+        "destino_id": "c_390",
+        "frase": "la autocorrección de la ciencia conserva el mismo a priori formal a pesar de revoluciones",
+        "tipo": "conserva",
+        "confianza": 0.92
       },
-      "frase_editada": "la teoría se une inseparablemente con práctica en lógica dialéctica",
+      "frase_editada": "la autocorrección de la ciencia conserva el mismo a priori formal a pesar de revoluciones",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_008",
       "conexion": {
-        "id": "cp_090",
-        "origen_id": "c_327",
-        "destino_id": "c_326",
-        "frase": "la eliminación de causas finales es consecuencia de cuantificación",
-        "tipo": "es consecuencia de",
-        "confianza": 0.94
+        "id": "cp_074",
+        "origen_id": "c_357",
+        "destino_id": "c_367",
+        "frase": "la técnica como forma universal abre el universo instrumentalista del pensamiento",
+        "tipo": "abre",
+        "confianza": 0.91
       },
-      "frase_editada": "la eliminación de causas finales es consecuencia de cuantificación",
+      "frase_editada": "la técnica como forma universal abre el universo instrumentalista del pensamiento",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_009",
       "conexion": {
-        "id": "cp_007",
-        "origen_id": "c_160",
-        "destino_id": "c_010",
-        "frase": "la libido es energía del instinto de vida que es deserotizada por la mecanización",
-        "tipo": "es manifestación de",
-        "confianza": 0.93
+        "id": "cp_076",
+        "origen_id": "c_360",
+        "destino_id": "c_387",
+        "frase": "la Lebenswelt como contexto de la ciencia no puede ser trascendida por el método científico",
+        "tipo": "establece límite a",
+        "confianza": 0.91
       },
-      "frase_editada": "la libido es energía del instinto de vida que es deserotizada por la mecanización",
+      "frase_editada": "la Lebenswelt como contexto de la ciencia no puede ser trascendida por el método científico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_010",
       "conexion": {
-        "id": "cp_055",
-        "origen_id": "c_278",
-        "destino_id": "c_276",
-        "frase": "el esclavo es quien dedica su vida a satisfacer necesidades materiales",
-        "tipo": "es quien",
-        "confianza": 0.93
+        "id": "cp_081",
+        "origen_id": "c_372",
+        "destino_id": "c_373",
+        "frase": "el empirismo terapéutico es forma de empirismo que excluye pensamiento crítico",
+        "tipo": "es forma de",
+        "confianza": 0.91
       },
-      "frase_editada": "el esclavo es quien dedica su vida a satisfacer necesidades materiales",
+      "frase_editada": "el empirismo terapéutico es forma de empirismo que excluye pensamiento crítico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_011",
       "conexion": {
-        "id": "cp_058",
-        "origen_id": "c_283",
-        "destino_id": "c_188",
-        "frase": "la proposición formaliza el juicio dialéctico dentro de lógica proposicional",
-        "tipo": "formaliza dentro de",
-        "confianza": 0.93
+        "id": "cp_084",
+        "origen_id": "c_378",
+        "destino_id": "c_359",
+        "frase": "la técnica como arte de anticipación caracteriza el proyecto de la ciencia galileana",
+        "tipo": "caracteriza",
+        "confianza": 0.91
       },
-      "frase_editada": "la proposición formaliza el juicio dialéctico dentro de lógica proposicional",
+      "frase_editada": "la técnica como arte de anticipación caracteriza el proyecto de la ciencia galileana",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_012",
       "conexion": {
-        "id": "cp_072",
-        "origen_id": "c_306",
-        "destino_id": "c_303",
-        "frase": "la negatividad interior es cualidad específica que expresa carácter contradictorio",
-        "tipo": "expresa",
-        "confianza": 0.93
+        "id": "cp_087",
+        "origen_id": "c_382",
+        "destino_id": "c_383",
+        "frase": "la experiencia restringida es resultado de la represión que limita el universo del discurso",
+        "tipo": "es resultado de",
+        "confianza": 0.91
       },
-      "frase_editada": "la negatividad interior es cualidad específica que expresa carácter contradictorio",
+      "frase_editada": "la experiencia restringida es resultado de la represión que limita el universo del discurso",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_013",
       "conexion": {
-        "id": "cp_081",
-        "origen_id": "c_317",
-        "destino_id": "c_001",
-        "frase": "la transformación de la oposición negativa en positiva es mecanismo de sociedad unidimensional",
-        "tipo": "es mecanismo de",
-        "confianza": 0.93
+        "id": "cp_090",
+        "origen_id": "c_386",
+        "destino_id": "c_364",
+        "frase": "las relaciones calculables caracterizan la anticipación y proyección del método galileano",
+        "tipo": "caracterizan",
+        "confianza": 0.91
       },
-      "frase_editada": "la transformación de la oposición negativa en positiva es mecanismo de sociedad unidimensional",
+      "frase_editada": "las relaciones calculables caracterizan la anticipación y proyección del método galileano",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_014",
       "conexion": {
-        "id": "cp_097",
-        "origen_id": "c_337",
-        "destino_id": "c_336",
-        "frase": "la pérdida del carácter objetable resulta de desintegración de sustancia objetiva",
-        "tipo": "resulta de",
-        "confianza": 0.93
+        "id": "cp_065",
+        "origen_id": "c_329",
+        "destino_id": "c_330",
+        "frase": "la racionalidad científica neutral produce la separación de valores de realidad",
+        "tipo": "produce",
+        "confianza": 0.9
       },
-      "frase_editada": "la pérdida del carácter objetable resulta de desintegración de sustancia objetiva",
+      "frase_editada": "la racionalidad científica neutral produce la separación de valores de realidad",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_015",
       "conexion": {
-        "id": "cp_098",
-        "origen_id": "c_339",
-        "destino_id": "c_340",
-        "frase": "la filosofía científica contemporánea suspende juicio metodológicamente",
-        "tipo": "suspende juicio en",
-        "confianza": 0.93
+        "id": "cp_066",
+        "origen_id": "c_345",
+        "destino_id": "c_346",
+        "frase": "la sustancia que se desenvuelve mantiene la tensión del antagonismo objeto-sujeto",
+        "tipo": "mantiene",
+        "confianza": 0.9
       },
-      "frase_editada": "la filosofía científica contemporánea suspende juicio metodológicamente",
+      "frase_editada": "la sustancia que se desenvuelve mantiene la tensión del antagonismo objeto-sujeto",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_016",
       "conexion": {
-        "id": "cp_101",
-        "origen_id": "c_342",
-        "destino_id": "c_343",
-        "frase": "el ser como instrumento opera como a priori tecnológico",
-        "tipo": "opera como",
-        "confianza": 0.93
+        "id": "cp_079",
+        "origen_id": "c_369",
+        "destino_id": "c_008",
+        "frase": "el análisis lingüístico reproduce ideológicamente el universo establecido del discurso",
+        "tipo": "reproduce",
+        "confianza": 0.9
       },
-      "frase_editada": "el ser como instrumento opera como a priori tecnológico",
+      "frase_editada": "el análisis lingüístico reproduce ideológicamente el universo establecido del discurso",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_017",
       "conexion": {
-        "id": "cp_061",
-        "origen_id": "c_287",
-        "destino_id": "c_270",
-        "frase": "la apariencia como lo que parece ser se contrasta con verdad como ser real",
-        "tipo": "se contrasta con",
-        "confianza": 0.92
+        "id": "cp_082",
+        "origen_id": "c_376",
+        "destino_id": "c_239",
+        "frase": "la sustancia como categoría ontológica es eliminada en análisis positivista",
+        "tipo": "es eliminada en",
+        "confianza": 0.9
       },
-      "frase_editada": "la apariencia como lo que parece ser se contrasta con verdad como ser real",
+      "frase_editada": "la sustancia como categoría ontológica es eliminada en análisis positivista",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_018",
       "conexion": {
-        "id": "cp_071",
-        "origen_id": "c_304",
-        "destino_id": "c_206",
-        "frase": "el objeto del pensamiento dialéctico en su concreción histórica determina estructura dialéctica",
-        "tipo": "determina estructura de",
-        "confianza": 0.92
+        "id": "cp_086",
+        "origen_id": "c_381",
+        "destino_id": "c_382",
+        "frase": "el contexto amplio de experiencia es mutilado en experiencia restringida por represión",
+        "tipo": "mutilado en",
+        "confianza": 0.9
       },
-      "frase_editada": "el objeto del pensamiento dialéctico en su concreción histórica determina estructura dialéctica",
+      "frase_editada": "el contexto amplio de experiencia es mutilado en experiencia restringida por represión",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_019",
       "conexion": {
-        "id": "cp_073",
-        "origen_id": "c_308",
-        "destino_id": "c_290",
-        "frase": "el filósofo en filosofía clásica domina teoría pura y práctica guiada por ella",
-        "tipo": "domina",
-        "confianza": 0.92
+        "id": "cp_088",
+        "origen_id": "c_384",
+        "destino_id": "c_326",
+        "frase": "las cualidades no cuantificables resisten la cuantificación fundamental de la ciencia",
+        "tipo": "resisten",
+        "confianza": 0.9
       },
-      "frase_editada": "el filósofo en filosofía clásica domina teoría pura y práctica guiada por ella",
+      "frase_editada": "las cualidades no cuantificables resisten la cuantificación fundamental de la ciencia",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_020",
       "conexion": {
-        "id": "cp_092",
-        "origen_id": "c_330",
-        "destino_id": "c_327",
-        "frase": "la separación de valores de realidad es resultado de método científico que separa verdadero de bueno",
-        "tipo": "es resultado de",
-        "confianza": 0.92
+        "id": "cp_093",
+        "origen_id": "c_390",
+        "destino_id": "c_387",
+        "frase": "el a priori formal establece el límite estructural de la ciencia",
+        "tipo": "establece",
+        "confianza": 0.9
       },
-      "frase_editada": "la separación de valores de realidad es resultado de método científico que separa verdadero de bueno",
+      "frase_editada": "el a priori formal establece el límite estructural de la ciencia",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_021",
       "conexion": {
-        "id": "cp_099",
-        "origen_id": "c_340",
-        "destino_id": "c_342",
-        "frase": "la suspensión del juicio metodológica reemplaza pregunta metafísica con funcional",
-        "tipo": "reemplaza",
-        "confianza": 0.92
+        "id": "cp_062",
+        "origen_id": "c_212",
+        "destino_id": "c_205",
+        "frase": "el lenguaje demostrativo permite la mediación conceptual que abre el universo",
+        "tipo": "permite",
+        "confianza": 0.89
       },
-      "frase_editada": "la suspensión del juicio metodológica reemplaza pregunta metafísica con funcional",
+      "frase_editada": "el lenguaje demostrativo permite la mediación conceptual que abre el universo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_022",
       "conexion": {
-        "id": "cp_053",
-        "origen_id": "c_275",
-        "destino_id": "c_006",
-        "frase": "el logos como forma de negación es forma de pensamiento crítico",
-        "tipo": "es forma de",
-        "confianza": 0.91
+        "id": "cp_070",
+        "origen_id": "c_347",
+        "destino_id": "c_346",
+        "frase": "el dualismo cartesiano de res cogitans y res extensa expresa el antagonismo objeto-sujeto",
+        "tipo": "expresa",
+        "confianza": 0.89
       },
-      "frase_editada": "el logos como forma de negación es forma de pensamiento crítico",
+      "frase_editada": "el dualismo cartesiano de res cogitans y res extensa expresa el antagonismo objeto-sujeto",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_023",
       "conexion": {
-        "id": "cp_057",
-        "origen_id": "c_281",
-        "destino_id": "c_414",
-        "frase": "la potencialidad es dimensión del ser en relación potencialidad-actualidad",
-        "tipo": "es dimensión de",
-        "confianza": 0.91
+        "id": "cp_073",
+        "origen_id": "c_353",
+        "destino_id": "c_357",
+        "frase": "la totalidad del ser como materia prima es realización de la técnica como forma universal",
+        "tipo": "realización de",
+        "confianza": 0.89
       },
-      "frase_editada": "la potencialidad es dimensión del ser en relación potencialidad-actualidad",
+      "frase_editada": "la totalidad del ser como materia prima es realización de la técnica como forma universal",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_024",
       "conexion": {
-        "id": "cp_078",
-        "origen_id": "c_314",
-        "destino_id": "c_021",
-        "frase": "la dominación del hombre por hombre vincula razón pre-tecnológica con racionalidad tecnológica",
-        "tipo": "vincula",
-        "confianza": 0.91
+        "id": "cp_083",
+        "origen_id": "c_377",
+        "destino_id": "c_252",
+        "frase": "la ideología justifica intelectualmente el orden establecido de forma neutral",
+        "tipo": "opera mediante",
+        "confianza": 0.89
       },
-      "frase_editada": "la dominación del hombre por hombre vincula razón pre-tecnológica con racionalidad tecnológica",
+      "frase_editada": "la ideología justifica intelectualmente el orden establecido de forma neutral",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_025",
       "conexion": {
-        "id": "cp_087",
-        "origen_id": "c_324",
-        "destino_id": "c_021",
-        "frase": "el control social contemporáneo funde racionalidad técnica con manipulación",
-        "tipo": "funde en",
-        "confianza": 0.91
+        "id": "cp_089",
+        "origen_id": "c_385",
+        "destino_id": "c_388",
+        "frase": "el mundo de la percepción permanece inalterado bajo la función estabilizadora de la ciencia",
+        "tipo": "permanece bajo",
+        "confianza": 0.89
       },
-      "frase_editada": "el control social contemporáneo funde racionalidad técnica con manipulación",
+      "frase_editada": "el mundo de la percepción permanece inalterado bajo la función estabilizadora de la ciencia",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_026",
       "conexion": {
-        "id": "cp_094",
-        "origen_id": "c_332",
-        "destino_id": "c_333",
-        "frase": "la falta de validez lógica de valores debilita la oposición a realidad establecida",
-        "tipo": "debilita",
-        "confianza": 0.91
+        "id": "cp_069",
+        "origen_id": "c_344",
+        "destino_id": "c_345",
+        "frase": "el idealismo hegeliano puesto sobre sus pies establece ontología de sustancia que se desenvuelve",
+        "tipo": "establece",
+        "confianza": 0.88
       },
-      "frase_editada": "la falta de validez lógica de valores debilita la oposición a realidad establecida",
+      "frase_editada": "el idealismo hegeliano puesto sobre sus pies establece ontología de sustancia que se desenvuelve",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_027",
       "conexion": {
-        "id": "cp_100",
-        "origen_id": "c_341",
-        "destino_id": "c_354",
-        "frase": "la transformación de naturaleza como instrumentación realiza esencia de la técnica",
-        "tipo": "realiza",
-        "confianza": 0.91
+        "id": "cp_072",
+        "origen_id": "c_351",
+        "destino_id": "c_353",
+        "frase": "la naturaleza bajo la técnica del hombre activo deviene totalidad como materia prima",
+        "tipo": "deviene",
+        "confianza": 0.88
       },
-      "frase_editada": "la transformación de naturaleza como instrumentación realiza esencia de la técnica",
+      "frase_editada": "la naturaleza bajo la técnica del hombre activo deviene totalidad como materia prima",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_028",
       "conexion": {
-        "id": "cp_001",
-        "origen_id": "c_217",
-        "destino_id": "c_008",
-        "frase": "el cierre del lenguaje constituye una forma extrema de universo del discurso",
-        "tipo": "constituye",
-        "confianza": 0.9
+        "id": "cp_078",
+        "origen_id": "c_368",
+        "destino_id": "c_007",
+        "frase": "el positivismo ratifica el pensamiento mediante hechos dentro de racionalidad tecnológica",
+        "tipo": "ratifica",
+        "confianza": 0.88
       },
-      "frase_editada": "el cierre del lenguaje constituye una forma extrema de universo del discurso",
+      "frase_editada": "el positivismo ratifica el pensamiento mediante hechos dentro de racionalidad tecnológica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_029",
       "conexion": {
-        "id": "cp_049",
-        "origen_id": "c_240",
-        "destino_id": "c_061",
-        "frase": "la investigación empírica opera dentro de la sociedad industrial avanzada sin cuestionar sus fundamentos",
-        "tipo": "opera dentro de",
-        "confianza": 0.9
+        "id": "cp_085",
+        "origen_id": "c_379",
+        "destino_id": "c_381",
+        "frase": "el mundo empírico real incluye el contexto amplio de experiencia excluido del positivismo",
+        "tipo": "incluye",
+        "confianza": 0.88
       },
-      "frase_editada": "la investigación empírica opera dentro de la sociedad industrial avanzada sin cuestionar sus fundamentos",
+      "frase_editada": "el mundo empírico real incluye el contexto amplio de experiencia excluido del positivismo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_030",
       "conexion": {
-        "id": "cp_052",
-        "origen_id": "c_272",
-        "destino_id": "c_271",
-        "frase": "lo negativo como potencialidad y amenaza es opuesto al ser",
-        "tipo": "es opuesto a",
-        "confianza": 0.9
+        "id": "cp_091",
+        "origen_id": "c_388",
+        "destino_id": "c_387",
+        "frase": "la función estabilizadora de la ciencia es expresión de su límite inherente",
+        "tipo": "expresión de",
+        "confianza": 0.88
       },
-      "frase_editada": "lo negativo como potencialidad y amenaza es opuesto al ser",
+      "frase_editada": "la función estabilizadora de la ciencia es expresión de su límite inherente",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_031",
       "conexion": {
-        "id": "cp_068",
-        "origen_id": "c_300",
-        "destino_id": "c_374",
-        "frase": "el símbolo en lógica formal es signo funcional vacío como concepto operacional",
-        "tipo": "es forma de",
-        "confianza": 0.9
+        "id": "cp_099",
+        "origen_id": "c_411",
+        "destino_id": "c_381",
+        "frase": "el análisis supralingüístico incluye el contexto amplio de experiencia social e histórica",
+        "tipo": "incluye",
+        "confianza": 0.88
       },
-      "frase_editada": "el símbolo en lógica formal es signo funcional vacío como concepto operacional",
+      "frase_editada": "el análisis supralingüístico incluye el contexto amplio de experiencia social e histórica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_032",
       "conexion": {
-        "id": "cp_076",
-        "origen_id": "c_312",
-        "destino_id": "c_284",
-        "frase": "la causa final en filosofía aristotélica es concepto que desaparece en lógica formal moderna",
-        "tipo": "es concepto en",
-        "confianza": 0.9
+        "id": "cp_075",
+        "origen_id": "c_358",
+        "destino_id": "c_364",
+        "frase": "la evolución del método científico refleja características de anticipación y proyección",
+        "tipo": "refleja",
+        "confianza": 0.87
       },
-      "frase_editada": "la causa final en filosofía aristotélica es concepto que desaparece en lógica formal moderna",
+      "frase_editada": "la evolución del método científico refleja características de anticipación y proyección",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_033",
       "conexion": {
-        "id": "cp_079",
-        "origen_id": "c_315",
-        "destino_id": "c_314",
-        "frase": "el orden objetivo de las cosas reemplaza dependencia personal directa",
-        "tipo": "reemplaza",
-        "confianza": 0.9
+        "id": "cp_096",
+        "origen_id": "c_393",
+        "destino_id": "c_429",
+        "frase": "la validez objetiva del conocimiento se relaciona con capacidad de cambio histórico",
+        "tipo": "se relaciona con",
+        "confianza": 0.82
       },
-      "frase_editada": "el orden objetivo de las cosas reemplaza dependencia personal directa",
+      "frase_editada": "la validez objetiva del conocimiento se relaciona con capacidad de cambio histórico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_034",
       "conexion": {
-        "id": "cp_083",
-        "origen_id": "c_320",
-        "destino_id": "c_014",
-        "frase": "el aparato que frustra su propio propósito es paradoja fundamental de totalidad",
-        "tipo": "es paradoja de",
-        "confianza": 0.9
+        "id": "cp_071",
+        "origen_id": "c_348",
+        "destino_id": "c_347",
+        "frase": "el dualismo cartesiano contiene su propia negación anticipatoria",
+        "tipo": "contiene negación de",
+        "confianza": 0.8
       },
-      "frase_editada": "el aparato que frustra su propio propósito es paradoja fundamental de totalidad",
+      "frase_editada": "el dualismo cartesiano contiene su propia negación anticipatoria",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_035",
       "conexion": {
-        "id": "cp_096",
-        "origen_id": "c_336",
-        "destino_id": "c_335",
-        "frase": "la desaparición de sustancia objetiva acompaña disolución en relaciones lógicas",
-        "tipo": "acompaña",
-        "confianza": 0.9
+        "id": "cp_098",
+        "origen_id": "c_407",
+        "destino_id": "c_215",
+        "frase": "la autoridad intelectual define lo correcto dentro del intelecto crítico",
+        "tipo": "ejerce poder dentro de",
+        "confianza": 0.8
       },
-      "frase_editada": "la desaparición de sustancia objetiva acompaña disolución en relaciones lógicas",
+      "frase_editada": "la autoridad intelectual define lo correcto dentro del intelecto crítico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_036",
       "conexion": {
-        "id": "cp_050",
-        "origen_id": "c_266",
-        "destino_id": "c_250",
-        "frase": "la cura terapéutica es resultado de conceptos operacionales y terapéuticos",
-        "tipo": "es resultado de",
-        "confianza": 0.89
+        "id": "cp_100",
+        "origen_id": "c_413",
+        "destino_id": "c_206",
+        "frase": "la función histórica de la filosofía revelada en la dialéctica transforma la conciencia",
+        "tipo": "transformada por",
+        "confianza": 0.8
       },
-      "frase_editada": "la cura terapéutica es resultado de conceptos operacionales y terapéuticos",
+      "frase_editada": "la función histórica de la filosofía revelada en la dialéctica transforma la conciencia",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_037",
       "conexion": {
-        "id": "cp_059",
-        "origen_id": "c_284",
-        "destino_id": "c_303",
-        "frase": "la ontología desarrolla estudio de la contradicción como elemento de ser",
-        "tipo": "desarrolla",
-        "confianza": 0.89
+        "id": "cp_095",
+        "origen_id": "c_392",
+        "destino_id": "c_387",
+        "frase": "la necesidad de física cualitativa expresa el límite inherente de la ciencia cuantificadora",
+        "tipo": "expresa",
+        "confianza": 0.78
       },
-      "frase_editada": "la ontología desarrolla estudio de la contradicción como elemento de ser",
+      "frase_editada": "la necesidad de física cualitativa expresa el límite inherente de la ciencia cuantificadora",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_038",
       "conexion": {
-        "id": "cp_077",
-        "origen_id": "c_313",
-        "destino_id": "c_275",
-        "frase": "Husserl revive la idea de logos apofántico subrayando su propósito crítico",
-        "tipo": "revive",
-        "confianza": 0.89
-      },
-      "frase_editada": "Husserl revive la idea de logos apofántico subrayando su propósito crítico",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_039",
-      "conexion": {
-        "id": "cp_082",
-        "origen_id": "c_319",
-        "destino_id": "c_050",
-        "frase": "la ideología de productividad racional naturaliza destrucción como manipulación de necesidades",
-        "tipo": "naturaliza como",
-        "confianza": 0.89
-      },
-      "frase_editada": "la ideología de productividad racional naturaliza destrucción como manipulación de necesidades",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_040",
-      "conexion": {
-        "id": "cp_086",
-        "origen_id": "c_323",
-        "destino_id": "c_007",
-        "frase": "la racionalización tiene doble significado en racionalidad tecnológica",
-        "tipo": "tiene doble significado en",
-        "confianza": 0.89
-      },
-      "frase_editada": "la racionalización tiene doble significado en racionalidad tecnológica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_041",
-      "conexion": {
-        "id": "cp_048",
-        "origen_id": "c_232",
-        "destino_id": "c_069",
-        "frase": "el poder de los políticos profesionales se incrementa en sociedad de movilización total",
-        "tipo": "se incrementa en",
-        "confianza": 0.88
-      },
-      "frase_editada": "el poder de los políticos profesionales se incrementa en sociedad de movilización total",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_042",
-      "conexion": {
-        "id": "cp_056",
-        "origen_id": "c_280",
-        "destino_id": "c_281",
-        "frase": "la potencialidad y actualidad evolucionan históricamente como idea",
-        "tipo": "es evolución histórica de",
-        "confianza": 0.88
-      },
-      "frase_editada": "la potencialidad y actualidad evolucionan históricamente como idea",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_043",
-      "conexion": {
-        "id": "cp_062",
-        "origen_id": "c_289",
+        "id": "cp_097",
+        "origen_id": "c_395",
         "destino_id": "c_040",
-        "frase": "el imperativo categórico expresa necesidad de cambio cualitativo",
-        "tipo": "expresa",
-        "confianza": 0.88
+        "frase": "el mundo pacificado permitiría ciencia con conceptos esencialmente diferentes",
+        "tipo": "permitiría",
+        "confianza": 0.75
       },
-      "frase_editada": "el imperativo categórico expresa necesidad de cambio cualitativo",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_044",
-      "conexion": {
-        "id": "cp_074",
-        "origen_id": "c_309",
-        "destino_id": "c_206",
-        "frase": "la intuición como forma de conocimiento en filosofía clásica es resultado de mediación conceptual dialéctica",
-        "tipo": "es resultado de",
-        "confianza": 0.88
-      },
-      "frase_editada": "la intuición como forma de conocimiento en filosofía clásica es resultado de mediación conceptual dialéctica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_045",
-      "conexion": {
-        "id": "cp_080",
-        "origen_id": "c_316",
-        "destino_id": "c_014",
-        "frase": "la organización equivocada de la sociedad rechaza alternativas al ser totalitaria",
-        "tipo": "caracteriza",
-        "confianza": 0.87
-      },
-      "frase_editada": "la organización equivocada de la sociedad rechaza alternativas al ser totalitaria",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_046",
-      "conexion": {
-        "id": "cp_085",
-        "origen_id": "c_322",
-        "destino_id": "c_362",
-        "frase": "la lucha por existencia es proceso perpetuado y cientifizado mediante dominación de naturaleza",
-        "tipo": "es perpetuado mediante",
-        "confianza": 0.87
-      },
-      "frase_editada": "la lucha por existencia es proceso perpetuado y cientifizado mediante dominación de naturaleza",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_047",
-      "conexion": {
-        "id": "cp_088",
-        "origen_id": "c_325",
-        "destino_id": "c_359",
-        "frase": "la ciencia pura tiene dirección inherente instrumentalista característica de ciencia galileana",
-        "tipo": "tiene dirección de",
-        "confianza": 0.87
-      },
-      "frase_editada": "la ciencia pura tiene dirección inherente instrumentalista característica de ciencia galileana",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_048",
-      "conexion": {
-        "id": "cp_051",
-        "origen_id": "c_267",
-        "destino_id": "c_226",
-        "frase": "los remanentes del pasado persisten como obstáculos a pesar de reducción de formas lingüísticas",
-        "tipo": "persisten como obstáculos a",
-        "confianza": 0.85
-      },
-      "frase_editada": "los remanentes del pasado persisten como obstáculos a pesar de reducción de formas lingüísticas",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_049",
-      "conexion": {
-        "id": "cp_075",
-        "origen_id": "c_311",
-        "destino_id": "c_051",
-        "frase": "la esencia como verdadera naturaleza es base para libertad verdadera",
-        "tipo": "es base para",
-        "confianza": 0.85
-      },
-      "frase_editada": "la esencia como verdadera naturaleza es base para libertad verdadera",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_050",
-      "conexion": {
-        "id": "cp_084",
-        "origen_id": "c_321",
-        "destino_id": "c_315",
-        "frase": "la dinámica de negativo en positivo estructura orden objetivo de las cosas",
-        "tipo": "estructura",
-        "confianza": 0.85
-      },
-      "frase_editada": "la dinámica de negativo en positivo estructura orden objetivo de las cosas",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_051",
-      "conexion": {
-        "id": "cp_095",
-        "origen_id": "c_335",
-        "destino_id": "c_338",
-        "frase": "la disolución en relaciones lógicas tiende hacia realidad de ideas",
-        "tipo": "tiende hacia",
-        "confianza": 0.85
-      },
-      "frase_editada": "la disolución en relaciones lógicas tiende hacia realidad de ideas",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_052",
-      "conexion": {
-        "id": "cp_070",
-        "origen_id": "c_302",
-        "destino_id": "c_021",
-        "frase": "el control como capacidad de poder mediante conceptos universales es base histórica de dominación racional-técnica",
-        "tipo": "es base histórica de",
-        "confianza": 0.84
-      },
-      "frase_editada": "el control como capacidad de poder mediante conceptos universales es base histórica de dominación racional-técnica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_053",
-      "conexion": {
-        "id": "cp_064",
-        "origen_id": "c_292",
-        "destino_id": "c_001",
-        "frase": "la sociedad basada en esclavitud forma base histórica de filosofía clásica que examina la unidimensionalidad",
-        "tipo": "es precedente histórico de",
-        "confianza": 0.82
-      },
-      "frase_editada": "la sociedad basada en esclavitud forma base histórica de filosofía clásica que examina la unidimensionalidad",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_054",
-      "conexion": {
-        "id": "cp_091",
-        "origen_id": "c_329",
-        "destino_id": "c_345",
-        "frase": "la pretensión de neutralidad científica reproduce problema cartesiano res cogitans y res extensa",
-        "tipo": "reproduce",
-        "confianza": 0.82
-      },
-      "frase_editada": "la pretensión de neutralidad científica reproduce problema cartesiano res cogitans y res extensa",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pr_055",
-      "conexion": {
-        "id": "cp_093",
-        "origen_id": "c_331",
-        "destino_id": "c_408",
-        "frase": "los ideales humanitarios no perturban el orden pero exponen verdad del arte",
-        "tipo": "exponen",
-        "confianza": 0.8
-      },
-      "frase_editada": "los ideales humanitarios no perturban el orden pero exponen verdad del arte",
+      "frase_editada": "el mundo pacificado permitiría ciencia con conceptos esencialmente diferentes",
       "seleccionada": true,
       "estado": "aceptada"
     }
   ],
   "estado": "completada",
   "razon_falla": null,
-  "iniciada_en": "2026-07-06T14:03:14.322098",
-  "completada_en": "2026-07-06T14:05:00.954605",
+  "iniciada_en": "2026-07-07T02:04:36.828590",
+  "completada_en": "2026-07-07T02:22:49.803634",
   "nodos_sueltos_ids": [
-    "c_201",
-    "c_222",
-    "c_221",
-    "c_217",
-    "c_220",
-    "c_218",
-    "c_219",
-    "c_160",
-    "c_166",
-    "c_167",
-    "c_181",
-    "c_173",
-    "c_189",
     "c_197",
-    "c_242",
     "c_205",
     "c_206",
+    "c_242",
     "c_227",
+    "c_304",
+    "c_309",
+    "c_285",
+    "c_247",
+    "c_249",
+    "c_303",
+    "c_306",
+    "c_284",
+    "c_312",
+    "c_269",
+    "c_286",
+    "c_298",
+    "c_301",
+    "c_299",
+    "c_270",
+    "c_297",
+    "c_287",
+    "c_271",
+    "c_272",
+    "c_325",
+    "c_359",
+    "c_326",
+    "c_327",
+    "c_330",
     "c_202",
     "c_203",
     "c_204",
     "c_215",
+    "c_209",
+    "c_225",
+    "c_226",
+    "c_267",
     "c_241",
     "c_243",
-    "c_246",
     "c_263",
+    "c_246",
+    "c_335",
+    "c_338",
+    "c_336",
+    "c_337",
+    "c_339",
+    "c_340",
+    "c_342",
+    "c_343",
     "c_164",
     "c_184",
     "c_176",
+    "c_174",
+    "c_188",
+    "c_283",
     "c_198",
     "c_214",
     "c_259",
-    "c_209",
-    "c_226",
-    "c_225",
     "c_216",
     "c_223",
     "c_224",
     "c_230",
     "c_233",
     "c_234",
-    "c_247",
-    "c_303",
-    "c_249",
     "c_251",
-    "c_252",
     "c_254",
+    "c_252",
     "c_256",
-    "c_260",
     "c_261",
+    "c_260",
     "c_257",
     "c_262",
     "c_264",
+    "c_290",
+    "c_308",
+    "c_291",
     "c_156",
     "c_165",
     "c_168",
     "c_169",
-    "c_174",
-    "c_188",
     "c_208",
     "c_212",
     "c_236",
     "c_238",
-    "c_269",
-    "c_286",
-    "c_270",
-    "c_271",
-    "c_232",
-    "c_240",
-    "c_266",
-    "c_267",
-    "c_272",
-    "c_275",
-    "c_276",
-    "c_278",
-    "c_280",
-    "c_281",
-    "c_283",
-    "c_284",
-    "c_285",
-    "c_287",
-    "c_289",
-    "c_290",
-    "c_291",
-    "c_292",
-    "c_297",
-    "c_298",
-    "c_299",
     "c_300",
-    "c_301",
-    "c_302",
-    "c_304",
-    "c_306",
-    "c_308",
-    "c_309",
-    "c_311",
-    "c_312",
-    "c_313",
-    "c_314",
-    "c_315",
-    "c_316",
-    "c_317",
-    "c_319",
-    "c_320",
-    "c_321",
+    "c_374",
     "c_322",
-    "c_323",
-    "c_324",
-    "c_325",
-    "c_326",
-    "c_327",
+    "c_362",
     "c_329",
-    "c_330",
-    "c_331",
+    "c_345",
     "c_332",
     "c_333",
-    "c_335",
-    "c_336",
-    "c_337",
-    "c_338",
-    "c_339",
-    "c_340",
     "c_341",
-    "c_342",
-    "c_343",
+    "c_354",
     "c_344",
-    "c_345",
     "c_346",
     "c_347",
     "c_348",
     "c_351",
     "c_353",
-    "c_354",
     "c_357",
     "c_358",
-    "c_359",
     "c_360",
-    "c_362",
     "c_363",
     "c_364",
     "c_367",
@@ -938,7 +665,6 @@
     "c_370",
     "c_372",
     "c_373",
-    "c_374",
     "c_376",
     "c_377",
     "c_378",

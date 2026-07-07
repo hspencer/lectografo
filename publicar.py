@@ -59,6 +59,7 @@ def main():
             "titulo": grafo.titulo,
             "total_nodos": grafo.total_nodos(),
             "total_relaciones": grafo.total_relaciones(),
+            "metadatos": estado.metadatos.model_dump() if estado.metadatos else None,
         })
         print(f"  ✓ {slug}  ({grafo.total_nodos()} conceptos, {grafo.total_relaciones()} relaciones)")
 

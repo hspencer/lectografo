@@ -378,11 +378,18 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
   function centerOnNode(nodeId) {
     const node = nodes.find(n => n.id === nodeId);
     if (!node || node.x == null) return;
-    const scale = 2;
+    // Preservar escala actual; asegurar mínimo 1 para que el nodo sea visible
+    const t = d3.zoomTransform(svg.node());
+    const scale = Math.max(t.k, 1);
     const tx = W / 2 - scale * node.x;
     const ty = H / 2 - scale * node.y;
     svg.transition().duration(600)
        .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+  }
+
+  // Pan programático: dx/dy positivos = mover la vista en esa dirección
+  function panBy(dx, dy) {
+    svg.transition().duration(80).call(zoom.translateBy, -dx, -dy);
   }
 
   return {
@@ -391,6 +398,7 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     updateVisuals,
     highlightPath,
     centerOnNode,
+    panBy,
     fitView: () => fitView(svg, g, zoom, W, H),
   };
 }

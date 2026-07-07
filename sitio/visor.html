@@ -6,7 +6,7 @@
   <title>Lectógrafo — Mapa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./sistema/tokens.css">
   <link rel="stylesheet" href="./style.css">
   <!-- Pin "three" a una única instancia, igual que en static/index.html -->
@@ -18,10 +18,6 @@
     }
   }
   </script>
-  <style>
-    body { min-height: 100vh; display: flex; flex-direction: column; }
-    #grafo-wrap { flex: 1; min-height: 0; }
-  </style>
 </head>
 <body>
 
@@ -33,25 +29,40 @@
     </div>
   </header>
 
-  <div id="grafo-wrap">
-    <div id="grafo-canvas">
-      <svg id="grafo-svg"></svg>
-      <div id="grafo-3d" hidden></div>
+  <!-- Mismo layout que el tab Mapa de la app: .tab-panel se posiciona
+       bajo el topbar fijo (top: var(--sn-header-h)) — ver style.css -->
+  <main id="tab-mapa" class="tab-panel">
+    <div id="grafo-wrap">
+      <div id="grafo-canvas">
+        <svg id="grafo-svg" aria-label="Mapa de conceptos"></svg>
+        <div id="grafo-3d" hidden aria-label="Mapa de conceptos en 3D"></div>
 
-      <div id="grafo-controles">
-        <button id="btn-fit" class="btn btn-neutro small">Ajustar</button>
-        <button id="btn-modo3d" class="btn btn-neutro small" title="Alternar vista 2D/3D">
-          <span id="btn-modo3d-label">3D</span>
-        </button>
-        <details id="leyenda-wrap">
-          <summary class="leyenda-summary">Leyenda</summary>
-          <div id="leyenda-tipos"></div>
-        </details>
+        <!-- Buscador de conceptos: overlay sobre el canvas -->
+        <div id="mapa-buscar-wrap">
+          <input id="mapa-buscar" class="buscar-input" type="text"
+                 placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
+          <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
+        </div>
+
+        <div id="grafo-controles">
+          <button id="btn-fit" class="btn btn-neutro small">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ajustar
+          </button>
+          <button id="btn-modo3d" class="btn btn-neutro small" title="Alternar vista 2D/3D">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span id="btn-modo3d-label">3D</span>
+          </button>
+          <details id="leyenda-wrap">
+            <summary class="leyenda-summary">Relaciones</summary>
+            <div id="leyenda-tipos"></div>
+          </details>
+        </div>
       </div>
-    </div>
 
-    <div id="nav-cols"></div>
-  </div>
+      <div id="nav-cols"></div>
+    </div>
+  </main>
 
   <script type="module" src="./visor.js"></script>
 </body>

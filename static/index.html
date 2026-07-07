@@ -29,11 +29,6 @@
       <button id="btn-biblioteca" class="btn-back" hidden>← Biblioteca</button>
       <span id="app-name">Lectógrafo</span>
       <span id="transcripcion-titulo" class="muted"></span>
-      <div id="topbar-search" hidden>
-        <input id="mapa-buscar" class="mapa-buscar-input" type="text"
-               placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
-        <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" hidden></ul>
-      </div>
     </div>
 
     <nav id="tabs" hidden>
@@ -44,7 +39,7 @@
     </nav>
 
     <div id="topbar-right">
-      <button id="btn-settings" title="Configuración">
+      <button id="btn-settings" title="Configuración" aria-label="Configuración">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"
              fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -147,7 +142,7 @@
 
       <!-- Panel lateral: detalle del nodo seleccionado -->
       <aside id="gp-panel" hidden>
-        <button id="btn-gp-cerrar-panel" title="Cerrar">×</button>
+        <button id="btn-gp-cerrar-panel" title="Cerrar" aria-label="Cerrar panel de detalle">×</button>
         <div id="gp-panel-content"></div>
       </aside>
 
@@ -164,6 +159,12 @@
       <div id="grafo-canvas">
         <svg id="grafo-svg"></svg>
         <div id="grafo-3d" hidden></div>
+        <!-- Buscador de conceptos: overlay sobre el canvas -->
+        <div id="mapa-buscar-wrap">
+          <input id="mapa-buscar" class="buscar-input" type="text"
+                 placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
+          <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
+        </div>
         <div id="grafo-controles">
           <button id="btn-fit" class="btn btn-neutro small">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
@@ -203,7 +204,7 @@
           <strong id="panel-reconexion-titulo">Reconexión</strong>
           <div id="panel-reconexion-desc"></div>
         </div>
-        <button id="btn-cerrar-reconexion" title="Cerrar panel">×</button>
+        <button id="btn-cerrar-reconexion" title="Cerrar panel" aria-label="Cerrar panel de reconexión">×</button>
       </div>
       <div id="panel-reconexion-content"></div>
       <div id="panel-reconexion-footer">
@@ -219,7 +220,7 @@
           <strong id="panel-consolidacion-titulo">Consolidación</strong>
           <div id="panel-consolidacion-desc"></div>
         </div>
-        <button id="btn-cerrar-consolidacion" title="Cerrar panel">×</button>
+        <button id="btn-cerrar-consolidacion" title="Cerrar panel" aria-label="Cerrar panel de consolidación">×</button>
       </div>
       <div id="panel-consolidacion-content"></div>
       <div id="panel-consolidacion-footer">
@@ -356,7 +357,7 @@
     <div id="ficha-modal-box">
       <div id="ficha-modal-header">
         <h3 id="ficha-modal-titulo">Ficha bibliográfica</h3>
-        <button id="ficha-modal-cerrar" title="Cerrar">×</button>
+        <button id="ficha-modal-cerrar" title="Cerrar" aria-label="Cerrar ficha bibliográfica">×</button>
       </div>
       <div id="ficha-modal-body">
         <div class="campo">
@@ -404,7 +405,7 @@
     <div id="repro-modal-box">
       <div id="repro-modal-header">
         <h3 id="repro-modal-titulo">Re-procesar</h3>
-        <button id="repro-modal-cerrar" title="Cerrar">×</button>
+        <button id="repro-modal-cerrar" title="Cerrar" aria-label="Cerrar diálogo de re-procesado">×</button>
       </div>
       <div id="repro-modal-body">
         <!-- Estado: confirmar -->
@@ -444,7 +445,7 @@
   <div id="settings-panel" hidden>
     <div id="settings-panel-header">
       <span class="campo-etiq">Configuración LLM</span>
-      <button id="settings-panel-cerrar" title="Cerrar">×</button>
+      <button id="settings-panel-cerrar" title="Cerrar" aria-label="Cerrar configuración">×</button>
     </div>
     <div id="settings-panel-body">
       <div class="campo">

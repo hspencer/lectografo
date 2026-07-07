@@ -1,0 +1,129 @@
+{
+  "id": "cons_1d743e95",
+  "slug": "arte-y-poesia",
+  "propuestas": [
+    {
+      "id": "pfr_000",
+      "propuesta": {
+        "id": "pf_000",
+        "nodo_canonico_id": "c_002",
+        "nodos_absorbidos_ids": [
+          "c_061"
+        ],
+        "label_canonico": "verdad del ser",
+        "justificacion": "Ambos conceptos refieren a la verdad en sentido ontológico heideggeriano, no como propiedad del conocimiento sino del ser mismo. c_002 destaca la manifestación en la obra de arte (aletheia), mientras c_061 enfatiza su carácter de verdad auténtica ontológica que fundamenta decisiones sobre la esencia del arte. Son el mismo concepto con matices complementarios.",
+        "confianza": 0.92
+      },
+      "label_editado": "verdad del ser",
+      "seleccionada": true,
+      "estado": "pendiente"
+    },
+    {
+      "id": "pfr_001",
+      "propuesta": {
+        "id": "pf_001",
+        "nodo_canonico_id": "c_031",
+        "nodos_absorbidos_ids": [
+          "c_010"
+        ],
+        "label_canonico": "lucha (mundo y tierra)",
+        "justificacion": "Ambos describen el enfrentamiento esencial entre mundo y tierra en la obra de arte. c_031 ofrece caracterización más precisa (no es discordia destructiva sino elevación mutua), mientras c_010 explicita mejor el carácter antagónico de las fuerzas. Son reformulaciones del mismo concepto fundamental.",
+        "confianza": 0.95
+      },
+      "label_editado": "lucha (mundo y tierra)",
+      "seleccionada": true,
+      "estado": "pendiente"
+    },
+    {
+      "id": "pfr_002",
+      "propuesta": {
+        "id": "pf_002",
+        "nodo_canonico_id": "c_017",
+        "nodos_absorbidos_ids": [
+          "c_030"
+        ],
+        "label_canonico": "ocultación",
+        "justificacion": "Ambos refieren a la ocultación como estructura esencial de la verdad y tendencia fundamental del ser a mantenerse oculto. c_030 profundiza en su doble modo (negarse/disimularse) y su papel constitutivo en la desocultación. Son el mismo concepto con distintos niveles de desarrollo.",
+        "confianza": 0.9
+      },
+      "label_editado": "ocultación",
+      "seleccionada": true,
+      "estado": "pendiente"
+    },
+    {
+      "id": "pfr_003",
+      "propuesta": {
+        "id": "pf_003",
+        "nodo_canonico_id": "c_024",
+        "nodos_absorbidos_ids": [
+          "c_029"
+        ],
+        "label_canonico": "cosa (cosidad)",
+        "justificacion": "Ambos tratan la cosidad como entidad fundamental del ser, caracterizada por descansare en sí misma. c_024 se enfoca en la esencia distintiva de la cosa, mientras c_029 subraya que conceptos tradicionales de cosa no bastan para la obra de arte. Son el mismo concepto ontológico.",
+        "confianza": 0.93
+      },
+      "label_editado": "cosa (cosidad)",
+      "seleccionada": true,
+      "estado": "pendiente"
+    },
+    {
+      "id": "pfr_004",
+      "propuesta": {
+        "id": "pf_004",
+        "nodo_canonico_id": "c_020",
+        "nodos_absorbidos_ids": [
+          "c_034"
+        ],
+        "label_canonico": "historia (historicidad)",
+        "justificacion": "Ambos definen la historia como dimensión existencial donde acontecen decisiones esenciales. c_020 enfatiza el papel del arte como factor determinante, mientras c_034 destaca el destino histórico de pueblos y la mundanización. Son perspectivas complementarias del mismo concepto.",
+        "confianza": 0.88
+      },
+      "label_editado": "historia (historicidad)",
+      "seleccionada": true,
+      "estado": "pendiente"
+    },
+    {
+      "id": "pfr_005",
+      "propuesta": {
+        "id": "pf_005",
+        "nodo_canonico_id": "c_021",
+        "nodos_absorbidos_ids": [
+          "c_036"
+        ],
+        "label_canonico": "dios (divinidad)",
+        "justificacion": "Ambos tratan el concepto de lo divino en Heidegger. c_021 enfatiza los dioses como seres que hablan mediante signos y el rol del poeta como mediador. c_036 destaca la presencia del dios en la obra (templo). Son aspectos del mismo concepto de divinidad en la teoría del arte.",
+        "confianza": 0.85
+      },
+      "label_editado": "dios (divinidad)",
+      "seleccionada": true,
+      "estado": "pendiente"
+    }
+  ],
+  "estado": "en_revision",
+  "razon_falla": null,
+  "iniciada_en": "2026-07-07T02:21:46.057916",
+  "completada_en": null,
+  "candidatos_ids": [
+    "c_002",
+    "c_061",
+    "c_010",
+    "c_031",
+    "c_011",
+    "c_053",
+    "c_017",
+    "c_030",
+    "c_033",
+    "c_018",
+    "c_065",
+    "c_020",
+    "c_034",
+    "c_021",
+    "c_036",
+    "c_024",
+    "c_029",
+    "c_041",
+    "c_044",
+    "c_047",
+    "c_054"
+  ]
+}

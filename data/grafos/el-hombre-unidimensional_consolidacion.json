@@ -1,20 +1,20 @@
 {
-  "id": "cons_21eb3356",
+  "id": "cons_9ba1b7fe",
   "slug": "el-hombre-unidimensional",
   "propuestas": [
     {
       "id": "pfr_000",
       "propuesta": {
         "id": "pf_000",
-        "nodo_canonico_id": "c_008",
+        "nodo_canonico_id": "c_376",
         "nodos_absorbidos_ids": [
-          "c_175"
+          "c_198"
         ],
-        "label_canonico": "Universo del discurso",
-        "justificacion": "c_008 'Cierre del universo del discurso' y c_175 'Universo del discurso' son variantes del mismo concepto. El cierre es el proceso; el universo es la estructura. Ambos refieren al mismo fenómeno de limitación de lo pensable y decible.",
+        "label_canonico": "Sustancia",
+        "justificacion": "Ambos nodos se refieren al mismo concepto ontológico fundamental de 'Sustancia' como un sustrato que permanece a través del cambio. c_376 lo define como la 'categoría ontológica fundamental' atacada por el positivismo, mientras que c_198 lo describe en su manifestación lingüístico-gramatical como el sujeto que 'permanece distinto de sus predicados', lo cual es una especificación del mismo concepto central.",
         "confianza": 0.9
       },
-      "label_editado": "Universo del discurso",
+      "label_editado": "Sustancia",
       "seleccionada": true,
       "estado": "aceptada"
     },
@@ -22,512 +22,27 @@
       "id": "pfr_001",
       "propuesta": {
         "id": "pf_001",
-        "nodo_canonico_id": "c_011",
+        "nodo_canonico_id": "c_312",
         "nodos_absorbidos_ids": [
-          "c_455"
+          "c_327"
         ],
-        "label_canonico": "Liberación",
-        "justificacion": "Ambos describen el mismo objetivo final: c_011 enfatiza satisfacción de necesidades no sublimadas; c_455 enfatiza autodeterminación consciente. Son dos dimensiones del mismo concepto de liberación.",
-        "confianza": 0.88
+        "label_canonico": "Causa final",
+        "justificacion": "Ambos nodos se refieren al concepto aristotélico de 'causa final' o telos. c_312 lo define explícitamente en su contexto aristotélico (singular), mientras que c_327 (plural) discute la consecuencia de su eliminación por la ciencia moderna ('separó lo verdadero de lo bueno'). Son el mismo concepto, visto desde su definición y su posterior rechazo.",
+        "confianza": 1.0
       },
-      "label_editado": "Liberación",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_002",
-      "propuesta": {
-        "id": "pf_002",
-        "nodo_canonico_id": "c_019",
-        "nodos_absorbidos_ids": [
-          "c_525"
-        ],
-        "label_canonico": "Reificación",
-        "justificacion": "c_019 define reificación como conversión de relaciones sociales en cosas; c_525 'Ilusión de reificación' es la caracterización de esa reificación como ilusoria que oculta contradicciones. Son aspectos del mismo fenómeno.",
-        "confianza": 0.85
-      },
-      "label_editado": "Reificación",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_003",
-      "propuesta": {
-        "id": "pf_003",
-        "nodo_canonico_id": "c_021",
-        "nodos_absorbidos_ids": [
-          "c_060",
-          "c_065",
-          "c_082",
-          "c_092",
-          "c_213",
-          "c_279",
-          "c_293",
-          "c_296",
-          "c_310",
-          "c_400",
-          "c_450",
-          "c_501",
-          "c_512",
-          "c_517",
-          "c_520",
-          "c_521"
-        ],
-        "label_canonico": "Dominación racional-técnica",
-        "justificacion": "El grupo candidato 7 contiene múltiples facetas de un mismo sistema: c_021 administración científica, c_060 administración total, c_065 mecanización, c_082 asimilación ocupacional, c_092 medición del trabajo, c_213 falsificación operacional, c_279 dominación, c_293 división del trabajo, c_296 abstracción (falsa), c_310 mediación, c_400 mistificación racional, c_450 mecanización del trabajo, c_501 imaginación, c_512 trabajo técnico, c_517 manipulación, c_520 asimilación total, c_521 administració",
-        "confianza": 0.75
-      },
-      "label_editado": "Dominación racional-técnica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_004",
-      "propuesta": {
-        "id": "pf_004",
-        "nodo_canonico_id": "c_029",
-        "nodos_absorbidos_ids": [
-          "c_057"
-        ],
-        "label_canonico": "Expansión y contención del capitalismo avanzado",
-        "justificacion": "c_029 describe expansión económica/política/militar; c_057 operacionalismo describe método de contención intelectual. Aunque distintos mecanismos, el análisis sugiere falsamente que son duplicados. Son conceptos relacionados pero diferentes. NO fusionar.",
-        "confianza": 0.35
-      },
-      "label_editado": "Expansión y contención del capitalismo avanzado",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_005",
-      "propuesta": {
-        "id": "pf_005",
-        "nodo_canonico_id": "c_044",
-        "nodos_absorbidos_ids": [
-          "c_088"
-        ],
-        "label_canonico": "Universo tecnológico",
-        "justificacion": "c_044 define el universo tecnológico como sistema de dominación; c_088 velo tecnológico es el mecanismo mediante el cual ese universo oculta explotación. Son dos aspectos del mismo fenómeno.",
-        "confianza": 0.88
-      },
-      "label_editado": "Universo tecnológico",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_006",
-      "propuesta": {
-        "id": "pf_006",
-        "nodo_canonico_id": "c_050",
-        "nodos_absorbidos_ids": [
-          "c_177"
-        ],
-        "label_canonico": "Manipulación de necesidades y necesidad de liberación",
-        "justificacion": "c_050 describe control mediante creación de necesidades falsas; c_177 describe cómo sublimación preserva conciencia de represión y necesidad de liberación. Aunque están en tensión dialéctica, son dos caras del mismo proceso de represión/conciencia.",
-        "confianza": 0.72
-      },
-      "label_editado": "Manipulación de necesidades y necesidad de liberación",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_007",
-      "propuesta": {
-        "id": "pf_007",
-        "nodo_canonico_id": "c_061",
-        "nodos_absorbidos_ids": [
-          "c_531"
-        ],
-        "label_canonico": "Sociedad industrial avanzada",
-        "justificacion": "c_061 define las sociedades industriales avanzadas; c_531 describe su estratificación específica. Son el mismo objeto con énfasis distinto.",
-        "confianza": 0.92
-      },
-      "label_editado": "Sociedad industrial avanzada",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_008",
-      "propuesta": {
-        "id": "pf_008",
-        "nodo_canonico_id": "c_075",
-        "nodos_absorbidos_ids": [
-          "c_255"
-        ],
-        "label_canonico": "Clase trabajadora",
-        "justificacion": "c_075 define la clase trabajadora en transformación; c_255 quejas de trabajador es manifestación particular de esa clase. No son duplicados verdaderos. NO fusionar.",
-        "confianza": 0.35
-      },
-      "label_editado": "Clase trabajadora",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_009",
-      "propuesta": {
-        "id": "pf_009",
-        "nodo_canonico_id": "c_079",
-        "nodos_absorbidos_ids": [
-          "c_394"
-        ],
-        "label_canonico": "Gestión/Método científico",
-        "justificacion": "c_079 es gestión científica aplicada al trabajo; c_394 es método científico general. Relacionados pero distintos. NO fusionar.",
-        "confianza": 0.4
-      },
-      "label_editado": "Gestión/Método científico",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_010",
-      "propuesta": {
-        "id": "pf_010",
-        "nodo_canonico_id": "c_102",
-        "nodos_absorbidos_ids": [
-          "c_428"
-        ],
-        "label_canonico": "Capitalismo y comunismo en conflicto",
-        "justificacion": "c_102 describe coexistencia competitiva; c_428 describe los dos proyectos históricos en conflicto con criterios de verdad. Son el mismo tema con énfasis distinto.",
-        "confianza": 0.87
-      },
-      "label_editado": "Capitalismo y comunismo en conflicto",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_011",
-      "propuesta": {
-        "id": "pf_011",
-        "nodo_canonico_id": "c_103",
-        "nodos_absorbidos_ids": [
-          "c_494"
-        ],
-        "label_canonico": "Modo de producción capitalista",
-        "justificacion": "c_103 describe producción de medios de destrucción como gasto que mantiene sistema; c_494 modo de producción establecido que requiere mecanismos de control. Son aspectos del mismo sistema capitalista.",
-        "confianza": 0.8
-      },
-      "label_editado": "Modo de producción capitalista",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_012",
-      "propuesta": {
-        "id": "pf_012",
-        "nodo_canonico_id": "c_120",
-        "nodos_absorbidos_ids": [
-          "c_489",
-          "c_497"
-        ],
-        "label_canonico": "Racionalización de lo irracional / Irracionalidad de la racionalidad",
-        "justificacion": "c_120 aparece en grupo 18 pero su descripción trata nacionalización, no racionalización. c_489 y c_497 en cambio describen la paradoja central: racionalización de lo irracional y la irracionalidad interna de la racionalidad técnica. Estos dos últimos son la misma paradoja expresada desde dos direcciones.",
-        "confianza": 0.88
-      },
-      "label_editado": "Racionalización de lo irracional / Irracionalidad de la racionalidad",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_013",
-      "propuesta": {
-        "id": "pf_013",
-        "nodo_canonico_id": "c_159",
-        "nodos_absorbidos_ids": [
-          "c_380"
-        ],
-        "label_canonico": "Lenguaje poético y meta-lenguaje",
-        "justificacion": "c_159 lenguaje poético como lenguaje de lo ausente y prohibido; c_380 meta-lenguaje como lenguaje de segundo nivel que trasciende universo común. Ambos son formas de lenguaje que escapan al discurso operacional.",
-        "confianza": 0.78
-      },
-      "label_editado": "Lenguaje poético y meta-lenguaje",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_014",
-      "propuesta": {
-        "id": "pf_014",
-        "nodo_canonico_id": "c_185",
-        "nodos_absorbidos_ids": [
-          "c_444"
-        ],
-        "label_canonico": "Mercancía",
-        "justificacion": "c_185 describe conversión de todas las formas culturales en mercancías; c_444 describe mercancía como categoría fundamental que oculta relaciones de explotación. Mismo concepto.",
-        "confianza": 0.9
-      },
-      "label_editado": "Mercancía",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_015",
-      "propuesta": {
-        "id": "pf_015",
-        "nodo_canonico_id": "c_196",
-        "nodos_absorbidos_ids": [
-          "c_258"
-        ],
-        "label_canonico": "Pensamiento bidimensional vs pensamiento operacional",
-        "justificacion": "c_196 define pensamiento bidimensional como pensamiento crítico que mantiene tensión entre lo que es y debería ser; c_258 pensamiento operacional es su opuesto. No son duplicados sino antítesis. NO fusionar.",
-        "confianza": 0.3
-      },
-      "label_editado": "Pensamiento bidimensional vs pensamiento operacional",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_016",
-      "propuesta": {
-        "id": "pf_016",
-        "nodo_canonico_id": "c_203",
-        "nodos_absorbidos_ids": [
-          "c_423"
-        ],
-        "label_canonico": "Memoria y materia",
-        "justificacion": "c_203 describe memoria como forma de disociación del presente; c_423 describe materia como lo opuesto al sujeto. No son el mismo concepto. NO fusionar.",
-        "confianza": 0.25
-      },
-      "label_editado": "Memoria y materia",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_017",
-      "propuesta": {
-        "id": "pf_017",
-        "nodo_canonico_id": "c_204",
-        "nodos_absorbidos_ids": [
-          "c_305",
-          "c_430"
-        ],
-        "label_canonico": "Contenido/Concreción histórica",
-        "justificacion": "c_204 conciencia histórica es pensamiento crítico consciente de determinaciones históricas; c_305 concreción histórica es especificidad en contexto histórico; c_430 contenido histórico es componente que entra en conceptos. Todos refieren a la historicidad como elemento intrínseco del pensamiento verdadero.",
-        "confianza": 0.88
-      },
-      "label_editado": "Contenido/Concreción histórica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_018",
-      "propuesta": {
-        "id": "pf_018",
-        "nodo_canonico_id": "c_211",
-        "nodos_absorbidos_ids": [
-          "c_244"
-        ],
-        "label_canonico": "Racionalidad histórica y totalidad histórica",
-        "justificacion": "c_211 describe racionalidad que rechaza historia; c_244 describe totalidad histórica que determina hechos particulares. Son complementarios pero no duplicados. c_211 es el rechazo; c_244 es lo rechazado.",
-        "confianza": 0.55
-      },
-      "label_editado": "Racionalidad histórica y totalidad histórica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_019",
-      "propuesta": {
-        "id": "pf_019",
-        "nodo_canonico_id": "c_239",
-        "nodos_absorbidos_ids": [
-          "c_396"
-        ],
-        "label_canonico": "Análisis filosófico / Filosofía analítica",
-        "justificacion": "c_239 describe análisis filosófico más abstracto e ideológico; c_396 describe filosofía analítica que disuelve conceptos en términos operacionales. Son métodos opuestos. NO fusionar.",
-        "confianza": 0.3
-      },
-      "label_editado": "Análisis filosófico / Filosofía analítica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_020",
-      "propuesta": {
-        "id": "pf_020",
-        "nodo_canonico_id": "c_250",
-        "nodos_absorbidos_ids": [
-          "c_253"
-        ],
-        "label_canonico": "Conceptos operacionales y terapéuticos",
-        "justificacion": "c_250 describe carácter terapéutico de conceptos operacionales; c_253 describe conceptos terapéuticos y operacionales como falsos. Mismo concepto.",
-        "confianza": 0.92
-      },
-      "label_editado": "Conceptos operacionales y terapéuticos",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_021",
-      "propuesta": {
-        "id": "pf_021",
-        "nodo_canonico_id": "c_287",
-        "nodos_absorbidos_ids": [
-          "c_419"
-        ],
-        "label_canonico": "Apariencia y experiencia",
-        "justificacion": "c_287 apariencia es lo que parece vs lo que es; c_419 experiencia es lo vivido directamente. Aunque relacionados en la teoría marcusiana, no son duplicados. NO fusionar.",
-        "confianza": 0.35
-      },
-      "label_editado": "Apariencia y experiencia",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_022",
-      "propuesta": {
-        "id": "pf_022",
-        "nodo_canonico_id": "c_288",
-        "nodos_absorbidos_ids": [
-          "c_402"
-        ],
-        "label_canonico": "Universalidad y universales",
-        "justificacion": "c_288 describe universalidad como cualidad formal; c_402 describe universales específicos (Espíritu, Conciencia, Voluntad, etc.) que persisten. Relacionados pero distintos niveles. NO fusionar.",
-        "confianza": 0.45
-      },
-      "label_editado": "Universalidad y universales",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_023",
-      "propuesta": {
-        "id": "pf_023",
-        "nodo_canonico_id": "c_324",
-        "nodos_absorbidos_ids": [
-          "c_511"
-        ],
-        "label_canonico": "Control social",
-        "justificacion": "c_324 describe control social efectivo mediante racionalidad técnica y manipulación; c_511 describe control social efectivo como requisito para autodeterminación. Mismo concepto desde perspectivas complementarias.",
-        "confianza": 0.85
-      },
-      "label_editado": "Control social",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_024",
-      "propuesta": {
-        "id": "pf_024",
-        "nodo_canonico_id": "c_327",
-        "nodos_absorbidos_ids": [
-          "c_334"
-        ],
-        "label_canonico": "Causas finales",
-        "justificacion": "c_327 y c_334 (si está) describen las causas finales como eliminadas por cuantificación. Notar que c_312 Causa final singular y c_327 Causas finales plural son el mismo concepto.",
-        "confianza": 0.88
-      },
-      "label_editado": "Causas finales",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_025",
-      "propuesta": {
-        "id": "pf_025",
-        "nodo_canonico_id": "c_343",
-        "nodos_absorbidos_ids": [
-          "c_352"
-        ],
-        "label_canonico": "A priori tecnológico",
-        "justificacion": "c_343 define a priori tecnológico general; c_352 especifica 'a priori tecnológico de la ciencia'. Son el mismo concepto con especificación.",
-        "confianza": 0.9
-      },
-      "label_editado": "A priori tecnológico",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_026",
-      "propuesta": {
-        "id": "pf_026",
-        "nodo_canonico_id": "c_348",
-        "nodos_absorbidos_ids": [
-          "c_349"
-        ],
-        "label_canonico": "Dualismo cartesiano y ego cartesiano",
-        "justificacion": "c_348 describe dualismo cartesiano; c_349 describe el ego cartesiano como su residuo. Son aspectos del mismo problema cartesiano.",
-        "confianza": 0.88
-      },
-      "label_editado": "Dualismo cartesiano y ego cartesiano",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_027",
-      "propuesta": {
-        "id": "pf_027",
-        "nodo_canonico_id": "c_384",
-        "nodos_absorbidos_ids": [
-          "c_433"
-        ],
-        "label_canonico": "Cualidades",
-        "justificacion": "c_384 describe cualidades no cuantificables que se levantan en el camino; c_433 describe cualidades como atributos que constituyen materia del mundo. Mismo concepto.",
-        "confianza": 0.9
-      },
-      "label_editado": "Cualidades",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_028",
-      "propuesta": {
-        "id": "pf_028",
-        "nodo_canonico_id": "c_408",
-        "nodos_absorbidos_ids": [
-          "c_466"
-        ],
-        "label_canonico": "Verdad del arte",
-        "justificacion": "c_408 describe verdad poética relegada a ámbito separado; c_466 describe verdad ilusoria e impotente del arte que testifica validez de sus imágenes. Mismo tema: la verdad específica del arte.",
-        "confianza": 0.87
-      },
-      "label_editado": "Verdad del arte",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_029",
-      "propuesta": {
-        "id": "pf_029",
-        "nodo_canonico_id": "c_429",
-        "nodos_absorbidos_ids": [
-          "c_454"
-        ],
-        "label_canonico": "Verdad histórica",
-        "justificacion": "c_429 describe verdad histórica como validez comparativa; c_454 ciencia política como transformación en reconocimiento de carácter político. No son duplicados verdaderos. NO fusionar.",
-        "confianza": 0.4
-      },
-      "label_editado": "Verdad histórica",
-      "seleccionada": true,
-      "estado": "aceptada"
-    },
-    {
-      "id": "pfr_030",
-      "propuesta": {
-        "id": "pf_030",
-        "nodo_canonico_id": "c_510",
-        "nodos_absorbidos_ids": [
-          "c_514"
-        ],
-        "label_canonico": "Democracia",
-        "justificacion": "c_510 democracia liberal como pretexto ideológico; c_514 democracia directa como participación real. Opuestos políticos, no duplicados. NO fusionar.",
-        "confianza": 0.25
-      },
-      "label_editado": "Democracia",
+      "label_editado": "Causa final",
       "seleccionada": true,
       "estado": "aceptada"
     }
   ],
   "estado": "completada",
   "razon_falla": null,
-  "iniciada_en": "2026-07-03T02:03:16.161261",
-  "completada_en": "2026-07-03T02:03:52.632202",
+  "iniciada_en": "2026-07-07T14:50:07.978575",
+  "completada_en": "2026-07-07T14:52:32.507164",
   "candidatos_ids": [
     "c_007",
     "c_080",
     "c_189",
-    "c_008",
-    "c_175",
-    "c_011",
-    "c_455",
     "c_012",
     "c_426",
     "c_014",
@@ -538,106 +53,34 @@
     "c_498",
     "c_505",
     "c_508",
-    "c_525",
-    "c_021",
-    "c_060",
-    "c_065",
-    "c_082",
-    "c_092",
-    "c_213",
-    "c_279",
-    "c_293",
-    "c_296",
-    "c_310",
-    "c_400",
-    "c_450",
-    "c_501",
-    "c_512",
-    "c_517",
-    "c_520",
-    "c_521",
-    "c_029",
-    "c_057",
     "c_043",
     "c_113",
     "c_515",
-    "c_044",
-    "c_088",
-    "c_050",
-    "c_177",
-    "c_474",
-    "c_061",
-    "c_531",
     "c_063",
     "c_499",
-    "c_075",
-    "c_255",
-    "c_079",
-    "c_394",
-    "c_102",
-    "c_428",
-    "c_103",
-    "c_494",
-    "c_120",
-    "c_242",
-    "c_323",
-    "c_489",
-    "c_497",
-    "c_159",
-    "c_380",
-    "c_397",
-    "c_434",
     "c_183",
     "c_311",
-    "c_185",
-    "c_444",
     "c_195",
     "c_303",
     "c_439",
-    "c_196",
-    "c_258",
     "c_198",
     "c_376",
-    "c_203",
-    "c_290",
-    "c_423",
-    "c_204",
-    "c_305",
-    "c_430",
-    "c_454",
-    "c_211",
-    "c_244",
-    "c_408",
-    "c_429",
-    "c_466",
-    "c_239",
-    "c_396",
-    "c_250",
-    "c_253",
+    "c_242",
+    "c_323",
     "c_259",
     "c_262",
     "c_283",
-    "c_287",
-    "c_419",
-    "c_288",
-    "c_402",
     "c_309",
     "c_404",
     "c_312",
     "c_327",
-    "c_324",
-    "c_511",
     "c_338",
     "c_412",
-    "c_343",
-    "c_352",
-    "c_348",
-    "c_349",
-    "c_384",
-    "c_433",
+    "c_397",
+    "c_434",
+    "c_408",
+    "c_449",
     "c_472",
-    "c_503",
-    "c_510",
-    "c_514"
+    "c_503"
   ]
 }
