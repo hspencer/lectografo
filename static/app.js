@@ -9,6 +9,7 @@ const state = {
   path:        [],     // camino de navegación en el mapa: [{ node, link, dir }]
   grafoUpdate: null,   // fn updateVisuals() exportada por initGrafo/initGrafo3D
   grafoHighlight: null, // fn highlightPath() exportada por initGrafo/initGrafo3D
+  grafoCenter: null,   // fn centerOnNode(nodeId) del renderer activo
   grafoFit:    null,   // fn fitView() del renderer activo
   grafoDestroy: null,  // fn destroy() del renderer 3D activo (null en modo 2D)
   modo3d:      false,  // vista activa del mapa: 2D (D3/SVG) o 3D (three.js)
@@ -69,6 +70,8 @@ function activarTab(nombre) {
   state.tabActivo = nombre;
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===nombre));
   document.querySelectorAll(".tab-panel").forEach(p=>{ p.hidden = p.id!==`tab-${nombre}`; });
+  const srchWrap = document.getElementById("topbar-search");
+  if (srchWrap) srchWrap.hidden = (nombre !== "mapa");
   if (nombre === "texto" && state.slug) { if (!_textoModoEdicion) initTab("texto"); return; }
   if (!tabsInit.has(nombre) && state.slug) { tabsInit.add(nombre); initTab(nombre); }
 }
@@ -126,6 +129,7 @@ async function mostrarBiblioteca(extData) {
   state.grafo = null;
   state.grafoUpdate = null;
   state.grafoHighlight = null;
+  state.grafoCenter = null;
   state.tabActivo = null;
   state.path = [];
   if (state.navCols) { state.navCols.destruir(); state.navCols = null; }
@@ -646,6 +650,9 @@ async function initMapa() {
   // ── Grafo de fuerza (raíz de la navegación) ────────────────────────
   await initMapaForce();
 
+  // ── Buscador de conceptos ──────────────────────────────────────────
+  initMapaBuscar();
+
   // ── Botones de mantenimiento del grafo ─────────────────────────────
   await actualizarBotonSesion(SESION_RECONEXION);
   await actualizarBotonSesion(SESION_CONSOLIDACION);
@@ -671,17 +678,19 @@ async function initMapaForce() {
   if (state.modo3d) {
     svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
     const { initGrafo3D } = await import("./grafo3d.js");
-    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
+    const { updateVisuals, highlightPath, centerOnNode, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
     state.grafoUpdate    = updateVisuals;
     state.grafoHighlight = highlightPath;
+    state.grafoCenter    = centerOnNode;
     state.grafoFit       = fitView;
     state.grafoDestroy   = destroy;
   } else {
     svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
     const { initGrafo } = await import("./grafo.js");
-    const { relColorScale, relTypes, updateVisuals, highlightPath, fitView } = initGrafo(svgEl, state.grafo, onNodoSeleccionado);
+    const { relColorScale, relTypes, updateVisuals, highlightPath, centerOnNode, fitView } = initGrafo(svgEl, state.grafo, onNodoSeleccionado);
     state.grafoUpdate    = updateVisuals;
     state.grafoHighlight = highlightPath;
+    state.grafoCenter    = centerOnNode;
     state.grafoFit       = fitView;
     state.relColor       = relColorScale;
     renderLeyenda(relColorScale, relTypes);
@@ -710,6 +719,34 @@ function renderLeyenda(relColorScale, relTypes) {
        <span>${esc(fmt(t))}</span>
      </div>`
   ).join("");
+}
+
+// ── Buscador de conceptos en el mapa ─────────────────────────────────────
+
+function initMapaBuscar() {
+  const inp  = document.getElementById("mapa-buscar");
+  const drop = document.getElementById("mapa-buscar-dropdown");
+  if (!inp || !drop) return;
+  if (inp.dataset.wired) return;
+  inp.dataset.wired = "1";
+
+  _gpWireAutocomplete(inp, drop,
+    () => (state.grafo?.nodes || []).map(n => ({
+      label: n.label,
+      meta:  n.menciones ? `${n.menciones} mens.` : undefined,
+      onSelect: () => {
+        inp.value = "";
+        drop.hidden = true;
+        // Asegurar que estamos en la pestaña mapa
+        if (state.tabActivo !== "mapa") activarTab("mapa");
+        // Centrar en el nodo
+        if (state.grafoCenter) state.grafoCenter(n.id);
+        // Seleccionar el nodo (abre panel/columnas)
+        onNodoSeleccionado(n);
+      },
+    })),
+    { minChars: 1, showAllOnFocus: false }
+  );
 }
 
 // ── Navegador de columnas: nodo del grafo → columnas concepto+relaciones ──

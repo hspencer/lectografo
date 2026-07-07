@@ -68,6 +68,73 @@ html, body {
 .tab-btn:hover { background: var(--sn-sunk); color: var(--sn-ink); }
 .tab-btn.active { background: var(--sn-ink); color: var(--sn-paper); }
 
+/* ── Buscador de conceptos (mapa) ─────────────────────────────────── */
+#topbar-search {
+  position: relative;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.mapa-buscar-input {
+  height: 26px;
+  padding: 0 var(--sn-s-3);
+  border: var(--sn-hair);
+  border-radius: var(--sn-radius);
+  font-size: var(--sn-fs-xs);
+  font-family: var(--sn-font-text);
+  background: var(--sn-sunk);
+  color: var(--sn-ink);
+  outline: none;
+  width: 180px;
+  transition: border-color var(--sn-dur-1), box-shadow var(--sn-dur-1), width var(--sn-dur-2);
+}
+.mapa-buscar-input:focus {
+  border-color: var(--sn-focus-border);
+  background: var(--sn-paper);
+  box-shadow: var(--sn-focus-ring);
+  width: 240px;
+}
+.mapa-buscar-input::placeholder { color: var(--sn-ink-faint); }
+
+.mapa-buscar-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  min-width: 220px;
+  max-width: 360px;
+  background: var(--sn-paper);
+  border: var(--sn-hair);
+  border-radius: var(--sn-radius);
+  box-shadow: var(--sn-lift);
+  z-index: calc(var(--sn-z-header) + 20);
+  list-style: none;
+  padding: var(--sn-s-1) 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.mapa-buscar-dropdown[hidden] { display: none; }
+
+.gp-ac-item.mapa-buscar-dropdown li,
+.mapa-buscar-dropdown .gp-ac-item {
+  padding: var(--sn-s-2) var(--sn-s-3);
+  cursor: pointer;
+  font-size: var(--sn-fs-xs);
+  display: flex; align-items: baseline; gap: var(--sn-s-2);
+  overflow: hidden;
+}
+.mapa-buscar-dropdown .gp-ac-item:hover,
+.mapa-buscar-dropdown .gp-ac-item.active {
+  background: var(--sn-sunk);
+}
+.mapa-buscar-dropdown .gp-ac-item-label {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mapa-buscar-dropdown .gp-ac-item-meta {
+  color: var(--sn-ink-faint); font-size: var(--sn-fs-xs); white-space: nowrap;
+}
+
 /* ── Topbar right ─────────────────────────────────────────────────── */
 #topbar-right {
   margin-left: auto;
@@ -656,7 +723,7 @@ details[open] > .panel-rel-grupo-hdr::before { transform: rotate(90deg); }
 
 /* ── Conceptos & Relaciones tabs ─────────────────────────────────── */
 #tab-conceptos,
-#tab-relaciones { flex-direction: column; }
+#tab-relaciones { flex-direction: column; overflow-y: auto; }
 
 .tabla-toolbar {
   background: var(--sn-paper); border-bottom: var(--sn-hair);

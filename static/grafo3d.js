@@ -338,9 +338,21 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     graph.linkOpacity(linkOpac);
   }
 
+  function centerOnNode(nodeId) {
+    const node = nodes.find(n => n.id === nodeId);
+    if (!node || !_graph || node.x == null) return;
+    const dist = 180;
+    _graph.cameraPosition(
+      { x: node.x, y: node.y, z: node.z + dist },
+      { x: node.x, y: node.y, z: node.z },
+      600
+    );
+  }
+
   return {
     updateVisuals,
     highlightPath,
+    centerOnNode,
     fitView: () => graph.zoomToFit(400, 60),
     destroy: () => { ro.disconnect(); destroyGrafo3D(); },
   };

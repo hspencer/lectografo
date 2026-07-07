@@ -375,11 +375,22 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     arrowStartMarkers.select("path").attr("fill-opacity", l => linkOpac(l));
   }
 
+  function centerOnNode(nodeId) {
+    const node = nodes.find(n => n.id === nodeId);
+    if (!node || node.x == null) return;
+    const scale = 2;
+    const tx = W / 2 - scale * node.x;
+    const ty = H / 2 - scale * node.y;
+    svg.transition().duration(600)
+       .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+  }
+
   return {
     relColorScale: relColor,
     relTypes,
     updateVisuals,
     highlightPath,
+    centerOnNode,
     fitView: () => fitView(svg, g, zoom, W, H),
   };
 }
