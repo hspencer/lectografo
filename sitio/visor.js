@@ -61,8 +61,11 @@ async function renderMapa() {
   const svgEl = document.getElementById("grafo-svg");
   const el3d  = document.getElementById("grafo-3d");
 
-  svgEl.hidden = state.modo3d;
-  el3d.hidden  = !state.modo3d;
+  if (state.modo3d) {
+    svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
+  } else {
+    svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
+  }
   document.getElementById("btn-modo3d-label").textContent = state.modo3d ? "2D" : "3D";
 
   const modulo = state.modo3d

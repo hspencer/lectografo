@@ -41,7 +41,7 @@ export function destroyGrafo3D() {
   if (_graph) { _graph._destructor?.(); _graph = null; }
 }
 
-export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
+export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { autoFit = true } = {}) {
   destroyGrafo3D();
   container.innerHTML = "";
 
@@ -261,7 +261,6 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
     .onNodeClick(node => {
       if (!node) return;
       onSelect(node);
-      recenterCamera(node);
     })
     .onBackgroundClick(() => onSelect(null))
     .onNodeHover(node => {
@@ -289,14 +288,16 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect) {
   const ro = new ResizeObserver(resize);
   ro.observe(container);
 
-  // Ajustar cámara cuando la simulación converge, no tras un delay fijo —
-  // con cientos de nodos un timeout corto encuadra el clúster aún colapsado.
-  let didInitialFit = false;
-  graph.onEngineStop(() => {
-    if (didInitialFit) return;
-    didInitialFit = true;
-    graph.zoomToFit(400, 60);
-  });
+  // Ajustar cámara cuando la simulación converge — solo si autoFit está habilitado
+  // (se deshabilita en refrescos de datos para no resetear la vista del usuario).
+  if (autoFit) {
+    let didInitialFit = false;
+    graph.onEngineStop(() => {
+      if (didInitialFit) return;
+      didInitialFit = true;
+      graph.zoomToFit(400, 60);
+    });
+  }
 
   // Reconstruye los tres sprites de un nodo (halo + texto normal + texto foco)
   // preservando su estado de opacidad/visibilidad actual.

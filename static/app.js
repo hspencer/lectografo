@@ -661,13 +661,17 @@ async function initMapaForce() {
   const el3d  = document.getElementById("grafo-3d");
   if (!svgEl || !el3d) return;
 
+  // Si ya estábamos en 3D es un refresco de datos, no un cambio de modo:
+  // no hacer auto-fit para no resetear la vista del usuario.
+  const yaEn3D = state.modo3d && state.grafoDestroy !== null;
+
   state.grafoDestroy?.();
   state.grafoDestroy = null;
 
   if (state.modo3d) {
     svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
     const { initGrafo3D } = await import("./grafo3d.js");
-    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado);
+    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
     state.grafoUpdate    = updateVisuals;
     state.grafoHighlight = highlightPath;
     state.grafoFit       = fitView;
@@ -2633,7 +2637,9 @@ async function renderGPCanvas() {
   const { nodes, links } = gpState.grafoVis;
   vacio.hidden = nodes.length > 0;
 
-  // Destruir renderer anterior si existe
+  // Si ya estábamos en 3D es un refresco (concepto añadido/editado): no auto-fit.
+  const yaEn3D = gpState.modo3d && gpState.gpDestroy !== null;
+
   gpState.gpDestroy?.();
   gpState.gpDestroy = null;
 
@@ -2642,7 +2648,7 @@ async function renderGPCanvas() {
   if (gpState.modo3d) {
     svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
     const { initGrafo3D } = await import("./grafo3d.js");
-    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, { nodes, links }, gpOnNodoSeleccionado);
+    const { updateVisuals, highlightPath, fitView, destroy } = initGrafo3D(el3d, { nodes, links }, gpOnNodoSeleccionado, { autoFit: !yaEn3D });
     gpState.gpUpdate    = updateVisuals;
     gpState.gpHighlight = highlightPath;
     gpState.gpFit       = fitView;

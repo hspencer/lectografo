@@ -505,7 +505,7 @@ kbd {
 #nav-cols { flex: 0 0 auto; display: flex; flex-direction: row; overflow-x: auto; max-width: 78%; }
 
 #grafo-svg { width: 100%; height: 100%; }
-#grafo-3d  { position: absolute; inset: 0; }
+#grafo-3d  { position: absolute; inset: 0; background: var(--sn-paper, #fff); }
 #grafo-3d canvas { outline: none; display: block; }
 #grafo-svg .node text,
 #grafo-svg .node circle.focus-halo,
@@ -1420,7 +1420,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
   flex: 1; position: relative; overflow: hidden;
 }
 #gp-svg { width: 100%; height: 100%; }
-#gp-3d  { position: absolute; inset: 0; }
+#gp-3d  { position: absolute; inset: 0; background: var(--sn-paper, #fff); }
 #gp-3d canvas { outline: none; display: block; }
 
 #gp-canvas-controles {
