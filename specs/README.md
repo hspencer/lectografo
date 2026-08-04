@@ -11,13 +11,15 @@ flowchart TD
     E[extraccion.allium<br/>propuesta del LLM]
     V[validacion.allium<br/>refinamiento humano]
     G[grafo.allium<br/>estructura persistente]
+    R[recorrido.allium<br/>criterios de arista y naturaleza del recorrido]
     S[surfaces.allium<br/>contratos y actores]
 
     L --> T
     T --> E
     E --> V
     V --> G
-    G --> S
+    G --> R
+    R --> S
     L --> S
 ```
 
@@ -26,7 +28,8 @@ flowchart TD
 3. `extraccion.allium` para la propuesta cruda del LLM.
 4. `validacion.allium` para el flujo de decisiones del investigador.
 5. `grafo.allium` para la estructura final persistente.
-6. `surfaces.allium` para los contratos con los actores (investigador y LLM).
+6. `recorrido.allium` para entender bajo que criterios nace cada arista y que es un recorrido sobre el grafo.
+7. `surfaces.allium` para los contratos con los actores (investigador y LLM).
 
 ## Estados principales
 

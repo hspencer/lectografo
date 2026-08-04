@@ -33,6 +33,7 @@
 --   extraccion-incremental.allium -> extraccion frase a frase con tesauro
 --   validacion.allium             -> resolucion humana de ambiguedades
 --   grafo.allium                  -> estructura persistente y publicacion
+--   recorrido.allium              -> criterios de las aristas y naturaleza del recorrido
 --   grafos-personales.allium      -> mapas libres del investigador
 --   surfaces.allium               -> contratos de UI e integracion LLM
 --   edicion-texto.allium          -> edicion del texto fuente y revision historica
@@ -42,6 +43,7 @@ use "./extraccion.allium" as extraccion
 use "./extraccion-incremental.allium" as incremental
 use "./validacion.allium" as validacion
 use "./grafo.allium" as grafo
+use "./recorrido.allium" as recorrido
 use "./grafos-personales.allium" as personal
 use "./surfaces.allium" as surfaces
 use "./edicion-texto.allium" as edicion
