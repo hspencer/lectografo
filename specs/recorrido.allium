@@ -1,0 +1,595 @@
+-- allium: 3
+-- recorrido.allium — la naturaleza del recorrido (trail) sobre el grafo
+--
+-- Este modulo especifica DOS cosas que el resto de los specs dan por supuestas:
+--
+--   1. Bajo que criterios nace una arista. Una Relacion no es un hecho del
+--      mundo: es el resultado de un procedimiento. Hay tres procedimientos
+--      distintos en Lectografo, con criterios de aceptacion incompatibles
+--      entre si, y la arista resultante casi no recuerda cual la produjo.
+--      Ver Parte I.
+--
+--   2. Que cosa es un Recorrido. El recorrido es el objeto que aparece
+--      cuando alguien atraviesa esas aristas en un orden. No es una
+--      propiedad del grafo: es un acto sobre el grafo. Ver Parte III.
+--
+-- La tesis del modulo, en una linea:
+--
+--     El grafo es dirigido. El recorrido no lo es.
+--     La direccion deja de ser restriccion y pasa a ser memoria.
+--
+-- Es decir: una Relacion se inscribe con origen y destino (par ordenado),
+-- pero el recorrido puede cruzarla en cualquier sentido. Lo que el recorrido
+-- conserva no es la obligacion de respetar la flecha, sino el registro de
+-- en que sentido la cruzo. La direccionalidad migra desde la arista (donde
+-- seria una regla) hacia el paso (donde es un dato). Ese desplazamiento es
+-- el corazon de este spec.
+--
+-- Scope: criterios de construccion de relaciones, semantica de la
+-- direccionalidad, y el objeto Recorrido tal como existe hoy.
+--
+-- Includes:
+--   - Los tres origenes de una Relacion y sus criterios de aceptacion
+--   - Que significa exactamente bidireccional
+--   - Que aristas se ofrecen como continuacion y en que orden
+--   - El Recorrido como valor efimero de sesion
+--   - La doble inscripcion del recorrido: columnas de lectura + resalte en el mapa
+--
+-- Excludes:
+--   - El dendrograma (Perspectiva / NodoEnContexto viven en surfaces.allium).
+--     El dendrograma es el ARBOL de recorridos posibles; el Recorrido es UNA
+--     linea elegida dentro de ese arbol. Ver "Recorrido frente a Perspectiva".
+--   - La mecanica de la sesion de reconexion (vive en getYourStuffTogether.allium);
+--     aqui solo se destila su CRITERIO de aceptacion.
+--   - La materializacion de relaciones desde decisiones validadas (vive en
+--     grafo.allium); aqui solo se destila bajo que condiciones se aceptan.
+--   - La persistencia de recorridos: hoy no existe. Ver preguntas abiertas.
+
+use "./grafo.allium" as grafo
+
+------------------------------------------------------------
+-- NOTA DE TERMINOLOGIA (deuda tecnica a saldar)
+------------------------------------------------------------
+
+-- El mismo objeto aparece hoy en el codigo con cuatro nombres distintos:
+--   state.path            (static/app.js)
+--   camino                (limpiarCamino, avanzarCamino)
+--   Ruta                  (lector.js, ya extinto; el comentario sobrevive)
+--   recorrido             (surfaces.allium, prosa del dendrograma)
+--
+-- Este spec fija UN nombre: Recorrido. Los otros tres son el mismo concepto
+-- y deben desaparecer del codigo. No son sinonimos utiles ni matices: son
+-- sedimento de refactors sucesivos. Mientras convivan, cualquier lectura del
+-- codigo tiene que decidir en cada sitio si "path" es un recorrido del grafo
+-- o una ruta de sistema de archivos (apiFetch(path) usa el segundo sentido
+-- en el mismo archivo, veinte lineas mas arriba).
+
+------------------------------------------------------------
+-- PARTE I — Bajo que criterios nace una arista
+------------------------------------------------------------
+
+-- Una Relacion (definida en grafo.allium) puede llegar a existir por tres
+-- vias. Las tres producen el mismo tipo de objeto, pero responden a
+-- preguntas distintas y aplican criterios de aceptacion que no se implican
+-- entre si. La distincion importa porque el recorrido las atraviesa a todas
+-- por igual: al caminar, el investigador no puede saber por que via nacio la
+-- arista que esta cruzando, salvo por la ausencia de frase.
+
+enum OrigenDeRelacion { textual | topologica | autoral }
+
+enum DireccionDePaso { saliente | entrante | bidireccional | nula }
+    -- nula corresponde al primer paso de un recorrido: no hubo cruce.
+
+-- ─── Via 1: textual (extraccion) ─────────────────────────
+--
+-- Criterio de aceptacion: la relacion debe estar EN EL TEXTO.
+-- El garante de ese criterio es frase_completa: el fragmento literal que
+-- expresa la conexion. Una relacion textual sin frase es una relacion sin
+-- evidencia, y el prompt lo dice explicitamente: "No inventes relaciones que
+-- no esten en el texto; si la relacion es implicita, baja la confianza".
+-- La confianza es, entonces, la distancia entre lo que el texto dice y lo
+-- que el LLM afirma que dice.
+--
+-- El tipo es ontologia ABIERTA: cualquier sintagma en espanol. TipoRelacion
+-- existe como enum en el codigo pero el campo es str libre y el prompt
+-- autoriza "es una forma de", "otra forma de decirlo", "da lugar a". Es una
+-- decision de diseno, no un descuido: cerrar la ontologia obligaria a
+-- traducir el vocabulario del autor al vocabulario de la herramienta, que es
+-- justo lo que Lectografo no quiere hacer.
+--
+-- Hay ademas un criterio de CANTIDAD, no solo de calidad: el prompt exige al
+-- menos N-1 relaciones para N conceptos. La conectividad se pide de entrada,
+-- antes de saber si el texto la sostiene.
+
+invariant RelacionTextualTieneAnclaEnElTexto {
+    for r in grafo/Relacion:
+        origen_de(r) = textual implies r.frase_completa != ""
+}
+
+invariant ConfianzaEnRango {
+    for r in grafo/Relacion:
+        r.confianza_extraccion >= 0 and r.confianza_extraccion <= 1
+}
+
+-- ─── Via 2: topologica (reconexion) ──────────────────────
+--
+-- Criterio de aceptacion: la relacion debe REDUCIR EL NUMERO DE COMPONENTES
+-- CONEXAS. Este criterio no habla del texto en absoluto. Es un criterio de
+-- forma, aplicado despues del criterio de contenido y capaz de rechazar
+-- propuestas que el texto sostiene perfectamente.
+--
+-- El filtro es union-find sobre las componentes actuales, aplicando las
+-- propuestas en orden de confianza descendente. Una conexion cuyos dos
+-- extremos ya estan en la misma componente se descarta como redundante,
+-- aunque sea verdadera, aunque el investigador la quisiera. El prompt se lo
+-- advierte al LLM de antemano: "no gastes propuestas ahi".
+--
+-- Consecuencia: la verdad no es condicion suficiente. La arista topologica
+-- se justifica por lo que HACE con la forma del grafo, no por lo que dice.
+-- Es una arista instrumental.
+
+invariant RelacionTopologicaNoTieneAncla {
+    for r in grafo/Relacion:
+        origen_de(r) = topologica implies r.frase_completa = ""
+}
+
+invariant RelacionTopologicaNuncaEsBidireccional {
+    for r in grafo/Relacion:
+        origen_de(r) = topologica implies r.bidireccional = false
+}
+    -- No porque se haya determinado que es asimetrica, sino porque nadie
+    -- pregunta. El prompt de reconexion no pide bidireccionalidad y el
+    -- endpoint de confirmacion la fija en false sin consultar. Es una
+    -- ausencia de decision presentada como decision.
+
+-- ── CriterioTopologicoNoConfirmaContenido ── (guidance)
+    -- El investigador puede EDITAR la frase propuesta antes de confirmar.
+    -- Esa frase editada se guarda como etiqueta, no como frase_completa.
+    -- Es decir: la arista topologica nunca adquiere ancla textual, por mucho
+    -- que se la anote. La distincion entre etiqueta (como se llama el
+    -- vinculo) y frase_completa (donde lo dice el texto) es exactamente la
+    -- distincion entre nombrar y citar.
+
+-- ─── Via 3: autoral (investigador) ───────────────────────
+--
+-- Criterio de aceptacion: que ambos extremos existan. Nada mas.
+-- No hay umbral de confianza, no hay evidencia textual requerida, no hay
+-- filtro topologico. La relacion autoral se acepta por autoridad.
+--
+-- Es coherente con el invariante rector declarado en lectografo.allium:
+-- "El investigador es la autoridad final en cualquier interpretacion. El LLM
+-- solo propone". El unico control es referencial: no se puede relacionar lo
+-- que no esta.
+--
+-- Nace con confianza = 1.0. No porque sea mas cierta, sino porque la
+-- confianza mide la incertidumbre de la MAQUINA, y aqui no hubo maquina.
+-- Un 1.0 autoral y un 1.0 extraido no son la misma cantidad, y el grafo los
+-- guarda en el mismo campo.
+
+invariant RelacionAutoralTieneConfianzaPlena {
+    for r in grafo/Relacion:
+        origen_de(r) = autoral implies r.confianza_extraccion = 1
+}
+
+-- ── LaViaAutoralEsLaUnicaQueDecideSimetria ── (guidance)
+    -- Es la unica de las tres vias donde la bidireccionalidad la elige una
+    -- persona directamente y de entrada. En la via textual la propone el LLM
+    -- (y el investigador la confirma o invierte via PuntoDecision de tipo
+    -- bidireccionalidad); en la via topologica no la elige nadie.
+
+-- ─── Criterio negativo comun a las tres vias ─────────────
+
+invariant NingunaRelacionEsReflexiva {
+    for r in grafo/Relacion:
+        r.origen != r.destino
+}
+
+-- ── LaFusionDeSinonimosBorraFrases ── (guidance)
+    -- NingunaRelacionEsReflexiva se aplica DESPUES de la fusion de sinonimos,
+    -- y ahi esta lo interesante: cuando dos conceptos se fusionan en un nodo
+    -- canonico, toda relacion que los unia se convierte en un lazo y se
+    -- descarta EN SILENCIO. La relacion desaparece sin dejar registro.
+    --
+    -- Filosoficamente es una decision fuerte: declarar que A y B son el mismo
+    -- concepto implica declarar que lo que se decia entre ellos no se decia.
+    -- La frase del texto que conectaba "poesia" con "poiesis" se pierde en el
+    -- momento en que se decide que son sinonimos, aunque esa frase fuera
+    -- precisamente el pasaje donde el autor explica por que son lo mismo.
+    --
+    -- Consecuencia para el recorrido: hay pasos que el grafo consolidado ya
+    -- no permite dar y que el texto si autorizaba.
+
+------------------------------------------------------------
+-- PARTE II — Que significa direccional y que significa bidireccional
+------------------------------------------------------------
+
+-- Toda Relacion se almacena como PAR ORDENADO (origen, destino). No existe
+-- forma de inscribir una relacion sin direccion: incluso la bidireccional
+-- tiene un origen y un destino en disco. bidireccional es un Boolean AL LADO
+-- de la direccion, no en lugar de ella.
+--
+-- No es un detalle de implementacion, es la estructura del objeto:
+--
+--     La simetria del significado no borra la asimetria de la inscripcion.
+--
+-- Alguien escribio esa relacion en algun sentido, y ese sentido sobrevive
+-- aunque se declare que da igual. Cuando el dendrograma decide mostrar una
+-- relacion bidireccional UNA SOLA VEZ, tiene que elegir desde que lado
+-- mostrarla, y elige "el lado que inicia el recorrido". La simetria semantica
+-- se resuelve en el momento del recorrido, no en el momento del dato.
+--
+-- Hay ademas una tercera categoria implicita, la que ve quien camina. La
+-- direccion de un PASO no es una propiedad de la Relacion: es una propiedad
+-- del cruce. Sus cuatro valores:
+--
+--   saliente       el nodo anterior era el origen; se cruza a favor
+--   entrante       el nodo anterior era el destino; se cruza en contra
+--   bidireccional  la relacion se declaro simetrica; el sentido no aplica
+--   nula           no hubo cruce: es el primer paso del recorrido
+--
+-- Notese la asimetria del vocabulario. La Relacion guarda un Boolean
+-- (bidireccional si/no) sobre un par ordenado: dos campos. El paso guarda un
+-- solo valor entre cuatro. La informacion no se conserva ni se pierde, se
+-- reorganiza: al paso no le interesa como es la arista sino que le paso al
+-- caminante.
+
+-- ─── La regla central: la direccion no restringe ─────────
+
+-- ── LaDireccionNoRestringeElRecorrido ── (guarantee)
+    -- Desde cualquier nodo se ofrecen como continuacion TODAS sus aristas
+    -- incidentes: salientes, bidireccionales y entrantes. Ninguna arista es
+    -- intransitable por su direccion.
+    --
+    -- Es la misma decision que ya toma componentes_conexas(), que calcula la
+    -- conectividad tratando el grafo como NO dirigido. Y la misma que toma el
+    -- dendrograma, que expande tanto salientes como entrantes.
+    --
+    -- El sistema resulta entonces coherente en algo poco obvio:
+    --   - la conectividad se define sin direccion
+    --   - el recorrido se ejecuta sin direccion
+    --   - el significado se conserva con direccion
+    --
+    -- La flecha no dice por donde se puede ir. Dice como leer lo que hay
+    -- entre los dos nodos una vez que se llego. Es una anotacion semantica
+    -- sobre una arista que, topologicamente, siempre fue simetrica.
+
+-- ─── El orden de la oferta es una tesis editorial ────────
+
+value AristaOfrecida {
+    relacion: grafo/Relacion
+    vecino: grafo/Nodo
+    direccion: DireccionDePaso
+    -- nunca nula: toda arista ofrecida implica un cruce
+}
+
+-- ── OrdenDeLaOferta ── (guidance)
+    -- ConexionesDe(nodo) devuelve las aristas incidentes agrupadas y
+    -- ordenadas asi:
+    --
+    --   1. Primero las que tienen a nodo como ORIGEN.
+    --   2. Despues las que tienen a nodo como DESTINO.
+    --   3. Cada arista aparece EXACTAMENTE UNA VEZ (dedup por id de
+    --      relacion). Una arista con nodo en ambos extremos no puede darse:
+    --      ver NingunaRelacionEsReflexiva.
+    --   4. Si la relacion es bidireccional, su direccion se reporta como
+    --      bidireccional independientemente del extremo por el que se
+    --      alcanzo.
+    --
+    -- La presentacion agrupa en tres bloques (Salientes / Bidireccionales /
+    -- Entrantes) y abre solo el primero no vacio.
+    --
+    -- El orden salientes → bidireccionales → entrantes no es arbitrario ni
+    -- cosmetico. Es una tesis sobre como se lee un argumento:
+    --
+    --   Primero hacia donde el texto EMPUJA (lo que este concepto funda,
+    --   genera, implica). Despues lo que es MUTUO. Al final lo que
+    --   PRESUPONE, aquello desde lo cual se llego a el.
+    --
+    -- Leer a favor de la flecha es seguir el argumento del autor. Leer en
+    -- contra es reconstruir sus condiciones de posibilidad. La interfaz
+    -- ofrece ambas, pero no como iguales: pone la primera arriba y abierta,
+    -- y la segunda abajo y plegada. Es una jerarquia de lectura, y esta
+    -- inscrita en el orden de una lista.
+
+------------------------------------------------------------
+-- PARTE III — El Recorrido
+------------------------------------------------------------
+
+-- Un Recorrido es una secuencia de pasos. Un paso NO es un nodo: es un nodo
+-- alcanzado por una arista determinada en un sentido determinado.
+--
+-- Esta es la definicion operativa del objeto, y de ella se sigue todo lo
+-- demas. Llegar a LOGOS desde FUEGO por "todo es transformacion de" y llegar
+-- a LOGOS desde COSMOS por "gobierna" son DOS PASOS DISTINTOS, aunque el
+-- nodo sea el mismo. El recorrido no colecciona conceptos: colecciona
+-- llegadas.
+--
+-- Por eso el recorrido es un objeto de lectura y no de topologia. La
+-- topologia ya sabe que LOGOS y FUEGO son adyacentes; eso no cambia. Lo que
+-- el recorrido agrega es que alguien fue de uno al otro, por esa frase, en
+-- ese orden, y no por la otra.
+
+value PasoDeRecorrido {
+    nodo: grafo/Nodo
+    relacion_entrada: grafo/Relacion?   -- null unicamente en el primer paso
+    direccion: DireccionDePaso
+
+    -- La frase que se revela al dar el paso. Es lo que la cabecera de la
+    -- columna muestra en grande, por encima del nombre del concepto: el
+    -- recorrido presenta la RELACION como titulo y el nodo como subtitulo.
+    frase_revelada: relacion_entrada?.frase_completa
+                 ?? relacion_entrada?.etiqueta
+                 ?? relacion_entrada?.tipo
+}
+
+-- ── PrimerPasoEsInmotivado ── (guidance)
+    -- relacion_entrada = null si y solo si direccion = nula. Las dos
+    -- ausencias son la misma ausencia: no hubo cruce.
+    --
+    -- El primer paso se alcanza desde FUERA del grafo (un clic en el mapa,
+    -- una busqueda por texto), no cruzando una arista. Todo recorrido empieza
+    -- con un acto que el grafo no explica.
+    --
+    -- Es la contrapartida exacta del dendrograma, cuya raiz por defecto SI la
+    -- elige el grafo: el nodo de mayor grado (NodoRaizActiva). Ahi la
+    -- topologia propone por donde empezar a leer; aqui no propone nada.
+
+-- ── DegradacionDeLaEvidencia ── (guidance)
+    -- El fallback de frase_revelada es una escala de perdida, y se lee de
+    -- izquierda a derecha:
+    --
+    --   frase_completa  -> lo que el texto dice           (via textual)
+    --   etiqueta        -> como alguien nombro el vinculo (via autoral/topologica)
+    --   tipo            -> la categoria, sin nadie        (ultimo recurso)
+    --
+    -- Al caminar sobre una arista topologica o autoral, la cabecera muestra
+    -- una etiqueta donde deberia haber una cita. Visualmente son
+    -- indistinguibles: el mismo tamano, la misma posicion, el mismo peso.
+    -- El recorrido borra la diferencia entre citar y nombrar justo en el
+    -- punto donde esa diferencia importa. Ver preguntas abiertas.
+
+value Recorrido {
+    pasos: List<PasoDeRecorrido>
+
+    -- Derivados
+    longitud: pasos.count
+    raiz: pasos.first
+    paso_actual: pasos.last
+}
+
+-- ── ContiguidadEsLoQueLoHaceUnRecorrido ── (guidance)
+    -- Para todo paso que no sea el primero, su relacion_entrada debe conectar
+    -- el nodo del paso anterior con el suyo. Sin contiguidad, un Recorrido no
+    -- es mas que una lista de nodos: la contiguidad es exactamente lo que
+    -- distingue un recorrido de una seleccion.
+    --
+    -- No se expresa como invariant porque relaciona pasos consecutivos de una
+    -- secuencia, no el estado de una entidad en un instante. Ver
+    -- ContiguidadSeRompeAlRecargar: el codigo actual puede violarla.
+
+------------------------------------------------------------
+-- El Recorrido es un valor, no una entidad
+------------------------------------------------------------
+
+-- Recorrido se declara como `value` y no como `entity`, y eso es la
+-- afirmacion mas fuerte de este spec. Un value no tiene identidad, no tiene
+-- ciclo de vida, no se persiste, no se referencia desde ningun otro objeto.
+--
+-- Se corresponde exactamente con lo que existe: state.path vive en memoria,
+-- muere al recargar, no llega a localStorage ni al fragmento de la URL (que
+-- solo transporta el slug del grafo). Dos investigadores frente al mismo
+-- grafo no pueden compartir un recorrido. El mismo investigador manana no
+-- puede volver al suyo.
+--
+--     El recorrido, hoy, no es una obra. Es un gesto.
+--
+-- No esta necesariamente mal. Es lo que corresponde a un instrumento de
+-- lectura: uno no guarda por donde paso los ojos. Pero es una decision, y
+-- conviene tenerla escrita, porque el resto del sistema va en direccion
+-- contraria: los grafos persisten, las anotaciones persisten, los grafos
+-- personales persisten. El recorrido es lo unico que el sistema deja
+-- evaporarse.
+--
+-- NOTA SOBRE LAS ADVERTENCIAS DEL CHECKER. `allium check` reporta
+-- OrigenDeRelacion, AristaOfrecida y Recorrido como declarados pero no
+-- referenciados. Es correcto y es el sintoma, no el problema: ninguna regla
+-- los produce ni los consume porque ninguna regla los toca. Un objeto que
+-- solo existe en la memoria de una sesion no aparece en el ensures de nada.
+-- Las advertencias desapareceran el dia que se responda que si a la pregunta
+-- abierta sobre persistencia: ese dia Recorrido pasara a ser entity, tendra
+-- reglas de creacion y fijado, y el checker dejara de senalarlo. Hasta
+-- entonces, las tres advertencias son la medida exacta de cuan poco existe
+-- el recorrido para el sistema.
+
+------------------------------------------------------------
+-- Como crece un Recorrido
+------------------------------------------------------------
+
+-- Las tres operaciones se declaran como funciones sobre valores: cada una
+-- devuelve un Recorrido nuevo en vez de mutar uno existente. Es la forma
+-- correcta para un value, y ademas es lo que el codigo hace (reasigna
+-- state.path en cada paso, nunca lo modifica en sitio).
+
+deferred Recorrido.iniciar    -- see: static/app.js: onNodoSeleccionado
+    -- (nodo: grafo/Nodo) -> Recorrido
+    -- Devuelve un Recorrido de un solo paso, con relacion_entrada = null y
+    -- direccion = nula. Descarta cualquier recorrido anterior sin ceremonia.
+
+deferred Recorrido.avanzar    -- see: static/app.js: avanzarCamino
+    -- (recorrido: Recorrido, indice_paso: Integer, arista: AristaOfrecida) -> Recorrido
+    --
+    -- TRUNCA Y AGREGA. Conserva los pasos 0..indice_paso y anade un paso
+    -- nuevo hacia arista.vecino, con arista.relacion como relacion_entrada y
+    -- arista.direccion como direccion.
+    --
+    -- Requiere que arista pertenezca a las conexiones del nodo en indice_paso.
+    --
+    -- Elegir una arista en el paso i destruye todos los pasos posteriores a i.
+    -- No hay ramificacion y no hay historial de lo abandonado: el recorrido
+    -- es una unica linea que se reescribe.
+    --
+    -- Retroceder no es una operacion propia. Se retrocede eligiendo otra cosa
+    -- en un paso anterior, y el precio es perder lo que venia despues. La
+    -- unica manera de deshacer es rehacer.
+
+deferred Recorrido.abandonar    -- see: static/app.js: limpiarCamino
+    -- () -> Recorrido
+    -- Devuelve el recorrido vacio. Se dispara al deseleccionar el nodo, al
+    -- cambiar de grafo y al recargar el grafo desde cero.
+    --
+    -- No hay estado terminado ni archivado: un recorrido no se cierra, se
+    -- abandona.
+
+deferred Recorrido.activo    -- see: static/app.js: state.path
+    -- () -> Recorrido
+    -- El unico recorrido de la sesion. Estado en memoria; no persiste ni en
+    -- disco ni en la URL. Vacio mientras no haya nodo seleccionado.
+
+deferred Recorrido.resincronizar    -- see: static/app.js: resincronizarPath
+    -- (recorrido: Recorrido, grafo: grafo/Grafo) -> Recorrido
+    -- Reata los pasos al grafo recien recargado, emparejando por id.
+    -- Ver ContiguidadSeRompeAlRecargar: la implementacion actual filtra pasos
+    -- individualmente en vez de truncar, y puede devolver un recorrido roto.
+
+------------------------------------------------------------
+-- Funciones caja negra usadas en este modulo
+------------------------------------------------------------
+
+-- conexiones_de(nodo)                                            -- black box
+--     Las continuaciones posibles desde nodo, como List<AristaOfrecida>.
+--     Contenido y orden en OrdenDeLaOferta. Implementado en conexionesDe().
+--
+-- origen_de(r)                                                   -- black box
+--     Por que via nacio la relacion r, como OrigenDeRelacion.
+--
+--     ATENCION: hoy NO es computable con precision. El codigo guarda un unico
+--     bit, es_investigador, que vale true tanto para las relaciones autorales
+--     como para las topologicas, y ademas ese campo ni siquiera esta modelado
+--     en grafo.allium (existe en src/models/grafo.py pero no en la entidad
+--     Relacion del spec). Con la informacion actual solo puede distinguirse
+--     textual de no-textual, con lo cual las invariantes de la Parte I que
+--     mencionan topologica y autoral no son verificables aun. Se dejan
+--     escritas porque nombran el criterio, no porque hoy puedan comprobarse.
+--
+-- reduce_componentes(a, b, g)                                    -- black box
+--     True si conectar a con b fusiona dos componentes conexas distintas.
+--     Union-find sobre el grafo tratado como NO dirigido, aplicando las
+--     propuestas en orden de confianza descendente.
+--     Implementado en filtrar_conexiones_que_reducen_componentes.
+
+------------------------------------------------------------
+-- Recorrido frente a Perspectiva: eleccion frente a posibilidad
+------------------------------------------------------------
+
+-- surfaces.allium ya define Perspectiva: un ARBOL proyectado desde una raiz
+-- hasta cierta profundidad, con todas las ramas simultaneamente visibles.
+-- Recorrido y Perspectiva se construyen sobre las mismas aristas y con el
+-- mismo criterio de oferta (salientes y entrantes por igual), pero son
+-- objetos de naturaleza opuesta:
+--
+--   Perspectiva   arbol    todo lo alcanzable       posibilidad
+--   Recorrido     linea    lo efectivamente andado  eleccion
+--
+-- La Perspectiva se calcula: dame todo hasta profundidad 3. El Recorrido se
+-- camina: en cada bifurcacion alguien decidio. La Perspectiva no tiene autor;
+-- el Recorrido no tiene otra cosa que autor. Un Recorrido es una rama del
+-- arbol de Perspectiva, seleccionada por una serie de actos.
+--
+-- Difieren ademas en un punto tecnico con consecuencias:
+--
+--   Perspectiva detecta ciclos de forma PATH-LOCAL: un nodo que ya es
+--   ancestro directo en esa rama se marca es_referencia_ciclica y no se
+--   expande. Es necesario, porque un arbol que expande ciclos explota.
+--
+--   Recorrido NO tiene deteccion de ciclos. Nada impide volver a un nodo ya
+--   visitado, ni cruzar dos veces la misma arista. Y no es una omision: en un
+--   recorrido, volver es significativo. Llegar a FUEGO, recorrer el argumento
+--   y volver a FUEGO por otra arista es exactamente lo que un Bucle nombra en
+--   el plano semantico. Prohibirlo seria prohibir leer un circulo como
+--   circulo.
+--
+-- Con lo cual, y con precision de teoria de grafos: el objeto que el codigo
+-- llama path y este spec llama Recorrido es un WALK (paseo: repite nodos y
+-- aristas libremente), no un TRAIL (que por definicion no repite aristas) ni
+-- un PATH (que no repite nodos). Ver preguntas abiertas: la eleccion del
+-- nombre "trail" es una apuesta sobre lo que el objeto deberia ser, no una
+-- descripcion de lo que es.
+
+------------------------------------------------------------
+-- La doble inscripcion
+------------------------------------------------------------
+
+-- ── RecorridoSeInscribeEnDosSuperficies ── (guarantee)
+    -- Un mismo Recorrido se manifiesta simultaneamente como:
+    --
+    --   1. COLUMNAS. Una por paso, en cascada horizontal. Cada cabecera
+    --      muestra el simbolo de direccion (→ ← ↔), la frase revelada y el
+    --      nombre del nodo. Leidas en fila, las cabeceras forman una cadena
+    --      de proposiciones: el argumento del texto reconstruido.
+    --
+    --   2. RESALTE EN EL MAPA. La misma secuencia, como lista de
+    --      (nodo, arista), iluminada sobre la visualizacion 2D o 3D.
+    --
+    -- Las dos vistas se actualizan juntas en cada paso. Son la misma
+    -- estructura leida en dos registros: uno lineal y discursivo, otro
+    -- espacial y topologico. Caminar es al mismo tiempo leer y trazar.
+    --
+    -- Ahi esta, literalmente, el nombre del proyecto. Lecto-grafo: lo que
+    -- grafica la lectura. El Recorrido es el unico objeto del sistema donde
+    -- las dos mitades del nombre ocurren en el mismo acto y al mismo tiempo.
+
+------------------------------------------------------------
+-- Fragilidad: el recorrido no sobrevive a su grafo
+------------------------------------------------------------
+
+-- ── ContiguidadSeRompeAlRecargar ── (guidance)
+    -- INCUMPLIMIENTO CONOCIDO.
+    --
+    -- El Recorrido guarda referencias a objetos Nodo y Relacion. Al recargar
+    -- el grafo (tras editar, revalidar o re-extraer) esos objetos cambian de
+    -- identidad y hay que reatarlos por id. El codigo lo hace, y descarta los
+    -- pasos cuyo nodo ya no existe.
+    --
+    -- Descartar pasos INTERMEDIOS deja un Recorrido no contiguo: pasos
+    -- consecutivos que ya no comparten arista, y pasos cuya relacion_entrada
+    -- apunta a un nodo ausente de la secuencia. La cascada de columnas sigue
+    -- mostrandose como si nada, presentando como cadena de razonamiento lo
+    -- que ya es una lista de fragmentos.
+    --
+    -- Truncar en el primer paso invalido seria correcto y mas simple: si el
+    -- paso 3 desaparecio, los pasos 4 y 5 ya no son alcanzables desde el 2 y
+    -- no significan nada.
+
+------------------------------------------------------------
+-- Preguntas abiertas
+------------------------------------------------------------
+
+open question "El objeto se llama trail pero es un walk: no restringe repeticion de aristas ni de nodos. Se adopta el nombre y se impone la restriccion (una arista no puede cruzarse dos veces en el mismo recorrido), o se conserva la libertad de repetir y se renombra a Paseo? La repeticion es hoy la unica forma de recorrer un Bucle como bucle."
+
+open question "El Recorrido es el unico objeto del sistema que no persiste, mientras grafos, anotaciones y grafos personales si lo hacen. Debe poder fijarse un Recorrido como lectura autoral, con titulo, autor y anotaciones por paso, convirtiendolo de value en entity? Y si se fija: queda ligado a la version del grafo que lo hizo posible, o se degrada cuando el grafo cambia bajo el?"
+
+open question "frase_revelada degrada de frase_completa a etiqueta a tipo sin senal visual alguna. El investigador que camina no distingue una arista citada del texto de una inventada para reparar la topologia. Debe el recorrido marcar el origen de cada arista que cruza (textual / topologica / autoral), o esa distincion pertenece solo a la fase de validacion?"
+
+open question "origen_de(r) no es computable hoy: es_investigador vale true tanto para relaciones autorales como topologicas, y ademas no esta modelado en la entidad Relacion de grafo.allium pese a existir en el codigo. Se anaden a Relacion los campos que faltan (via de entrada y autor por separado), o la confirmacion humana basta para hacer equivalentes ambas vias?"
+
+open question "La fusion de sinonimos descarta en silencio las relaciones que quedan reflexivas, perdiendo frases del texto que a veces son justamente las que justifican la sinonimia. Debe conservarse esa frase en algun sitio (por ejemplo, absorbida en el nodo canonico junto a los sinonimos), o su perdida es aceptable?"
+
+open question "El primer paso del recorrido es inmotivado, mientras el dendrograma propone raiz por grado. Debe el Recorrido tambien sugerir por donde empezar, o la ausencia de sugerencia es parte de lo que lo hace un acto del investigador?"
+
+-- ── ResumenParaImplementar ── (guidance)
+    -- 1. Una arista puede nacer de tres criterios incompatibles (evidencia
+    --    textual / reparacion topologica / autoridad del investigador) y el
+    --    grafo consolidado casi no conserva de cual vino.
+    --
+    -- 2. La direccion se almacena siempre, no restringe nunca, y se recuerda
+    --    en cada paso. Una arista bidireccional conserva su par ordenado
+    --    original: la simetria es semantica, no estructural.
+    --
+    -- 3. Un paso es la terna (nodo, arista, sentido), no un nodo. Dos
+    --    llegadas al mismo concepto por aristas distintas son dos pasos.
+    --
+    -- 4. El recorrido es una linea que se reescribe, no un arbol que se
+    --    explora. Avanzar desde un paso intermedio destruye lo que seguia.
+    --
+    -- 5. Es efimero por construccion. Todo lo que se quiera conservar de un
+    --    recorrido hay que decidirlo antes: hoy no queda nada de el.
