@@ -7,6 +7,9 @@ def get_llm() -> EvaluadorLLM:
         case "ollama":
             from src.llm.ollama import OllamaLLM
             return OllamaLLM()
+        case "lmstudio":
+            from src.llm.lmstudio import LMStudioLLM
+            return LMStudioLLM()
         case "anthropic":
             from src.llm.anthropic import AnthropicLLM
             return AnthropicLLM()

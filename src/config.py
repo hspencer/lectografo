@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     ollama_endpoint: str = "http://localhost:11434"
     ollama_model: Optional[str] = None
 
+    # LM Studio local (API compatible con OpenAI)
+    lmstudio_endpoint: str = "http://localhost:1234/v1"
+    lmstudio_model: Optional[str] = None
+
     # Paths
     transcripts_dir: Path = Path("transcripts")
     grafos_dir: Path = Path("data/grafos")
@@ -37,11 +41,13 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validar_proveedor(self):
-        validos = {"anthropic", "openai", "gemini", "ollama"}
+        validos = {"anthropic", "openai", "gemini", "ollama", "lmstudio"}
         if self.provider not in validos:
             raise ValueError(f"PROVIDER='{self.provider}' no reconocido. Opciones: {validos}")
         if self.provider == "ollama" and not self.ollama_model:
             raise ValueError("OLLAMA_MODEL debe estar definido cuando PROVIDER=ollama")
+        if self.provider == "lmstudio" and not self.lmstudio_model:
+            raise ValueError("LMSTUDIO_MODEL debe estar definido cuando PROVIDER=lmstudio")
         # Las API keys se validan al momento de usar el LLM, no al arrancar,
         # para que el servidor pueda iniciarse aunque la key aún no esté en memoria.
         return self
