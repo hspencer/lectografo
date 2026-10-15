@@ -21060,7 +21060,7 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-07-06T23:26:33.770239",
-  "actualizado_en": "2026-07-07T14:49:43.905849",
+  "actualizado_en": "2026-10-15T18:59:16.860881",
   "conceptos_editados": {
     "c_002": {
       "label": "conciencia y autoconciencia"
@@ -23404,6 +23404,1798 @@
       "destino_id": "c_296",
       "tipo": "ejemplo deficiente de",
       "etiqueta": "la proporción inversa es la relación cuantitativa vacía entre sensibilidad e irritabilidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_984cb835",
+      "origen_id": "c_1002",
+      "destino_id": "c_440",
+      "tipo": "se caracteriza por",
+      "etiqueta": "la distinción interior/exterior es fundamental para la observación de lo orgánico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a7c1a915",
+      "origen_id": "c_406",
+      "destino_id": "c_446",
+      "tipo": "es principio de",
+      "etiqueta": "la preservación de sí es el principio de autoconservación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b96ecfd8",
+      "origen_id": "c_451",
+      "destino_id": "c_448",
+      "tipo": "es",
+      "etiqueta": "la Tierra es el individuo universal que ejerce poder sobre el género",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_061c9eb2",
+      "origen_id": "c_407",
+      "destino_id": "c_458",
+      "tipo": "es superada por",
+      "etiqueta": "la conciencia observadora es superada por la conciencia activa o práctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_339dbd6a",
+      "origen_id": "c_476",
+      "destino_id": "c_029",
+      "tipo": "es",
+      "etiqueta": "la educación es el proceso de formación (Bildung) que desarrolla la naturaleza innata",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7d7c1b78",
+      "origen_id": "c_1035",
+      "destino_id": "c_481",
+      "tipo": "intenta correlacionar",
+      "etiqueta": "la frenología intenta correlacionar facultades del alma con partes del cráneo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_aab1f706",
+      "origen_id": "c_1035",
+      "destino_id": "c_482",
+      "tipo": "intenta correlacionar",
+      "etiqueta": "la frenología intenta correlacionar pasiones con características del cráneo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d5020a72",
+      "origen_id": "c_486",
+      "destino_id": "c_474",
+      "tipo": "es",
+      "etiqueta": "el cráneo es un ser muerto, una realidad ósea sin vida",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5d65e482",
+      "origen_id": "c_487",
+      "destino_id": "c_023",
+      "tipo": "es negación de",
+      "etiqueta": "dar un hueso como existencia real de la conciencia es una negación de la razón",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_760783cf",
+      "origen_id": "c_407",
+      "destino_id": "c_490",
+      "tipo": "se caracteriza por",
+      "etiqueta": "la conciencia observadora se caracteriza por su falta de concepto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a0d0b78c",
+      "origen_id": "c_497",
+      "destino_id": "c_024",
+      "tipo": "es forma de",
+      "etiqueta": "la razón observadora es la forma de la razón que se limita a la observación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_605132d7",
+      "origen_id": "c_500",
+      "destino_id": "c_474",
+      "tipo": "es materia de",
+      "etiqueta": "el hueso es la materia muerta del cráneo en la que la observación busca el espíritu",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a828a99d",
+      "origen_id": "c_504",
+      "destino_id": "c_503",
+      "tipo": "es realización de",
+      "etiqueta": "la realización de la ley del corazón la convierte en su opuesto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d3650bba",
+      "origen_id": "c_506",
+      "destino_id": "c_503",
+      "tipo": "se opone a",
+      "etiqueta": "el orden universal existente se opone a la ley del corazón",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3391547f",
+      "origen_id": "c_508",
+      "destino_id": "c_315",
+      "tipo": "es",
+      "etiqueta": "el placer es la satisfacción inmediata del deseo, el goce",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_309f26cb",
+      "origen_id": "c_518",
+      "destino_id": "c_510",
+      "tipo": "es victoria de",
+      "etiqueta": "la victoria del curso del mundo sobre la virtud es inevitable",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c1176a79",
+      "origen_id": "c_519",
+      "destino_id": "c_050",
+      "tipo": "es",
+      "etiqueta": "la práctica es la acción que se realiza en la existencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_607f13b5",
+      "origen_id": "c_544",
+      "destino_id": "c_530",
+      "tipo": "es ejemplo de",
+      "etiqueta": "Antígona es el ejemplo paradigmático de la conciencia ética en colisión",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_40ecba99",
+      "origen_id": "c_547",
+      "destino_id": "c_492",
+      "tipo": "es",
+      "etiqueta": "la realidad ética es la sustancia ética realizada en la vida de un pueblo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c92b77e8",
+      "origen_id": "c_573",
+      "destino_id": "c_027",
+      "tipo": "es conflicto entre",
+      "etiqueta": "la colisión es el conflicto entre la ley humana y la ley divina",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ef752967",
+      "origen_id": "c_579",
+      "destino_id": "c_545",
+      "tipo": "es",
+      "etiqueta": "la Gesinnung es la disposición o convicción ética que se atiene al derecho",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9b6af1f3",
+      "origen_id": "c_591",
+      "destino_id": "c_026",
+      "tipo": "es espíritu en forma de",
+      "etiqueta": "el espíritu ético es el espíritu en la forma de la eticidad inmediata",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ee14b520",
+      "origen_id": "c_592",
+      "destino_id": "c_029",
+      "tipo": "es espíritu en forma de",
+      "etiqueta": "el espíritu extrañado de sí mismo es el espíritu en el mundo de la formación (Bildung)",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_35b63f35",
+      "origen_id": "c_595",
+      "destino_id": "c_030",
+      "tipo": "es",
+      "etiqueta": "la Aufklärung es la Ilustración que desbarata el extrañamiento del espíritu",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4993d010",
+      "origen_id": "c_598",
+      "destino_id": "c_645",
+      "tipo": "es",
+      "etiqueta": "la Einsicht es la intelección pura que transforma todo ser-en-sí en ser-para-sí",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f8755d8a",
+      "origen_id": "c_610",
+      "destino_id": "c_603",
+      "tipo": "es",
+      "etiqueta": "la Entfremdung es el extrañamiento del espíritu respecto a su propio ser",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2f3f1656",
+      "origen_id": "c_632",
+      "destino_id": "c_251",
+      "tipo": "es",
+      "etiqueta": "la supresión y superación es el movimiento dialéctico del Aufheben",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_be7ac755",
+      "origen_id": "c_635",
+      "destino_id": "c_029",
+      "tipo": "es",
+      "etiqueta": "la formación es el proceso de Bildung mediante el cual la conciencia se pule",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4b29818d",
+      "origen_id": "c_656",
+      "destino_id": "c_010",
+      "tipo": "es",
+      "etiqueta": "la conciencia sensible es la conciencia inmediata de la certeza sensible",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_655a1b3f",
+      "origen_id": "c_669",
+      "destino_id": "c_649",
+      "tipo": "es",
+      "etiqueta": "la conciencia creyente mantiene una relación con el Ser absoluto a través de la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e56abb59",
+      "origen_id": "c_675",
+      "destino_id": "c_674",
+      "tipo": "es formulación de",
+      "etiqueta": "el 'cogito, sum' es la formulación cartesiana de la identidad entre pensamiento y ser",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bbb08dab",
+      "origen_id": "c_693",
+      "destino_id": "c_703",
+      "tipo": "es",
+      "etiqueta": "la armonía es la unidad postulada entre moralidad y naturaleza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4bb9c6dc",
+      "origen_id": "c_718",
+      "destino_id": "c_705",
+      "tipo": "son",
+      "etiqueta": "las inclinaciones son los impulsos o tendencias naturales del individuo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4845365a",
+      "origen_id": "c_758",
+      "destino_id": "c_757",
+      "tipo": "crea",
+      "etiqueta": "el artista es la autoconciencia que crea la obra de arte",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_87b49a4f",
+      "origen_id": "c_765",
+      "destino_id": "c_774",
+      "tipo": "es",
+      "etiqueta": "Dionisos es el dios Baco, principio de la vida autoconsciente",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8f5d2e07",
+      "origen_id": "c_779",
+      "destino_id": "c_168",
+      "tipo": "es",
+      "etiqueta": "la mnemosyne es la memoria como reconsideración e interiorización (Erinnerung)",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8e86afb3",
+      "origen_id": "c_785",
+      "destino_id": "c_577",
+      "tipo": "es",
+      "etiqueta": "el no-saber es la dimensión de lo no sabido que escapa al héroe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e43570fd",
+      "origen_id": "c_793",
+      "destino_id": "c_002",
+      "tipo": "es",
+      "etiqueta": "la conciencia autoconsciente es la conciencia que sabe de sí, que conoce sus derechos y fines",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_be944097",
+      "origen_id": "c_432",
+      "destino_id": "c_296",
+      "tipo": "es aspecto de",
+      "etiqueta": "la intensión es el aspecto cualitativo de la magnitud",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ed574f4b",
+      "origen_id": "c_433",
+      "destino_id": "c_296",
+      "tipo": "es aspecto de",
+      "etiqueta": "la extensión es el aspecto cuantitativo de la magnitud",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a492e083",
+      "origen_id": "c_418",
+      "destino_id": "c_437",
+      "tipo": "incluye como aspecto",
+      "etiqueta": "la reproducción incluye la conservación como su aspecto formal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7d59d080",
+      "origen_id": "c_442",
+      "destino_id": "c_403",
+      "tipo": "es propiedad de",
+      "etiqueta": "el peso específico es el interior simple de una cosa inorgánica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2b696547",
+      "origen_id": "c_444",
+      "destino_id": "c_403",
+      "tipo": "son determinidades de",
+      "etiqueta": "las propiedades sensibles son las determinidades externas de lo inorgánico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_729acfe9",
+      "origen_id": "c_449",
+      "destino_id": "c_016",
+      "tipo": "es carácter de",
+      "etiqueta": "la vitalidad es el carácter esencial de la vida orgánica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_845aac7b",
+      "origen_id": "c_462",
+      "destino_id": "c_342",
+      "tipo": "es determinidad de",
+      "etiqueta": "el carácter es la determinidad interior original del individuo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_44dbe787",
+      "origen_id": "c_477",
+      "destino_id": "c_475",
+      "tipo": "es",
+      "etiqueta": "la disposición es una capacidad originaria que puede desarrollarse",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e1c62784",
+      "origen_id": "c_483",
+      "destino_id": "c_474",
+      "tipo": "es rasgo de",
+      "etiqueta": "el abultamiento del cráneo es considerado un índice de una determinación espiritual",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ecbebfa0",
+      "origen_id": "c_484",
+      "destino_id": "c_474",
+      "tipo": "es rasgo de",
+      "etiqueta": "la concavidad del cráneo es considerada un índice de una determinación espiritual",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d1407ba8",
+      "origen_id": "c_498",
+      "destino_id": "c_026",
+      "tipo": "es actitud en",
+      "etiqueta": "la confianza es la actitud inmediata del individuo en la sustancia ética",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a4a0ae77",
+      "origen_id": "c_503",
+      "destino_id": "c_002",
+      "tipo": "es figura de",
+      "etiqueta": "la ley del corazón es una figura de la autoconciencia que pone la ley inmediatamente en sí misma",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_99e252f4",
+      "origen_id": "c_505",
+      "destino_id": "c_503",
+      "tipo": "es fin de",
+      "etiqueta": "el bien de la humanidad es el fin que motiva a la ley del corazón",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_368b6b7d",
+      "origen_id": "c_514",
+      "destino_id": "c_342",
+      "tipo": "es",
+      "etiqueta": "la naturaleza originalmente determinada es la individualidad en cuanto naturaleza particular",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ea8517c4",
+      "origen_id": "c_535",
+      "destino_id": "c_534",
+      "tipo": "usa como criterio",
+      "etiqueta": "la razón legisladora usa el principio de no contradicción como criterio formal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_852d7a3c",
+      "origen_id": "c_535",
+      "destino_id": "c_023",
+      "tipo": "es figura de",
+      "etiqueta": "la razón legisladora es una figura de la razón que intenta dar leyes éticas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b6e08e2a",
+      "origen_id": "c_545",
+      "destino_id": "c_530",
+      "tipo": "es orientación de",
+      "etiqueta": "la disposición ética es la orientación del ánimo de la conciencia ética",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3b6ab23c",
+      "origen_id": "c_557",
+      "destino_id": "c_493",
+      "tipo": "participa en",
+      "etiqueta": "el ciudadano es el individuo en cuanto participa de la conciencia universal del pueblo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dfdb4912",
+      "origen_id": "c_564",
+      "destino_id": "c_563",
+      "tipo": "surge de",
+      "etiqueta": "la Erinia es la furia vengadora que surge de la sangre vertida",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_57728404",
+      "origen_id": "c_570",
+      "destino_id": "c_028",
+      "tipo": "es ámbito de",
+      "etiqueta": "la sombra es el ámbito inconsciente de la ley divina",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2218cef5",
+      "origen_id": "c_571",
+      "destino_id": "c_027",
+      "tipo": "es ámbito de",
+      "etiqueta": "la luz es el ámbito consciente de la ley humana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_89a36b67",
+      "origen_id": "c_575",
+      "destino_id": "c_574",
+      "tipo": "es ausencia de",
+      "etiqueta": "la inocencia es la ausencia de culpa, posible solo en el no-hacer",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3f78a40a",
+      "origen_id": "c_611",
+      "destino_id": "c_521",
+      "tipo": "es",
+      "etiqueta": "el ser natural es la naturaleza originaria de la cual la autoconciencia debe extrañarse",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_aef90ede",
+      "origen_id": "c_613",
+      "destino_id": "c_030",
+      "tipo": "es combatida por",
+      "etiqueta": "la superstición es el error combatido por la Ilustración",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0fcd4bde",
+      "origen_id": "c_617",
+      "destino_id": "c_606",
+      "tipo": "es comportamiento de",
+      "etiqueta": "el heroísmo del servicio es el comportamiento de la conciencia noble que se sacrifica por el Estado",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9a47f53f",
+      "origen_id": "c_620",
+      "destino_id": "c_607",
+      "tipo": "es acto de",
+      "etiqueta": "la sublevación es el acto de rebelión de la conciencia vil contra el poder",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_05c6c75c",
+      "origen_id": "c_626",
+      "destino_id": "c_601",
+      "tipo": "es individualidad de",
+      "etiqueta": "el monarca es la individualidad pura del poder del Estado",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_67c2f8c5",
+      "origen_id": "c_634",
+      "destino_id": "c_018",
+      "tipo": "es",
+      "etiqueta": "el respeto es el reconocimiento mutuo que surge del sacrificio",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d6e0742d",
+      "origen_id": "c_636",
+      "destino_id": "c_040",
+      "tipo": "es manifestación en",
+      "etiqueta": "la voz es la manifestación del self en el lenguaje",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bd19c4ef",
+      "origen_id": "c_641",
+      "destino_id": "c_640",
+      "tipo": "es habla de",
+      "etiqueta": "el enjuiciamiento es el habla de la conciencia desgarrada que disuelve todos los momentos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_85967d02",
+      "origen_id": "c_649",
+      "destino_id": "c_031",
+      "tipo": "resulta de",
+      "etiqueta": "la autoconciencia creyente es la forma de autoconciencia que resulta de la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cabcedf3",
+      "origen_id": "c_661",
+      "destino_id": "c_171",
+      "tipo": "es adecuación a",
+      "etiqueta": "la conformidad con el fin es la adecuación de los medios al fin",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_538d7a82",
+      "origen_id": "c_665",
+      "destino_id": "c_132",
+      "tipo": "se opone a",
+      "etiqueta": "la finitud es la limitación propia de lo sensible, opuesta a lo infinito",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_27bdf812",
+      "origen_id": "c_672",
+      "destino_id": "c_010",
+      "tipo": "es",
+      "etiqueta": "la realidad sensible es lo inmediato de la experiencia en la certeza sensible",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e17b6a1d",
+      "origen_id": "c_674",
+      "destino_id": "c_045",
+      "tipo": "es de",
+      "etiqueta": "la metafísica cartesiana establece la identidad entre ser y pensamiento",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c102c896",
+      "origen_id": "c_677",
+      "destino_id": "c_670",
+      "tipo": "es",
+      "etiqueta": "la insatisfacción es el estado de la fe como Ilustración, una pura añoranza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_38e5a090",
+      "origen_id": "c_680",
+      "destino_id": "c_033",
+      "tipo": "es erupción de",
+      "etiqueta": "la convulsión real de la realidad es la erupción de la libertad absoluta",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_672db010",
+      "origen_id": "c_684",
+      "destino_id": "c_033",
+      "tipo": "es miedo ante",
+      "etiqueta": "el terror es el miedo ante la esencia negativa de la libertad absoluta",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_110dfc28",
+      "origen_id": "c_694",
+      "destino_id": "c_034",
+      "tipo": "caracteriza a",
+      "etiqueta": "la tarea infinita caracteriza a la moralidad que nunca puede completarse",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7f382baf",
+      "origen_id": "c_696",
+      "destino_id": "c_026",
+      "tipo": "es figura de",
+      "etiqueta": "el mundo ético es la figura anterior del espíritu caracterizada por la sustancia ética",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_158a6cb3",
+      "origen_id": "c_698",
+      "destino_id": "c_066",
+      "tipo": "es",
+      "etiqueta": "la realidad objetiva es el ser que se presenta como objeto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c1cbc6f2",
+      "origen_id": "c_708",
+      "destino_id": "c_219",
+      "tipo": "es",
+      "etiqueta": "el movimiento contradictorio es el movimiento dialéctico de la conciencia moral",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_25e44cf7",
+      "origen_id": "c_714",
+      "destino_id": "c_065",
+      "tipo": "existe en",
+      "etiqueta": "el ente de razón es lo que existe solo en el pensamiento, sin realidad efectiva",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dec5da44",
+      "origen_id": "c_715",
+      "destino_id": "c_587",
+      "tipo": "es",
+      "etiqueta": "la persona es el self abstracto del mundo ético, la personalidad jurídica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fc033903",
+      "origen_id": "c_719",
+      "destino_id": "c_035",
+      "tipo": "es fuente de",
+      "etiqueta": "el arbitrio del individuo es la fuente del contenido moral en el Gewissen",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_95736a13",
+      "origen_id": "c_721",
+      "destino_id": "c_720",
+      "tipo": "es escuchada por",
+      "etiqueta": "la voz interior es la voz de Dios que la genialidad moral escucha",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1b28e600",
+      "origen_id": "c_726",
+      "destino_id": "c_018",
+      "tipo": "es carácter de",
+      "etiqueta": "la validez es el carácter de lo que es reconocido y tiene vigencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c473bbf2",
+      "origen_id": "c_729",
+      "destino_id": "c_179",
+      "tipo": "representa",
+      "etiqueta": "la conciencia universal representa la universalidad del deber",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ac590a3b",
+      "origen_id": "c_737",
+      "destino_id": "c_022",
+      "tipo": "es",
+      "etiqueta": "el Más allá es lo trascendente que permanece fuera del alcance de la autoconciencia desgraciada",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_513a3ed5",
+      "origen_id": "c_741",
+      "destino_id": "c_739",
+      "tipo": "es transformación de",
+      "etiqueta": "la religión del cielo es la transformación de la fe en el submundo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_faa228d2",
+      "origen_id": "c_743",
+      "destino_id": "c_025",
+      "tipo": "es",
+      "etiqueta": "el espíritu universal es el espíritu que en la religión contiene toda realidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_533db7f9",
+      "origen_id": "c_745",
+      "destino_id": "c_025",
+      "tipo": "es figura de",
+      "etiqueta": "el espíritu seguro de sí mismo es la figura del espíritu que ha alcanzado certeza de sí",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_405c31fb",
+      "origen_id": "c_750",
+      "destino_id": "c_036",
+      "tipo": "es primera realidad de",
+      "etiqueta": "la religión natural es la primera realidad del espíritu en la religión",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6ce25ad1",
+      "origen_id": "c_752",
+      "destino_id": "c_036",
+      "tipo": "es última realidad de",
+      "etiqueta": "la religión revelada es la última realidad del espíritu donde alcanza la forma de ser-en-y-para-sí",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d9f1a5de",
+      "origen_id": "c_760",
+      "destino_id": "c_757",
+      "tipo": "es",
+      "etiqueta": "el culto es una obra de arte viva en que la autoconciencia se expresa",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_435e9c86",
+      "origen_id": "c_761",
+      "destino_id": "c_757",
+      "tipo": "es",
+      "etiqueta": "la estatua es una obra de arte cósica que representa la figura divina",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_90fde913",
+      "origen_id": "c_763",
+      "destino_id": "c_760",
+      "tipo": "es forma de",
+      "etiqueta": "la fiesta es un culto colectivo en que el pueblo se honra a sí mismo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5299c250",
+      "origen_id": "c_766",
+      "destino_id": "c_765",
+      "tipo": "son manifestación en culto a",
+      "etiqueta": "las bacantes son la manifestación de la autoconciencia divina en el culto a Dionisos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e403a4fb",
+      "origen_id": "c_771",
+      "destino_id": "c_780",
+      "tipo": "es conjunto de",
+      "etiqueta": "el panteón es el conjunto de dioses particulares que se unifican en un todo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5edb587f",
+      "origen_id": "c_776",
+      "destino_id": "c_416",
+      "tipo": "es",
+      "etiqueta": "la exterioridad es la manifestación sensible, lo que existe fuera de sí",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4463ff00",
+      "origen_id": "c_778",
+      "destino_id": "c_777",
+      "tipo": "engendra",
+      "etiqueta": "el cantor es el individuo particular que engendra el mundo épico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8aea0366",
+      "origen_id": "c_780",
+      "destino_id": "c_036",
+      "tipo": "son representados en",
+      "etiqueta": "los dioses son los poderes divinos representados en la religión del arte",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2685fb7f",
+      "origen_id": "c_782",
+      "destino_id": "c_781",
+      "tipo": "actúa en",
+      "etiqueta": "el héroe es el individuo autoconsciente que actúa en la tragedia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_41f761da",
+      "origen_id": "c_783",
+      "destino_id": "c_601",
+      "tipo": "es",
+      "etiqueta": "el Estado es el poder universal que representa el derecho humano",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ef08fbe5",
+      "origen_id": "c_786",
+      "destino_id": "c_780",
+      "tipo": "es",
+      "etiqueta": "Apolo es el dios de la luz y el saber",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_20f77084",
+      "origen_id": "c_1002",
+      "destino_id": "c_434",
+      "tipo": "se manifiesta en",
+      "etiqueta": "el organismo se manifiesta en el sistema sensible universal, distinto del sistema nervioso",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_35392f86",
+      "origen_id": "c_1002",
+      "destino_id": "c_435",
+      "tipo": "se manifiesta en",
+      "etiqueta": "el organismo se manifiesta en el sistema irritable universal, distinto del sistema muscular",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c2c60567",
+      "origen_id": "c_1002",
+      "destino_id": "c_436",
+      "tipo": "se manifiesta en",
+      "etiqueta": "el organismo se manifiesta en el sistema reproductivo universal, distinto de los órganos anatómicos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6b4ee043",
+      "origen_id": "c_115",
+      "destino_id": "c_438",
+      "tipo": "se opone a",
+      "etiqueta": "la verdadera sensibilidad no es mera pasividad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_30235f97",
+      "origen_id": "c_441",
+      "destino_id": "c_440",
+      "tipo": "media entre",
+      "etiqueta": "el número media entre la vida indeterminada (interior) y la forma real (exterior)",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1f203251",
+      "origen_id": "c_445",
+      "destino_id": "c_016",
+      "tipo": "caracteriza a",
+      "etiqueta": "el Uno infinito es la unidad característica de la vida que reasume los momentos de la forma",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8758bb3a",
+      "origen_id": "c_447",
+      "destino_id": "c_296",
+      "tipo": "son aspectos de",
+      "etiqueta": "la intensión y extensión son aspectos de la magnitud en la existencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_09651bda",
+      "origen_id": "c_450",
+      "destino_id": "c_441",
+      "tipo": "se expresa mediante",
+      "etiqueta": "la multiplicidad de individuos se expresa mediante el número",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7c12aad1",
+      "origen_id": "c_454",
+      "destino_id": "c_308",
+      "tipo": "representa a",
+      "etiqueta": "el número actúa como representante del género en la multiplicidad de individuos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c6149834",
+      "origen_id": "c_464",
+      "destino_id": "c_465",
+      "tipo": "es ejemplo de",
+      "etiqueta": "la astrología es un ejemplo de saber que, como la fisiognómica, relaciona lo exterior con lo exterior",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dd34d8ab",
+      "origen_id": "c_469",
+      "destino_id": "c_467",
+      "tipo": "es expresión mediante",
+      "etiqueta": "la escritura es la forma más fija de expresión del interior mediante la mano",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ba0b87a1",
+      "origen_id": "c_464",
+      "destino_id": "c_470",
+      "tipo": "es análoga a",
+      "etiqueta": "la quiromancia, como la fisiognómica, pretende leer el interior en lo exterior",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fbe32328",
+      "origen_id": "c_478",
+      "destino_id": "c_473",
+      "tipo": "se supone entre",
+      "etiqueta": "la relación mecánica es un tipo de conexión causal externa supuesta entre cerebro y cráneo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b5820dd7",
+      "origen_id": "c_480",
+      "destino_id": "c_461",
+      "tipo": "es sentimiento de",
+      "etiqueta": "la sensación es un sentimiento corporal indeterminado que acompaña la actividad espiritual",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_31d70525",
+      "origen_id": "c_1035",
+      "destino_id": "c_485",
+      "tipo": "es ejemplo contra",
+      "etiqueta": "la figura del asesino ejemplifica la imposibilidad de la correlación frenológica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e68f96f9",
+      "origen_id": "c_496",
+      "destino_id": "c_306",
+      "tipo": "es forma de",
+      "etiqueta": "el impulso natural es una forma del deseo que busca satisfacción",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_00d4d88b",
+      "origen_id": "c_502",
+      "destino_id": "c_508",
+      "tipo": "busca",
+      "etiqueta": "el 'carpe diem' es el modo de vida que busca la satisfacción inmediata en el placer",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bfa2b66b",
+      "origen_id": "c_507",
+      "destino_id": "c_503",
+      "tipo": "es resultado de",
+      "etiqueta": "el desvarío es la inversión en la que cae la conciencia de la ley del corazón",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_577cdd70",
+      "origen_id": "c_509",
+      "destino_id": "c_503",
+      "tipo": "es obstáculo para",
+      "etiqueta": "la resistencia es el obstáculo que encuentra la ley del corazón en los otros",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7aa7ebfe",
+      "origen_id": "c_515",
+      "destino_id": "c_510",
+      "tipo": "es en-sí de",
+      "etiqueta": "el orden es el en-sí del curso del mundo que la virtud combate",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_657a0942",
+      "origen_id": "c_533",
+      "destino_id": "c_532",
+      "tipo": "caracteriza a",
+      "etiqueta": "el deber-ser caracteriza a los mandamientos que carecen de realidad efectiva",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f274e88b",
+      "origen_id": "c_540",
+      "destino_id": "c_226",
+      "tipo": "es aplicación de",
+      "etiqueta": "la sana razón es el sano sentido común aplicado a la práctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3abee532",
+      "origen_id": "c_543",
+      "destino_id": "c_542",
+      "tipo": "es fundamento de",
+      "etiqueta": "el derecho es lo justo en sí, fundamento de la ley eterna",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4ac2a347",
+      "origen_id": "c_546",
+      "destino_id": "c_023",
+      "tipo": "es determinación de",
+      "etiqueta": "el concepto de razón es la determinación del objeto como inherentemente racional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d16663d1",
+      "origen_id": "c_562",
+      "destino_id": "c_558",
+      "tipo": "es violación de",
+      "etiqueta": "la injusticia es la violación del equilibrio ético que la justicia restaura",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_58ff1c76",
+      "origen_id": "c_563",
+      "destino_id": "c_548",
+      "tipo": "es sustancia de",
+      "etiqueta": "la sangre es la sustancia permanente del individuo que vive en la familia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9d010beb",
+      "origen_id": "c_565",
+      "destino_id": "c_584",
+      "tipo": "es",
+      "etiqueta": "la res publica es la comunidad organizada como poder universal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_95ddf1e9",
+      "origen_id": "c_566",
+      "destino_id": "c_553",
+      "tipo": "es individualización de",
+      "etiqueta": "el varón es el hombre como individualización de la ley humana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_76b71a4b",
+      "origen_id": "c_567",
+      "destino_id": "c_027",
+      "tipo": "es poder de",
+      "etiqueta": "el espíritu universal consciente es el poder de la ley humana",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_32dd4e73",
+      "origen_id": "c_569",
+      "destino_id": "c_283",
+      "tipo": "se opone a",
+      "etiqueta": "la irrealidad es el estado de lo que pasa a la realidad mediante la acción",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9f354592",
+      "origen_id": "c_574",
+      "destino_id": "c_050",
+      "tipo": "es resultado de",
+      "etiqueta": "la culpa es el resultado de la división que produce el acto ético",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a9066d4a",
+      "origen_id": "c_576",
+      "destino_id": "c_530",
+      "tipo": "es lado de",
+      "etiqueta": "lo sabido es el lado consciente de la resolución de la conciencia ética",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_33bf1f7d",
+      "origen_id": "c_577",
+      "destino_id": "c_530",
+      "tipo": "es lado de",
+      "etiqueta": "lo no sabido es el lado oculto que la acción revela a la conciencia ética",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a89c6e96",
+      "origen_id": "c_578",
+      "destino_id": "c_492",
+      "tipo": "es encarnación de",
+      "etiqueta": "el pathos es la sustancia ética encarnada en el carácter individual",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8bf3d60a",
+      "origen_id": "c_580",
+      "destino_id": "c_466",
+      "tipo": "es poder de",
+      "etiqueta": "el poder negativo es el poder del destino que devora a las partes en conflicto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ed82d427",
+      "origen_id": "c_581",
+      "destino_id": "c_558",
+      "tipo": "es restaurado por",
+      "etiqueta": "el equilibrio es el estado de igualdad que la justicia restaura",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5920f3be",
+      "origen_id": "c_582",
+      "destino_id": "c_028",
+      "tipo": "es poder de",
+      "etiqueta": "lo inconsciente es el poder de la ley divina que persiste",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8076f335",
+      "origen_id": "c_586",
+      "destino_id": "c_027",
+      "tipo": "es actividad de",
+      "etiqueta": "la virilidad es la actividad de la ley humana manifestada en el gobierno y la guerra",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1bb67d4a",
+      "origen_id": "c_593",
+      "destino_id": "c_548",
+      "tipo": "representan",
+      "etiqueta": "los penates representan la autonomización de lo privado (familia) en el mundo romano",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a24d7536",
+      "origen_id": "c_594",
+      "destino_id": "c_583",
+      "tipo": "es modo de actuar de",
+      "etiqueta": "la intriga es el modo de actuar de la femineidad que pervierte lo universal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8ba02933",
+      "origen_id": "c_604",
+      "destino_id": "c_165",
+      "tipo": "es principio de",
+      "etiqueta": "el alma es el principio animador mediante el cual la sustancia se forma en sus momentos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3660f15d",
+      "origen_id": "c_614",
+      "destino_id": "c_645",
+      "tipo": "es producido por",
+      "etiqueta": "el ser absoluto incognoscible es el objeto producido por la negación de la intelección pura",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_85625bff",
+      "origen_id": "c_616",
+      "destino_id": "c_603",
+      "tipo": "es forma de",
+      "etiqueta": "la vida doble es una forma del extrañamiento que divide la conciencia en dos mundos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_74d723ae",
+      "origen_id": "c_618",
+      "destino_id": "c_602",
+      "tipo": "es personificación de",
+      "etiqueta": "el benefactor es la riqueza personificada de la cual la conciencia obtiene su goce",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a10afc31",
+      "origen_id": "c_619",
+      "destino_id": "c_606",
+      "tipo": "es sentimiento de",
+      "etiqueta": "la gratitud es el sentimiento de la conciencia noble hacia la riqueza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cd833aa5",
+      "origen_id": "c_622",
+      "destino_id": "c_606",
+      "tipo": "es ofrecido por",
+      "etiqueta": "el consejo es lo que la conciencia noble ofrece al poder del Estado",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4ecf8737",
+      "origen_id": "c_623",
+      "destino_id": "c_499",
+      "tipo": "es forma de",
+      "etiqueta": "el verdadero sacrificio es aquel en que la conciencia se conserva en la enajenación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4d4b9eda",
+      "origen_id": "c_624",
+      "destino_id": "c_039",
+      "tipo": "es",
+      "etiqueta": "el término medio es la unidad mediadora que queda excluida de los extremos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_383a7edf",
+      "origen_id": "c_628",
+      "destino_id": "c_626",
+      "tipo": "realiza la diferencia de",
+      "etiqueta": "el nombre propio convierte la diferencia del monarca en una diferencia real para todos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_414b12bb",
+      "origen_id": "c_629",
+      "destino_id": "c_601",
+      "tipo": "es",
+      "etiqueta": "la autonomía extrañada es lo que el poder del Estado es cuando consiste en el sacrificio de la conciencia noble",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3b894a3d",
+      "origen_id": "c_630",
+      "destino_id": "c_618",
+      "tipo": "es espíritu de",
+      "etiqueta": "la arrogancia es el espíritu del benefactor que imagina haber sometido al otro",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5d37057d",
+      "origen_id": "c_631",
+      "destino_id": "c_125",
+      "tipo": "es profundidad de",
+      "etiqueta": "el abismo es la profundidad sin fondo de la pura negatividad donde desaparece toda sustancia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3d6d0ba4",
+      "origen_id": "c_633",
+      "destino_id": "c_179",
+      "tipo": "es",
+      "etiqueta": "lo mejor universal es la universalidad abstracta a la que apunta la conciencia noble",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fa677dd7",
+      "origen_id": "c_644",
+      "destino_id": "c_031",
+      "tipo": "es determinidad en",
+      "etiqueta": "la universalidad positiva es la determinidad del espíritu en la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_51f3b010",
+      "origen_id": "c_647",
+      "destino_id": "c_015",
+      "tipo": "son esencias de",
+      "etiqueta": "los espíritus eternos son las esencias inmutables del mundo suprasensible de la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5ff8b5a2",
+      "origen_id": "c_648",
+      "destino_id": "c_004",
+      "tipo": "es forma de",
+      "etiqueta": "la sustancia simple es la primera forma del ser absoluto en el mundo irreal de la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_94206b77",
+      "origen_id": "c_652",
+      "destino_id": "c_601",
+      "tipo": "es forma de",
+      "etiqueta": "el despotismo es el poder político absoluto que reprime la conciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7d7892e2",
+      "origen_id": "c_653",
+      "destino_id": "c_031",
+      "tipo": "domina mediante",
+      "etiqueta": "el sacerdocio es la casta que, según la Ilustración, domina mediante la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8d08e568",
+      "origen_id": "c_654",
+      "destino_id": "c_645",
+      "tipo": "es metáfora de",
+      "etiqueta": "el contagio es la metáfora para la propagación de la intelección pura",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_160d548e",
+      "origen_id": "c_655",
+      "destino_id": "c_031",
+      "tipo": "es declarado de",
+      "etiqueta": "el error es lo que la intelección pura declara que es la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_383af979",
+      "origen_id": "c_657",
+      "destino_id": "c_161",
+      "tipo": "es",
+      "etiqueta": "la enunciación es la expresión proposicional de la verdad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d2775120",
+      "origen_id": "c_658",
+      "destino_id": "c_030",
+      "tipo": "es acusado por",
+      "etiqueta": "el engaño es de lo que la Ilustración acusa al sacerdocio",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_87a9f5e9",
+      "origen_id": "c_662",
+      "destino_id": "c_002",
+      "tipo": "es propósito de",
+      "etiqueta": "la intención es el propósito o la voluntad pura de la conciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dbaf7bf2",
+      "origen_id": "c_663",
+      "destino_id": "c_031",
+      "tipo": "es acto de",
+      "etiqueta": "la renuncia es el acto mediante el cual el individuo creyente se niega a sí mismo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_780ce272",
+      "origen_id": "c_666",
+      "destino_id": "c_031",
+      "tipo": "es falso fundamento de",
+      "etiqueta": "el testimonio es lo que la Ilustración falsamente dice que fundamenta la fe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_41f9421b",
+      "origen_id": "c_668",
+      "destino_id": "c_028",
+      "tipo": "es derecho de",
+      "etiqueta": "el derecho divino es el derecho de la fe que se opone a la ley humana de la Ilustración",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7e671a7f",
+      "origen_id": "c_670",
+      "destino_id": "c_031",
+      "tipo": "es estado de",
+      "etiqueta": "la añoranza es el estado afectivo de la fe cuando se convierte en Ilustración insatisfecha",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5617d91e",
+      "origen_id": "c_671",
+      "destino_id": "c_030",
+      "tipo": "es forma de",
+      "etiqueta": "la Ilustración satisfecha se contenta con el conocimiento de lo finito",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e9f8d00e",
+      "origen_id": "c_678",
+      "destino_id": "c_031",
+      "tipo": "es característica de",
+      "etiqueta": "la doble medida es la característica de la fe de mantener dos sistemas de valoración sin confrontarlos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cc500963",
+      "origen_id": "c_683",
+      "destino_id": "c_033",
+      "tipo": "sustituye en",
+      "etiqueta": "la sospecha sustituye a la culpa en el régimen de la libertad absoluta",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4d026964",
+      "origen_id": "c_685",
+      "destino_id": "c_492",
+      "tipo": "son esferas de",
+      "etiqueta": "los estamentos son las esferas espirituales en que se articula la sustancia ética",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_42ea7bdc",
+      "origen_id": "c_686",
+      "destino_id": "c_549",
+      "tipo": "es resultado de",
+      "etiqueta": "la facción es lo que el gobierno se convierte al oponerse a la voluntad general",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ae57b182",
+      "origen_id": "c_687",
+      "destino_id": "c_015",
+      "tipo": "es",
+      "etiqueta": "el mundo ideal es el mundo suprasensible de la fe que la utilidad reconcilia con el mundo real",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c309e6cc",
+      "origen_id": "c_688",
+      "destino_id": "c_032",
+      "tipo": "falta en",
+      "etiqueta": "la medida es la verdadera mediación que falta en la utilidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1bdf3397",
+      "origen_id": "c_695",
+      "destino_id": "c_034",
+      "tipo": "es mérito de",
+      "etiqueta": "la dignidad es el mérito moral que permite recibir la felicidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b7698643",
+      "origen_id": "c_697",
+      "destino_id": "c_058",
+      "tipo": "es independencia de",
+      "etiqueta": "la libre realización es la independencia de la naturaleza respecto a la conciencia moral",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6148c915",
+      "origen_id": "c_699",
+      "destino_id": "c_004",
+      "tipo": "es",
+      "etiqueta": "el legislador santo es el Absoluto postulado que santifica los deberes",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6b92bedc",
+      "origen_id": "c_700",
+      "destino_id": "c_004",
+      "tipo": "es don de",
+      "etiqueta": "la gracia es el don del Absoluto mediante el cual se otorga la felicidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9cd463ce",
+      "origen_id": "c_706",
+      "destino_id": "c_034",
+      "tipo": "es progreso hacia",
+      "etiqueta": "el progreso hacia la moralidad consumada se revela como imposible",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_afbd58b3",
+      "origen_id": "c_707",
+      "destino_id": "c_034",
+      "tipo": "es consecuencia de",
+      "etiqueta": "la inmoralidad es la consecuencia necesaria de la moralidad incompleta",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_425982f2",
+      "origen_id": "c_709",
+      "destino_id": "c_191",
+      "tipo": "falta en",
+      "etiqueta": "la transparencia del objeto para la conciencia moral falta en el deber",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dead2cd4",
+      "origen_id": "c_713",
+      "destino_id": "c_050",
+      "tipo": "demanda",
+      "etiqueta": "el caso es la situación concreta que demanda la acción del Gewissen",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bfd2f313",
+      "origen_id": "c_720",
+      "destino_id": "c_035",
+      "tipo": "es capacidad de",
+      "etiqueta": "la genialidad moral es la capacidad creadora del Gewissen que sabe su voz interior como voz de Dios",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_17f02e4b",
+      "origen_id": "c_722",
+      "destino_id": "c_035",
+      "tipo": "es práctica de",
+      "etiqueta": "el culto divino es la práctica solipsista de la conciencia moral que es a la vez comunitaria",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_048b8b62",
+      "origen_id": "c_723",
+      "destino_id": "c_712",
+      "tipo": "es afirmación de",
+      "etiqueta": "el aseguramiento es la afirmación mediante la cual la conciencia asevera su convicción",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e2f2c4e0",
+      "origen_id": "c_725",
+      "destino_id": "c_724",
+      "tipo": "es aspiración de",
+      "etiqueta": "la nostalgia es la aspiración frustrada del alma bella que rehúye la acción",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c6de7715",
+      "origen_id": "c_728",
+      "destino_id": "c_729",
+      "tipo": "es capacidad de",
+      "etiqueta": "la puntuación es la capacidad de la conciencia universal para distorsionar lo que otra conciencia pone",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0cfeaf1a",
+      "origen_id": "c_736",
+      "destino_id": "c_050",
+      "tipo": "mueve",
+      "etiqueta": "el móvil es la razón o intención particular que mueve la acción",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b4e9b5b1",
+      "origen_id": "c_738",
+      "destino_id": "c_023",
+      "tipo": "son figuras de",
+      "etiqueta": "la existencia inmediata de la razón son las figuras que emergen tras la conciencia desgraciada",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f9f8092c",
+      "origen_id": "c_739",
+      "destino_id": "c_036",
+      "tipo": "es forma de",
+      "etiqueta": "la religión del submundo es una forma de religión basada en la fe en el destino",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d6be303a",
+      "origen_id": "c_742",
+      "destino_id": "c_034",
+      "tipo": "es religión de",
+      "etiqueta": "la religión de la moralidad es donde el Ser absoluto recupera contenido positivo unido a la negatividad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fc4d53da",
+      "origen_id": "c_744",
+      "destino_id": "c_025",
+      "tipo": "es figura de",
+      "etiqueta": "el espíritu verdadero es una de las figuras del espíritu en su desarrollo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_07e15b59",
+      "origen_id": "c_746",
+      "destino_id": "c_025",
+      "tipo": "es existencia de",
+      "etiqueta": "la existencia mundana es la existencia del espíritu en el tiempo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_17a2c764",
+      "origen_id": "c_747",
+      "destino_id": "c_025",
+      "tipo": "es cumplimiento de",
+      "etiqueta": "la consumación es el cumplimiento del espíritu cuando retorna a su fundamento",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a401bce3",
+      "origen_id": "c_748",
+      "destino_id": "c_188",
+      "tipo": "es",
+      "etiqueta": "el fundamento es el self consciente de sí mismo al que retornan los momentos del espíritu",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_de98e101",
+      "origen_id": "c_749",
+      "destino_id": "c_582",
+      "tipo": "es",
+      "etiqueta": "la noche es la oscuridad de lo inconsciente, la negatividad sin forma",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fa6261de",
+      "origen_id": "c_753",
+      "destino_id": "c_025",
+      "tipo": "es existencia de",
+      "etiqueta": "la realidad libre es la existencia autónoma del espíritu en su forma objetiva",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5e53ec79",
+      "origen_id": "c_755",
+      "destino_id": "c_025",
+      "tipo": "es",
+      "etiqueta": "el creador es el espíritu en su actividad productiva de formas en la religión",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e968af90",
+      "origen_id": "c_762",
+      "destino_id": "c_040",
+      "tipo": "es forma de",
+      "etiqueta": "el oráculo es el primer lenguaje necesario del dios en las religiones artísticas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_04112747",
+      "origen_id": "c_764",
+      "destino_id": "c_188",
+      "tipo": "es",
+      "etiqueta": "el misterio es aquello en que el self se sabe uno con la esencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6657bf3b",
+      "origen_id": "c_767",
+      "destino_id": "c_461",
+      "tipo": "es manifestación de",
+      "etiqueta": "la corporalidad es la manifestación corporal y visible de la autoconciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_65659756",
+      "origen_id": "c_768",
+      "destino_id": "c_065",
+      "tipo": "es forma de",
+      "etiqueta": "el pensamiento sabiente es el conocimiento reflexivo que se apropia de las verdades universales",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_25afb0d6",
+      "origen_id": "c_770",
+      "destino_id": "c_767",
+      "tipo": "es manifestación de",
+      "etiqueta": "el atletismo es la manifestación de la belleza corporal en competencias públicas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_80c2745c",
+      "origen_id": "c_772",
+      "destino_id": "c_025",
+      "tipo": "es amanecer de",
+      "etiqueta": "el orto es el amanecer o luz naciente del espíritu",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b24eab61",
+      "origen_id": "c_773",
+      "destino_id": "c_760",
+      "tipo": "es objeto de",
+      "etiqueta": "Ceres es la diosa de la nutrición cuyo culto se celebra con los frutos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c2721d37",
+      "origen_id": "c_775",
+      "destino_id": "c_760",
+      "tipo": "es estado en",
+      "etiqueta": "el entusiasmo es el estado de arrebato divino en el culto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_48e7edab",
+      "origen_id": "c_777",
+      "destino_id": "c_040",
+      "tipo": "es forma de",
+      "etiqueta": "el epos es la forma épica como primer lenguaje universal",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_177ea3f5",
+      "origen_id": "c_781",
+      "destino_id": "c_040",
+      "tipo": "es forma de",
+      "etiqueta": "la tragedia es una forma superior de lenguaje que expresa la dispersión de los momentos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fa182bb7",
+      "origen_id": "c_784",
+      "destino_id": "c_781",
+      "tipo": "es representante en",
+      "etiqueta": "el coro es el representante del pueblo en la tragedia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c9fd8a04",
+      "origen_id": "c_787",
+      "destino_id": "c_735",
+      "tipo": "es",
+      "etiqueta": "el olvido (lethe) es la reconciliación final donde desaparecen los poderes de la sustancia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9ab947d6",
+      "origen_id": "c_789",
+      "destino_id": "c_781",
+      "tipo": "es forma en",
+      "etiqueta": "la máscara es la forma de individualidad en la tragedia y comedia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_57c500cc",
+      "origen_id": "c_790",
+      "destino_id": "c_782",
+      "tipo": "encarna a",
+      "etiqueta": "el actor es el hombre real que se reviste de la persona del héroe",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_487242aa",
+      "origen_id": "c_791",
+      "destino_id": "c_788",
+      "tipo": "revela en",
+      "etiqueta": "la ironía en la comedia revela que la máscara es pura apariencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_69e704f7",
+      "origen_id": "c_792",
+      "destino_id": "c_781",
+      "tipo": "es observador de",
+      "etiqueta": "el espectador es el observador de la representación trágica y cómica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_14bb5d99",
+      "origen_id": "c_794",
+      "destino_id": "c_781",
+      "tipo": "es respuesta a",
+      "etiqueta": "la compasión es la respuesta emocional del coro a la tragedia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2b8eb43d",
+      "origen_id": "c_443",
+      "destino_id": "c_403",
+      "tipo": "representa en",
+      "etiqueta": "la cohesión representa el ser-para-sí en lo inorgánico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_26d4c37f",
+      "origen_id": "c_452",
+      "destino_id": "c_062",
+      "tipo": "se opone a la contingencia",
+      "etiqueta": "la sistematicidad es el orden conceptual que falta en la naturaleza contingente",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_41012531",
+      "origen_id": "c_488",
+      "destino_id": "c_455",
+      "tipo": "no se realiza en",
+      "etiqueta": "el universo como universal no se realiza plenamente en la naturaleza orgánica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2e76b983",
+      "origen_id": "c_511",
+      "destino_id": "c_191",
+      "tipo": "caracteriza a",
+      "etiqueta": "la dilación o desenvolvimiento caracteriza al objeto en la realidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c27e422a",
+      "origen_id": "c_667",
+      "destino_id": "c_125",
+      "tipo": "caracteriza a",
+      "etiqueta": "el exceso es el ir más allá de sí mismo que caracteriza la negatividad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cce81ea3",
+      "origen_id": "c_710",
+      "destino_id": "c_034",
+      "tipo": "se disfraza de",
+      "etiqueta": "la envidia se disfraza de moralidad en el juicio sobre la desdicha ajena",
       "bidireccional": false
     }
   ],

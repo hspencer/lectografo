@@ -1,1383 +1,3149 @@
 {
-  "id": "rec_9af83295",
+  "id": "rec_f457e85f",
   "slug": "hegel_fenomenologia",
   "propuestas": [
     {
       "id": "pr_000",
       "conexion": {
-        "id": "cp_000",
-        "origen_id": "c_107",
-        "destino_id": "c_047",
-        "frase": "la afirmación trascendental es concepto cuyo contenido es ya un ser",
-        "tipo": "expresa la identidad de",
-        "confianza": 0.9
+        "id": "cp_007",
+        "origen_id": "c_1002",
+        "destino_id": "c_440",
+        "frase": "la distinción interior/exterior es fundamental para la observación de lo orgánico",
+        "tipo": "se caracteriza por",
+        "confianza": 1.0
       },
-      "frase_editada": "la afirmación trascendental es concepto cuyo contenido es ya un ser",
+      "frase_editada": "la distinción interior/exterior es fundamental para la observación de lo orgánico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_001",
       "conexion": {
-        "id": "cp_011",
-        "origen_id": "c_332",
-        "destino_id": "c_022",
-        "frase": "la nihilidad es lo que la conciencia desgraciada percibe en su propia existencia individual",
-        "tipo": "experiencia fundamental de",
-        "confianza": 0.9
+        "id": "cp_013",
+        "origen_id": "c_406",
+        "destino_id": "c_446",
+        "frase": "la preservación de sí es el principio de autoconservación",
+        "tipo": "es principio de",
+        "confianza": 1.0
       },
-      "frase_editada": "la nihilidad es lo que la conciencia desgraciada percibe en su propia existencia individual",
+      "frase_editada": "la preservación de sí es el principio de autoconservación",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_002",
       "conexion": {
-        "id": "cp_009",
-        "origen_id": "c_327",
-        "destino_id": "c_021",
-        "frase": "la negatividad de la autoconciencia libre se realiza en el escepticismo que disuelve toda determinación",
-        "tipo": "se manifiesta como",
-        "confianza": 0.89
+        "id": "cp_015",
+        "origen_id": "c_451",
+        "destino_id": "c_448",
+        "frase": "la Tierra es el individuo universal que ejerce poder sobre el género",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la negatividad de la autoconciencia libre se realiza en el escepticismo que disuelve toda determinación",
+      "frase_editada": "la Tierra es el individuo universal que ejerce poder sobre el género",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_003",
       "conexion": {
-        "id": "cp_047",
-        "origen_id": "c_371",
-        "destino_id": "c_022",
-        "frase": "la escisión es la división de la conciencia desgraciada en dos polos irreconciliables",
-        "tipo": "característica fundamental de",
-        "confianza": 0.89
+        "id": "cp_020",
+        "origen_id": "c_407",
+        "destino_id": "c_458",
+        "frase": "la conciencia observadora es superada por la conciencia activa o práctica",
+        "tipo": "es superada por",
+        "confianza": 1.0
       },
-      "frase_editada": "la escisión es la división de la conciencia desgraciada en dos polos irreconciliables",
+      "frase_editada": "la conciencia observadora es superada por la conciencia activa o práctica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_004",
       "conexion": {
-        "id": "cp_005",
-        "origen_id": "c_294",
-        "destino_id": "c_135",
-        "frase": "la disociación es división en dos que supone la igualdad a sí misma como diferencia interna",
-        "tipo": "expresa la estructura de",
-        "confianza": 0.88
+        "id": "cp_025",
+        "origen_id": "c_476",
+        "destino_id": "c_029",
+        "frase": "la educación es el proceso de formación (Bildung) que desarrolla la naturaleza innata",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la disociación es división en dos que supone la igualdad a sí misma como diferencia interna",
+      "frase_editada": "la educación es el proceso de formación (Bildung) que desarrolla la naturaleza innata",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_005",
       "conexion": {
-        "id": "cp_010",
-        "origen_id": "c_331",
-        "destino_id": "c_022",
-        "frase": "la elevación es el movimiento mediante el cual la conciencia desgraciada se eleva hacia lo inmutable",
-        "tipo": "movimiento constitutivo de",
-        "confianza": 0.88
+        "id": "cp_029",
+        "origen_id": "c_1035",
+        "destino_id": "c_481",
+        "frase": "la frenología intenta correlacionar facultades del alma con partes del cráneo",
+        "tipo": "intenta correlacionar",
+        "confianza": 1.0
       },
-      "frase_editada": "la elevación es el movimiento mediante el cual la conciencia desgraciada se eleva hacia lo inmutable",
+      "frase_editada": "la frenología intenta correlacionar facultades del alma con partes del cráneo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_006",
       "conexion": {
-        "id": "cp_017",
-        "origen_id": "c_338",
-        "destino_id": "c_004",
-        "frase": "el ser en y para sí es idéntico tanto en sí mismo como para la conciencia, característica del Absoluto",
-        "tipo": "determinación de",
-        "confianza": 0.88
+        "id": "cp_030",
+        "origen_id": "c_1035",
+        "destino_id": "c_482",
+        "frase": "la frenología intenta correlacionar pasiones con características del cráneo",
+        "tipo": "intenta correlacionar",
+        "confianza": 1.0
       },
-      "frase_editada": "el ser en y para sí es idéntico tanto en sí mismo como para la conciencia, característica del Absoluto",
+      "frase_editada": "la frenología intenta correlacionar pasiones con características del cráneo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_007",
       "conexion": {
-        "id": "cp_021",
-        "origen_id": "c_343",
-        "destino_id": "c_065",
-        "frase": "el puro pensamiento es pensamiento en forma pura sin contenido empírico ni determinación particular",
+        "id": "cp_034",
+        "origen_id": "c_486",
+        "destino_id": "c_474",
+        "frase": "el cráneo es un ser muerto, una realidad ósea sin vida",
         "tipo": "es",
-        "confianza": 0.88
+        "confianza": 1.0
       },
-      "frase_editada": "el puro pensamiento es pensamiento en forma pura sin contenido empírico ni determinación particular",
+      "frase_editada": "el cráneo es un ser muerto, una realidad ósea sin vida",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_008",
       "conexion": {
-        "id": "cp_027",
-        "origen_id": "c_349",
-        "destino_id": "c_022",
-        "frase": "la nostalgia infinita es el anhelo sin fin que experimenta la conciencia desgraciada por su esencia en lo Inmutable",
-        "tipo": "movimiento de",
-        "confianza": 0.88
+        "id": "cp_035",
+        "origen_id": "c_487",
+        "destino_id": "c_023",
+        "frase": "dar un hueso como existencia real de la conciencia es una negación de la razón",
+        "tipo": "es negación de",
+        "confianza": 1.0
       },
-      "frase_editada": "la nostalgia infinita es el anhelo sin fin que experimenta la conciencia desgraciada por su esencia en lo Inmutable",
+      "frase_editada": "dar un hueso como existencia real de la conciencia es una negación de la razón",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_009",
       "conexion": {
-        "id": "cp_059",
-        "origen_id": "c_385",
-        "destino_id": "c_092",
-        "frase": "la apercepción es la unidad del yo en el pensamiento que fundamenta el idealismo kantiano",
-        "tipo": "en el sentido de",
-        "confianza": 0.88
+        "id": "cp_037",
+        "origen_id": "c_407",
+        "destino_id": "c_490",
+        "frase": "la conciencia observadora se caracteriza por su falta de concepto",
+        "tipo": "se caracteriza por",
+        "confianza": 1.0
       },
-      "frase_editada": "la apercepción es la unidad del yo en el pensamiento que fundamenta el idealismo kantiano",
+      "frase_editada": "la conciencia observadora se caracteriza por su falta de concepto",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_010",
       "conexion": {
-        "id": "cp_007",
-        "origen_id": "c_322",
-        "destino_id": "c_020",
-        "frase": "la inmutabilidad de la esencia pura es lo que el escepticismo distingue de la contingencia",
-        "tipo": "caracteriza",
-        "confianza": 0.87
+        "id": "cp_039",
+        "origen_id": "c_497",
+        "destino_id": "c_024",
+        "frase": "la razón observadora es la forma de la razón que se limita a la observación",
+        "tipo": "es forma de",
+        "confianza": 1.0
       },
-      "frase_editada": "la inmutabilidad de la esencia pura es lo que el escepticismo distingue de la contingencia",
+      "frase_editada": "la razón observadora es la forma de la razón que se limita a la observación",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_011",
       "conexion": {
-        "id": "cp_015",
-        "origen_id": "c_336",
-        "destino_id": "c_022",
-        "frase": "lo inmutable figurado es lo inmutable como individualidad que aparece a la conciencia desgraciada",
-        "tipo": "forma en que se presenta",
-        "confianza": 0.87
+        "id": "cp_041",
+        "origen_id": "c_500",
+        "destino_id": "c_474",
+        "frase": "el hueso es la materia muerta del cráneo en la que la observación busca el espíritu",
+        "tipo": "es materia de",
+        "confianza": 1.0
       },
-      "frase_editada": "lo inmutable figurado es lo inmutable como individualidad que aparece a la conciencia desgraciada",
+      "frase_editada": "el hueso es la materia muerta del cráneo en la que la observación busca el espíritu",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_012",
       "conexion": {
-        "id": "cp_028",
-        "origen_id": "c_350",
-        "destino_id": "c_022",
-        "frase": "el más-allá inaccesible es lo Inmutable que siempre se sustrae cuando la conciencia intenta aprehenderlo",
-        "tipo": "estructura de",
-        "confianza": 0.87
+        "id": "cp_044",
+        "origen_id": "c_504",
+        "destino_id": "c_503",
+        "frase": "la realización de la ley del corazón la convierte en su opuesto",
+        "tipo": "es realización de",
+        "confianza": 1.0
       },
-      "frase_editada": "el más-allá inaccesible es lo Inmutable que siempre se sustrae cuando la conciencia intenta aprehenderlo",
+      "frase_editada": "la realización de la ley del corazón la convierte en su opuesto",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_013",
       "conexion": {
-        "id": "cp_036",
-        "origen_id": "c_360",
-        "destino_id": "c_022",
-        "frase": "los dos extremos estructuran la relación fundamental de la conciencia desgraciada con lo Inmutable",
-        "tipo": "estructura de",
-        "confianza": 0.87
+        "id": "cp_046",
+        "origen_id": "c_506",
+        "destino_id": "c_503",
+        "frase": "el orden universal existente se opone a la ley del corazón",
+        "tipo": "se opone a",
+        "confianza": 1.0
       },
-      "frase_editada": "los dos extremos estructuran la relación fundamental de la conciencia desgraciada con lo Inmutable",
+      "frase_editada": "el orden universal existente se opone a la ley del corazón",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_014",
       "conexion": {
-        "id": "cp_043",
-        "origen_id": "c_367",
-        "destino_id": "c_022",
-        "frase": "la negación de sí es la acción mediante la cual la conciencia desgraciada se anula ante lo Inmutable",
-        "tipo": "movimiento de",
-        "confianza": 0.87
+        "id": "cp_048",
+        "origen_id": "c_508",
+        "destino_id": "c_315",
+        "frase": "el placer es la satisfacción inmediata del deseo, el goce",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la negación de sí es la acción mediante la cual la conciencia desgraciada se anula ante lo Inmutable",
+      "frase_editada": "el placer es la satisfacción inmediata del deseo, el goce",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_015",
       "conexion": {
-        "id": "cp_069",
-        "origen_id": "c_395",
-        "destino_id": "c_132",
-        "frase": "la mala infinitud es la infinitud sensible, contradicción que oscila sin unificarse",
-        "tipo": "manifestación deficiente de",
-        "confianza": 0.87
+        "id": "cp_053",
+        "origen_id": "c_518",
+        "destino_id": "c_510",
+        "frase": "la victoria del curso del mundo sobre la virtud es inevitable",
+        "tipo": "es victoria de",
+        "confianza": 1.0
       },
-      "frase_editada": "la mala infinitud es la infinitud sensible, contradicción que oscila sin unificarse",
+      "frase_editada": "la victoria del curso del mundo sobre la virtud es inevitable",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_016",
       "conexion": {
-        "id": "cp_080",
-        "origen_id": "c_414",
-        "destino_id": "c_016",
-        "frase": "el movimiento interno es el proceso esencial del organismo que no puede ser aprehendido como ser fijo",
-        "tipo": "característica de",
-        "confianza": 0.87
+        "id": "cp_054",
+        "origen_id": "c_519",
+        "destino_id": "c_050",
+        "frase": "la práctica es la acción que se realiza en la existencia",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "el movimiento interno es el proceso esencial del organismo que no puede ser aprehendido como ser fijo",
+      "frase_editada": "la práctica es la acción que se realiza en la existencia",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_017",
       "conexion": {
-        "id": "cp_008",
-        "origen_id": "c_326",
-        "destino_id": "c_020",
-        "frase": "la ataraxia es el estado de imperturbabilidad que alcanza el escepticismo mediante la negación de toda determinación",
-        "tipo": "resultado de",
-        "confianza": 0.86
+        "id": "cp_060",
+        "origen_id": "c_544",
+        "destino_id": "c_530",
+        "frase": "Antígona es el ejemplo paradigmático de la conciencia ética en colisión",
+        "tipo": "es ejemplo de",
+        "confianza": 1.0
       },
-      "frase_editada": "la ataraxia es el estado de imperturbabilidad que alcanza el escepticismo mediante la negación de toda determinación",
+      "frase_editada": "Antígona es el ejemplo paradigmático de la conciencia ética en colisión",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_018",
       "conexion": {
-        "id": "cp_014",
-        "origen_id": "c_335",
-        "destino_id": "c_020",
-        "frase": "la insensibilidad es el estado de la conciencia estoica que se desvincula del padecer",
-        "tipo": "caracteriza",
-        "confianza": 0.86
+        "id": "cp_063",
+        "origen_id": "c_547",
+        "destino_id": "c_492",
+        "frase": "la realidad ética es la sustancia ética realizada en la vida de un pueblo",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la insensibilidad es el estado de la conciencia estoica que se desvincula del padecer",
+      "frase_editada": "la realidad ética es la sustancia ética realizada en la vida de un pueblo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_019",
       "conexion": {
-        "id": "cp_022",
-        "origen_id": "c_344",
-        "destino_id": "c_022",
-        "frase": "la Andacht es devoción religiosa que caracteriza la aspiración de la conciencia desgraciada hacia lo sagrado",
-        "tipo": "forma de",
-        "confianza": 0.86
+        "id": "cp_074",
+        "origen_id": "c_573",
+        "destino_id": "c_027",
+        "frase": "la colisión es el conflicto entre la ley humana y la ley divina",
+        "tipo": "es conflicto entre",
+        "confianza": 1.0
       },
-      "frase_editada": "la Andacht es devoción religiosa que caracteriza la aspiración de la conciencia desgraciada hacia lo sagrado",
+      "frase_editada": "la colisión es el conflicto entre la ley humana y la ley divina",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_020",
       "conexion": {
-        "id": "cp_031",
-        "origen_id": "c_353",
-        "destino_id": "c_022",
-        "frase": "la realidad suelta es la individualidad incomunicada con lo Inmutable que caracteriza la conciencia desgraciada",
-        "tipo": "forma de",
-        "confianza": 0.86
+        "id": "cp_080",
+        "origen_id": "c_579",
+        "destino_id": "c_545",
+        "frase": "la Gesinnung es la disposición o convicción ética que se atiene al derecho",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la realidad suelta es la individualidad incomunicada con lo Inmutable que caracteriza la conciencia desgraciada",
+      "frase_editada": "la Gesinnung es la disposición o convicción ética que se atiene al derecho",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_021",
       "conexion": {
-        "id": "cp_040",
-        "origen_id": "c_364",
-        "destino_id": "c_022",
-        "frase": "el poder absoluto de lo Inmutable es la potencia universal de la que procede todo en la conciencia desgraciada",
-        "tipo": "caracteriza",
-        "confianza": 0.86
+        "id": "cp_085",
+        "origen_id": "c_591",
+        "destino_id": "c_026",
+        "frase": "el espíritu ético es el espíritu en la forma de la eticidad inmediata",
+        "tipo": "es espíritu en forma de",
+        "confianza": 1.0
       },
-      "frase_editada": "el poder absoluto de lo Inmutable es la potencia universal de la que procede todo en la conciencia desgraciada",
+      "frase_editada": "el espíritu ético es el espíritu en la forma de la eticidad inmediata",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_022",
       "conexion": {
-        "id": "cp_042",
-        "origen_id": "c_366",
-        "destino_id": "c_022",
-        "frase": "el agradecimiento es la acción mediante la cual la conciencia desgraciada reconoce al Inmutable como esencia",
-        "tipo": "momento de transformación en",
-        "confianza": 0.86
+        "id": "cp_086",
+        "origen_id": "c_592",
+        "destino_id": "c_029",
+        "frase": "el espíritu extrañado de sí mismo es el espíritu en el mundo de la formación (Bildung)",
+        "tipo": "es espíritu en forma de",
+        "confianza": 1.0
       },
-      "frase_editada": "el agradecimiento es la acción mediante la cual la conciencia desgraciada reconoce al Inmutable como esencia",
+      "frase_editada": "el espíritu extrañado de sí mismo es el espíritu en el mundo de la formación (Bildung)",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_023",
       "conexion": {
-        "id": "cp_046",
-        "origen_id": "c_370",
-        "destino_id": "c_022",
-        "frase": "la reflexión en ambos extremos es el doble movimiento de retorno en la conciencia desgraciada",
-        "tipo": "estructura dialéctica de",
-        "confianza": 0.86
+        "id": "cp_089",
+        "origen_id": "c_595",
+        "destino_id": "c_030",
+        "frase": "la Aufklärung es la Ilustración que desbarata el extrañamiento del espíritu",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la reflexión en ambos extremos es el doble movimiento de retorno en la conciencia desgraciada",
+      "frase_editada": "la Aufklärung es la Ilustración que desbarata el extrañamiento del espíritu",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_024",
       "conexion": {
-        "id": "cp_048",
-        "origen_id": "c_372",
-        "destino_id": "c_022",
-        "frase": "la ascesis es la práctica de mortificación mediante la cual la conciencia desgraciada busca unidad con lo Inmutable",
-        "tipo": "forma de acción en",
-        "confianza": 0.86
+        "id": "cp_090",
+        "origen_id": "c_598",
+        "destino_id": "c_645",
+        "frase": "la Einsicht es la intelección pura que transforma todo ser-en-sí en ser-para-sí",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la ascesis es la práctica de mortificación mediante la cual la conciencia desgraciada busca unidad con lo Inmutable",
+      "frase_editada": "la Einsicht es la intelección pura que transforma todo ser-en-sí en ser-para-sí",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_025",
       "conexion": {
-        "id": "cp_060",
-        "origen_id": "c_386",
-        "destino_id": "c_023",
-        "frase": "el empirismo necesita impulso extraño para llenar vacío de la conciencia, complemento contradictorio del idealismo",
-        "tipo": "antítesis de",
-        "confianza": 0.86
+        "id": "cp_092",
+        "origen_id": "c_610",
+        "destino_id": "c_603",
+        "frase": "la Entfremdung es el extrañamiento del espíritu respecto a su propio ser",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "el empirismo necesita impulso extraño para llenar vacío de la conciencia, complemento contradictorio del idealismo",
+      "frase_editada": "la Entfremdung es el extrañamiento del espíritu respecto a su propio ser",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_026",
       "conexion": {
-        "id": "cp_079",
-        "origen_id": "c_413",
-        "destino_id": "c_169",
-        "frase": "la actividad es la forma del ser-para-sí de lo orgánico, su retorno a sí misma",
-        "tipo": "expresión de",
-        "confianza": 0.86
+        "id": "cp_109",
+        "origen_id": "c_632",
+        "destino_id": "c_251",
+        "frase": "la supresión y superación es el movimiento dialéctico del Aufheben",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la actividad es la forma del ser-para-sí de lo orgánico, su retorno a sí misma",
+      "frase_editada": "la supresión y superación es el movimiento dialéctico del Aufheben",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_027",
       "conexion": {
-        "id": "cp_082",
-        "origen_id": "c_418",
-        "destino_id": "c_016",
-        "frase": "la reproducción es la actividad del organismo como género, su autoproducción y conservación",
-        "tipo": "función de",
-        "confianza": 0.86
+        "id": "cp_112",
+        "origen_id": "c_635",
+        "destino_id": "c_029",
+        "frase": "la formación es el proceso de Bildung mediante el cual la conciencia se pule",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la reproducción es la actividad del organismo como género, su autoproducción y conservación",
+      "frase_editada": "la formación es el proceso de Bildung mediante el cual la conciencia se pule",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_028",
       "conexion": {
-        "id": "cp_086",
-        "origen_id": "c_423",
-        "destino_id": "c_016",
-        "frase": "la fluidez es el carácter de continuidad y movimiento indivisible de los momentos orgánicos",
-        "tipo": "característica de",
-        "confianza": 0.86
+        "id": "cp_123",
+        "origen_id": "c_656",
+        "destino_id": "c_010",
+        "frase": "la conciencia sensible es la conciencia inmediata de la certeza sensible",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la fluidez es el carácter de continuidad y movimiento indivisible de los momentos orgánicos",
+      "frase_editada": "la conciencia sensible es la conciencia inmediata de la certeza sensible",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_029",
       "conexion": {
-        "id": "cp_090",
-        "origen_id": "c_427",
-        "destino_id": "c_016",
-        "frase": "el proceso es el movimiento continuo del organismo vivo mediante el cual realiza sus determinidades",
-        "tipo": "esencia de",
-        "confianza": 0.86
+        "id": "cp_133",
+        "origen_id": "c_669",
+        "destino_id": "c_649",
+        "frase": "la conciencia creyente mantiene una relación con el Ser absoluto a través de la fe",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "el proceso es el movimiento continuo del organismo vivo mediante el cual realiza sus determinidades",
+      "frase_editada": "la conciencia creyente mantiene una relación con el Ser absoluto a través de la fe",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_030",
       "conexion": {
-        "id": "cp_093",
-        "origen_id": "c_430",
-        "destino_id": "c_016",
-        "frase": "la inseparabilidad es característica de los momentos orgánicos que no pueden existir independientemente",
-        "tipo": "marca estructural de",
-        "confianza": 0.86
+        "id": "cp_138",
+        "origen_id": "c_675",
+        "destino_id": "c_674",
+        "frase": "el 'cogito, sum' es la formulación cartesiana de la identidad entre pensamiento y ser",
+        "tipo": "es formulación de",
+        "confianza": 1.0
       },
-      "frase_editada": "la inseparabilidad es característica de los momentos orgánicos que no pueden existir independientemente",
+      "frase_editada": "el 'cogito, sum' es la formulación cartesiana de la identidad entre pensamiento y ser",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_031",
       "conexion": {
-        "id": "cp_006",
-        "origen_id": "c_320",
-        "destino_id": "c_017",
-        "frase": "la relación dialéctica anterior del señor y siervo donde la autoconciencia se relaciona mediante el deseo",
-        "tipo": "antecede a",
-        "confianza": 0.85
+        "id": "cp_148",
+        "origen_id": "c_693",
+        "destino_id": "c_703",
+        "frase": "la armonía es la unidad postulada entre moralidad y naturaleza",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la relación dialéctica anterior del señor y siervo donde la autoconciencia se relaciona mediante el deseo",
+      "frase_editada": "la armonía es la unidad postulada entre moralidad y naturaleza",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_032",
       "conexion": {
-        "id": "cp_012",
-        "origen_id": "c_333",
-        "destino_id": "c_022",
-        "frase": "la confusión caracteriza el estado de la conciencia desgraciada incapaz de mantener determinaciones fijas",
-        "tipo": "estado de",
-        "confianza": 0.85
+        "id": "cp_164",
+        "origen_id": "c_718",
+        "destino_id": "c_705",
+        "frase": "las inclinaciones son los impulsos o tendencias naturales del individuo",
+        "tipo": "son",
+        "confianza": 1.0
       },
-      "frase_editada": "la confusión caracteriza el estado de la conciencia desgraciada incapaz de mantener determinaciones fijas",
+      "frase_editada": "las inclinaciones son los impulsos o tendencias naturales del individuo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_033",
       "conexion": {
-        "id": "cp_020",
-        "origen_id": "c_341",
-        "destino_id": "c_020",
-        "frase": "el pensamiento abstracto del estoicismo prescinde de la individualidad buscando universalidad pura",
-        "tipo": "método de",
-        "confianza": 0.85
+        "id": "cp_191",
+        "origen_id": "c_758",
+        "destino_id": "c_757",
+        "frase": "el artista es la autoconciencia que crea la obra de arte",
+        "tipo": "crea",
+        "confianza": 1.0
       },
-      "frase_editada": "el pensamiento abstracto del estoicismo prescinde de la individualidad buscando universalidad pura",
+      "frase_editada": "el artista es la autoconciencia que crea la obra de arte",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_034",
       "conexion": {
-        "id": "cp_024",
-        "origen_id": "c_346",
-        "destino_id": "c_022",
-        "frase": "el infinito puro sentimiento interno es experiencia emocional de la conciencia desgraciada sin determinación conceptual",
-        "tipo": "caracteriza",
-        "confianza": 0.85
+        "id": "cp_197",
+        "origen_id": "c_765",
+        "destino_id": "c_774",
+        "frase": "Dionisos es el dios Baco, principio de la vida autoconsciente",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "el infinito puro sentimiento interno es experiencia emocional de la conciencia desgraciada sin determinación conceptual",
+      "frase_editada": "Dionisos es el dios Baco, principio de la vida autoconsciente",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_035",
       "conexion": {
-        "id": "cp_033",
-        "origen_id": "c_355",
-        "destino_id": "c_003",
-        "frase": "el Selbstgefühl es el sentimiento de sí mismo en que se experiencia la altura y valor de la autoconciencia",
-        "tipo": "aspecto experiencial de",
-        "confianza": 0.85
+        "id": "cp_209",
+        "origen_id": "c_779",
+        "destino_id": "c_168",
+        "frase": "la mnemosyne es la memoria como reconsideración e interiorización (Erinnerung)",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "el Selbstgefühl es el sentimiento de sí mismo en que se experiencia la altura y valor de la autoconciencia",
+      "frase_editada": "la mnemosyne es la memoria como reconsideración e interiorización (Erinnerung)",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_036",
       "conexion": {
-        "id": "cp_037",
-        "origen_id": "c_361",
-        "destino_id": "c_022",
-        "frase": "el más-acá activo es la conciencia como polo activo en la relación desgraciada con lo Inmutable",
-        "tipo": "momento de",
-        "confianza": 0.85
+        "id": "cp_215",
+        "origen_id": "c_785",
+        "destino_id": "c_577",
+        "frase": "el no-saber es la dimensión de lo no sabido que escapa al héroe",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "el más-acá activo es la conciencia como polo activo en la relación desgraciada con lo Inmutable",
+      "frase_editada": "el no-saber es la dimensión de lo no sabido que escapa al héroe",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_037",
       "conexion": {
-        "id": "cp_038",
-        "origen_id": "c_362",
-        "destino_id": "c_022",
-        "frase": "la realidad pasiva es lo que la conciencia desgraciada confronta como padecimiento sin poder activo",
-        "tipo": "momento de",
-        "confianza": 0.85
+        "id": "cp_222",
+        "origen_id": "c_793",
+        "destino_id": "c_002",
+        "frase": "la conciencia autoconsciente es la conciencia que sabe de sí, que conoce sus derechos y fines",
+        "tipo": "es",
+        "confianza": 1.0
       },
-      "frase_editada": "la realidad pasiva es lo que la conciencia desgraciada confronta como padecimiento sin poder activo",
+      "frase_editada": "la conciencia autoconsciente es la conciencia que sabe de sí, que conoce sus derechos y fines",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_038",
       "conexion": {
-        "id": "cp_041",
-        "origen_id": "c_365",
-        "destino_id": "c_022",
-        "frase": "la renuncia mutua es el doble abandono entre lo Inmutable y la conciencia en la relación desgraciada",
-        "tipo": "movimiento de reconciliación en",
-        "confianza": 0.85
+        "id": "cp_000",
+        "origen_id": "c_432",
+        "destino_id": "c_296",
+        "frase": "la intensión es el aspecto cualitativo de la magnitud",
+        "tipo": "es aspecto de",
+        "confianza": 0.95
       },
-      "frase_editada": "la renuncia mutua es el doble abandono entre lo Inmutable y la conciencia en la relación desgraciada",
+      "frase_editada": "la intensión es el aspecto cualitativo de la magnitud",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_039",
       "conexion": {
-        "id": "cp_049",
-        "origen_id": "c_373",
-        "destino_id": "c_022",
-        "frase": "la conciencia real es la conciencia desgraciada que se ha vuelto real mediante el hacer y gozar",
-        "tipo": "resultado transformativo de",
-        "confianza": 0.85
+        "id": "cp_001",
+        "origen_id": "c_433",
+        "destino_id": "c_296",
+        "frase": "la extensión es el aspecto cuantitativo de la magnitud",
+        "tipo": "es aspecto de",
+        "confianza": 0.95
       },
-      "frase_editada": "la conciencia real es la conciencia desgraciada que se ha vuelto real mediante el hacer y gozar",
+      "frase_editada": "la extensión es el aspecto cuantitativo de la magnitud",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_040",
       "conexion": {
-        "id": "cp_050",
-        "origen_id": "c_374",
-        "destino_id": "c_022",
-        "frase": "la inesencia es el carácter de la individualidad que la conciencia desgraciada experimenta como carente de verdad",
-        "tipo": "auto-percepción de",
-        "confianza": 0.85
+        "id": "cp_005",
+        "origen_id": "c_418",
+        "destino_id": "c_437",
+        "frase": "la reproducción incluye la conservación como su aspecto formal",
+        "tipo": "incluye como aspecto",
+        "confianza": 0.95
       },
-      "frase_editada": "la inesencia es el carácter de la individualidad que la conciencia desgraciada experimenta como carente de verdad",
+      "frase_editada": "la reproducción incluye la conservación como su aspecto formal",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_041",
       "conexion": {
-        "id": "cp_057",
-        "origen_id": "c_381",
-        "destino_id": "c_007",
-        "frase": "el movimiento negativo es el proceso dialéctico mediante el cual la conciencia se endereza contra su singularidad",
-        "tipo": "manifestación de",
-        "confianza": 0.85
+        "id": "cp_009",
+        "origen_id": "c_442",
+        "destino_id": "c_403",
+        "frase": "el peso específico es el interior simple de una cosa inorgánica",
+        "tipo": "es propiedad de",
+        "confianza": 0.95
       },
-      "frase_editada": "el movimiento negativo es el proceso dialéctico mediante el cual la conciencia se endereza contra su singularidad",
+      "frase_editada": "el peso específico es el interior simple de una cosa inorgánica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_042",
       "conexion": {
-        "id": "cp_058",
-        "origen_id": "c_382",
-        "destino_id": "c_023",
-        "frase": "el idealismo expresa la certeza inmediata de que toda realidad es conciencia pero tiende a mala infinitud",
-        "tipo": "posición deficiente de",
-        "confianza": 0.85
+        "id": "cp_011",
+        "origen_id": "c_444",
+        "destino_id": "c_403",
+        "frase": "las propiedades sensibles son las determinidades externas de lo inorgánico",
+        "tipo": "son determinidades de",
+        "confianza": 0.95
       },
-      "frase_editada": "el idealismo expresa la certeza inmediata de que toda realidad es conciencia pero tiende a mala infinitud",
+      "frase_editada": "las propiedades sensibles son las determinidades externas de lo inorgánico",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_043",
       "conexion": {
-        "id": "cp_071",
-        "origen_id": "c_397",
-        "destino_id": "c_186",
-        "frase": "el ser en reposo es el estado de algo en sí mismo sin relación con lo otro",
-        "tipo": "es",
-        "confianza": 0.85
+        "id": "cp_016",
+        "origen_id": "c_449",
+        "destino_id": "c_016",
+        "frase": "la vitalidad es el carácter esencial de la vida orgánica",
+        "tipo": "es carácter de",
+        "confianza": 0.95
       },
-      "frase_editada": "el ser en reposo es el estado de algo en sí mismo sin relación con lo otro",
+      "frase_editada": "la vitalidad es el carácter esencial de la vida orgánica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_044",
       "conexion": {
-        "id": "cp_077",
-        "origen_id": "c_411",
-        "destino_id": "c_455",
-        "frase": "la naturaleza elemental constituye elementos universales que forman el ser simple de individualidades orgánicas",
-        "tipo": "característica de",
-        "confianza": 0.85
+        "id": "cp_021",
+        "origen_id": "c_462",
+        "destino_id": "c_342",
+        "frase": "el carácter es la determinidad interior original del individuo",
+        "tipo": "es determinidad de",
+        "confianza": 0.95
       },
-      "frase_editada": "la naturaleza elemental constituye elementos universales que forman el ser simple de individualidades orgánicas",
+      "frase_editada": "el carácter es la determinidad interior original del individuo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_045",
       "conexion": {
-        "id": "cp_081",
-        "origen_id": "c_417",
-        "destino_id": "c_016",
-        "frase": "la irritabilidad es el momento orgánico de reacción, el ser-para-otro del organismo",
-        "tipo": "dimensión de",
-        "confianza": 0.85
+        "id": "cp_026",
+        "origen_id": "c_477",
+        "destino_id": "c_475",
+        "frase": "la disposición es una capacidad originaria que puede desarrollarse",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la irritabilidad es el momento orgánico de reacción, el ser-para-otro del organismo",
+      "frase_editada": "la disposición es una capacidad originaria que puede desarrollarse",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_046",
       "conexion": {
-        "id": "cp_083",
-        "origen_id": "c_419",
-        "destino_id": "c_416",
-        "frase": "el sistema nervioso es la plasmación de la sensibilidad en forma externa lo orgánico",
-        "tipo": "manifestación de",
-        "confianza": 0.85
+        "id": "cp_031",
+        "origen_id": "c_483",
+        "destino_id": "c_474",
+        "frase": "el abultamiento del cráneo es considerado un índice de una determinación espiritual",
+        "tipo": "es rasgo de",
+        "confianza": 0.95
       },
-      "frase_editada": "el sistema nervioso es la plasmación de la sensibilidad en forma externa lo orgánico",
+      "frase_editada": "el abultamiento del cráneo es considerado un índice de una determinación espiritual",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_047",
       "conexion": {
-        "id": "cp_084",
-        "origen_id": "c_420",
-        "destino_id": "c_416",
-        "frase": "el sistema muscular es la plasmación de la irritabilidad en forma externa en lo orgánico",
-        "tipo": "manifestación de",
-        "confianza": 0.85
+        "id": "cp_032",
+        "origen_id": "c_484",
+        "destino_id": "c_474",
+        "frase": "la concavidad del cráneo es considerada un índice de una determinación espiritual",
+        "tipo": "es rasgo de",
+        "confianza": 0.95
       },
-      "frase_editada": "el sistema muscular es la plasmación de la irritabilidad en forma externa en lo orgánico",
+      "frase_editada": "la concavidad del cráneo es considerada un índice de una determinación espiritual",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_048",
       "conexion": {
-        "id": "cp_088",
-        "origen_id": "c_425",
-        "destino_id": "c_016",
-        "frase": "la anatomía es análisis del organismo muerto que separa sus sistemas y niega su proceso vital",
-        "tipo": "negación de",
-        "confianza": 0.85
+        "id": "cp_040",
+        "origen_id": "c_498",
+        "destino_id": "c_026",
+        "frase": "la confianza es la actitud inmediata del individuo en la sustancia ética",
+        "tipo": "es actitud en",
+        "confianza": 0.95
       },
-      "frase_editada": "la anatomía es análisis del organismo muerto que separa sus sistemas y niega su proceso vital",
+      "frase_editada": "la confianza es la actitud inmediata del individuo en la sustancia ética",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_049",
       "conexion": {
-        "id": "cp_013",
-        "origen_id": "c_334",
-        "destino_id": "c_020",
-        "frase": "la inmovilidad caracteriza al estoicismo que se retrae del movimiento de la existencia",
-        "tipo": "rasgo de",
-        "confianza": 0.84
+        "id": "cp_043",
+        "origen_id": "c_503",
+        "destino_id": "c_002",
+        "frase": "la ley del corazón es una figura de la autoconciencia que pone la ley inmediatamente en sí misma",
+        "tipo": "es figura de",
+        "confianza": 0.95
       },
-      "frase_editada": "la inmovilidad caracteriza al estoicismo que se retrae del movimiento de la existencia",
+      "frase_editada": "la ley del corazón es una figura de la autoconciencia que pone la ley inmediatamente en sí misma",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_050",
       "conexion": {
-        "id": "cp_019",
-        "origen_id": "c_340",
-        "destino_id": "c_022",
-        "frase": "la imperfección caracteriza la relación entre conciencia e inmutable en la conciencia desgraciada",
-        "tipo": "resultado de",
-        "confianza": 0.84
+        "id": "cp_045",
+        "origen_id": "c_505",
+        "destino_id": "c_503",
+        "frase": "el bien de la humanidad es el fin que motiva a la ley del corazón",
+        "tipo": "es fin de",
+        "confianza": 0.95
       },
-      "frase_editada": "la imperfección caracteriza la relación entre conciencia e inmutable en la conciencia desgraciada",
+      "frase_editada": "el bien de la humanidad es el fin que motiva a la ley del corazón",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_051",
       "conexion": {
-        "id": "cp_032",
-        "origen_id": "c_354",
-        "destino_id": "c_003",
-        "frase": "la certeza de sí misma es el conocimiento que la conciencia tiene de su autonomía mediante su hacer",
-        "tipo": "aspecto de",
-        "confianza": 0.84
+        "id": "cp_051",
+        "origen_id": "c_514",
+        "destino_id": "c_342",
+        "frase": "la naturaleza originalmente determinada es la individualidad en cuanto naturaleza particular",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la certeza de sí misma es el conocimiento que la conciencia tiene de su autonomía mediante su hacer",
+      "frase_editada": "la naturaleza originalmente determinada es la individualidad en cuanto naturaleza particular",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_052",
       "conexion": {
-        "id": "cp_035",
-        "origen_id": "c_359",
-        "destino_id": "c_022",
-        "frase": "el don ajeno es lo que la conciencia desgraciada recibe de lo Inmutable como sus facultades",
-        "tipo": "característica de",
-        "confianza": 0.84
+        "id": "cp_056",
+        "origen_id": "c_535",
+        "destino_id": "c_534",
+        "frase": "la razón legisladora usa el principio de no contradicción como criterio formal",
+        "tipo": "usa como criterio",
+        "confianza": 0.95
       },
-      "frase_editada": "el don ajeno es lo que la conciencia desgraciada recibe de lo Inmutable como sus facultades",
+      "frase_editada": "la razón legisladora usa el principio de no contradicción como criterio formal",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_053",
       "conexion": {
-        "id": "cp_044",
-        "origen_id": "c_368",
-        "destino_id": "c_022",
-        "frase": "la generosidad es la acción de lo Inmutable al desprenderse donando forma a la conciencia desgraciada",
-        "tipo": "movimiento recíproco de",
-        "confianza": 0.84
+        "id": "cp_057",
+        "origen_id": "c_535",
+        "destino_id": "c_023",
+        "frase": "la razón legisladora es una figura de la razón que intenta dar leyes éticas",
+        "tipo": "es figura de",
+        "confianza": 0.95
       },
-      "frase_editada": "la generosidad es la acción de lo Inmutable al desprenderse donando forma a la conciencia desgraciada",
+      "frase_editada": "la razón legisladora es una figura de la razón que intenta dar leyes éticas",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_054",
       "conexion": {
-        "id": "cp_062",
-        "origen_id": "c_388",
-        "destino_id": "c_023",
-        "frase": "la razón real no cae en contradicción del idealismo puro porque se sabe como certeza que debe elevarse a verdad",
-        "tipo": "resolución de",
-        "confianza": 0.84
+        "id": "cp_061",
+        "origen_id": "c_545",
+        "destino_id": "c_530",
+        "frase": "la disposición ética es la orientación del ánimo de la conciencia ética",
+        "tipo": "es orientación de",
+        "confianza": 0.95
       },
-      "frase_editada": "la razón real no cae en contradicción del idealismo puro porque se sabe como certeza que debe elevarse a verdad",
+      "frase_editada": "la disposición ética es la orientación del ánimo de la conciencia ética",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_055",
       "conexion": {
-        "id": "cp_065",
-        "origen_id": "c_391",
-        "destino_id": "c_179",
-        "frase": "las especies son divisiones del género, modos diferenciados de la universalidad",
-        "tipo": "determina",
-        "confianza": 0.84
+        "id": "cp_064",
+        "origen_id": "c_557",
+        "destino_id": "c_493",
+        "frase": "el ciudadano es el individuo en cuanto participa de la conciencia universal del pueblo",
+        "tipo": "participa en",
+        "confianza": 0.95
       },
-      "frase_editada": "las especies son divisiones del género, modos diferenciados de la universalidad",
+      "frase_editada": "el ciudadano es el individuo en cuanto participa de la conciencia universal del pueblo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_056",
       "conexion": {
-        "id": "cp_074",
-        "origen_id": "c_408",
-        "destino_id": "c_015",
-        "frase": "el ser sensible es lo inmediato en que la ley debe manifestarse pero de lo cual debe liberarse como concepto",
-        "tipo": "fenómeno de",
-        "confianza": 0.84
+        "id": "cp_067",
+        "origen_id": "c_564",
+        "destino_id": "c_563",
+        "frase": "la Erinia es la furia vengadora que surge de la sangre vertida",
+        "tipo": "surge de",
+        "confianza": 0.95
       },
-      "frase_editada": "el ser sensible es lo inmediato en que la ley debe manifestarse pero de lo cual debe liberarse como concepto",
+      "frase_editada": "la Erinia es la furia vengadora que surge de la sangre vertida",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_057",
       "conexion": {
-        "id": "cp_076",
-        "origen_id": "c_410",
-        "destino_id": "c_271",
-        "frase": "ácido y base son contraposiciones cuya esencia es transitarse mutuamente en la ley",
-        "tipo": "ejemplo de",
-        "confianza": 0.84
+        "id": "cp_072",
+        "origen_id": "c_570",
+        "destino_id": "c_028",
+        "frase": "la sombra es el ámbito inconsciente de la ley divina",
+        "tipo": "es ámbito de",
+        "confianza": 0.95
       },
-      "frase_editada": "ácido y base son contraposiciones cuya esencia es transitarse mutuamente en la ley",
+      "frase_editada": "la sombra es el ámbito inconsciente de la ley divina",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_058",
       "conexion": {
-        "id": "cp_078",
-        "origen_id": "c_412",
-        "destino_id": "c_402",
-        "frase": "la excepción es lo que se sustrae a las leyes de la observación, manifestación de la libertad orgánica",
-        "tipo": "reveladora de",
-        "confianza": 0.84
+        "id": "cp_073",
+        "origen_id": "c_571",
+        "destino_id": "c_027",
+        "frase": "la luz es el ámbito consciente de la ley humana",
+        "tipo": "es ámbito de",
+        "confianza": 0.95
       },
-      "frase_editada": "la excepción es lo que se sustrae a las leyes de la observación, manifestación de la libertad orgánica",
+      "frase_editada": "la luz es el ámbito consciente de la ley humana",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_059",
       "conexion": {
-        "id": "cp_085",
-        "origen_id": "c_421",
-        "destino_id": "c_416",
-        "frase": "las vísceras son los órganos que plasman el momento de reproducción",
-        "tipo": "manifestación de",
-        "confianza": 0.84
+        "id": "cp_076",
+        "origen_id": "c_575",
+        "destino_id": "c_574",
+        "frase": "la inocencia es la ausencia de culpa, posible solo en el no-hacer",
+        "tipo": "es ausencia de",
+        "confianza": 0.95
       },
-      "frase_editada": "las vísceras son los órganos que plasman el momento de reproducción",
+      "frase_editada": "la inocencia es la ausencia de culpa, posible solo en el no-hacer",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_060",
       "conexion": {
-        "id": "cp_089",
-        "origen_id": "c_426",
-        "destino_id": "c_016",
-        "frase": "el cadáver es el organismo desprovisto de vida cuyos sistemas la anatomía estudia",
-        "tipo": "objeto falso de",
-        "confianza": 0.84
+        "id": "cp_093",
+        "origen_id": "c_611",
+        "destino_id": "c_521",
+        "frase": "el ser natural es la naturaleza originaria de la cual la autoconciencia debe extrañarse",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "el cadáver es el organismo desprovisto de vida cuyos sistemas la anatomía estudia",
+      "frase_editada": "el ser natural es la naturaleza originaria de la cual la autoconciencia debe extrañarse",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_061",
       "conexion": {
-        "id": "cp_091",
-        "origen_id": "c_428",
-        "destino_id": "c_016",
-        "frase": "la cualidad es la determinidad propia de la diferencia orgánica, distinta de la cantidad",
-        "tipo": "estructura de",
-        "confianza": 0.84
+        "id": "cp_094",
+        "origen_id": "c_613",
+        "destino_id": "c_030",
+        "frase": "la superstición es el error combatido por la Ilustración",
+        "tipo": "es combatida por",
+        "confianza": 0.95
       },
-      "frase_editada": "la cualidad es la determinidad propia de la diferencia orgánica, distinta de la cantidad",
+      "frase_editada": "la superstición es el error combatido por la Ilustración",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_062",
       "conexion": {
-        "id": "cp_092",
-        "origen_id": "c_429",
-        "destino_id": "c_016",
-        "frase": "la elasticidad es la capacidad del organismo de reaccionar manteniendo su forma íntegra",
-        "tipo": "propiedad de",
-        "confianza": 0.84
+        "id": "cp_097",
+        "origen_id": "c_617",
+        "destino_id": "c_606",
+        "frase": "el heroísmo del servicio es el comportamiento de la conciencia noble que se sacrifica por el Estado",
+        "tipo": "es comportamiento de",
+        "confianza": 0.95
       },
-      "frase_editada": "la elasticidad es la capacidad del organismo de reaccionar manteniendo su forma íntegra",
+      "frase_editada": "el heroísmo del servicio es el comportamiento de la conciencia noble que se sacrifica por el Estado",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_063",
       "conexion": {
-        "id": "cp_018",
-        "origen_id": "c_339",
-        "destino_id": "c_237",
-        "frase": "la presencia unilateral es modo de aparición incompleto donde el objeto se presenta solo para la conciencia",
-        "tipo": "forma deficiente de",
-        "confianza": 0.83
+        "id": "cp_100",
+        "origen_id": "c_620",
+        "destino_id": "c_607",
+        "frase": "la sublevación es el acto de rebelión de la conciencia vil contra el poder",
+        "tipo": "es acto de",
+        "confianza": 0.95
       },
-      "frase_editada": "la presencia unilateral es modo de aparición incompleto donde el objeto se presenta solo para la conciencia",
+      "frase_editada": "la sublevación es el acto de rebelión de la conciencia vil contra el poder",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_064",
       "conexion": {
-        "id": "cp_026",
-        "origen_id": "c_348",
-        "destino_id": "c_022",
-        "frase": "el Gemüth es el ánimo en su puridad interior caracterizando la subjetividad de la conciencia desgraciada",
-        "tipo": "dimensión de",
-        "confianza": 0.83
+        "id": "cp_104",
+        "origen_id": "c_626",
+        "destino_id": "c_601",
+        "frase": "el monarca es la individualidad pura del poder del Estado",
+        "tipo": "es individualidad de",
+        "confianza": 0.95
       },
-      "frase_editada": "el Gemüth es el ánimo en su puridad interior caracterizando la subjetividad de la conciencia desgraciada",
+      "frase_editada": "el monarca es la individualidad pura del poder del Estado",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_065",
       "conexion": {
-        "id": "cp_030",
-        "origen_id": "c_352",
-        "destino_id": "c_022",
-        "frase": "la inesencialidad es el carácter de lo contingente que la conciencia desgraciada confronta con lo Inmutable",
-        "tipo": "dimensión de",
-        "confianza": 0.83
+        "id": "cp_111",
+        "origen_id": "c_634",
+        "destino_id": "c_018",
+        "frase": "el respeto es el reconocimiento mutuo que surge del sacrificio",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la inesencialidad es el carácter de lo contingente que la conciencia desgraciada confronta con lo Inmutable",
+      "frase_editada": "el respeto es el reconocimiento mutuo que surge del sacrificio",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_066",
       "conexion": {
-        "id": "cp_039",
-        "origen_id": "c_363",
-        "destino_id": "c_022",
-        "frase": "la fuerza activa es la potencia actuante de la conciencia desgraciada que busca disolver la realidad",
-        "tipo": "aspecto de",
-        "confianza": 0.83
+        "id": "cp_113",
+        "origen_id": "c_636",
+        "destino_id": "c_040",
+        "frase": "la voz es la manifestación del self en el lenguaje",
+        "tipo": "es manifestación en",
+        "confianza": 0.95
       },
-      "frase_editada": "la fuerza activa es la potencia actuante de la conciencia desgraciada que busca disolver la realidad",
+      "frase_editada": "la voz es la manifestación del self en el lenguaje",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_067",
       "conexion": {
-        "id": "cp_052",
-        "origen_id": "c_376",
-        "destino_id": "c_022",
-        "frase": "el enemigo es la individualidad particular que la conciencia desgraciada debe superar y negar",
-        "tipo": "antagonista de",
-        "confianza": 0.83
+        "id": "cp_114",
+        "origen_id": "c_641",
+        "destino_id": "c_640",
+        "frase": "el enjuiciamiento es el habla de la conciencia desgarrada que disuelve todos los momentos",
+        "tipo": "es habla de",
+        "confianza": 0.95
       },
-      "frase_editada": "el enemigo es la individualidad particular que la conciencia desgraciada debe superar y negar",
+      "frase_editada": "el enjuiciamiento es el habla de la conciencia desgarrada que disuelve todos los momentos",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_068",
       "conexion": {
-        "id": "cp_055",
-        "origen_id": "c_379",
-        "destino_id": "c_022",
-        "frase": "la insignificancia es la baja valía de los esfuerzos de la conciencia desgraciada",
-        "tipo": "resultado de",
-        "confianza": 0.83
+        "id": "cp_118",
+        "origen_id": "c_649",
+        "destino_id": "c_031",
+        "frase": "la autoconciencia creyente es la forma de autoconciencia que resulta de la fe",
+        "tipo": "resulta de",
+        "confianza": 0.95
       },
-      "frase_editada": "la insignificancia es la baja valía de los esfuerzos de la conciencia desgraciada",
+      "frase_editada": "la autoconciencia creyente es la forma de autoconciencia que resulta de la fe",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_069",
       "conexion": {
-        "id": "cp_061",
-        "origen_id": "c_387",
-        "destino_id": "c_114",
-        "frase": "el Anstoss es el impulso extraño que el idealismo necesita para explicar la diversidad de sensaciones",
-        "tipo": "concepto clave en",
-        "confianza": 0.83
+        "id": "cp_126",
+        "origen_id": "c_661",
+        "destino_id": "c_171",
+        "frase": "la conformidad con el fin es la adecuación de los medios al fin",
+        "tipo": "es adecuación a",
+        "confianza": 0.95
       },
-      "frase_editada": "el Anstoss es el impulso extraño que el idealismo necesita para explicar la diversidad de sensaciones",
+      "frase_editada": "la conformidad con el fin es la adecuación de los medios al fin",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_070",
       "conexion": {
-        "id": "cp_064",
-        "origen_id": "c_390",
-        "destino_id": "c_053",
-        "frase": "la memoria expresa en términos universales lo que en realidad está presente de forma individual",
-        "tipo": "función reflexiva de",
-        "confianza": 0.83
+        "id": "cp_129",
+        "origen_id": "c_665",
+        "destino_id": "c_132",
+        "frase": "la finitud es la limitación propia de lo sensible, opuesta a lo infinito",
+        "tipo": "se opone a",
+        "confianza": 0.95
       },
-      "frase_editada": "la memoria expresa en términos universales lo que en realidad está presente de forma individual",
+      "frase_editada": "la finitud es la limitación propia de lo sensible, opuesta a lo infinito",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_071",
       "conexion": {
-        "id": "cp_066",
-        "origen_id": "c_392",
-        "destino_id": "c_275",
-        "frase": "la particularización es el proceso de descender hacia lo individual mediante diferencias cada vez más finas",
-        "tipo": "movimiento que caracteriza",
-        "confianza": 0.83
+        "id": "cp_136",
+        "origen_id": "c_672",
+        "destino_id": "c_010",
+        "frase": "la realidad sensible es lo inmediato de la experiencia en la certeza sensible",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la particularización es el proceso de descender hacia lo individual mediante diferencias cada vez más finas",
+      "frase_editada": "la realidad sensible es lo inmediato de la experiencia en la certeza sensible",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_072",
       "conexion": {
-        "id": "cp_067",
-        "origen_id": "c_393",
-        "destino_id": "c_754",
-        "frase": "la singularización es el descenso a lo singular, a lo meramente individual que no es universal",
-        "tipo": "momento de",
-        "confianza": 0.83
+        "id": "cp_137",
+        "origen_id": "c_674",
+        "destino_id": "c_045",
+        "frase": "la metafísica cartesiana establece la identidad entre ser y pensamiento",
+        "tipo": "es de",
+        "confianza": 0.95
       },
-      "frase_editada": "la singularización es el descenso a lo singular, a lo meramente individual que no es universal",
+      "frase_editada": "la metafísica cartesiana establece la identidad entre ser y pensamiento",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_073",
       "conexion": {
-        "id": "cp_068",
-        "origen_id": "c_394",
-        "destino_id": "c_170",
-        "frase": "la esencialidad es la pura entidad de lo que está ahí, la pura categoría que es el yo",
-        "tipo": "dimensión de",
-        "confianza": 0.83
+        "id": "cp_139",
+        "origen_id": "c_677",
+        "destino_id": "c_670",
+        "frase": "la insatisfacción es el estado de la fe como Ilustración, una pura añoranza",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la esencialidad es la pura entidad de lo que está ahí, la pura categoría que es el yo",
+      "frase_editada": "la insatisfacción es el estado de la fe como Ilustración, una pura añoranza",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_074",
       "conexion": {
-        "id": "cp_075",
-        "origen_id": "c_409",
-        "destino_id": "c_005",
-        "frase": "la probabilidad es forma imperfecta de verdad a la que recurre la observación sin alcanzar necesidad conceptual",
-        "tipo": "deficiencia de",
-        "confianza": 0.83
+        "id": "cp_141",
+        "origen_id": "c_680",
+        "destino_id": "c_033",
+        "frase": "la convulsión real de la realidad es la erupción de la libertad absoluta",
+        "tipo": "es erupción de",
+        "confianza": 0.95
       },
-      "frase_editada": "la probabilidad es forma imperfecta de verdad a la que recurre la observación sin alcanzar necesidad conceptual",
+      "frase_editada": "la convulsión real de la realidad es la erupción de la libertad absoluta",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_075",
       "conexion": {
-        "id": "cp_094",
-        "origen_id": "c_431",
-        "destino_id": "c_400",
-        "frase": "el instinto del concepto es el impulso no consciente de la observación hacia el concepto",
-        "tipo": "manifestación de",
-        "confianza": 0.83
+        "id": "cp_143",
+        "origen_id": "c_684",
+        "destino_id": "c_033",
+        "frase": "el terror es el miedo ante la esencia negativa de la libertad absoluta",
+        "tipo": "es miedo ante",
+        "confianza": 0.95
       },
-      "frase_editada": "el instinto del concepto es el impulso no consciente de la observación hacia el concepto",
+      "frase_editada": "el terror es el miedo ante la esencia negativa de la libertad absoluta",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_076",
       "conexion": {
-        "id": "cp_016",
-        "origen_id": "c_337",
-        "destino_id": "c_065",
-        "frase": "la conciencia pura es el pensamiento considerado sin contenido empírico, como pura capacidad de representación",
-        "tipo": "aspecto de",
-        "confianza": 0.82
+        "id": "cp_149",
+        "origen_id": "c_694",
+        "destino_id": "c_034",
+        "frase": "la tarea infinita caracteriza a la moralidad que nunca puede completarse",
+        "tipo": "caracteriza a",
+        "confianza": 0.95
       },
-      "frase_editada": "la conciencia pura es el pensamiento considerado sin contenido empírico, como pura capacidad de representación",
+      "frase_editada": "la tarea infinita caracteriza a la moralidad que nunca puede completarse",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_077",
       "conexion": {
-        "id": "cp_025",
-        "origen_id": "c_347",
-        "destino_id": "c_191",
-        "frase": "el objeto extraño se presenta a la conciencia como exterior y no comprendido conceptualmente",
-        "tipo": "forma de",
-        "confianza": 0.82
+        "id": "cp_151",
+        "origen_id": "c_696",
+        "destino_id": "c_026",
+        "frase": "el mundo ético es la figura anterior del espíritu caracterizada por la sustancia ética",
+        "tipo": "es figura de",
+        "confianza": 0.95
       },
-      "frase_editada": "el objeto extraño se presenta a la conciencia como exterior y no comprendido conceptualmente",
+      "frase_editada": "el mundo ético es la figura anterior del espíritu caracterizada por la sustancia ética",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_078",
       "conexion": {
-        "id": "cp_034",
-        "origen_id": "c_356",
-        "destino_id": "c_022",
-        "frase": "el mundo santificado es la realidad considerada sagrada como forma de lo Inmutable en la conciencia desgraciada",
-        "tipo": "visión de",
-        "confianza": 0.82
+        "id": "cp_153",
+        "origen_id": "c_698",
+        "destino_id": "c_066",
+        "frase": "la realidad objetiva es el ser que se presenta como objeto",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "el mundo santificado es la realidad considerada sagrada como forma de lo Inmutable en la conciencia desgraciada",
+      "frase_editada": "la realidad objetiva es el ser que se presenta como objeto",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_079",
       "conexion": {
-        "id": "cp_054",
-        "origen_id": "c_378",
-        "destino_id": "c_022",
-        "frase": "la suciedad es la impureza de la conciencia desgraciada que permanece atrapada en sus propios esfuerzos",
-        "tipo": "característica de",
-        "confianza": 0.82
+        "id": "cp_158",
+        "origen_id": "c_708",
+        "destino_id": "c_219",
+        "frase": "el movimiento contradictorio es el movimiento dialéctico de la conciencia moral",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la suciedad es la impureza de la conciencia desgraciada que permanece atrapada en sus propios esfuerzos",
+      "frase_editada": "el movimiento contradictorio es el movimiento dialéctico de la conciencia moral",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_080",
       "conexion": {
-        "id": "cp_063",
-        "origen_id": "c_389",
-        "destino_id": "c_053",
-        "frase": "la descripción es el acto de expresar en términos universales lo que en realidad está presente de forma individual",
-        "tipo": "proceso de mediación en",
-        "confianza": 0.82
+        "id": "cp_162",
+        "origen_id": "c_714",
+        "destino_id": "c_065",
+        "frase": "el ente de razón es lo que existe solo en el pensamiento, sin realidad efectiva",
+        "tipo": "existe en",
+        "confianza": 0.95
       },
-      "frase_editada": "la descripción es el acto de expresar en términos universales lo que en realidad está presente de forma individual",
+      "frase_editada": "el ente de razón es lo que existe solo en el pensamiento, sin realidad efectiva",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_081",
       "conexion": {
-        "id": "cp_072",
-        "origen_id": "c_398",
-        "destino_id": "c_169",
-        "frase": "el ser en relación caracteriza al individuo por su capacidad de conservarse frente a lo otro",
-        "tipo": "determina",
-        "confianza": 0.82
+        "id": "cp_163",
+        "origen_id": "c_715",
+        "destino_id": "c_587",
+        "frase": "la persona es el self abstracto del mundo ético, la personalidad jurídica",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "el ser en relación caracteriza al individuo por su capacidad de conservarse frente a lo otro",
+      "frase_editada": "la persona es el self abstracto del mundo ético, la personalidad jurídica",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_082",
       "conexion": {
-        "id": "cp_073",
-        "origen_id": "c_399",
-        "destino_id": "c_062",
-        "frase": "el sistema de la naturaleza es el orden que debe ser expresado por el sistema de conocimiento",
-        "tipo": "objeto de",
-        "confianza": 0.82
+        "id": "cp_165",
+        "origen_id": "c_719",
+        "destino_id": "c_035",
+        "frase": "el arbitrio del individuo es la fuente del contenido moral en el Gewissen",
+        "tipo": "es fuente de",
+        "confianza": 0.95
       },
-      "frase_editada": "el sistema de la naturaleza es el orden que debe ser expresado por el sistema de conocimiento",
+      "frase_editada": "el arbitrio del individuo es la fuente del contenido moral en el Gewissen",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_083",
       "conexion": {
-        "id": "cp_023",
-        "origen_id": "c_345",
-        "destino_id": "c_053",
-        "frase": "el pensamiento musical es forma de pensamiento que permanece en emotividad abstracta sin llegar al concepto",
-        "tipo": "deficiencia en",
-        "confianza": 0.81
+        "id": "cp_167",
+        "origen_id": "c_721",
+        "destino_id": "c_720",
+        "frase": "la voz interior es la voz de Dios que la genialidad moral escucha",
+        "tipo": "es escuchada por",
+        "confianza": 0.95
       },
-      "frase_editada": "el pensamiento musical es forma de pensamiento que permanece en emotividad abstracta sin llegar al concepto",
+      "frase_editada": "la voz interior es la voz de Dios que la genialidad moral escucha",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_084",
       "conexion": {
-        "id": "cp_051",
-        "origen_id": "c_375",
-        "destino_id": "c_022",
-        "frase": "las funciones animales son el lugar donde la conciencia desgraciada se es consciente de sí como lo más bajo",
-        "tipo": "campo de",
-        "confianza": 0.81
+        "id": "cp_171",
+        "origen_id": "c_726",
+        "destino_id": "c_018",
+        "frase": "la validez es el carácter de lo que es reconocido y tiene vigencia",
+        "tipo": "es carácter de",
+        "confianza": 0.95
       },
-      "frase_editada": "las funciones animales son el lugar donde la conciencia desgraciada se es consciente de sí como lo más bajo",
+      "frase_editada": "la validez es el carácter de lo que es reconocido y tiene vigencia",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_085",
       "conexion": {
-        "id": "cp_056",
-        "origen_id": "c_380",
-        "destino_id": "c_022",
-        "frase": "la personalidad ruin es el sujeto que se incuba en la perpetuación de su propia miseria",
-        "tipo": "forma de subjetividad en",
-        "confianza": 0.81
+        "id": "cp_173",
+        "origen_id": "c_729",
+        "destino_id": "c_179",
+        "frase": "la conciencia universal representa la universalidad del deber",
+        "tipo": "representa",
+        "confianza": 0.95
       },
-      "frase_editada": "la personalidad ruin es el sujeto que se incuba en la perpetuación de su propia miseria",
+      "frase_editada": "la conciencia universal representa la universalidad del deber",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_086",
       "conexion": {
-        "id": "cp_070",
-        "origen_id": "c_396",
-        "destino_id": "c_400",
-        "frase": "el instinto es la manera como la razón se comporta al observar como impulso no mediado",
-        "tipo": "antecedente de",
-        "confianza": 0.81
+        "id": "cp_175",
+        "origen_id": "c_737",
+        "destino_id": "c_022",
+        "frase": "el Más allá es lo trascendente que permanece fuera del alcance de la autoconciencia desgraciada",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "el instinto es la manera como la razón se comporta al observar como impulso no mediado",
+      "frase_editada": "el Más allá es lo trascendente que permanece fuera del alcance de la autoconciencia desgraciada",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_087",
       "conexion": {
-        "id": "cp_029",
-        "origen_id": "c_351",
-        "destino_id": "c_022",
-        "frase": "el sepulcro es símbolo de la desaparición que la conciencia desgraciada busca en su lugar de aparición",
-        "tipo": "imagen de",
-        "confianza": 0.8
+        "id": "cp_178",
+        "origen_id": "c_741",
+        "destino_id": "c_739",
+        "frase": "la religión del cielo es la transformación de la fe en el submundo",
+        "tipo": "es transformación de",
+        "confianza": 0.95
       },
-      "frase_editada": "el sepulcro es símbolo de la desaparición que la conciencia desgraciada busca en su lugar de aparición",
+      "frase_editada": "la religión del cielo es la transformación de la fe en el submundo",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_088",
       "conexion": {
-        "id": "cp_045",
-        "origen_id": "c_369",
-        "destino_id": "c_022",
-        "frase": "la superficie es lo más superficial de cada extremo en la relación desgraciada, no su esencia",
-        "tipo": "aspecto de",
-        "confianza": 0.8
+        "id": "cp_180",
+        "origen_id": "c_743",
+        "destino_id": "c_025",
+        "frase": "el espíritu universal es el espíritu que en la religión contiene toda realidad",
+        "tipo": "es",
+        "confianza": 0.95
       },
-      "frase_editada": "la superficie es lo más superficial de cada extremo en la relación desgraciada, no su esencia",
+      "frase_editada": "el espíritu universal es el espíritu que en la religión contiene toda realidad",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_089",
       "conexion": {
-        "id": "cp_053",
-        "origen_id": "c_377",
-        "destino_id": "c_022",
-        "frase": "la derrota del enemigo es la aniquilación de la individualidad que paradójicamente genera su autopreservación",
-        "tipo": "movimiento paradójico en",
-        "confianza": 0.8
+        "id": "cp_182",
+        "origen_id": "c_745",
+        "destino_id": "c_025",
+        "frase": "el espíritu seguro de sí mismo es la figura del espíritu que ha alcanzado certeza de sí",
+        "tipo": "es figura de",
+        "confianza": 0.95
       },
-      "frase_editada": "la derrota del enemigo es la aniquilación de la individualidad que paradójicamente genera su autopreservación",
+      "frase_editada": "el espíritu seguro de sí mismo es la figura del espíritu que ha alcanzado certeza de sí",
       "seleccionada": true,
       "estado": "aceptada"
     },
     {
       "id": "pr_090",
       "conexion": {
-        "id": "cp_087",
-        "origen_id": "c_424",
-        "destino_id": "c_296",
-        "frase": "la proporción inversa es la relación cuantitativa vacía entre sensibilidad e irritabilidad",
-        "tipo": "ejemplo deficiente de",
-        "confianza": 0.78
+        "id": "cp_187",
+        "origen_id": "c_750",
+        "destino_id": "c_036",
+        "frase": "la religión natural es la primera realidad del espíritu en la religión",
+        "tipo": "es primera realidad de",
+        "confianza": 0.95
       },
-      "frase_editada": "la proporción inversa es la relación cuantitativa vacía entre sensibilidad e irritabilidad",
+      "frase_editada": "la religión natural es la primera realidad del espíritu en la religión",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_091",
+      "conexion": {
+        "id": "cp_188",
+        "origen_id": "c_752",
+        "destino_id": "c_036",
+        "frase": "la religión revelada es la última realidad del espíritu donde alcanza la forma de ser-en-y-para-sí",
+        "tipo": "es última realidad de",
+        "confianza": 0.95
+      },
+      "frase_editada": "la religión revelada es la última realidad del espíritu donde alcanza la forma de ser-en-y-para-sí",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_092",
+      "conexion": {
+        "id": "cp_192",
+        "origen_id": "c_760",
+        "destino_id": "c_757",
+        "frase": "el culto es una obra de arte viva en que la autoconciencia se expresa",
+        "tipo": "es",
+        "confianza": 0.95
+      },
+      "frase_editada": "el culto es una obra de arte viva en que la autoconciencia se expresa",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_093",
+      "conexion": {
+        "id": "cp_193",
+        "origen_id": "c_761",
+        "destino_id": "c_757",
+        "frase": "la estatua es una obra de arte cósica que representa la figura divina",
+        "tipo": "es",
+        "confianza": 0.95
+      },
+      "frase_editada": "la estatua es una obra de arte cósica que representa la figura divina",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_094",
+      "conexion": {
+        "id": "cp_195",
+        "origen_id": "c_763",
+        "destino_id": "c_760",
+        "frase": "la fiesta es un culto colectivo en que el pueblo se honra a sí mismo",
+        "tipo": "es forma de",
+        "confianza": 0.95
+      },
+      "frase_editada": "la fiesta es un culto colectivo en que el pueblo se honra a sí mismo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_095",
+      "conexion": {
+        "id": "cp_198",
+        "origen_id": "c_766",
+        "destino_id": "c_765",
+        "frase": "las bacantes son la manifestación de la autoconciencia divina en el culto a Dionisos",
+        "tipo": "son manifestación en culto a",
+        "confianza": 0.95
+      },
+      "frase_editada": "las bacantes son la manifestación de la autoconciencia divina en el culto a Dionisos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_096",
+      "conexion": {
+        "id": "cp_202",
+        "origen_id": "c_771",
+        "destino_id": "c_780",
+        "frase": "el panteón es el conjunto de dioses particulares que se unifican en un todo",
+        "tipo": "es conjunto de",
+        "confianza": 0.95
+      },
+      "frase_editada": "el panteón es el conjunto de dioses particulares que se unifican en un todo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_097",
+      "conexion": {
+        "id": "cp_206",
+        "origen_id": "c_776",
+        "destino_id": "c_416",
+        "frase": "la exterioridad es la manifestación sensible, lo que existe fuera de sí",
+        "tipo": "es",
+        "confianza": 0.95
+      },
+      "frase_editada": "la exterioridad es la manifestación sensible, lo que existe fuera de sí",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_098",
+      "conexion": {
+        "id": "cp_208",
+        "origen_id": "c_778",
+        "destino_id": "c_777",
+        "frase": "el cantor es el individuo particular que engendra el mundo épico",
+        "tipo": "engendra",
+        "confianza": 0.95
+      },
+      "frase_editada": "el cantor es el individuo particular que engendra el mundo épico",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_099",
+      "conexion": {
+        "id": "cp_210",
+        "origen_id": "c_780",
+        "destino_id": "c_036",
+        "frase": "los dioses son los poderes divinos representados en la religión del arte",
+        "tipo": "son representados en",
+        "confianza": 0.95
+      },
+      "frase_editada": "los dioses son los poderes divinos representados en la religión del arte",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_100",
+      "conexion": {
+        "id": "cp_212",
+        "origen_id": "c_782",
+        "destino_id": "c_781",
+        "frase": "el héroe es el individuo autoconsciente que actúa en la tragedia",
+        "tipo": "actúa en",
+        "confianza": 0.95
+      },
+      "frase_editada": "el héroe es el individuo autoconsciente que actúa en la tragedia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_101",
+      "conexion": {
+        "id": "cp_213",
+        "origen_id": "c_783",
+        "destino_id": "c_601",
+        "frase": "el Estado es el poder universal que representa el derecho humano",
+        "tipo": "es",
+        "confianza": 0.95
+      },
+      "frase_editada": "el Estado es el poder universal que representa el derecho humano",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_102",
+      "conexion": {
+        "id": "cp_216",
+        "origen_id": "c_786",
+        "destino_id": "c_780",
+        "frase": "Apolo es el dios de la luz y el saber",
+        "tipo": "es",
+        "confianza": 0.95
+      },
+      "frase_editada": "Apolo es el dios de la luz y el saber",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_103",
+      "conexion": {
+        "id": "cp_002",
+        "origen_id": "c_1002",
+        "destino_id": "c_434",
+        "frase": "el organismo se manifiesta en el sistema sensible universal, distinto del sistema nervioso",
+        "tipo": "se manifiesta en",
+        "confianza": 0.9
+      },
+      "frase_editada": "el organismo se manifiesta en el sistema sensible universal, distinto del sistema nervioso",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_104",
+      "conexion": {
+        "id": "cp_003",
+        "origen_id": "c_1002",
+        "destino_id": "c_435",
+        "frase": "el organismo se manifiesta en el sistema irritable universal, distinto del sistema muscular",
+        "tipo": "se manifiesta en",
+        "confianza": 0.9
+      },
+      "frase_editada": "el organismo se manifiesta en el sistema irritable universal, distinto del sistema muscular",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_105",
+      "conexion": {
+        "id": "cp_004",
+        "origen_id": "c_1002",
+        "destino_id": "c_436",
+        "frase": "el organismo se manifiesta en el sistema reproductivo universal, distinto de los órganos anatómicos",
+        "tipo": "se manifiesta en",
+        "confianza": 0.9
+      },
+      "frase_editada": "el organismo se manifiesta en el sistema reproductivo universal, distinto de los órganos anatómicos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_106",
+      "conexion": {
+        "id": "cp_006",
+        "origen_id": "c_115",
+        "destino_id": "c_438",
+        "frase": "la verdadera sensibilidad no es mera pasividad",
+        "tipo": "se opone a",
+        "confianza": 0.9
+      },
+      "frase_editada": "la verdadera sensibilidad no es mera pasividad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_107",
+      "conexion": {
+        "id": "cp_008",
+        "origen_id": "c_441",
+        "destino_id": "c_440",
+        "frase": "el número media entre la vida indeterminada (interior) y la forma real (exterior)",
+        "tipo": "media entre",
+        "confianza": 0.9
+      },
+      "frase_editada": "el número media entre la vida indeterminada (interior) y la forma real (exterior)",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_108",
+      "conexion": {
+        "id": "cp_012",
+        "origen_id": "c_445",
+        "destino_id": "c_016",
+        "frase": "el Uno infinito es la unidad característica de la vida que reasume los momentos de la forma",
+        "tipo": "caracteriza a",
+        "confianza": 0.9
+      },
+      "frase_editada": "el Uno infinito es la unidad característica de la vida que reasume los momentos de la forma",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_109",
+      "conexion": {
+        "id": "cp_014",
+        "origen_id": "c_447",
+        "destino_id": "c_296",
+        "frase": "la intensión y extensión son aspectos de la magnitud en la existencia",
+        "tipo": "son aspectos de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la intensión y extensión son aspectos de la magnitud en la existencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_110",
+      "conexion": {
+        "id": "cp_017",
+        "origen_id": "c_450",
+        "destino_id": "c_441",
+        "frase": "la multiplicidad de individuos se expresa mediante el número",
+        "tipo": "se expresa mediante",
+        "confianza": 0.9
+      },
+      "frase_editada": "la multiplicidad de individuos se expresa mediante el número",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_111",
+      "conexion": {
+        "id": "cp_019",
+        "origen_id": "c_454",
+        "destino_id": "c_308",
+        "frase": "el número actúa como representante del género en la multiplicidad de individuos",
+        "tipo": "representa a",
+        "confianza": 0.9
+      },
+      "frase_editada": "el número actúa como representante del género en la multiplicidad de individuos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_112",
+      "conexion": {
+        "id": "cp_022",
+        "origen_id": "c_464",
+        "destino_id": "c_465",
+        "frase": "la astrología es un ejemplo de saber que, como la fisiognómica, relaciona lo exterior con lo exterior",
+        "tipo": "es ejemplo de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la astrología es un ejemplo de saber que, como la fisiognómica, relaciona lo exterior con lo exterior",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_113",
+      "conexion": {
+        "id": "cp_023",
+        "origen_id": "c_469",
+        "destino_id": "c_467",
+        "frase": "la escritura es la forma más fija de expresión del interior mediante la mano",
+        "tipo": "es expresión mediante",
+        "confianza": 0.9
+      },
+      "frase_editada": "la escritura es la forma más fija de expresión del interior mediante la mano",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_114",
+      "conexion": {
+        "id": "cp_024",
+        "origen_id": "c_464",
+        "destino_id": "c_470",
+        "frase": "la quiromancia, como la fisiognómica, pretende leer el interior en lo exterior",
+        "tipo": "es análoga a",
+        "confianza": 0.9
+      },
+      "frase_editada": "la quiromancia, como la fisiognómica, pretende leer el interior en lo exterior",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_115",
+      "conexion": {
+        "id": "cp_027",
+        "origen_id": "c_478",
+        "destino_id": "c_473",
+        "frase": "la relación mecánica es un tipo de conexión causal externa supuesta entre cerebro y cráneo",
+        "tipo": "se supone entre",
+        "confianza": 0.9
+      },
+      "frase_editada": "la relación mecánica es un tipo de conexión causal externa supuesta entre cerebro y cráneo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_116",
+      "conexion": {
+        "id": "cp_028",
+        "origen_id": "c_480",
+        "destino_id": "c_461",
+        "frase": "la sensación es un sentimiento corporal indeterminado que acompaña la actividad espiritual",
+        "tipo": "es sentimiento de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la sensación es un sentimiento corporal indeterminado que acompaña la actividad espiritual",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_117",
+      "conexion": {
+        "id": "cp_033",
+        "origen_id": "c_1035",
+        "destino_id": "c_485",
+        "frase": "la figura del asesino ejemplifica la imposibilidad de la correlación frenológica",
+        "tipo": "es ejemplo contra",
+        "confianza": 0.9
+      },
+      "frase_editada": "la figura del asesino ejemplifica la imposibilidad de la correlación frenológica",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_118",
+      "conexion": {
+        "id": "cp_038",
+        "origen_id": "c_496",
+        "destino_id": "c_306",
+        "frase": "el impulso natural es una forma del deseo que busca satisfacción",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el impulso natural es una forma del deseo que busca satisfacción",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_119",
+      "conexion": {
+        "id": "cp_042",
+        "origen_id": "c_502",
+        "destino_id": "c_508",
+        "frase": "el 'carpe diem' es el modo de vida que busca la satisfacción inmediata en el placer",
+        "tipo": "busca",
+        "confianza": 0.9
+      },
+      "frase_editada": "el 'carpe diem' es el modo de vida que busca la satisfacción inmediata en el placer",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_120",
+      "conexion": {
+        "id": "cp_047",
+        "origen_id": "c_507",
+        "destino_id": "c_503",
+        "frase": "el desvarío es la inversión en la que cae la conciencia de la ley del corazón",
+        "tipo": "es resultado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el desvarío es la inversión en la que cae la conciencia de la ley del corazón",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_121",
+      "conexion": {
+        "id": "cp_049",
+        "origen_id": "c_509",
+        "destino_id": "c_503",
+        "frase": "la resistencia es el obstáculo que encuentra la ley del corazón en los otros",
+        "tipo": "es obstáculo para",
+        "confianza": 0.9
+      },
+      "frase_editada": "la resistencia es el obstáculo que encuentra la ley del corazón en los otros",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_122",
+      "conexion": {
+        "id": "cp_052",
+        "origen_id": "c_515",
+        "destino_id": "c_510",
+        "frase": "el orden es el en-sí del curso del mundo que la virtud combate",
+        "tipo": "es en-sí de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el orden es el en-sí del curso del mundo que la virtud combate",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_123",
+      "conexion": {
+        "id": "cp_055",
+        "origen_id": "c_533",
+        "destino_id": "c_532",
+        "frase": "el deber-ser caracteriza a los mandamientos que carecen de realidad efectiva",
+        "tipo": "caracteriza a",
+        "confianza": 0.9
+      },
+      "frase_editada": "el deber-ser caracteriza a los mandamientos que carecen de realidad efectiva",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_124",
+      "conexion": {
+        "id": "cp_058",
+        "origen_id": "c_540",
+        "destino_id": "c_226",
+        "frase": "la sana razón es el sano sentido común aplicado a la práctica",
+        "tipo": "es aplicación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la sana razón es el sano sentido común aplicado a la práctica",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_125",
+      "conexion": {
+        "id": "cp_059",
+        "origen_id": "c_543",
+        "destino_id": "c_542",
+        "frase": "el derecho es lo justo en sí, fundamento de la ley eterna",
+        "tipo": "es fundamento de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el derecho es lo justo en sí, fundamento de la ley eterna",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_126",
+      "conexion": {
+        "id": "cp_062",
+        "origen_id": "c_546",
+        "destino_id": "c_023",
+        "frase": "el concepto de razón es la determinación del objeto como inherentemente racional",
+        "tipo": "es determinación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el concepto de razón es la determinación del objeto como inherentemente racional",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_127",
+      "conexion": {
+        "id": "cp_065",
+        "origen_id": "c_562",
+        "destino_id": "c_558",
+        "frase": "la injusticia es la violación del equilibrio ético que la justicia restaura",
+        "tipo": "es violación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la injusticia es la violación del equilibrio ético que la justicia restaura",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_128",
+      "conexion": {
+        "id": "cp_066",
+        "origen_id": "c_563",
+        "destino_id": "c_548",
+        "frase": "la sangre es la sustancia permanente del individuo que vive en la familia",
+        "tipo": "es sustancia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la sangre es la sustancia permanente del individuo que vive en la familia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_129",
+      "conexion": {
+        "id": "cp_068",
+        "origen_id": "c_565",
+        "destino_id": "c_584",
+        "frase": "la res publica es la comunidad organizada como poder universal",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "la res publica es la comunidad organizada como poder universal",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_130",
+      "conexion": {
+        "id": "cp_069",
+        "origen_id": "c_566",
+        "destino_id": "c_553",
+        "frase": "el varón es el hombre como individualización de la ley humana",
+        "tipo": "es individualización de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el varón es el hombre como individualización de la ley humana",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_131",
+      "conexion": {
+        "id": "cp_070",
+        "origen_id": "c_567",
+        "destino_id": "c_027",
+        "frase": "el espíritu universal consciente es el poder de la ley humana",
+        "tipo": "es poder de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el espíritu universal consciente es el poder de la ley humana",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_132",
+      "conexion": {
+        "id": "cp_071",
+        "origen_id": "c_569",
+        "destino_id": "c_283",
+        "frase": "la irrealidad es el estado de lo que pasa a la realidad mediante la acción",
+        "tipo": "se opone a",
+        "confianza": 0.9
+      },
+      "frase_editada": "la irrealidad es el estado de lo que pasa a la realidad mediante la acción",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_133",
+      "conexion": {
+        "id": "cp_075",
+        "origen_id": "c_574",
+        "destino_id": "c_050",
+        "frase": "la culpa es el resultado de la división que produce el acto ético",
+        "tipo": "es resultado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la culpa es el resultado de la división que produce el acto ético",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_134",
+      "conexion": {
+        "id": "cp_077",
+        "origen_id": "c_576",
+        "destino_id": "c_530",
+        "frase": "lo sabido es el lado consciente de la resolución de la conciencia ética",
+        "tipo": "es lado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "lo sabido es el lado consciente de la resolución de la conciencia ética",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_135",
+      "conexion": {
+        "id": "cp_078",
+        "origen_id": "c_577",
+        "destino_id": "c_530",
+        "frase": "lo no sabido es el lado oculto que la acción revela a la conciencia ética",
+        "tipo": "es lado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "lo no sabido es el lado oculto que la acción revela a la conciencia ética",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_136",
+      "conexion": {
+        "id": "cp_079",
+        "origen_id": "c_578",
+        "destino_id": "c_492",
+        "frase": "el pathos es la sustancia ética encarnada en el carácter individual",
+        "tipo": "es encarnación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el pathos es la sustancia ética encarnada en el carácter individual",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_137",
+      "conexion": {
+        "id": "cp_081",
+        "origen_id": "c_580",
+        "destino_id": "c_466",
+        "frase": "el poder negativo es el poder del destino que devora a las partes en conflicto",
+        "tipo": "es poder de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el poder negativo es el poder del destino que devora a las partes en conflicto",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_138",
+      "conexion": {
+        "id": "cp_082",
+        "origen_id": "c_581",
+        "destino_id": "c_558",
+        "frase": "el equilibrio es el estado de igualdad que la justicia restaura",
+        "tipo": "es restaurado por",
+        "confianza": 0.9
+      },
+      "frase_editada": "el equilibrio es el estado de igualdad que la justicia restaura",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_139",
+      "conexion": {
+        "id": "cp_083",
+        "origen_id": "c_582",
+        "destino_id": "c_028",
+        "frase": "lo inconsciente es el poder de la ley divina que persiste",
+        "tipo": "es poder de",
+        "confianza": 0.9
+      },
+      "frase_editada": "lo inconsciente es el poder de la ley divina que persiste",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_140",
+      "conexion": {
+        "id": "cp_084",
+        "origen_id": "c_586",
+        "destino_id": "c_027",
+        "frase": "la virilidad es la actividad de la ley humana manifestada en el gobierno y la guerra",
+        "tipo": "es actividad de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la virilidad es la actividad de la ley humana manifestada en el gobierno y la guerra",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_141",
+      "conexion": {
+        "id": "cp_087",
+        "origen_id": "c_593",
+        "destino_id": "c_548",
+        "frase": "los penates representan la autonomización de lo privado (familia) en el mundo romano",
+        "tipo": "representan",
+        "confianza": 0.9
+      },
+      "frase_editada": "los penates representan la autonomización de lo privado (familia) en el mundo romano",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_142",
+      "conexion": {
+        "id": "cp_088",
+        "origen_id": "c_594",
+        "destino_id": "c_583",
+        "frase": "la intriga es el modo de actuar de la femineidad que pervierte lo universal",
+        "tipo": "es modo de actuar de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la intriga es el modo de actuar de la femineidad que pervierte lo universal",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_143",
+      "conexion": {
+        "id": "cp_091",
+        "origen_id": "c_604",
+        "destino_id": "c_165",
+        "frase": "el alma es el principio animador mediante el cual la sustancia se forma en sus momentos",
+        "tipo": "es principio de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el alma es el principio animador mediante el cual la sustancia se forma en sus momentos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_144",
+      "conexion": {
+        "id": "cp_095",
+        "origen_id": "c_614",
+        "destino_id": "c_645",
+        "frase": "el ser absoluto incognoscible es el objeto producido por la negación de la intelección pura",
+        "tipo": "es producido por",
+        "confianza": 0.9
+      },
+      "frase_editada": "el ser absoluto incognoscible es el objeto producido por la negación de la intelección pura",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_145",
+      "conexion": {
+        "id": "cp_096",
+        "origen_id": "c_616",
+        "destino_id": "c_603",
+        "frase": "la vida doble es una forma del extrañamiento que divide la conciencia en dos mundos",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la vida doble es una forma del extrañamiento que divide la conciencia en dos mundos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_146",
+      "conexion": {
+        "id": "cp_098",
+        "origen_id": "c_618",
+        "destino_id": "c_602",
+        "frase": "el benefactor es la riqueza personificada de la cual la conciencia obtiene su goce",
+        "tipo": "es personificación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el benefactor es la riqueza personificada de la cual la conciencia obtiene su goce",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_147",
+      "conexion": {
+        "id": "cp_099",
+        "origen_id": "c_619",
+        "destino_id": "c_606",
+        "frase": "la gratitud es el sentimiento de la conciencia noble hacia la riqueza",
+        "tipo": "es sentimiento de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la gratitud es el sentimiento de la conciencia noble hacia la riqueza",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_148",
+      "conexion": {
+        "id": "cp_101",
+        "origen_id": "c_622",
+        "destino_id": "c_606",
+        "frase": "el consejo es lo que la conciencia noble ofrece al poder del Estado",
+        "tipo": "es ofrecido por",
+        "confianza": 0.9
+      },
+      "frase_editada": "el consejo es lo que la conciencia noble ofrece al poder del Estado",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_149",
+      "conexion": {
+        "id": "cp_102",
+        "origen_id": "c_623",
+        "destino_id": "c_499",
+        "frase": "el verdadero sacrificio es aquel en que la conciencia se conserva en la enajenación",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el verdadero sacrificio es aquel en que la conciencia se conserva en la enajenación",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_150",
+      "conexion": {
+        "id": "cp_103",
+        "origen_id": "c_624",
+        "destino_id": "c_039",
+        "frase": "el término medio es la unidad mediadora que queda excluida de los extremos",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el término medio es la unidad mediadora que queda excluida de los extremos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_151",
+      "conexion": {
+        "id": "cp_105",
+        "origen_id": "c_628",
+        "destino_id": "c_626",
+        "frase": "el nombre propio convierte la diferencia del monarca en una diferencia real para todos",
+        "tipo": "realiza la diferencia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el nombre propio convierte la diferencia del monarca en una diferencia real para todos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_152",
+      "conexion": {
+        "id": "cp_106",
+        "origen_id": "c_629",
+        "destino_id": "c_601",
+        "frase": "la autonomía extrañada es lo que el poder del Estado es cuando consiste en el sacrificio de la conciencia noble",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "la autonomía extrañada es lo que el poder del Estado es cuando consiste en el sacrificio de la conciencia noble",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_153",
+      "conexion": {
+        "id": "cp_107",
+        "origen_id": "c_630",
+        "destino_id": "c_618",
+        "frase": "la arrogancia es el espíritu del benefactor que imagina haber sometido al otro",
+        "tipo": "es espíritu de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la arrogancia es el espíritu del benefactor que imagina haber sometido al otro",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_154",
+      "conexion": {
+        "id": "cp_108",
+        "origen_id": "c_631",
+        "destino_id": "c_125",
+        "frase": "el abismo es la profundidad sin fondo de la pura negatividad donde desaparece toda sustancia",
+        "tipo": "es profundidad de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el abismo es la profundidad sin fondo de la pura negatividad donde desaparece toda sustancia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_155",
+      "conexion": {
+        "id": "cp_110",
+        "origen_id": "c_633",
+        "destino_id": "c_179",
+        "frase": "lo mejor universal es la universalidad abstracta a la que apunta la conciencia noble",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "lo mejor universal es la universalidad abstracta a la que apunta la conciencia noble",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_156",
+      "conexion": {
+        "id": "cp_115",
+        "origen_id": "c_644",
+        "destino_id": "c_031",
+        "frase": "la universalidad positiva es la determinidad del espíritu en la fe",
+        "tipo": "es determinidad en",
+        "confianza": 0.9
+      },
+      "frase_editada": "la universalidad positiva es la determinidad del espíritu en la fe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_157",
+      "conexion": {
+        "id": "cp_116",
+        "origen_id": "c_647",
+        "destino_id": "c_015",
+        "frase": "los espíritus eternos son las esencias inmutables del mundo suprasensible de la fe",
+        "tipo": "son esencias de",
+        "confianza": 0.9
+      },
+      "frase_editada": "los espíritus eternos son las esencias inmutables del mundo suprasensible de la fe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_158",
+      "conexion": {
+        "id": "cp_117",
+        "origen_id": "c_648",
+        "destino_id": "c_004",
+        "frase": "la sustancia simple es la primera forma del ser absoluto en el mundo irreal de la fe",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la sustancia simple es la primera forma del ser absoluto en el mundo irreal de la fe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_159",
+      "conexion": {
+        "id": "cp_119",
+        "origen_id": "c_652",
+        "destino_id": "c_601",
+        "frase": "el despotismo es el poder político absoluto que reprime la conciencia",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el despotismo es el poder político absoluto que reprime la conciencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_160",
+      "conexion": {
+        "id": "cp_120",
+        "origen_id": "c_653",
+        "destino_id": "c_031",
+        "frase": "el sacerdocio es la casta que, según la Ilustración, domina mediante la fe",
+        "tipo": "domina mediante",
+        "confianza": 0.9
+      },
+      "frase_editada": "el sacerdocio es la casta que, según la Ilustración, domina mediante la fe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_161",
+      "conexion": {
+        "id": "cp_121",
+        "origen_id": "c_654",
+        "destino_id": "c_645",
+        "frase": "el contagio es la metáfora para la propagación de la intelección pura",
+        "tipo": "es metáfora de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el contagio es la metáfora para la propagación de la intelección pura",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_162",
+      "conexion": {
+        "id": "cp_122",
+        "origen_id": "c_655",
+        "destino_id": "c_031",
+        "frase": "el error es lo que la intelección pura declara que es la fe",
+        "tipo": "es declarado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el error es lo que la intelección pura declara que es la fe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_163",
+      "conexion": {
+        "id": "cp_124",
+        "origen_id": "c_657",
+        "destino_id": "c_161",
+        "frase": "la enunciación es la expresión proposicional de la verdad",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "la enunciación es la expresión proposicional de la verdad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_164",
+      "conexion": {
+        "id": "cp_125",
+        "origen_id": "c_658",
+        "destino_id": "c_030",
+        "frase": "el engaño es de lo que la Ilustración acusa al sacerdocio",
+        "tipo": "es acusado por",
+        "confianza": 0.9
+      },
+      "frase_editada": "el engaño es de lo que la Ilustración acusa al sacerdocio",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_165",
+      "conexion": {
+        "id": "cp_127",
+        "origen_id": "c_662",
+        "destino_id": "c_002",
+        "frase": "la intención es el propósito o la voluntad pura de la conciencia",
+        "tipo": "es propósito de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la intención es el propósito o la voluntad pura de la conciencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_166",
+      "conexion": {
+        "id": "cp_128",
+        "origen_id": "c_663",
+        "destino_id": "c_031",
+        "frase": "la renuncia es el acto mediante el cual el individuo creyente se niega a sí mismo",
+        "tipo": "es acto de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la renuncia es el acto mediante el cual el individuo creyente se niega a sí mismo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_167",
+      "conexion": {
+        "id": "cp_130",
+        "origen_id": "c_666",
+        "destino_id": "c_031",
+        "frase": "el testimonio es lo que la Ilustración falsamente dice que fundamenta la fe",
+        "tipo": "es falso fundamento de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el testimonio es lo que la Ilustración falsamente dice que fundamenta la fe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_168",
+      "conexion": {
+        "id": "cp_132",
+        "origen_id": "c_668",
+        "destino_id": "c_028",
+        "frase": "el derecho divino es el derecho de la fe que se opone a la ley humana de la Ilustración",
+        "tipo": "es derecho de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el derecho divino es el derecho de la fe que se opone a la ley humana de la Ilustración",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_169",
+      "conexion": {
+        "id": "cp_134",
+        "origen_id": "c_670",
+        "destino_id": "c_031",
+        "frase": "la añoranza es el estado afectivo de la fe cuando se convierte en Ilustración insatisfecha",
+        "tipo": "es estado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la añoranza es el estado afectivo de la fe cuando se convierte en Ilustración insatisfecha",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_170",
+      "conexion": {
+        "id": "cp_135",
+        "origen_id": "c_671",
+        "destino_id": "c_030",
+        "frase": "la Ilustración satisfecha se contenta con el conocimiento de lo finito",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la Ilustración satisfecha se contenta con el conocimiento de lo finito",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_171",
+      "conexion": {
+        "id": "cp_140",
+        "origen_id": "c_678",
+        "destino_id": "c_031",
+        "frase": "la doble medida es la característica de la fe de mantener dos sistemas de valoración sin confrontarlos",
+        "tipo": "es característica de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la doble medida es la característica de la fe de mantener dos sistemas de valoración sin confrontarlos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_172",
+      "conexion": {
+        "id": "cp_142",
+        "origen_id": "c_683",
+        "destino_id": "c_033",
+        "frase": "la sospecha sustituye a la culpa en el régimen de la libertad absoluta",
+        "tipo": "sustituye en",
+        "confianza": 0.9
+      },
+      "frase_editada": "la sospecha sustituye a la culpa en el régimen de la libertad absoluta",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_173",
+      "conexion": {
+        "id": "cp_144",
+        "origen_id": "c_685",
+        "destino_id": "c_492",
+        "frase": "los estamentos son las esferas espirituales en que se articula la sustancia ética",
+        "tipo": "son esferas de",
+        "confianza": 0.9
+      },
+      "frase_editada": "los estamentos son las esferas espirituales en que se articula la sustancia ética",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_174",
+      "conexion": {
+        "id": "cp_145",
+        "origen_id": "c_686",
+        "destino_id": "c_549",
+        "frase": "la facción es lo que el gobierno se convierte al oponerse a la voluntad general",
+        "tipo": "es resultado de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la facción es lo que el gobierno se convierte al oponerse a la voluntad general",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_175",
+      "conexion": {
+        "id": "cp_146",
+        "origen_id": "c_687",
+        "destino_id": "c_015",
+        "frase": "el mundo ideal es el mundo suprasensible de la fe que la utilidad reconcilia con el mundo real",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el mundo ideal es el mundo suprasensible de la fe que la utilidad reconcilia con el mundo real",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_176",
+      "conexion": {
+        "id": "cp_147",
+        "origen_id": "c_688",
+        "destino_id": "c_032",
+        "frase": "la medida es la verdadera mediación que falta en la utilidad",
+        "tipo": "falta en",
+        "confianza": 0.9
+      },
+      "frase_editada": "la medida es la verdadera mediación que falta en la utilidad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_177",
+      "conexion": {
+        "id": "cp_150",
+        "origen_id": "c_695",
+        "destino_id": "c_034",
+        "frase": "la dignidad es el mérito moral que permite recibir la felicidad",
+        "tipo": "es mérito de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la dignidad es el mérito moral que permite recibir la felicidad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_178",
+      "conexion": {
+        "id": "cp_152",
+        "origen_id": "c_697",
+        "destino_id": "c_058",
+        "frase": "la libre realización es la independencia de la naturaleza respecto a la conciencia moral",
+        "tipo": "es independencia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la libre realización es la independencia de la naturaleza respecto a la conciencia moral",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_179",
+      "conexion": {
+        "id": "cp_154",
+        "origen_id": "c_699",
+        "destino_id": "c_004",
+        "frase": "el legislador santo es el Absoluto postulado que santifica los deberes",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el legislador santo es el Absoluto postulado que santifica los deberes",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_180",
+      "conexion": {
+        "id": "cp_155",
+        "origen_id": "c_700",
+        "destino_id": "c_004",
+        "frase": "la gracia es el don del Absoluto mediante el cual se otorga la felicidad",
+        "tipo": "es don de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la gracia es el don del Absoluto mediante el cual se otorga la felicidad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_181",
+      "conexion": {
+        "id": "cp_156",
+        "origen_id": "c_706",
+        "destino_id": "c_034",
+        "frase": "el progreso hacia la moralidad consumada se revela como imposible",
+        "tipo": "es progreso hacia",
+        "confianza": 0.9
+      },
+      "frase_editada": "el progreso hacia la moralidad consumada se revela como imposible",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_182",
+      "conexion": {
+        "id": "cp_157",
+        "origen_id": "c_707",
+        "destino_id": "c_034",
+        "frase": "la inmoralidad es la consecuencia necesaria de la moralidad incompleta",
+        "tipo": "es consecuencia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la inmoralidad es la consecuencia necesaria de la moralidad incompleta",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_183",
+      "conexion": {
+        "id": "cp_159",
+        "origen_id": "c_709",
+        "destino_id": "c_191",
+        "frase": "la transparencia del objeto para la conciencia moral falta en el deber",
+        "tipo": "falta en",
+        "confianza": 0.9
+      },
+      "frase_editada": "la transparencia del objeto para la conciencia moral falta en el deber",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_184",
+      "conexion": {
+        "id": "cp_161",
+        "origen_id": "c_713",
+        "destino_id": "c_050",
+        "frase": "el caso es la situación concreta que demanda la acción del Gewissen",
+        "tipo": "demanda",
+        "confianza": 0.9
+      },
+      "frase_editada": "el caso es la situación concreta que demanda la acción del Gewissen",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_185",
+      "conexion": {
+        "id": "cp_166",
+        "origen_id": "c_720",
+        "destino_id": "c_035",
+        "frase": "la genialidad moral es la capacidad creadora del Gewissen que sabe su voz interior como voz de Dios",
+        "tipo": "es capacidad de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la genialidad moral es la capacidad creadora del Gewissen que sabe su voz interior como voz de Dios",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_186",
+      "conexion": {
+        "id": "cp_168",
+        "origen_id": "c_722",
+        "destino_id": "c_035",
+        "frase": "el culto divino es la práctica solipsista de la conciencia moral que es a la vez comunitaria",
+        "tipo": "es práctica de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el culto divino es la práctica solipsista de la conciencia moral que es a la vez comunitaria",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_187",
+      "conexion": {
+        "id": "cp_169",
+        "origen_id": "c_723",
+        "destino_id": "c_712",
+        "frase": "el aseguramiento es la afirmación mediante la cual la conciencia asevera su convicción",
+        "tipo": "es afirmación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el aseguramiento es la afirmación mediante la cual la conciencia asevera su convicción",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_188",
+      "conexion": {
+        "id": "cp_170",
+        "origen_id": "c_725",
+        "destino_id": "c_724",
+        "frase": "la nostalgia es la aspiración frustrada del alma bella que rehúye la acción",
+        "tipo": "es aspiración de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la nostalgia es la aspiración frustrada del alma bella que rehúye la acción",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_189",
+      "conexion": {
+        "id": "cp_172",
+        "origen_id": "c_728",
+        "destino_id": "c_729",
+        "frase": "la puntuación es la capacidad de la conciencia universal para distorsionar lo que otra conciencia pone",
+        "tipo": "es capacidad de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la puntuación es la capacidad de la conciencia universal para distorsionar lo que otra conciencia pone",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_190",
+      "conexion": {
+        "id": "cp_174",
+        "origen_id": "c_736",
+        "destino_id": "c_050",
+        "frase": "el móvil es la razón o intención particular que mueve la acción",
+        "tipo": "mueve",
+        "confianza": 0.9
+      },
+      "frase_editada": "el móvil es la razón o intención particular que mueve la acción",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_191",
+      "conexion": {
+        "id": "cp_176",
+        "origen_id": "c_738",
+        "destino_id": "c_023",
+        "frase": "la existencia inmediata de la razón son las figuras que emergen tras la conciencia desgraciada",
+        "tipo": "son figuras de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la existencia inmediata de la razón son las figuras que emergen tras la conciencia desgraciada",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_192",
+      "conexion": {
+        "id": "cp_177",
+        "origen_id": "c_739",
+        "destino_id": "c_036",
+        "frase": "la religión del submundo es una forma de religión basada en la fe en el destino",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la religión del submundo es una forma de religión basada en la fe en el destino",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_193",
+      "conexion": {
+        "id": "cp_179",
+        "origen_id": "c_742",
+        "destino_id": "c_034",
+        "frase": "la religión de la moralidad es donde el Ser absoluto recupera contenido positivo unido a la negatividad",
+        "tipo": "es religión de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la religión de la moralidad es donde el Ser absoluto recupera contenido positivo unido a la negatividad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_194",
+      "conexion": {
+        "id": "cp_181",
+        "origen_id": "c_744",
+        "destino_id": "c_025",
+        "frase": "el espíritu verdadero es una de las figuras del espíritu en su desarrollo",
+        "tipo": "es figura de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el espíritu verdadero es una de las figuras del espíritu en su desarrollo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_195",
+      "conexion": {
+        "id": "cp_183",
+        "origen_id": "c_746",
+        "destino_id": "c_025",
+        "frase": "la existencia mundana es la existencia del espíritu en el tiempo",
+        "tipo": "es existencia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la existencia mundana es la existencia del espíritu en el tiempo",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_196",
+      "conexion": {
+        "id": "cp_184",
+        "origen_id": "c_747",
+        "destino_id": "c_025",
+        "frase": "la consumación es el cumplimiento del espíritu cuando retorna a su fundamento",
+        "tipo": "es cumplimiento de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la consumación es el cumplimiento del espíritu cuando retorna a su fundamento",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_197",
+      "conexion": {
+        "id": "cp_185",
+        "origen_id": "c_748",
+        "destino_id": "c_188",
+        "frase": "el fundamento es el self consciente de sí mismo al que retornan los momentos del espíritu",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el fundamento es el self consciente de sí mismo al que retornan los momentos del espíritu",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_198",
+      "conexion": {
+        "id": "cp_186",
+        "origen_id": "c_749",
+        "destino_id": "c_582",
+        "frase": "la noche es la oscuridad de lo inconsciente, la negatividad sin forma",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "la noche es la oscuridad de lo inconsciente, la negatividad sin forma",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_199",
+      "conexion": {
+        "id": "cp_189",
+        "origen_id": "c_753",
+        "destino_id": "c_025",
+        "frase": "la realidad libre es la existencia autónoma del espíritu en su forma objetiva",
+        "tipo": "es existencia de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la realidad libre es la existencia autónoma del espíritu en su forma objetiva",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_200",
+      "conexion": {
+        "id": "cp_190",
+        "origen_id": "c_755",
+        "destino_id": "c_025",
+        "frase": "el creador es el espíritu en su actividad productiva de formas en la religión",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el creador es el espíritu en su actividad productiva de formas en la religión",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_201",
+      "conexion": {
+        "id": "cp_194",
+        "origen_id": "c_762",
+        "destino_id": "c_040",
+        "frase": "el oráculo es el primer lenguaje necesario del dios en las religiones artísticas",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el oráculo es el primer lenguaje necesario del dios en las religiones artísticas",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_202",
+      "conexion": {
+        "id": "cp_196",
+        "origen_id": "c_764",
+        "destino_id": "c_188",
+        "frase": "el misterio es aquello en que el self se sabe uno con la esencia",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el misterio es aquello en que el self se sabe uno con la esencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_203",
+      "conexion": {
+        "id": "cp_199",
+        "origen_id": "c_767",
+        "destino_id": "c_461",
+        "frase": "la corporalidad es la manifestación corporal y visible de la autoconciencia",
+        "tipo": "es manifestación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la corporalidad es la manifestación corporal y visible de la autoconciencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_204",
+      "conexion": {
+        "id": "cp_200",
+        "origen_id": "c_768",
+        "destino_id": "c_065",
+        "frase": "el pensamiento sabiente es el conocimiento reflexivo que se apropia de las verdades universales",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el pensamiento sabiente es el conocimiento reflexivo que se apropia de las verdades universales",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_205",
+      "conexion": {
+        "id": "cp_201",
+        "origen_id": "c_770",
+        "destino_id": "c_767",
+        "frase": "el atletismo es la manifestación de la belleza corporal en competencias públicas",
+        "tipo": "es manifestación de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el atletismo es la manifestación de la belleza corporal en competencias públicas",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_206",
+      "conexion": {
+        "id": "cp_203",
+        "origen_id": "c_772",
+        "destino_id": "c_025",
+        "frase": "el orto es el amanecer o luz naciente del espíritu",
+        "tipo": "es amanecer de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el orto es el amanecer o luz naciente del espíritu",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_207",
+      "conexion": {
+        "id": "cp_204",
+        "origen_id": "c_773",
+        "destino_id": "c_760",
+        "frase": "Ceres es la diosa de la nutrición cuyo culto se celebra con los frutos",
+        "tipo": "es objeto de",
+        "confianza": 0.9
+      },
+      "frase_editada": "Ceres es la diosa de la nutrición cuyo culto se celebra con los frutos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_208",
+      "conexion": {
+        "id": "cp_205",
+        "origen_id": "c_775",
+        "destino_id": "c_760",
+        "frase": "el entusiasmo es el estado de arrebato divino en el culto",
+        "tipo": "es estado en",
+        "confianza": 0.9
+      },
+      "frase_editada": "el entusiasmo es el estado de arrebato divino en el culto",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_209",
+      "conexion": {
+        "id": "cp_207",
+        "origen_id": "c_777",
+        "destino_id": "c_040",
+        "frase": "el epos es la forma épica como primer lenguaje universal",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el epos es la forma épica como primer lenguaje universal",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_210",
+      "conexion": {
+        "id": "cp_211",
+        "origen_id": "c_781",
+        "destino_id": "c_040",
+        "frase": "la tragedia es una forma superior de lenguaje que expresa la dispersión de los momentos",
+        "tipo": "es forma de",
+        "confianza": 0.9
+      },
+      "frase_editada": "la tragedia es una forma superior de lenguaje que expresa la dispersión de los momentos",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_211",
+      "conexion": {
+        "id": "cp_214",
+        "origen_id": "c_784",
+        "destino_id": "c_781",
+        "frase": "el coro es el representante del pueblo en la tragedia",
+        "tipo": "es representante en",
+        "confianza": 0.9
+      },
+      "frase_editada": "el coro es el representante del pueblo en la tragedia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_212",
+      "conexion": {
+        "id": "cp_217",
+        "origen_id": "c_787",
+        "destino_id": "c_735",
+        "frase": "el olvido (lethe) es la reconciliación final donde desaparecen los poderes de la sustancia",
+        "tipo": "es",
+        "confianza": 0.9
+      },
+      "frase_editada": "el olvido (lethe) es la reconciliación final donde desaparecen los poderes de la sustancia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_213",
+      "conexion": {
+        "id": "cp_218",
+        "origen_id": "c_789",
+        "destino_id": "c_781",
+        "frase": "la máscara es la forma de individualidad en la tragedia y comedia",
+        "tipo": "es forma en",
+        "confianza": 0.9
+      },
+      "frase_editada": "la máscara es la forma de individualidad en la tragedia y comedia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_214",
+      "conexion": {
+        "id": "cp_219",
+        "origen_id": "c_790",
+        "destino_id": "c_782",
+        "frase": "el actor es el hombre real que se reviste de la persona del héroe",
+        "tipo": "encarna a",
+        "confianza": 0.9
+      },
+      "frase_editada": "el actor es el hombre real que se reviste de la persona del héroe",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_215",
+      "conexion": {
+        "id": "cp_220",
+        "origen_id": "c_791",
+        "destino_id": "c_788",
+        "frase": "la ironía en la comedia revela que la máscara es pura apariencia",
+        "tipo": "revela en",
+        "confianza": 0.9
+      },
+      "frase_editada": "la ironía en la comedia revela que la máscara es pura apariencia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_216",
+      "conexion": {
+        "id": "cp_221",
+        "origen_id": "c_792",
+        "destino_id": "c_781",
+        "frase": "el espectador es el observador de la representación trágica y cómica",
+        "tipo": "es observador de",
+        "confianza": 0.9
+      },
+      "frase_editada": "el espectador es el observador de la representación trágica y cómica",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_217",
+      "conexion": {
+        "id": "cp_223",
+        "origen_id": "c_794",
+        "destino_id": "c_781",
+        "frase": "la compasión es la respuesta emocional del coro a la tragedia",
+        "tipo": "es respuesta a",
+        "confianza": 0.9
+      },
+      "frase_editada": "la compasión es la respuesta emocional del coro a la tragedia",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_218",
+      "conexion": {
+        "id": "cp_010",
+        "origen_id": "c_443",
+        "destino_id": "c_403",
+        "frase": "la cohesión representa el ser-para-sí en lo inorgánico",
+        "tipo": "representa en",
+        "confianza": 0.85
+      },
+      "frase_editada": "la cohesión representa el ser-para-sí en lo inorgánico",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_219",
+      "conexion": {
+        "id": "cp_018",
+        "origen_id": "c_452",
+        "destino_id": "c_062",
+        "frase": "la sistematicidad es el orden conceptual que falta en la naturaleza contingente",
+        "tipo": "se opone a la contingencia",
+        "confianza": 0.85
+      },
+      "frase_editada": "la sistematicidad es el orden conceptual que falta en la naturaleza contingente",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_220",
+      "conexion": {
+        "id": "cp_036",
+        "origen_id": "c_488",
+        "destino_id": "c_455",
+        "frase": "el universo como universal no se realiza plenamente en la naturaleza orgánica",
+        "tipo": "no se realiza en",
+        "confianza": 0.85
+      },
+      "frase_editada": "el universo como universal no se realiza plenamente en la naturaleza orgánica",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_221",
+      "conexion": {
+        "id": "cp_050",
+        "origen_id": "c_511",
+        "destino_id": "c_191",
+        "frase": "la dilación o desenvolvimiento caracteriza al objeto en la realidad",
+        "tipo": "caracteriza a",
+        "confianza": 0.85
+      },
+      "frase_editada": "la dilación o desenvolvimiento caracteriza al objeto en la realidad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_222",
+      "conexion": {
+        "id": "cp_131",
+        "origen_id": "c_667",
+        "destino_id": "c_125",
+        "frase": "el exceso es el ir más allá de sí mismo que caracteriza la negatividad",
+        "tipo": "caracteriza a",
+        "confianza": 0.85
+      },
+      "frase_editada": "el exceso es el ir más allá de sí mismo que caracteriza la negatividad",
+      "seleccionada": true,
+      "estado": "aceptada"
+    },
+    {
+      "id": "pr_223",
+      "conexion": {
+        "id": "cp_160",
+        "origen_id": "c_710",
+        "destino_id": "c_034",
+        "frase": "la envidia se disfraza de moralidad en el juicio sobre la desdicha ajena",
+        "tipo": "se disfraza de",
+        "confianza": 0.85
+      },
+      "frase_editada": "la envidia se disfraza de moralidad en el juicio sobre la desdicha ajena",
       "seleccionada": true,
       "estado": "aceptada"
     }
   ],
   "estado": "completada",
   "razon_falla": null,
-  "iniciada_en": "2026-07-07T14:41:29.998312",
-  "completada_en": "2026-07-07T14:42:29.164187",
+  "iniciada_en": "2026-10-15T18:41:50.521865",
+  "completada_en": "2026-10-15T18:59:16.860868",
   "nodos_sueltos_ids": [
-    "c_107",
-    "c_109",
-    "c_139",
-    "c_141",
-    "c_110",
-    "c_140",
-    "c_294",
-    "c_320",
-    "c_322",
-    "c_326",
-    "c_327",
-    "c_331",
-    "c_332",
-    "c_333",
-    "c_334",
-    "c_335",
-    "c_336",
-    "c_337",
-    "c_338",
-    "c_339",
-    "c_340",
-    "c_341",
-    "c_343",
-    "c_344",
-    "c_345",
-    "c_346",
-    "c_347",
-    "c_348",
-    "c_349",
-    "c_350",
-    "c_351",
-    "c_352",
-    "c_353",
-    "c_354",
-    "c_355",
-    "c_356",
-    "c_359",
-    "c_360",
-    "c_361",
-    "c_362",
-    "c_363",
-    "c_364",
-    "c_365",
-    "c_366",
-    "c_367",
-    "c_368",
-    "c_369",
-    "c_370",
-    "c_371",
-    "c_372",
-    "c_373",
-    "c_374",
-    "c_375",
-    "c_376",
-    "c_377",
-    "c_378",
-    "c_379",
-    "c_380",
-    "c_381",
-    "c_382",
-    "c_385",
-    "c_386",
-    "c_387",
-    "c_388",
-    "c_389",
-    "c_390",
-    "c_391",
-    "c_392",
-    "c_393",
-    "c_394",
-    "c_395",
-    "c_396",
-    "c_397",
-    "c_398",
-    "c_399",
-    "c_408",
-    "c_409",
-    "c_410",
-    "c_411",
-    "c_412",
-    "c_413",
-    "c_414",
-    "c_417",
-    "c_418",
-    "c_419",
-    "c_420",
-    "c_421",
-    "c_423",
-    "c_424",
-    "c_425",
-    "c_426",
-    "c_427",
-    "c_428",
-    "c_429",
-    "c_430",
-    "c_431",
     "c_432",
     "c_433",
     "c_434",
@@ -1385,7 +3151,6 @@
     "c_436",
     "c_437",
     "c_438",
-    "c_439",
     "c_440",
     "c_441",
     "c_442",
@@ -1401,16 +3166,13 @@
     "c_452",
     "c_454",
     "c_458",
-    "c_459",
     "c_462",
     "c_465",
     "c_469",
     "c_470",
-    "c_475",
     "c_476",
     "c_477",
     "c_478",
-    "c_479",
     "c_480",
     "c_481",
     "c_482",
@@ -1421,7 +3183,6 @@
     "c_487",
     "c_488",
     "c_490",
-    "c_494",
     "c_496",
     "c_497",
     "c_498",
@@ -1435,14 +3196,10 @@
     "c_508",
     "c_509",
     "c_511",
-    "c_512",
-    "c_513",
     "c_514",
     "c_515",
     "c_518",
     "c_519",
-    "c_520",
-    "c_531",
     "c_533",
     "c_534",
     "c_535",
@@ -1473,7 +3230,6 @@
     "c_581",
     "c_582",
     "c_586",
-    "c_589",
     "c_591",
     "c_592",
     "c_593",
@@ -1481,13 +3237,10 @@
     "c_595",
     "c_598",
     "c_604",
-    "c_608",
     "c_610",
     "c_611",
-    "c_612",
     "c_613",
     "c_614",
-    "c_615",
     "c_616",
     "c_617",
     "c_618",
@@ -1496,7 +3249,6 @@
     "c_622",
     "c_623",
     "c_624",
-    "c_625",
     "c_626",
     "c_628",
     "c_629",
@@ -1509,11 +3261,9 @@
     "c_636",
     "c_641",
     "c_644",
-    "c_646",
     "c_647",
     "c_648",
     "c_649",
-    "c_651",
     "c_652",
     "c_653",
     "c_654",
@@ -1521,11 +3271,9 @@
     "c_656",
     "c_657",
     "c_658",
-    "c_659",
     "c_661",
     "c_662",
     "c_663",
-    "c_664",
     "c_665",
     "c_666",
     "c_667",
@@ -1536,19 +3284,15 @@
     "c_672",
     "c_674",
     "c_675",
-    "c_676",
     "c_677",
     "c_678",
     "c_680",
-    "c_682",
     "c_683",
     "c_684",
     "c_685",
     "c_686",
     "c_687",
     "c_688",
-    "c_689",
-    "c_692",
     "c_693",
     "c_694",
     "c_695",
@@ -1562,11 +3306,9 @@
     "c_708",
     "c_709",
     "c_710",
-    "c_711",
     "c_713",
     "c_714",
     "c_715",
-    "c_717",
     "c_718",
     "c_719",
     "c_720",
@@ -1575,7 +3317,6 @@
     "c_723",
     "c_725",
     "c_726",
-    "c_727",
     "c_728",
     "c_729",
     "c_736",
@@ -1594,10 +3335,8 @@
     "c_750",
     "c_752",
     "c_753",
-    "c_754",
     "c_755",
     "c_758",
-    "c_759",
     "c_760",
     "c_761",
     "c_762",
@@ -1607,7 +3346,6 @@
     "c_766",
     "c_767",
     "c_768",
-    "c_769",
     "c_770",
     "c_771",
     "c_772",
@@ -1636,7 +3374,6 @@
     "c_799",
     "c_800",
     "c_801",
-    "c_802",
     "c_803",
     "c_804",
     "c_805",
@@ -1644,13 +3381,11 @@
     "c_807",
     "c_808",
     "c_809",
-    "c_810",
     "c_811",
     "c_812",
     "c_813",
     "c_814",
     "c_815",
-    "c_816",
     "c_817",
     "c_818",
     "c_819",
@@ -1660,13 +3395,11 @@
     "c_827",
     "c_828",
     "c_829",
-    "c_830",
     "c_831",
     "c_832",
     "c_833",
     "c_834",
     "c_835",
-    "c_836",
     "c_837",
     "c_838",
     "c_839",
@@ -1678,16 +3411,13 @@
     "c_845",
     "c_846",
     "c_847",
-    "c_848",
     "c_849",
     "c_850",
     "c_851",
     "c_852",
     "c_853",
     "c_854",
-    "c_855",
     "c_856",
-    "c_857",
     "c_858",
     "c_859",
     "c_860",
@@ -1697,11 +3427,9 @@
     "c_866",
     "c_867",
     "c_868",
-    "c_869",
     "c_870",
     "c_871",
     "c_872",
-    "c_873",
     "c_874",
     "c_875",
     "c_876",
@@ -1720,7 +3448,6 @@
     "c_889",
     "c_890",
     "c_891",
-    "c_892",
     "c_893",
     "c_894",
     "c_895",
@@ -1732,18 +3459,14 @@
     "c_901",
     "c_902",
     "c_903",
-    "c_904",
     "c_905",
     "c_906",
     "c_907",
-    "c_908",
     "c_909",
     "c_910",
     "c_911",
     "c_912",
-    "c_913",
     "c_914",
-    "c_915",
     "c_916",
     "c_917",
     "c_918",
@@ -1762,7 +3485,6 @@
     "c_931",
     "c_932",
     "c_933",
-    "c_934",
     "c_935",
     "c_936",
     "c_937",
@@ -1772,7 +3494,6 @@
     "c_941",
     "c_942",
     "c_943",
-    "c_944",
     "c_945",
     "c_946",
     "c_947",
@@ -1782,7 +3503,6 @@
     "c_951",
     "c_952",
     "c_953",
-    "c_954",
     "c_955",
     "c_956",
     "c_957",
@@ -1796,14 +3516,12 @@
     "c_965",
     "c_966",
     "c_967",
-    "c_968",
     "c_969",
     "c_970",
     "c_971",
     "c_972",
     "c_973",
     "c_974",
-    "c_975",
     "c_976",
     "c_977",
     "c_978",
@@ -1815,8 +3533,6 @@
     "c_984",
     "c_985",
     "c_986",
-    "c_987",
-    "c_989",
     "c_990",
     "c_991",
     "c_992",
@@ -1832,9 +3548,7 @@
     "c_1004",
     "c_1005",
     "c_1006",
-    "c_1007",
     "c_1008",
-    "c_1009",
     "c_1010",
     "c_1011",
     "c_1012",
@@ -1851,11 +3565,9 @@
     "c_1027",
     "c_1028",
     "c_1029",
-    "c_1030",
     "c_1031",
     "c_1032",
     "c_1033",
-    "c_1034",
     "c_1035",
     "c_1036",
     "c_1037",
@@ -1866,10 +3578,8 @@
     "c_1042",
     "c_1043",
     "c_1044",
-    "c_1045",
     "c_1046",
     "c_1047",
-    "c_1048",
     "c_1049",
     "c_1050",
     "c_1051",
@@ -1878,7 +3588,6 @@
     "c_1054",
     "c_1055",
     "c_1056",
-    "c_1057",
     "c_1058",
     "c_1059",
     "c_1060",
@@ -1898,16 +3607,13 @@
     "c_1075",
     "c_1076",
     "c_1077",
-    "c_1078",
     "c_1079",
-    "c_1081",
     "c_1082",
     "c_1083",
     "c_1084",
     "c_1085",
     "c_1086",
     "c_1087",
-    "c_1088",
     "c_1089",
     "c_1090",
     "c_1091",
@@ -1916,7 +3622,6 @@
     "c_1094",
     "c_1095",
     "c_1096",
-    "c_1097",
     "c_1098",
     "c_1099",
     "c_1100",
@@ -1986,11 +3691,9 @@
     "c_1168",
     "c_1169",
     "c_1170",
-    "c_1171",
     "c_1172",
     "c_1173",
     "c_1174",
-    "c_1175",
     "c_1176",
     "c_1177",
     "c_1178",
@@ -2022,7 +3725,6 @@
     "c_1204",
     "c_1205",
     "c_1206",
-    "c_1207",
     "c_1208",
     "c_1209",
     "c_1210",
@@ -2036,28 +3738,21 @@
     "c_1218",
     "c_1219",
     "c_1220",
-    "c_1221",
     "c_1222",
-    "c_1223",
     "c_1224",
     "c_1225",
     "c_1226",
-    "c_1227",
     "c_1228",
     "c_1229",
     "c_1230",
     "c_1231",
-    "c_1232",
     "c_1233",
     "c_1234",
-    "c_1235",
     "c_1236",
     "c_1237",
     "c_1238",
     "c_1239",
     "c_1240",
-    "c_1241",
-    "c_1242",
     "c_1243"
   ]
 }

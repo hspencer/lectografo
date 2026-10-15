@@ -7118,7 +7118,7 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-07-03T01:34:03.248553",
-  "actualizado_en": "2026-07-07T14:52:32.507212",
+  "actualizado_en": "2026-09-14T15:17:15.988380",
   "conceptos_editados": {
     "c_001": {
       "label": "Sociedad unidimensional"
@@ -9689,6 +9689,886 @@
       "destino_id": "c_040",
       "tipo": "permitiría",
       "etiqueta": "el mundo pacificado permitiría ciencia con conceptos esencialmente diferentes",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_54938c56",
+      "origen_id": "c_215",
+      "destino_id": "c_006",
+      "tipo": "ejerce",
+      "etiqueta": "El intelecto crítico es la facultad que ejerce el pensamiento crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ecedd8b8",
+      "origen_id": "c_236",
+      "destino_id": "c_263",
+      "tipo": "causa",
+      "etiqueta": "La traducción a términos operacionales causa la abolición de la transitividad del concepto",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_aabc982d",
+      "origen_id": "c_001",
+      "destino_id": "c_184",
+      "tipo": "opera mediante",
+      "etiqueta": "La sociedad unidimensional opera mediante la absorción de la oposición",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e2c0c130",
+      "origen_id": "c_236",
+      "destino_id": "c_257",
+      "tipo": "reduce a",
+      "etiqueta": "La traducción operacional reduce los conceptos universales a una referencia objetiva particular",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c25046f6",
+      "origen_id": "c_359",
+      "destino_id": "c_364",
+      "tipo": "se caracteriza por",
+      "etiqueta": "La ciencia galileana se caracteriza por la anticipación y proyección metódica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_023da654",
+      "origen_id": "c_156",
+      "destino_id": "c_004",
+      "tipo": "se opone a",
+      "etiqueta": "La sublimación mediada se opone a la desublimación represiva e inmediata",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_de0f7f51",
+      "origen_id": "c_250",
+      "destino_id": "c_374",
+      "tipo": "se basan en",
+      "etiqueta": "Los conceptos operacionales y terapéuticos se basan en la reducción del concepto al concepto operacional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f9e2137b",
+      "origen_id": "c_016",
+      "destino_id": "c_416",
+      "tipo": "es un tipo de",
+      "etiqueta": "La conciencia falsa es un tipo de conciencia determinado por la represión social",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5251ef6b",
+      "origen_id": "c_001",
+      "destino_id": "c_427",
+      "tipo": "es",
+      "etiqueta": "La sociedad unidimensional es la sociedad establecida que prejuzga las alternativas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b2db5d7b",
+      "origen_id": "c_437",
+      "destino_id": "c_436",
+      "tipo": "propuesto por",
+      "etiqueta": "El concepto de 'objeto eterno' fue propuesto por Whitehead",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dc9871ae",
+      "origen_id": "c_018",
+      "destino_id": "c_438",
+      "tipo": "son",
+      "etiqueta": "Las alternativas históricas son las posibilidades abiertas en una situación dada",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_19c8f057",
+      "origen_id": "c_015",
+      "destino_id": "c_439",
+      "tipo": "son",
+      "etiqueta": "Las contradicciones internas del capitalismo son la fuente de la posibilidad de cambio",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2b3b076e",
+      "origen_id": "c_061",
+      "destino_id": "c_479",
+      "tipo": "es",
+      "etiqueta": "La sociedad industrial avanzada es una sociedad opulenta en movilización permanente",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a8b75484",
+      "origen_id": "c_047",
+      "destino_id": "c_485",
+      "tipo": "es",
+      "etiqueta": "La autonomía individual es la capacidad de autodeterminación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a7cae25a",
+      "origen_id": "c_485",
+      "destino_id": "c_486",
+      "tipo": "requiere",
+      "etiqueta": "La autodeterminación requiere energía libre no canalizada en trabajo y consumo heterónomos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e0f6141e",
+      "origen_id": "c_050",
+      "destino_id": "c_493",
+      "tipo": "crea",
+      "etiqueta": "La manipulación de necesidades consiste en la creación de necesidades represivas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_411cd242",
+      "origen_id": "c_499",
+      "destino_id": "c_463",
+      "tipo": "es ámbito de",
+      "etiqueta": "La dimensión estética es el ámbito propio del arte",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b3617b29",
+      "origen_id": "c_059",
+      "destino_id": "c_505",
+      "tipo": "es",
+      "etiqueta": "La pacificación de la existencia es el objetivo de la pacificación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_02fbe27f",
+      "origen_id": "c_404",
+      "destino_id": "c_507",
+      "tipo": "son",
+      "etiqueta": "Las instituciones sociales básicas son el objeto de la práctica política",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3d33ae56",
+      "origen_id": "c_524",
+      "destino_id": "c_526",
+      "tipo": "se define por",
+      "etiqueta": "El sistema de producción represivo se define por la contradicción entre su productividad y su uso represivo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_dc8cde4c",
+      "origen_id": "c_532",
+      "destino_id": "c_533",
+      "tipo": "viven",
+      "etiqueta": "Los proscritos viven la necesidad inmediata de poner fin a condiciones intolerables",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_955834aa",
+      "origen_id": "c_534",
+      "destino_id": "c_535",
+      "tipo": "se enfrenta a",
+      "etiqueta": "La oposición revolucionaria se enfrenta a la violencia del sistema",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_78bead78",
+      "origen_id": "c_359",
+      "destino_id": "c_360",
+      "tipo": "emerge de",
+      "etiqueta": "La ciencia galileana emerge de la Lebenswelt pero no la trasciende",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_06b594a0",
+      "origen_id": "c_269",
+      "destino_id": "c_206",
+      "tipo": "se opone a",
+      "etiqueta": "La lógica formal se opone a la dialéctica al abstraer del contenido histórico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_917ccc78",
+      "origen_id": "c_251",
+      "destino_id": "c_250",
+      "tipo": "aplica",
+      "etiqueta": "La sociología industrial aplica conceptos operacionales y terapéuticos para el control social",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d27bb4bd",
+      "origen_id": "c_007",
+      "destino_id": "c_343",
+      "tipo": "opera sobre",
+      "etiqueta": "La racionalidad tecnológica opera sobre la base de un a priori tecnológico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_351b18f7",
+      "origen_id": "c_007",
+      "destino_id": "c_362",
+      "tipo": "tiene como proyecto",
+      "etiqueta": "La racionalidad tecnológica tiene como proyecto histórico la dominación de la naturaleza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_fde6a083",
+      "origen_id": "c_024",
+      "destino_id": "c_420",
+      "tipo": "incluye",
+      "etiqueta": "La belleza es un valor estético fundamental que promete felicidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7a5240b8",
+      "origen_id": "c_011",
+      "destino_id": "c_431",
+      "tipo": "permite desarrollo de",
+      "etiqueta": "La liberación permite el libre desarrollo de las facultades humanas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4390433a",
+      "origen_id": "c_006",
+      "destino_id": "c_443",
+      "tipo": "revela",
+      "etiqueta": "El pensamiento crítico revela la distinción entre la apariencia racional y la realidad irracional del sistema",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cd47cdcd",
+      "origen_id": "c_448",
+      "destino_id": "c_449",
+      "tipo": "promueve",
+      "etiqueta": "La nueva idea de Razón tiene como función promover el arte de la vida",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6c231cc3",
+      "origen_id": "c_463",
+      "destino_id": "c_465",
+      "tipo": "proyecta",
+      "etiqueta": "El arte proyecta imágenes de una vida sin temor",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c19b1644",
+      "origen_id": "c_052",
+      "destino_id": "c_474",
+      "tipo": "son un tipo de",
+      "etiqueta": "Las necesidades verdaderas son un tipo de necesidades humanas cuyo contenido es histórico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_0bdff118",
+      "origen_id": "c_004",
+      "destino_id": "c_487",
+      "tipo": "produce",
+      "etiqueta": "La desublimación represiva produce una satisfacción que esclaviza",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_29eae997",
+      "origen_id": "c_021",
+      "destino_id": "c_495",
+      "tipo": "se sustenta en",
+      "etiqueta": "La dominación racional-técnica se sustenta en una base material de dominación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e272135c",
+      "origen_id": "c_001",
+      "destino_id": "c_506",
+      "tipo": "constituye",
+      "etiqueta": "La sociedad unidimensional constituye un círculo vicioso que se autoperpetúa",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4b506840",
+      "origen_id": "c_040",
+      "destino_id": "c_515",
+      "tipo": "es realizado por",
+      "etiqueta": "El cambio cualitativo debe ser realizado por un nuevo sujeto histórico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_79e3816f",
+      "origen_id": "c_184",
+      "destino_id": "c_528",
+      "tipo": "hace ineficaces",
+      "etiqueta": "La absorción de la oposición hace ineficaces las formas tradicionales de protesta",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_eb78e1fb",
+      "origen_id": "c_196",
+      "destino_id": "c_270",
+      "tipo": "se fundamenta en",
+      "etiqueta": "El pensamiento bidimensional se fundamenta en la distinción ontológica entre verdad y apariencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_87bfe5dc",
+      "origen_id": "c_368",
+      "destino_id": "c_379",
+      "tipo": "ignora",
+      "etiqueta": "El positivismo ignora el mundo empírico real al restringir la experiencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a08b4b61",
+      "origen_id": "c_006",
+      "destino_id": "c_241",
+      "tipo": "opera mediante",
+      "etiqueta": "El pensamiento crítico opera mediante conceptos con sentido transitivo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_390dacfb",
+      "origen_id": "c_339",
+      "destino_id": "c_335",
+      "tipo": "tiende a",
+      "etiqueta": "La filosofía científica contemporánea tiende a la disolución de la materia en relaciones lógicas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3ccb254b",
+      "origen_id": "c_007",
+      "destino_id": "c_357",
+      "tipo": "se realiza como",
+      "etiqueta": "La racionalidad tecnológica se realiza históricamente cuando la técnica se convierte en forma universal de producción",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d81b7d99",
+      "origen_id": "c_159",
+      "destino_id": "c_174",
+      "tipo": "subvierte",
+      "etiqueta": "El lenguaje poético subvierte el sistema proposicional tradicional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_785e70d9",
+      "origen_id": "c_049",
+      "destino_id": "c_223",
+      "tipo": "se manifiesta en",
+      "etiqueta": "Los regímenes autoritarios son una manifestación de la sociedad totalitaria",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_304bfa71",
+      "origen_id": "c_001",
+      "destino_id": "c_234",
+      "tipo": "se expresa a través de",
+      "etiqueta": "La sociedad unidimensional se expresa a través de la comunicación funcional",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_57ec7e54",
+      "origen_id": "c_257",
+      "destino_id": "c_256",
+      "tipo": "elimina ambigüedad de",
+      "etiqueta": "La referencia objetiva particular elimina la ambigüedad de los términos vagos e indefinidos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cb155427",
+      "origen_id": "c_329",
+      "destino_id": "c_332",
+      "tipo": "implica",
+      "etiqueta": "La neutralidad de la racionalidad científica implica la falta de validez lógica de los valores",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_22bba230",
+      "origen_id": "c_067",
+      "destino_id": "c_354",
+      "tipo": "expresa",
+      "etiqueta": "La tecnología como proyecto político expresa la esencia de la técnica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_79ab442f",
+      "origen_id": "c_251",
+      "destino_id": "c_373",
+      "tipo": "practica",
+      "etiqueta": "La sociología industrial practica una forma de empirismo terapéutico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9f4c611a",
+      "origen_id": "c_018",
+      "destino_id": "c_429",
+      "tipo": "se juzgan según",
+      "etiqueta": "Las alternativas históricas se juzgan según el criterio de la verdad histórica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f5a51023",
+      "origen_id": "c_415",
+      "destino_id": "c_417",
+      "tipo": "es sintetizada en",
+      "etiqueta": "El espíritu es la síntesis integradora de los actos de la conciencia",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_900e7e10",
+      "origen_id": "c_417",
+      "destino_id": "c_418",
+      "tipo": "incluye",
+      "etiqueta": "El espíritu incluye lo que está negativamente presente como fuerzas reprimidas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_83fb28de",
+      "origen_id": "c_011",
+      "destino_id": "c_421",
+      "tipo": "busca realizar",
+      "etiqueta": "La liberación busca realizar la justicia como potencialidad histórica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_21524297",
+      "origen_id": "c_427",
+      "destino_id": "c_426",
+      "tipo": "condiciona",
+      "etiqueta": "La elección determinada ocurre dentro de las condiciones de la sociedad establecida",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_94f1b304",
+      "origen_id": "c_426",
+      "destino_id": "c_425",
+      "tipo": "presupone",
+      "etiqueta": "La elección determinada presupone la libertad negativa frente a los hechos dados",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2e8cc88d",
+      "origen_id": "c_008",
+      "destino_id": "c_434",
+      "tipo": "se constituye en",
+      "etiqueta": "El universo del discurso se constituye en y a través del lenguaje",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9a04f17c",
+      "origen_id": "c_438",
+      "destino_id": "c_440",
+      "tipo": "depende de",
+      "etiqueta": "La realización de las posibilidades históricas depende de los recursos materiales e intelectuales disponibles",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6635e2b9",
+      "origen_id": "c_048",
+      "destino_id": "c_445",
+      "tipo": "opera en",
+      "etiqueta": "La integración de opuestos es el mecanismo de cohesión dentro de la sociedad de clases avanzada",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c38bf007",
+      "origen_id": "c_448",
+      "destino_id": "c_007",
+      "tipo": "es alternativa a",
+      "etiqueta": "Una nueva idea de Razón es la alternativa a la racionalidad tecnológica dominante",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_b7cef181",
+      "origen_id": "c_011",
+      "destino_id": "c_457",
+      "tipo": "busca",
+      "etiqueta": "La liberación busca un dominio sobre la naturaleza que sea liberador y no represivo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_6607c290",
+      "origen_id": "c_457",
+      "destino_id": "c_459",
+      "tipo": "es manifestación de",
+      "etiqueta": "El dominio liberador es una manifestación de la razón como libertad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_3ccaf4e3",
+      "origen_id": "c_459",
+      "destino_id": "c_458",
+      "tipo": "se realiza en",
+      "etiqueta": "La razón como libertad se realiza en la historia como negación de la naturaleza ciega",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f103fb33",
+      "origen_id": "c_458",
+      "destino_id": "c_460",
+      "tipo": "es proyecto de",
+      "etiqueta": "La historia como negación de la naturaleza es el proyecto del hombre como animal rationale",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_edd2b6ea",
+      "origen_id": "c_154",
+      "destino_id": "c_463",
+      "tipo": "es cualidad de",
+      "etiqueta": "La alienación artística es una cualidad esencial del arte en una sociedad no libre",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_448986cc",
+      "origen_id": "c_463",
+      "destino_id": "c_461",
+      "tipo": "realiza",
+      "etiqueta": "El arte realiza una reducción estética que revela la forma de la libertad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4f230e15",
+      "origen_id": "c_461",
+      "destino_id": "c_462",
+      "tipo": "es",
+      "etiqueta": "La reducción estética es una forma de transformación liberadora",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7ebc6dd3",
+      "origen_id": "c_469",
+      "destino_id": "c_007",
+      "tipo": "mistifica",
+      "etiqueta": "El fetichismo tecnológico es una interpretación ideológica que mistifica la racionalidad tecnológica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_5b316ae5",
+      "origen_id": "c_011",
+      "destino_id": "c_471",
+      "tipo": "requiere",
+      "etiqueta": "La liberación requiere una reducción cualitativa y cuantitativa del poder",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a2576430",
+      "origen_id": "c_474",
+      "destino_id": "c_475",
+      "tipo": "determina",
+      "etiqueta": "El nivel de producción socialmente necesaria depende de la definición de las necesidades humanas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7eb6fabd",
+      "origen_id": "c_100",
+      "destino_id": "c_476",
+      "tipo": "produce",
+      "etiqueta": "El tiempo libre produce una transformación del sujeto que le permite redefinir sus necesidades",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_421677e1",
+      "origen_id": "c_479",
+      "destino_id": "c_478",
+      "tipo": "se mantiene mediante",
+      "etiqueta": "La sociedad opulenta se mantiene mediante la 'carrera de ratas' del consumo competitivo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8e20f6b5",
+      "origen_id": "c_479",
+      "destino_id": "c_480",
+      "tipo": "alcanza el",
+      "etiqueta": "El superdesarrollo es el estado alcanzado por la sociedad opulenta",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ce5943a0",
+      "origen_id": "c_479",
+      "destino_id": "c_481",
+      "tipo": "se basa en",
+      "etiqueta": "La sociedad opulenta se basa en el despilfarro lucrativo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1c6c8fa4",
+      "origen_id": "c_479",
+      "destino_id": "c_482",
+      "tipo": "se organiza como",
+      "etiqueta": "La sociedad opulenta se organiza como una sociedad de movilización permanente",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ff69a77c",
+      "origen_id": "c_059",
+      "destino_id": "c_483",
+      "tipo": "requiere",
+      "etiqueta": "La pacificación de la existencia requiere el desarrollo de nuevas cualidades humanas",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_cfcd5f2c",
+      "origen_id": "c_487",
+      "destino_id": "c_488",
+      "tipo": "conduce a",
+      "etiqueta": "La satisfacción que esclaviza conduce a la servidumbre de la prosperidad destructiva",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c6dc0446",
+      "origen_id": "c_011",
+      "destino_id": "c_490",
+      "tipo": "permitiría",
+      "etiqueta": "La liberación permitiría una sublimación no represiva de las necesidades",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_c3ffe554",
+      "origen_id": "c_499",
+      "destino_id": "c_498",
+      "tipo": "se comunica vía",
+      "etiqueta": "La dimensión estética se comunica a través de la ficción cuando otros canales están cerrados",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2d7ded19",
+      "origen_id": "c_001",
+      "destino_id": "c_500",
+      "tipo": "realiza",
+      "etiqueta": "La sociedad unidimensional realiza la administración de toda comunicación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ccc52255",
+      "origen_id": "c_502",
+      "destino_id": "c_503",
+      "tipo": "coexiste con",
+      "etiqueta": "El horror de Auschwitz coexiste con los mayores logros tecnológicos",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_d1f94c04",
+      "origen_id": "c_502",
+      "destino_id": "c_504",
+      "tipo": "es una de las",
+      "etiqueta": "Auschwitz es una de las imágenes de dominación y muerte que poseen a la sociedad contemporánea",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a72aadbd",
+      "origen_id": "c_040",
+      "destino_id": "c_508",
+      "tipo": "requiere",
+      "etiqueta": "El cambio cualitativo requiere una planificación de la totalidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_08fe9946",
+      "origen_id": "c_507",
+      "destino_id": "c_510",
+      "tipo": "son sostenidas por",
+      "etiqueta": "La democracia liberal es la forma de gobierno que sostiene las instituciones sociales básicas existentes",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_26d37c03",
+      "origen_id": "c_515",
+      "destino_id": "c_516",
+      "tipo": "requiere liberación de",
+      "etiqueta": "La aparición del sujeto histórico requiere la liberación de la propaganda",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_13b6798e",
+      "origen_id": "c_515",
+      "destino_id": "c_518",
+      "tipo": "es negado por",
+      "etiqueta": "El sistema material y cultural existente niega la posibilidad de un nuevo sujeto histórico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9d894b94",
+      "origen_id": "c_006",
+      "destino_id": "c_523",
+      "tipo": "es forma extrema de",
+      "etiqueta": "La negación absoluta es la forma extrema del pensamiento crítico en la sociedad totalmente administrada",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_8ec843f9",
+      "origen_id": "c_523",
+      "destino_id": "c_524",
+      "tipo": "es respuesta a",
+      "etiqueta": "La negación absoluta es la respuesta al sistema de producción represivo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1c8b966a",
+      "origen_id": "c_526",
+      "destino_id": "c_527",
+      "tipo": "es ocultada por",
+      "etiqueta": "La unificación ilusoria de los opuestos oculta la contradicción entre productividad y uso represivo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_16c9116d",
+      "origen_id": "c_510",
+      "destino_id": "c_529",
+      "tipo": "preserva ilusión de",
+      "etiqueta": "La democracia establecida preserva la ilusión de soberanía popular",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_bf235d37",
+      "origen_id": "c_529",
+      "destino_id": "c_530",
+      "tipo": "neutraliza",
+      "etiqueta": "La soberanía popular neutraliza al pueblo como fermento del cambio social",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_a5539c45",
+      "origen_id": "c_533",
+      "destino_id": "c_534",
+      "tipo": "impulsa",
+      "etiqueta": "La necesidad inmediata impulsa una oposición revolucionaria en la práctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9b546009",
+      "origen_id": "c_534",
+      "destino_id": "c_536",
+      "tipo": "es",
+      "etiqueta": "La oposición revolucionaria de los excluidos es una fuerza elemental que rompe las reglas del juego",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_799a714d",
+      "origen_id": "c_001",
+      "destino_id": "c_169",
+      "tipo": "manipula",
+      "etiqueta": "La sociedad unidimensional manipula el instinto de muerte para reforzar la cohesión social",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_ba5ed84c",
+      "origen_id": "c_379",
+      "destino_id": "c_447",
+      "tipo": "se caracteriza por",
+      "etiqueta": "El mundo empírico real se caracteriza por una ambigüedad objetiva",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_7db219c1",
+      "origen_id": "c_463",
+      "destino_id": "c_464",
+      "tipo": "se relaciona con",
+      "etiqueta": "El arte mantiene una relación compleja con la técnica, compartiendo y diferenciándose de su lógica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e7d295c6",
+      "origen_id": "c_471",
+      "destino_id": "c_472",
+      "tipo": "permite reorientar",
+      "etiqueta": "La reducción del poder permite que el logos técnico se oriente a la pacificación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_e8d6bb15",
+      "origen_id": "c_040",
+      "destino_id": "c_532",
+      "tipo": "es portado por",
+      "etiqueta": "Los proscritos y extraños son los portadores potenciales del cambio cualitativo",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_80d34f35",
+      "origen_id": "c_017",
+      "destino_id": "c_290",
+      "tipo": "es forma contemporánea de",
+      "etiqueta": "La teoría crítica es la forma contemporánea de la teoría filosófica unida a la práctica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_75cb9748",
+      "origen_id": "c_017",
+      "destino_id": "c_432",
+      "tipo": "confronta",
+      "etiqueta": "La teoría crítica debe confrontar el problema del historicismo para establecer criterios de verdad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_1d59eeb3",
+      "origen_id": "c_434",
+      "destino_id": "c_435",
+      "tipo": "es analizado por",
+      "etiqueta": "La filosofía de Humboldt analiza el carácter experiencial del lenguaje",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_00dec7ce",
+      "origen_id": "c_453",
+      "destino_id": "c_330",
+      "tipo": "supera",
+      "etiqueta": "La materialización de valores en una sociedad libre superaría la separación de valores y realidad",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4a9b0bff",
+      "origen_id": "c_463",
+      "destino_id": "c_467",
+      "tipo": "define posibilidades de",
+      "etiqueta": "La racionalidad del arte puede definir las posibilidades de una sociedad libre",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_f07595c7",
+      "origen_id": "c_059",
+      "destino_id": "c_468",
+      "tipo": "requiere",
+      "etiqueta": "La pacificación de la existencia requiere que el arte se convierta en una técnica de pacificación",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_2407fa95",
+      "origen_id": "c_472",
+      "destino_id": "c_473",
+      "tipo": "se convierte en",
+      "etiqueta": "El logos técnico orientado a la pacificación se convierte en el organon del arte de la vida",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9bae0bb8",
+      "origen_id": "c_483",
+      "destino_id": "c_484",
+      "tipo": "se manifiesta en",
+      "etiqueta": "La retirada personal de energía es una manifestación de las cualidades de una existencia pacífica",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_9d6be45f",
+      "origen_id": "c_492",
+      "destino_id": "c_006",
+      "tipo": "abre posibilidad de",
+      "etiqueta": "El vacío traumático de la desconexión social abre la posibilidad del pensamiento crítico",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_17a50805",
+      "origen_id": "c_321",
+      "destino_id": "c_502",
+      "tipo": "se manifiesta en",
+      "etiqueta": "La dinámica de lo negativo en lo positivo se manifiesta en el horror de Auschwitz",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_446af89d",
+      "origen_id": "c_018",
+      "destino_id": "c_437",
+      "tipo": "son formulación de",
+      "etiqueta": "Los 'objetos eternos' de Whitehead son una formulación metafísica de las alternativas históricas como posibilidades",
+      "bidireccional": false
+    },
+    {
+      "id": "r_rec_4d0c0e95",
+      "origen_id": "c_508",
+      "destino_id": "c_513",
+      "tipo": "podría requerir",
+      "etiqueta": "La planificación podría requerir una autoridad centralizada racional",
       "bidireccional": false
     }
   ],
