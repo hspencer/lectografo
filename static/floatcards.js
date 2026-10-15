@@ -67,8 +67,16 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
       if (!data.parentCardId) return;
       const pd = cards.get(data.parentCardId);
       if (!pd) return;
-      const x1 = pd.el.offsetLeft + pd.el.offsetWidth, y1 = pd.el.offsetTop + 18;
-      const x2 = data.el.offsetLeft, y2 = data.el.offsetTop + 18;
+      // El punto de anclaje se recalcula según la posición relativa actual
+      // (no la de apertura): si al arrastrar la tarjeta hija queda a la
+      // izquierda de la padre, la flecha sale por el borde izquierdo de
+      // ambas en vez de cruzarlas — el sentido (marker-start/end) no cambia,
+      // solo el lado por el que conecta.
+      const pLeft = pd.el.offsetLeft, pRight = pLeft + pd.el.offsetWidth;
+      const cLeft = data.el.offsetLeft, cRight = cLeft + data.el.offsetWidth;
+      const hijoALaDerecha = (cLeft + cRight) / 2 >= (pLeft + pRight) / 2;
+      const x1 = hijoALaDerecha ? pRight : pLeft, y1 = pd.el.offsetTop + 18;
+      const x2 = hijoALaDerecha ? cLeft : cRight,  y2 = data.el.offsetTop + 18;
       const cx = (x1 + x2) / 2;
       const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
       p.setAttribute("d", `M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}`);
