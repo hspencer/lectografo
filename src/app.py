@@ -1760,19 +1760,28 @@ async def obtener_settings():
     """Configuración actual + modelos disponibles y estado por proveedor."""
     modelos: list[str] = []
     ollama_ok = False
+    lmstudio_ok = False
+
+    import httpx as _httpx
+
     if settings.provider == "ollama":
         try:
-            import httpx as _httpx
             r = _httpx.get(f"{settings.ollama_endpoint}/api/tags", timeout=4.0)
             if r.status_code == 200:
                 modelos = [m["name"] for m in r.json().get("models", [])]
                 ollama_ok = True
         except Exception:
             pass
-    modelo_actual = (
-        settings.ollama_model if settings.provider == "ollama"
-        else getattr(settings, f"{settings.provider}_model", None)
-    )
+    elif settings.provider == "lmstudio":
+        try:
+            r = _httpx.get(f"{settings.lmstudio_endpoint.rstrip('/')}/models", timeout=4.0)
+            if r.status_code == 200:
+                modelos = [m["id"] for m in r.json().get("data", [])]
+                lmstudio_ok = True
+        except Exception:
+            pass
+
+    modelo_actual = getattr(settings, f"{settings.provider}_model", None)
     return {
         "provider":         settings.provider,
         "model":            modelo_actual,
@@ -1781,6 +1790,10 @@ async def obtener_settings():
             "ollama": {
                 "model":     settings.ollama_model or "",
                 "connected": ollama_ok,
+            },
+            "lmstudio": {
+                "model":     settings.lmstudio_model or "",
+                "connected": lmstudio_ok,
             },
             "anthropic": {
                 "model":   settings.anthropic_model,
@@ -1806,7 +1819,7 @@ class SettingsPayload(BaseModel):
 @app.patch("/api/settings")
 async def actualizar_settings(payload: SettingsPayload):
     """Cambia el proveedor y/o modelo en uso. Escribe .env y actualiza en memoria."""
-    valid_providers = {"ollama", "anthropic", "openai", "gemini"}
+    valid_providers = {"ollama", "lmstudio", "anthropic", "openai", "gemini"}
     new_provider = (payload.provider or "").strip() or None
     if new_provider and new_provider not in valid_providers:
         raise HTTPException(400, f"Proveedor no reconocido: '{new_provider}'")
@@ -1817,6 +1830,10 @@ async def actualizar_settings(payload: SettingsPayload):
         new_model = (payload.model or "").strip() or settings.ollama_model or ""
         if not new_model:
             raise HTTPException(400, "OLLAMA_MODEL debe estar configurado")
+    elif target == "lmstudio":
+        new_model = (payload.model or "").strip() or settings.lmstudio_model or ""
+        if not new_model:
+            raise HTTPException(400, "LMSTUDIO_MODEL debe estar configurado")
     elif target == "anthropic":
         key = _leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key
         if not key:
@@ -2034,4 +2051,13 @@ def editar_transcript(slug: str, payload: EditarTextoPayload):
 
 
 # ── Static files (debe ir al final) ───────────────────────────────────────────
-app.mount("/", StaticFiles(directory=str(STATIC), html=True), name="static")
+# Sin esto el navegador cachea app.js/css por heurística (sin validar nunca)
+# y los cambios durante desarrollo no se ven hasta vaciar la caché a mano.
+class _NoCacheStaticFiles(StaticFiles):
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = "no-store"
+        return response
+
+
+app.mount("/", _NoCacheStaticFiles(directory=str(STATIC), html=True), name="static")

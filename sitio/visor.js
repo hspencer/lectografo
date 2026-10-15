@@ -1,8 +1,17 @@
-import { initNavCols } from "./navcols.js";
+import { createFloatingCards } from "./floatcards.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 }[c]));
+
+// Lucide icon helper — igual que ico() en static/app.js, subset usado acá
+function ico(name, size = 13) {
+  const P = {
+    "book-a":     `<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m8 13 4-7 4 7"/><path d="M9.1 11h5.7"/>`,
+    "graph-star": `<path d="m12.342 9.316 1.764-3.527"/><path d="m12.59 14.545 2.35 3.759"/><path d="m13.982 12.332 4.03.447"/><path d="M5.414 17.586 8.88 14.12"/><path d="M9.025 9.742 5.317 5.505"/><circle cx="11" cy="12" r="3"/><circle cx="15" cy="4" r="2"/><circle cx="16" cy="20" r="2"/><circle cx="20" cy="13" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="4" cy="4" r="2"/>`,
+  };
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] || ""}</svg>`;
+}
 
 const DIR_SYM = { saliente: "→", entrante: "←", bidireccional: "↔" };
 
@@ -10,14 +19,13 @@ const slug = new URLSearchParams(location.search).get("slug");
 
 const state = {
   grafo: null,
-  modo3d: false,
+  modo3d: true,  // 3D por defecto
   grafoDestroy: null,
   grafoFit: null,
   grafoHighlight: null,
   grafoCenter: null,
   relColor: null,
-  navCols: null,
-  path: [],   // [{ node, link, dir }] — link/dir describen cómo se llegó a ese paso
+  mapaCards: null,
 };
 
 // Token de generación: descarta renders 3D/2D que quedaron en vuelo si el
@@ -40,13 +48,11 @@ async function init() {
   document.title = `Lectógrafo — ${state.grafo.titulo || slug}`;
   document.getElementById("grafo-titulo").textContent = state.grafo.titulo || slug;
 
-  state.navCols = initNavCols(document.getElementById("nav-cols"), {
-    onCerrar: id => {
-      const idx = parseInt(id.replace("col-", ""), 10);
-      state.path = state.path.slice(0, idx);
-      refrescarHighlight();
-    },
-  });
+  state.mapaCards = createFloatingCards(
+    document.getElementById("mapa-overlay"),
+    document.getElementById("mapa-arrows"),
+    { onFocus: nodeId => state.grafoCenter?.(nodeId) },
+  );
 
   document.getElementById("btn-fit").onclick = () => state.grafoFit?.();
   document.getElementById("btn-modo3d").onclick = () => {
@@ -68,7 +74,9 @@ async function renderMapa() {
   } else {
     svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
   }
-  document.getElementById("btn-modo3d-label").textContent = state.modo3d ? "2D" : "3D";
+  const btnModo3d = document.getElementById("btn-modo3d");
+  btnModo3d.title = state.modo3d ? "Cambiar a vista 2D" : "Cambiar a vista 3D";
+  btnModo3d.classList.toggle("active", state.modo3d);
 
   const modulo = state.modo3d
     ? await import("./grafo3d.js")
@@ -195,89 +203,52 @@ function wireAutocomplete(inputEl, dropdownEl, getPool, { minChars = 1 } = {}) {
   });
 }
 
-// ── Navegador de columnas: nodo del grafo → columnas concepto+relaciones ──
+// ── Tarjetas flotantes: nodo del grafo → tarjeta flotante de concepto,
+// encadenadas por flechas que respetan la dirección de la relación ──────
 
 function onNodoSeleccionado(nodo) {
-  if (!nodo) { limpiarCamino(); return; }
-  state.path = [{ node: nodo, link: null, dir: null }];
-  renderColumnasDesde(0);
+  if (!nodo || !state.mapaCards) return;
+  const existente = state.mapaCards.findByNodeId(nodo.id);
+  if (existente) { state.mapaCards.bringToFront(existente); return; }
+  abrirCardMapa(nodo);
   refrescarHighlight();
 }
 
-function limpiarCamino() {
-  state.path = [];
-  state.navCols?.limpiar();
-  refrescarHighlight();
-}
-
-function avanzarCamino(nodoId, link, dir, colIdx) {
-  const nodo = state.grafo?.nodes.find(n => n.id === nodoId);
-  if (!nodo) return;
-  state.path = state.path.slice(0, colIdx + 1);
-  state.path.push({ node: nodo, link, dir });
-  renderColumnasDesde(colIdx + 1);
-  refrescarHighlight();
+function abrirCardMapa(nodo, parentCardId = null, link = null, dir = null) {
+  if (!state.mapaCards) return null;
+  const relLabel = link ? (link.tipo ? link.tipo.replace(/_/g, " ") : "") : null;
+  return state.mapaCards.open({
+    nodeId:   nodo.id,
+    title:    esc(nodo.label),
+    bodyHtml: buildPanelHTML(nodo),
+    onBind:   (el, cardId) => bindPanelListeners(el, nodo, cardId),
+    parentCardId, linkId: link?.id || null, relLabel, dir,
+  });
 }
 
 function refrescarHighlight() {
-  if (!state.grafoHighlight) return;
-  state.grafoHighlight(state.path.map(p => ({ nodeId: p.node.id, linkId: p.link?.id || null })));
-}
-
-function renderColumnasDesde(idx) {
-  if (!state.navCols) return;
-  state.navCols.truncarDesde(`col-${idx}`);
-  for (let i = idx; i < state.path.length; i++) {
-    const paso = state.path[i];
-    state.navCols.abrirColumna({
-      id: `col-${i}`,
-      headerHtml: buildColHeaderHTML(paso),
-      bodyHtml:   buildPanelHTML(paso.node, i),
-      onBind:     colEl => bindPanelListeners(colEl, i),
-    });
-  }
-}
-
-function buildColHeaderHTML(paso) {
-  const { node, link, dir } = paso;
-  let h = "";
-  if (link && dir) {
-    const sym   = DIR_SYM[dir] || "";
-    const frase = link.frase_completa || link.etiqueta || (link.tipo ? link.tipo.replace(/_/g, " ") : "");
-    const tipo  = link.tipo ? link.tipo.replace(/_/g, " ") : "";
-    h += `<div class="nav-col-rama">
-      <span class="nav-col-dir">${sym}</span>
-      <span class="nav-col-frase-wrap">
-        <span class="nav-col-frase">${esc(frase)}</span>
-        ${tipo ? `<span class="nav-col-tipo-tag">${esc(tipo)}</span>` : ""}
-      </span>
-    </div>`;
-  }
-  h += `<div class="nav-col-titlerow">
-    <div class="nav-col-raiz">${esc(node.label)}</div>
-    <button class="nav-col-close" title="Cerrar" aria-label="Cerrar columna de ${esc(node.label)}">×</button>
-  </div>`;
-  return h;
+  if (!state.grafoHighlight || !state.mapaCards) return;
+  state.grafoHighlight(state.mapaCards.highlightList());
 }
 
 function campo(etiq, valorHtml) {
   return `<div class="campo"><span class="campo-etiq">${esc(etiq)}</span><div>${valorHtml}</div></div>`;
 }
 
-function buildPanelHTML(nodo, colIdx) {
+function buildPanelHTML(nodo) {
   let h = "";
 
-  h += `<div class="panel-seccion">`;
+  h += `<details class="panel-seccion panel-seccion-concepto"><summary class="panel-seccion-titulo panel-seccion-summary">${ico("book-a")} Concepto</summary>`;
+  if (nodo.descripcion) h += `<p class="concepto-definicion">${esc(nodo.descripcion)}</p>`;
+  if (nodo.cita_directa) h += campo("Cita directa", `<p class="cita">"${esc(nodo.cita_directa)}"</p>`);
   h += `<div class="campo"><span class="campo-etiq">Menciones · Confianza</span>
     <div>${nodo.menciones} menciones &ensp;<span>${nodo.confianza.toFixed(2)}</span></div></div>`;
-  if (nodo.descripcion) h += campo("Descripción", esc(nodo.descripcion));
-  if (nodo.cita_directa) h += campo("Cita directa", `<p class="cita">"${esc(nodo.cita_directa)}"</p>`);
   if (nodo.sinonimos_candidatos?.length) {
     h += `<div class="campo"><span class="campo-etiq">Sinónimos candidatos</span><div class="sinonimos-lista">${nodo.sinonimos_candidatos.map(s => `<span class="tag">${esc(s)}</span>`).join("")}</div></div>`;
   }
-  h += `</div>`;
+  h += `</details>`;
 
-  h += buildRelacionesHTML(nodo, colIdx);
+  h += buildRelacionesHTML(nodo);
   return h;
 }
 
@@ -300,19 +271,17 @@ function conexionesDe(nodoId) {
   return out;
 }
 
-function buildRelacionesHTML(nodo, colIdx) {
+function buildRelacionesHTML(nodo) {
   const color = state.relColor || (() => "#888");
   const nodeById = Object.fromEntries((state.grafo?.nodes || []).map(n => [n.id, n]));
   const conex = conexionesDe(nodo.id);
 
   if (!conex.length) {
     return `<div class="panel-seccion">
-      <div class="panel-seccion-titulo">Relaciones</div>
+      <div class="panel-seccion-titulo">${ico("graph-star")} Relaciones</div>
       <p class="muted" style="font-size:var(--sn-fs-xs)">Sin conexiones.</p>
     </div>`;
   }
-
-  const siguienteLinkId = state.path[colIdx + 1]?.link?.id || null;
 
   const grupos = { saliente: [], bidireccional: [], entrante: [] };
   conex.forEach(item => grupos[item.dir]?.push(item));
@@ -322,15 +291,13 @@ function buildRelacionesHTML(nodo, colIdx) {
     entrante:      { label: "Entrantes",       sym: DIR_SYM.entrante },
   };
 
-  let h = `<div class="panel-seccion"><div class="panel-seccion-titulo">Relaciones (${conex.length})</div>`;
-  let primerGrupo = true;
+  let h = `<details class="panel-seccion"><summary class="panel-seccion-titulo panel-seccion-summary">${ico("graph-star")} Relaciones (${conex.length})</summary>`;
   ["saliente", "bidireccional", "entrante"].forEach(dir => {
     const items = grupos[dir];
     if (!items.length) return;
     const { label, sym } = grupoMeta[dir];
-    const abierto = primerGrupo; primerGrupo = false;
 
-    h += `<details class="panel-rel-grupo"${abierto ? " open" : ""}>
+    h += `<details class="panel-rel-grupo">
       <summary class="panel-rel-grupo-hdr">
         <span class="panel-rel-dir">${sym}</span>
         <span class="panel-rel-grupo-nombre">${label}</span>
@@ -344,9 +311,8 @@ function buildRelacionesHTML(nodo, colIdx) {
       const frase   = link.frase_completa || link.etiqueta || (link.tipo ? link.tipo.replace(/_/g, " ") : "");
       const tipo    = link.tipo ? link.tipo.replace(/_/g, " ") : "";
       const c       = color(link.tipo || "_");
-      const elegida = link.id === siguienteLinkId;
 
-      h += `<button class="panel-rel-fila panel-rel-fila--clicable${elegida ? " panel-rel-fila--elegida" : ""}"
+      h += `<button class="panel-rel-fila panel-rel-fila--clicable"
         data-link-id="${esc(link.id)}" data-neighbor-id="${esc(neighbor)}" data-dir="${esc(dir)}">
         <span class="panel-rel-frase">${esc(frase)}</span>
         <span class="panel-rel-pie">
@@ -358,18 +324,20 @@ function buildRelacionesHTML(nodo, colIdx) {
 
     h += `</div></details>`;
   });
-  h += `</div>`;
+  h += `</details>`;
   return h;
 }
 
-function bindPanelListeners(colEl, colIdx) {
-  colEl.querySelectorAll(".panel-rel-fila--clicable").forEach(btn => {
+function bindPanelListeners(el, nodo, cardId) {
+  el.querySelectorAll(".panel-rel-fila--clicable").forEach(btn => {
     btn.addEventListener("click", () => {
-      const linkId     = btn.dataset.linkId;
-      const neighborId = btn.dataset.neighborId;
-      const dir        = btn.dataset.dir;
-      const link       = state.grafo.links.find(l => l.id === linkId);
-      avanzarCamino(neighborId, link, dir, colIdx);
+      const link     = state.grafo.links.find(l => l.id === btn.dataset.linkId);
+      const neighbor = state.grafo.nodes.find(n => n.id === btn.dataset.neighborId);
+      if (!link || !neighbor) return;
+      const existente = state.mapaCards?.findChildByLink(cardId, link.id);
+      if (existente) { state.mapaCards.bringToFront(existente); return; }
+      abrirCardMapa(neighbor, cardId, link, btn.dataset.dir);
+      refrescarHighlight();
     });
   });
 }

@@ -6,15 +6,14 @@ const state = {
   validacion:  null,
   grafo:       null,
   tabActivo:   "mapa",
-  path:        [],     // camino de navegación en el mapa: [{ node, link, dir }]
   grafoUpdate: null,   // fn updateVisuals() exportada por initGrafo/initGrafo3D
   grafoHighlight: null, // fn highlightPath() exportada por initGrafo/initGrafo3D
   grafoCenter: null,   // fn centerOnNode(nodeId) del renderer activo
   grafoPan:    null,   // fn panBy(dx, dy) del renderer activo
   grafoFit:    null,   // fn fitView() del renderer activo
   grafoDestroy: null,  // fn destroy() del renderer 3D activo (null en modo 2D)
-  modo3d:      false,  // vista activa del mapa: 2D (D3/SVG) o 3D (three.js)
-  navCols:     null,   // instancia activa de initNavCols
+  modo3d:      true,   // vista activa del mapa: 2D (D3/SVG) o 3D (three.js) — 3D por defecto
+  mapaCards:   null,   // instancia activa de createFloatingCards (tarjetas del Mapa)
 };
 
 const tabsInit = new Set();
@@ -35,9 +34,13 @@ function _formatElapsed(secs) {
 // Feather icon helper — returns inline SVG string
 function ico(name, size=14) {
   const P = {
+    "book-a":         `<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m8 13 4-7 4 7"/><path d="M9.1 11h5.7"/>`,
     "check":          `<polyline points="20 6 9 17 4 12"/>`,
     "corner-up-left": `<polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>`,
     "edit-2":         `<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>`,
+    "graph-star":     `<path d="m12.342 9.316 1.764-3.527"/><path d="m12.59 14.545 2.35 3.759"/><path d="m13.982 12.332 4.03.447"/><path d="M5.414 17.586 8.88 14.12"/><path d="M9.025 9.742 5.317 5.505"/><circle cx="11" cy="12" r="3"/><circle cx="15" cy="4" r="2"/><circle cx="16" cy="20" r="2"/><circle cx="20" cy="13" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="4" cy="4" r="2"/>`,
+    "link":           `<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>`,
+    "notebook-pen":   `<path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>`,
     "maximize-2":     `<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>`,
     "refresh-cw":     `<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>`,
     "skip-forward":   `<polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/>`,
@@ -151,8 +154,8 @@ async function mostrarBiblioteca(extData) {
   state.grafoCenter = null;
   state.grafoPan = null;
   state.tabActivo = null;
-  state.path = [];
-  if (state.navCols) { state.navCols.destruir(); state.navCols = null; }
+  state.mapaCards?.closeAll();
+  state.mapaCards = null;
   tabsInit.clear();
 
   history.replaceState(null, "", location.pathname);
@@ -654,16 +657,13 @@ async function refrescarValidacion() {
 async function initMapa() {
   if (!state.grafo) await cargarGrafo();
 
-  // ── Navegador de columnas ──────────────────────────────────────────
-  const navColsEl = document.getElementById("nav-cols");
-  if (navColsEl && !state.navCols) {
-    const { initNavCols } = await import("./navcols.js");
-    state.navCols = initNavCols(navColsEl, {
-      onCerrar: id => {
-        const idx = parseInt(id.replace("col-", ""), 10);
-        state.path = state.path.slice(0, idx);
-        refrescarHighlight();
-      },
+  // ── Tarjetas flotantes de concepto ──────────────────────────────────
+  const overlayEl = document.getElementById("mapa-overlay");
+  const arrowsEl  = document.getElementById("mapa-arrows");
+  if (overlayEl && arrowsEl && !state.mapaCards) {
+    const { createFloatingCards } = await import("./floatcards.js");
+    state.mapaCards = createFloatingCards(overlayEl, arrowsEl, {
+      onFocus: nodeId => state.grafoCenter?.(nodeId),
     });
   }
 
@@ -723,10 +723,9 @@ async function initMapaForce() {
   if (btnFit) btnFit.onclick = () => state.grafoFit?.();
 
   const btnModo3d = document.getElementById("btn-modo3d");
-  const lblModo3d = document.getElementById("btn-modo3d-label");
   if (btnModo3d) {
+    btnModo3d.title = state.modo3d ? "Cambiar a vista 2D" : "Cambiar a vista 3D";
     btnModo3d.classList.toggle("active", state.modo3d);
-    if (lblModo3d) lblModo3d.textContent = state.modo3d ? "2D" : "3D";
     btnModo3d.onclick = () => { state.modo3d = !state.modo3d; initMapaForce(); };
   }
 }
@@ -771,111 +770,65 @@ function initMapaBuscar() {
   );
 }
 
-// ── Navegador de columnas: nodo del grafo → columnas concepto+relaciones ──
-// state.path: [{ node, link, dir }] — link/dir describen cómo se llegó a
-// ese paso (null para el primero). Cada paso es una columna en #nav-cols.
+// ── Tarjetas flotantes: nodo del grafo → tarjeta flotante de concepto,
+// encadenadas por flechas que respetan la dirección de la relación ──────
 
 const DIR_SYM = { saliente: "→", entrante: "←", bidireccional: "↔" };
 
 function onNodoSeleccionado(nodo) {
-  if (!nodo) { limpiarCamino(); return; }
-  state.path = [{ node: nodo, link: null, dir: null }];
-  renderColumnasDesde(0);
+  if (!nodo || !state.mapaCards) return;
+  const existente = state.mapaCards.findByNodeId(nodo.id);
+  if (existente) { state.mapaCards.bringToFront(existente); return; }
+  abrirCardMapa(nodo);
   refrescarHighlight();
 }
 
 function limpiarCamino() {
-  state.path = [];
-  state.navCols?.limpiar();
+  state.mapaCards?.closeAll();
   refrescarHighlight();
 }
 
-function avanzarCamino(nodoId, link, dir, colIdx) {
-  const nodo = state.grafo?.nodes.find(n => n.id === nodoId);
-  if (!nodo) return;
-  state.path = state.path.slice(0, colIdx + 1);
-  state.path.push({ node: nodo, link, dir });
-  renderColumnasDesde(colIdx + 1);
-  refrescarHighlight();
+function abrirCardMapa(nodo, parentCardId = null, link = null, dir = null) {
+  if (!state.mapaCards) return null;
+  const relLabel = link ? (link.tipo ? link.tipo.replace(/_/g, " ") : "") : null;
+  return state.mapaCards.open({
+    nodeId:   nodo.id,
+    title:    esc(nodo.label),
+    bodyHtml: buildPanelHTML(nodo),
+    onBind:   (el, cardId) => bindPanelListeners(el, nodo, cardId),
+    parentCardId, linkId: link?.id || null, relLabel, dir,
+  });
 }
 
 function refrescarHighlight() {
-  if (!state.grafoHighlight) return;
-  state.grafoHighlight(state.path.map(p => ({ nodeId: p.node.id, linkId: p.link?.id || null })));
+  if (!state.grafoHighlight || !state.mapaCards) return;
+  state.grafoHighlight(state.mapaCards.highlightList());
 }
 
-// Reata las referencias de state.path al grafo recién recargado (los objetos
-// nodo/link cambian de identidad en cada cargarGrafo()); descarta pasos cuyo
-// nodo ya no exista.
-function resincronizarPath() {
-  if (!state.grafo) { state.path = []; return; }
-  const nodeById = Object.fromEntries(state.grafo.nodes.map(n => [n.id, n]));
-  const linkById = Object.fromEntries(state.grafo.links.map(l => [l.id, l]));
-  state.path = state.path
-    .map(p => ({ node: nodeById[p.node.id], link: p.link ? linkById[p.link.id] : null, dir: p.dir }))
-    .filter(p => p.node);
-}
-
-function renderColumnasDesde(idx) {
-  if (!state.navCols) return;
-  state.navCols.truncarDesde(`col-${idx}`);
-  for (let i = idx; i < state.path.length; i++) {
-    const paso = state.path[i];
-    state.navCols.abrirColumna({
-      id: `col-${i}`,
-      headerHtml: buildColHeaderHTML(paso),
-      bodyHtml:   buildPanelHTML(paso.node, i),
-      onBind:     colEl => bindPanelListeners(colEl, paso.node, i),
-    });
-  }
-}
-
-function buildColHeaderHTML(paso) {
-  const { node, link, dir } = paso;
-  let h = "";
-  if (link && dir) {
-    const sym   = DIR_SYM[dir] || "";
-    const frase = link.frase_completa || link.etiqueta || (link.tipo ? link.tipo.replace(/_/g, " ") : "");
-    const tipo  = link.tipo ? link.tipo.replace(/_/g, " ") : "";
-    h += `<div class="nav-col-rama">
-      <span class="nav-col-dir">${sym}</span>
-      <span class="nav-col-frase-wrap">
-        <span class="nav-col-frase">${esc(frase)}</span>
-        ${tipo ? `<span class="nav-col-tipo-tag">${esc(tipo)}</span>` : ""}
-      </span>
-    </div>`;
-  }
-  h += `<div class="nav-col-titlerow">
-    <div class="nav-col-raiz">${esc(node.label)}</div>
-    <button class="nav-col-close" title="Cerrar" aria-label="Cerrar columna de ${esc(node.label)}">×</button>
-  </div>`;
-  return h;
-}
-
-function buildPanelHTML(nodo, colIdx) {
+function buildPanelHTML(nodo) {
   let h="";
 
   if (nodo.editado) {
     h+=`<div class="panel-editado"><span class="edited-mark" title="Editado por investigador">${ico("edit-2",11)} editado</span></div>`;
   }
 
-  // ── Detalles del concepto ─────────────────────────────────────────────
-  h+=`<div class="panel-seccion">`;
+  // ── Detalles del concepto (colapsado: tarjeta mínima al abrir) ────────
+  h+=`<details class="panel-seccion panel-seccion-concepto"><summary class="panel-seccion-titulo panel-seccion-summary">${ico("book-a",13)} Concepto</summary>`;
+  if (nodo.descripcion) h+=`<p class="concepto-definicion">${esc(nodo.descripcion)}</p>`;
+  if (nodo.cita_directa) h+=campo("Cita directa",`<p class="cita">"${esc(nodo.cita_directa)}"</p>`);
   h+=`<div class="campo"><span class="campo-etiq">Menciones · Confianza</span>
     <div>${nodo.menciones} menciones &ensp;<span style="color:var(--badge-conf-text)">${nodo.confianza.toFixed(2)}</span></div></div>`;
-  if (nodo.descripcion) h+=campo("Descripción",esc(nodo.descripcion));
-  if (nodo.cita_directa) h+=campo("Cita directa",`<p class="cita">"${esc(nodo.cita_directa)}"</p>`);
   if (nodo.sinonimos_candidatos?.length) h+=`<div class="campo"><span class="campo-etiq">Sinónimos candidatos</span><div class="sinonimos-lista">${nodo.sinonimos_candidatos.map(s=>`<span class="tag">${esc(s)}</span>`).join("")}</div></div>`;
-  h+=`</div>`;
+  h+=`</details>`;
 
-  // ── Relaciones (clicables: cada una abre la siguiente columna) ────────
-  h+=buildRelacionesHTML(nodo, colIdx);
-
-  // ── Nueva relación ────────────────────────────────────────────────────
-  h+=buildNuevaRelacionHTML(nodo);
+  // ── Relaciones (clicables: cada una encadena una tarjeta flotante) ────
+  h+=buildRelacionesHTML(nodo);
 
   // ── Anotaciones ───────────────────────────────────────────────────────
   h+=buildAnnotationPanelHTML(nodo);
+
+  // ── Vincular con otro concepto ─────────────────────────────────────────
+  h+=buildNuevaRelacionHTML(nodo);
 
   return h;
 }
@@ -900,19 +853,17 @@ function conexionesDe(nodoId) {
   return out;
 }
 
-function buildRelacionesHTML(nodo, colIdx) {
+function buildRelacionesHTML(nodo) {
   const color = state.relColor || (() => "#888");
   const nodeById = Object.fromEntries((state.grafo?.nodes||[]).map(n=>[n.id,n]));
   const conex = conexionesDe(nodo.id);
 
   if (!conex.length) {
     return `<div class="panel-seccion">
-      <div class="panel-seccion-titulo">Relaciones</div>
+      <div class="panel-seccion-titulo">${ico("graph-star",13)} Relaciones</div>
       <p class="muted" style="font-size:var(--sn-fs-xs)">Sin conexiones.</p>
     </div>`;
   }
-
-  const siguienteLinkId = state.path[colIdx + 1]?.link?.id || null;
 
   const grupos = { saliente: [], bidireccional: [], entrante: [] };
   conex.forEach(item => grupos[item.dir]?.push(item));
@@ -922,15 +873,13 @@ function buildRelacionesHTML(nodo, colIdx) {
     entrante:      { label: "Entrantes",       sym: DIR_SYM.entrante },
   };
 
-  let h = `<div class="panel-seccion"><div class="panel-seccion-titulo">Relaciones (${conex.length})</div>`;
-  let primerGrupo = true;
+  let h = `<details class="panel-seccion"><summary class="panel-seccion-titulo panel-seccion-summary">${ico("graph-star",13)} Relaciones (${conex.length})</summary>`;
   ["saliente", "bidireccional", "entrante"].forEach(dir => {
     const items = grupos[dir];
     if (!items.length) return;
     const { label, sym } = grupoMeta[dir];
-    const abierto = primerGrupo; primerGrupo = false;
 
-    h += `<details class="panel-rel-grupo"${abierto ? " open" : ""}>
+    h += `<details class="panel-rel-grupo">
       <summary class="panel-rel-grupo-hdr">
         <span class="panel-rel-dir">${sym}</span>
         <span class="panel-rel-grupo-nombre">${label}</span>
@@ -944,9 +893,8 @@ function buildRelacionesHTML(nodo, colIdx) {
       const frase   = link.frase_completa || link.etiqueta || (link.tipo ? link.tipo.replace(/_/g, " ") : "");
       const tipo    = link.tipo ? link.tipo.replace(/_/g, " ") : "";
       const c       = color(link.tipo || "_");
-      const elegida = link.id === siguienteLinkId;
 
-      h += `<button class="panel-rel-fila panel-rel-fila--clicable${elegida ? " panel-rel-fila--elegida" : ""}"
+      h += `<button class="panel-rel-fila panel-rel-fila--clicable"
         data-link-id="${esc(link.id)}" data-neighbor-id="${esc(neighbor)}" data-dir="${esc(dir)}">
         <span class="panel-rel-frase">${esc(frase)}</span>
         <span class="panel-rel-pie">
@@ -958,7 +906,7 @@ function buildRelacionesHTML(nodo, colIdx) {
 
     h += `</div></details>`;
   });
-  h += `</div>`;
+  h += `</details>`;
   return h;
 }
 
@@ -977,7 +925,7 @@ function buildNuevaRelacionHTML(nodo) {
     .sort((a, b) => a.label.localeCompare(b.label));
 
   return `<details class="panel-seccion">
-    <summary class="panel-seccion-titulo panel-seccion-summary">Vincular con otro concepto</summary>
+    <summary class="panel-seccion-titulo panel-seccion-summary">${ico("link",13)} Vincular con otro concepto</summary>
     <div class="campo">
       <span class="campo-etiq">Concepto destino</span>
       <select id="nr-destino" class="edit-select" style="width:100%">
@@ -1007,8 +955,8 @@ function buildNuevaRelacionHTML(nodo) {
 
 function buildAnnotationPanelHTML(nodo) {
   const anotaciones=(state.validacion?.anotaciones||[]).filter(a=>a.objeto_anotado===nodo.id);
-  let h=`<details class="panel-seccion"${anotaciones.length ? " open" : ""}>
-    <summary class="panel-seccion-titulo panel-seccion-summary">Anotaciones</summary>`;
+  let h=`<details class="panel-seccion">
+    <summary class="panel-seccion-titulo panel-seccion-summary">${ico("notebook-pen",13)} Anotaciones</summary>`;
   if (anotaciones.length) {
     h+=anotaciones.map(a=>`<div class="panel-anotacion">
       <p class="cita">${esc(a.nota)}</p>
@@ -1021,33 +969,48 @@ function buildAnnotationPanelHTML(nodo) {
   return h;
 }
 
-function bindPanelListeners(colEl, nodo, colIdx) {
-  colEl.querySelector("#pb-anotar")?.addEventListener("click", () => {
-    const t = colEl.querySelector("#pb-anotacion")?.value.trim();
-    if (t) anotarEnPanel(nodo.id, t, colIdx);
+function bindPanelListeners(el, nodo, cardId) {
+  el.querySelector("#pb-anotar")?.addEventListener("click", () => {
+    const t = el.querySelector("#pb-anotacion")?.value.trim();
+    if (t) anotarEnPanel(nodo.id, t, cardId);
   });
 
   // Nueva relación
-  colEl.querySelector("#nr-crear")?.addEventListener("click", () => {
-    const destino  = colEl.querySelector("#nr-destino")?.value;
-    const tipo     = colEl.querySelector("#nr-tipo")?.value;
-    const etiqueta = colEl.querySelector("#nr-etiqueta")?.value.trim();
-    const bidir    = colEl.querySelector("#nr-bidir")?.checked || false;
-    if (!destino)  { colEl.querySelector("#nr-destino").focus();  return; }
-    if (!etiqueta) { colEl.querySelector("#nr-etiqueta").focus(); return; }
-    crearRelacion(nodo.id, destino, tipo, etiqueta, bidir);
+  el.querySelector("#nr-crear")?.addEventListener("click", () => {
+    const destino  = el.querySelector("#nr-destino")?.value;
+    const tipo     = el.querySelector("#nr-tipo")?.value;
+    const etiqueta = el.querySelector("#nr-etiqueta")?.value.trim();
+    const bidir    = el.querySelector("#nr-bidir")?.checked || false;
+    if (!destino)  { el.querySelector("#nr-destino").focus();  return; }
+    if (!etiqueta) { el.querySelector("#nr-etiqueta").focus(); return; }
+    crearRelacion(nodo.id, destino, tipo, etiqueta, bidir, cardId);
   });
 
-  // Relaciones: cada una abre (o reemplaza) la columna siguiente
-  colEl.querySelectorAll(".panel-rel-fila--clicable").forEach(btn => {
+  // Relaciones: cada una encadena (o trae al frente) una tarjeta flotante
+  el.querySelectorAll(".panel-rel-fila--clicable").forEach(btn => {
     btn.addEventListener("click", () => {
-      const link = (state.grafo?.links || []).find(l => l.id === btn.dataset.linkId);
-      avanzarCamino(btn.dataset.neighborId, link, btn.dataset.dir, colIdx);
+      const link     = (state.grafo?.links || []).find(l => l.id === btn.dataset.linkId);
+      const neighbor = (state.grafo?.nodes || []).find(n => n.id === btn.dataset.neighborId);
+      if (!link || !neighbor) return;
+      const existente = state.mapaCards?.findChildByLink(cardId, link.id);
+      if (existente) { state.mapaCards.bringToFront(existente); return; }
+      abrirCardMapa(neighbor, cardId, link, btn.dataset.dir);
+      refrescarHighlight();
     });
   });
 }
 
-async function crearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional) {
+function refrescarCardMapa(cardId, nodoId) {
+  const nodo = state.grafo?.nodes.find(n => n.id === nodoId);
+  if (!nodo || !state.mapaCards) return;
+  state.mapaCards.refresh(cardId, {
+    title:    esc(nodo.label),
+    bodyHtml: buildPanelHTML(nodo),
+    onBind:   (el, cid) => bindPanelListeners(el, nodo, cid),
+  });
+}
+
+async function crearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional, cardId) {
   try {
     await apiFetch(
       `/api/validacion/${encodeURIComponent(state.slug)}/relaciones`,
@@ -1058,27 +1021,21 @@ async function crearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional)
     state.grafoUpdate = null;
     tabsInit.delete("mapa");
     tabsInit.delete("relaciones");
-    resincronizarPath();
     if (state.tabActivo === "mapa") {
       tabsInit.add("mapa");
       await initMapa();
     }
-    renderColumnasDesde(0);
+    // Las relaciones de cualquier tarjeta abierta pueden haber cambiado.
+    state.mapaCards?.listOpen().forEach(({ cardId: id, nodeId }) => refrescarCardMapa(id, nodeId));
     refrescarHighlight();
   } catch(e) { alert("Error al crear relación: " + e.message); }
 }
 
-async function anotarEnPanel(nodoId, nota, colIdx) {
+async function anotarEnPanel(nodoId, nota, cardId) {
   try {
     await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/anotar`,{method:"POST",body:JSON.stringify({objeto_anotado:nodoId,nota})});
     await refrescarValidacion();
-    const paso = state.path[colIdx];
-    if (paso && paso.node.id === nodoId) {
-      state.navCols?.refrescarColumna(`col-${colIdx}`, {
-        headerHtml: buildColHeaderHTML(paso),
-        bodyHtml:   buildPanelHTML(paso.node, colIdx),
-      }, colEl => bindPanelListeners(colEl, paso.node, colIdx));
-    }
+    refrescarCardMapa(cardId, nodoId);
   } catch(e) { alert("Error al anotar: "+e.message); }
 }
 
@@ -1495,7 +1452,7 @@ function renderPanelSesion(cfg, sesion) {
       // Recargar grafo en segundo plano
       delete _miniGrafoCache[state.slug];
       state.grafo = null; tabsInit.delete("mapa");
-      state.path = [];
+      state.mapaCards?.closeAll();
       await cargarGrafo(); await initMapa();
       actualizarBotonSesion(cfg);
       setTimeout(() => { panel.hidden = true; }, 2200);
@@ -1693,6 +1650,7 @@ function initSettingsPanel() {
   // Modelos conocidos por proveedor (preset + opción personalizada)
   const MODELOS = {
     ollama:    [],   // se pueblan desde la API
+    lmstudio:  [],   // se pueblan desde la API
     anthropic: ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-5-20251001"],
     openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
     gemini:    ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
@@ -1721,9 +1679,10 @@ function initSettingsPanel() {
       ind.style.color = ok ? "var(--sn-ok)" : "var(--sn-danger)";
     });
 
-    // Actualizar lista de modelos Ollama si la tenemos
+    // Actualizar lista de modelos locales si la tenemos
     if (_cfg.available_models?.length) {
-      MODELOS.ollama = _cfg.available_models;
+      if (_cfg.provider === "lmstudio") MODELOS.lmstudio = _cfg.available_models;
+      else MODELOS.ollama = _cfg.available_models;
     }
 
     // Poblar selector con el proveedor activo
@@ -1733,14 +1692,16 @@ function initSettingsPanel() {
   // ── Poblar el selector de modelos para un proveedor ─────────────
   function _poblarModelos(provider, modelActual) {
     const ps = (_cfg?.providers_status || {})[provider] || {};
-    const modelos = provider === "ollama"
-      ? (MODELOS.ollama.length ? MODELOS.ollama : (modelActual ? [modelActual] : []))
+    const isLocal = provider === "ollama" || provider === "lmstudio";
+    const modelos = isLocal
+      ? (MODELOS[provider].length ? MODELOS[provider] : (modelActual ? [modelActual] : []))
       : MODELOS[provider] || [];
 
     modelSel.innerHTML = "";
 
-    if (provider === "ollama" && !modelos.length) {
-      modelSel.innerHTML = '<option value="">Ollama no responde</option>';
+    if (isLocal && !modelos.length) {
+      const label = provider === "lmstudio" ? "LM Studio" : "Ollama";
+      modelSel.innerHTML = `<option value="">${label} no responde</option>`;
       modelSel.disabled = true;
       keyStatus.textContent = "";
     } else {
@@ -1752,7 +1713,7 @@ function initSettingsPanel() {
         modelSel.appendChild(opt);
       });
       // Opción personalizada para proveedores cloud
-      if (provider !== "ollama") {
+      if (!isLocal) {
         const optCustom = document.createElement("option");
         optCustom.value = "__custom__";
         optCustom.textContent = "Otro…";
@@ -1769,8 +1730,8 @@ function initSettingsPanel() {
 
     _toggleCustomInput();
 
-    // Estado de API key
-    if (provider === "ollama") {
+    // Estado: locales no necesitan API key
+    if (isLocal) {
       keyStatus.textContent = "";
     } else {
       const ok = ps.has_key;
@@ -2649,12 +2610,6 @@ function gpBindSidebarListeners() {
     });
   }
 
-  // Cerrar panel
-  document.getElementById("btn-gp-cerrar-panel").onclick = () => {
-    document.getElementById("gp-panel").hidden = true;
-    gpState.nodoSeleccionado = null;
-    renderConceptosSidebar();
-  };
 }
 
 // ── Sidebar: lista de conceptos ──────────────────────────────────────
@@ -2738,178 +2693,291 @@ function d3ClearGPSvg(svgEl) {
   import("https://cdn.jsdelivr.net/npm/d3@7/+esm").then(d3 => d3.select(svgEl).selectAll("*").remove());
 }
 
-// ── Panel lateral: detalle del nodo seleccionado ─────────────────────
+// ── Tarjetas flotantes ────────────────────────────────────────────────
+
+const _gpCards = new Map();  // cardId → {nodo, el, parentCardId, relLabel}
+let _gpCardZ = 100;
+
+function _gpCloseAllCards() {
+  [..._gpCards.keys()].forEach(id => _gpCloseCard(id));
+}
+
+function _gpCloseCard(cardId) {
+  const data = _gpCards.get(cardId);
+  if (!data) return;
+  // Cerrar hijos primero
+  [..._gpCards.entries()].forEach(([id, d]) => { if (d.parentCardId === cardId) _gpCloseCard(id); });
+  data.el.remove();
+  _gpCards.delete(cardId);
+  _gpRedrawArrows();
+}
+
+function _gpDragCard(el, handle) {
+  handle.addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    el.style.zIndex = ++_gpCardZ;
+    const ox = e.clientX - el.offsetLeft;
+    const oy = e.clientY - el.offsetTop;
+    const onMove = e => {
+      el.style.left = (e.clientX - ox) + "px";
+      el.style.top  = (e.clientY - oy) + "px";
+      _gpRedrawArrows();
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  });
+}
+
+function _gpRedrawArrows() {
+  const svg = document.getElementById("gp-arrows");
+  if (!svg) return;
+  [...svg.children].forEach(c => { if (c.tagName !== "defs") c.remove(); });
+  _gpCards.forEach((data) => {
+    if (!data.parentCardId) return;
+    const pd = _gpCards.get(data.parentCardId);
+    if (!pd) return;
+    const x1 = pd.el.offsetLeft + pd.el.offsetWidth;
+    const y1 = pd.el.offsetTop + 18;
+    const x2 = data.el.offsetLeft;
+    const y2 = data.el.offsetTop + 18;
+    const cx = (x1 + x2) / 2;
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", `M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}`);
+    p.setAttribute("fill", "none");
+    p.setAttribute("stroke", "var(--sn-ink-faint)");
+    p.setAttribute("stroke-width", "1.5");
+    p.setAttribute("marker-end", "url(#gp-arrowhead)");
+    svg.appendChild(p);
+    if (data.relLabel) {
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      t.setAttribute("x", cx); t.setAttribute("y", Math.min(y1, y2) - 4);
+      t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "10");
+      t.setAttribute("fill", "var(--sn-ink-soft)");
+      t.textContent = data.relLabel;
+      svg.appendChild(t);
+    }
+  });
+}
+
+function _gpRefreshCard(cardId, nodo) {
+  const data = _gpCards.get(cardId);
+  if (!data) return;
+  const { parentCardId, relLabel, el } = data;
+  const left = el.style.left, top = el.style.top;
+  _gpCloseCard(cardId);
+  const newId = gpAbrirCard(nodo, parentCardId, relLabel);
+  const newData = newId && _gpCards.get(newId);
+  if (newData) { newData.el.style.left = left; newData.el.style.top = top; }
+}
 
 function gpOnNodoSeleccionado(nodo) {
   gpState.nodoSeleccionado = nodo;
   renderConceptosSidebar();
+  if (!nodo) return;
+  // Si ya hay una tarjeta raíz para este nodo, traerla al frente
+  for (const [, data] of _gpCards) {
+    if (data.nodo.id === nodo.id && !data.parentCardId) {
+      data.el.style.zIndex = ++_gpCardZ;
+      return;
+    }
+  }
+  gpAbrirCard(nodo);
+}
 
-  const panel = document.getElementById("gp-panel");
-  if (!nodo) { panel.hidden = true; return; }
-  panel.hidden = false;
+function gpAbrirCard(nodo, parentCardId = null, relLabel = null) {
+  const overlay = document.getElementById("gp-overlay");
+  if (!overlay) return null;
+
+  const cardId = `gpc-${Date.now()}`;
+  let left = 32 + (_gpCards.size % 5) * 20, top = 72 + (_gpCards.size % 5) * 20;
+  if (parentCardId) {
+    const pd = _gpCards.get(parentCardId);
+    if (pd) { left = pd.el.offsetLeft + pd.el.offsetWidth + 48; top = pd.el.offsetTop; }
+  }
 
   const c = gpState.grafo.conceptos_propios.find(x => x.id === nodo.id);
-  if (!c) return;
+  if (!c) return null;
 
-  // Relaciones de este nodo
-  const relacionesPropias = gpState.grafoVis.links.filter(
-    l => l.source === nodo.id || l.target === nodo.id ||
-         (l.source?.id === nodo.id) || (l.target?.id === nodo.id)
-  );
-  // Otros conceptos disponibles para relacionar
-  const otros = (gpState.grafoVis.nodes || []).filter(n => n.id !== nodo.id);
+  const links = gpState.grafoVis?.links || [];
+  const relacionesPropias = links.filter(l => {
+    const s = l.source?.id ?? l.source, t = l.target?.id ?? l.target;
+    return s === nodo.id || t === nodo.id;
+  });
+  const otros = (gpState.grafoVis?.nodes || []).filter(n => n.id !== nodo.id);
 
-  document.getElementById("gp-panel-content").innerHTML = `
-    <div class="panel-header" style="padding-right:44px">
-      <div class="panel-titulo">${esc(c.label)}</div>
-    </div>
+  const el = document.createElement("div");
+  el.className = "gp-card";
+  el.dataset.cardId = cardId;
+  el.style.cssText = `left:${left}px;top:${top}px;z-index:${++_gpCardZ}`;
 
-    <!-- Editar concepto -->
-    <div class="panel-seccion">
-      <div class="panel-seccion-titulo">Concepto</div>
-      <div class="campo">
-        <span class="campo-etiq">Label</span>
-        <input id="gp-edit-label" class="edit-input" value="${esc(c.label)}" style="width:100%">
-      </div>
-      <div class="campo">
-        <span class="campo-etiq">Definición</span>
-        <textarea id="gp-edit-def" class="panel-nota-input" rows="3">${esc(c.definicion || "")}</textarea>
-      </div>
-      ${c.citas?.length ? `
-      <div style="margin-top:var(--sn-s-2)">
-        <span class="campo-etiq">Citas</span>
-        ${c.citas.map(cit => `
-          <div style="font-size:11px;border-left:2px solid var(--sn-hairline);padding-left:6px;margin-top:4px;color:var(--sn-ink-soft)">
-            "${esc(cit.texto)}"${cit.fuente ? `<span style="display:block;font-style:normal;font-size:10px;margin-top:1px">— ${esc(cit.fuente)}</span>` : ""}
-          </div>
-        `).join("")}
-      </div>` : ""}
-      <div style="display:flex;gap:var(--sn-s-2);margin-top:var(--sn-s-2)">
-        <button id="gp-btn-save-concepto" class="btn btn-aceptar small">Guardar</button>
-        <button id="gp-btn-del-concepto" class="btn btn-rechazar small" title="Eliminar concepto">${ico("trash-2")} Eliminar</button>
-      </div>
-    </div>
-
-    <!-- Relaciones existentes -->
-    ${relacionesPropias.length ? `
-    <div class="panel-seccion">
-      <div class="panel-seccion-titulo">Relaciones (${relacionesPropias.length})</div>
-      ${relacionesPropias.map(r => {
-        const srcId = r.source?.id ?? r.source;
-        const tgtId = r.target?.id ?? r.target;
+  const relsHtml = relacionesPropias.length
+    ? relacionesPropias.map(r => {
+        const srcId = r.source?.id ?? r.source, tgtId = r.target?.id ?? r.target;
         const esOrigen = srcId === nodo.id;
         const otroId = esOrigen ? tgtId : srcId;
-        const otro = gpState.grafoVis.nodes.find(n => n.id === otroId);
-        return `<div class="panel-anotacion" style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+        const otro = (gpState.grafoVis?.nodes || []).find(n => n.id === otroId);
+        return `<div class="panel-anotacion" style="display:flex;align-items:center;gap:6px"
+                  data-rel-id="${esc(r.id)}" data-otro-id="${esc(otroId)}" data-rel-tipo="${esc(r.tipo)}">
           <div style="flex:1;min-width:0">
             <span class="tag" style="font-size:10px">${esc(r.tipo)}</span>
             <span style="font-size:12px;margin-left:4px">${esOrigen ? "→" : "←"} ${esc(otro?.label || otroId)}</span>
             ${r.etiqueta ? `<div style="font-size:11px;color:var(--sn-ink-soft);font-style:italic">"${esc(r.etiqueta)}"</div>` : ""}
-            ${r.cita?.texto ? `<div style="font-size:10px;color:var(--sn-ink-soft);border-left:2px solid var(--sn-hairline);padding-left:6px;margin-top:3px;white-space:pre-wrap">"${esc(r.cita.texto)}"${r.cita.fuente ? `<span style="display:block;font-style:normal;margin-top:1px">— ${esc(r.cita.fuente)}</span>` : ""}</div>` : ""}
+            ${r.cita?.texto ? `<div style="font-size:10px;color:var(--sn-ink-soft);border-left:2px solid var(--sn-hairline);padding-left:6px;margin-top:3px">"${esc(r.cita.texto)}"</div>` : ""}
           </div>
-          <button class="btn-inline danger" data-del-rel="${esc(r.id)}" title="Eliminar relación" style="flex-shrink:0">${ico("x")}</button>
+          <div style="display:flex;gap:3px;flex-shrink:0">
+            <button class="btn-inline gp-rel-abrir" title="Abrir concepto relacionado" style="font-size:11px;padding:1px 5px">→</button>
+            <button class="btn-inline danger gp-rel-del" title="Eliminar relación">${ico("x")}</button>
+          </div>
         </div>`;
-      }).join("")}
-    </div>` : ""}
+      }).join("")
+    : `<div style="font-size:var(--sn-fs-xs);color:var(--sn-ink-faint)">Sin relaciones aún.</div>`;
 
-    <!-- Nueva relación -->
-    ${otros.length ? `
-    <details class="panel-seccion">
-      <summary class="panel-seccion-titulo panel-seccion-summary">Vincular con…</summary>
-      <div class="campo">
-        <span class="campo-etiq">Concepto destino</span>
-        <div style="position:relative">
-          <input id="gp-nr-destino-text" class="edit-input" placeholder="Buscar concepto…" autocomplete="off" style="width:100%">
-          <input type="hidden" id="gp-nr-destino">
-          <ul id="gp-nr-destino-dropdown" class="gp-ac-dropdown" hidden></ul>
+  el.innerHTML = `
+    <div class="gp-card-header">
+      <span class="gp-card-title">${esc(c.label)}</span>
+      <div class="gp-card-btns">
+        <button class="gp-card-btn gp-card-collapse" title="Colapsar">−</button>
+        <button class="gp-card-btn gp-card-close" title="Cerrar">×</button>
+      </div>
+    </div>
+    <div class="gp-card-body">
+      <details class="panel-seccion">
+        <summary class="panel-seccion-titulo panel-seccion-summary">Concepto</summary>
+        <div class="campo">
+          <span class="campo-etiq">Label</span>
+          <input class="edit-input gp-c-label" value="${esc(c.label)}" style="width:100%">
         </div>
-      </div>
-      <div class="campo">
-        <span class="campo-etiq">Tipo de relación</span>
-        <div style="position:relative">
-          <input id="gp-nr-tipo" class="edit-input" placeholder="Tipo de relación…" autocomplete="off" value="${esc(TIPOS_REL[0])}" style="width:100%">
-          <ul id="gp-nr-tipo-dropdown" class="gp-ac-dropdown" hidden></ul>
+        <div class="campo">
+          <span class="campo-etiq">Definición</span>
+          <textarea class="panel-nota-input gp-c-def" rows="3">${esc(c.definicion || "")}</textarea>
         </div>
-      </div>
-      <div class="campo">
-        <span class="campo-etiq">Etiqueta <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></span>
-        <input id="gp-nr-etiqueta" class="edit-input" placeholder="ej. implica, reduce, requiere…" style="width:100%">
-      </div>
-      <div class="campo" style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" id="gp-nr-bidir" style="cursor:pointer">
-        <label for="gp-nr-bidir" class="campo-etiq" style="margin-bottom:0;cursor:pointer">Bidireccional ↔</label>
-      </div>
-      <div class="campo">
-        <span class="campo-etiq">Cita <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></span>
-        <textarea id="gp-nr-cita" class="panel-nota-input" rows="2" placeholder="Pasaje que fundamenta esta relación…"></textarea>
-        <input id="gp-nr-fuente" class="edit-input" placeholder="Fuente…" style="width:100%;margin-top:4px">
-      </div>
-      <button id="gp-btn-crear-relacion" class="btn btn-aceptar small" style="width:100%;margin-top:4px">+ Crear relación</button>
-      <div id="gp-nr-error" style="color:var(--sn-danger);font-size:var(--sn-fs-xs);margin-top:4px;display:none">Selecciona un concepto destino.</div>
-    </details>` : ""}
-  `;
+        ${c.citas?.length ? `<div style="margin-top:var(--sn-s-2)">
+          <span class="campo-etiq">Citas</span>
+          ${c.citas.map(ci => `<div style="font-size:11px;border-left:2px solid var(--sn-hairline);padding-left:6px;margin-top:4px;color:var(--sn-ink-soft)">"${esc(ci.texto)}"${ci.fuente ? `<span style="display:block;font-size:10px;margin-top:1px">— ${esc(ci.fuente)}</span>` : ""}</div>`).join("")}
+        </div>` : ""}
+        <div style="display:flex;gap:var(--sn-s-2);margin-top:var(--sn-s-2)">
+          <button class="btn btn-aceptar small gp-btn-save">Guardar</button>
+          <button class="btn btn-rechazar small gp-btn-del-c">${ico("trash-2")} Eliminar</button>
+        </div>
+      </details>
 
-  // Listeners del panel
-  document.getElementById("gp-btn-save-concepto").addEventListener("click", () => {
-    const label = document.getElementById("gp-edit-label").value.trim();
-    const def   = document.getElementById("gp-edit-def").value.trim() || null;
-    if (!label) { document.getElementById("gp-edit-label").focus(); return; }
-    gpEditarConcepto(c.id, label, def);
+      <details class="panel-seccion">
+        <summary class="panel-seccion-titulo panel-seccion-summary">Relaciones (${relacionesPropias.length})</summary>
+        ${relsHtml}
+      </details>
+
+      ${otros.length ? `<details class="panel-seccion">
+        <summary class="panel-seccion-titulo panel-seccion-summary">Vincular con…</summary>
+        <div class="campo">
+          <span class="campo-etiq">Concepto destino</span>
+          <div style="position:relative">
+            <input class="edit-input gp-nr-dest-txt" placeholder="Buscar concepto…" autocomplete="off" style="width:100%">
+            <input type="hidden" class="gp-nr-dest-id">
+            <ul class="gp-ac-dropdown gp-nr-dest-drop" hidden></ul>
+          </div>
+        </div>
+        <div class="campo">
+          <span class="campo-etiq">Tipo</span>
+          <div style="position:relative">
+            <input class="edit-input gp-nr-tipo" placeholder="Tipo…" autocomplete="off" value="${esc(TIPOS_REL[0])}" style="width:100%">
+            <ul class="gp-ac-dropdown gp-nr-tipo-drop" hidden></ul>
+          </div>
+        </div>
+        <div class="campo">
+          <span class="campo-etiq">Etiqueta <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></span>
+          <input class="edit-input gp-nr-etiq" placeholder="ej. implica, requiere…" style="width:100%">
+        </div>
+        <div class="campo" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" class="gp-nr-bidir" style="cursor:pointer">
+          <label class="campo-etiq" style="margin-bottom:0;cursor:pointer">Bidireccional ↔</label>
+        </div>
+        <button class="btn btn-aceptar small gp-btn-crear-rel" style="width:100%;margin-top:4px">+ Crear relación</button>
+        <div class="gp-nr-error" style="color:var(--sn-danger);font-size:var(--sn-fs-xs);margin-top:4px;display:none">Selecciona un concepto destino.</div>
+      </details>` : ""}
+    </div>`;
+
+  overlay.appendChild(el);
+  _gpCards.set(cardId, { nodo, el, parentCardId, relLabel });
+  _gpDragCard(el, el.querySelector(".gp-card-header"));
+
+  // Colapsar/expandir
+  el.querySelector(".gp-card-collapse").addEventListener("click", () => {
+    const collapsed = el.classList.toggle("collapsed");
+    el.querySelector(".gp-card-collapse").textContent = collapsed ? "+" : "−";
+    _gpRedrawArrows();
+  });
+  // Cerrar
+  el.querySelector(".gp-card-close").addEventListener("click", () => {
+    const wasSelected = gpState.nodoSeleccionado?.id === c.id;
+    _gpCloseCard(cardId);
+    if (wasSelected && ![...(_gpCards.values())].some(d => d.nodo.id === c.id)) {
+      gpState.nodoSeleccionado = null;
+      renderConceptosSidebar();
+    }
+  });
+  // Guardar concepto
+  el.querySelector(".gp-btn-save").addEventListener("click", () => {
+    const label = el.querySelector(".gp-c-label").value.trim();
+    const def   = el.querySelector(".gp-c-def").value.trim() || null;
+    if (!label) { el.querySelector(".gp-c-label").focus(); return; }
+    gpEditarConcepto(c.id, label, def, cardId);
+  });
+  // Eliminar concepto
+  el.querySelector(".gp-btn-del-c").addEventListener("click", () => {
+    if (!confirm(`¿Eliminar "${c.label}"?`)) return;
+    gpEliminarConcepto(c.id, cardId);
+  });
+  // Abrir/eliminar relaciones
+  el.querySelectorAll(".panel-anotacion").forEach(row => {
+    row.querySelector(".gp-rel-abrir")?.addEventListener("click", () => {
+      const otroNodo = (gpState.grafoVis?.nodes || []).find(n => n.id === row.dataset.otroId);
+      if (otroNodo) gpAbrirCard(otroNodo, cardId, row.dataset.relTipo);
+    });
+    row.querySelector(".gp-rel-del")?.addEventListener("click", () => gpEliminarRelacion(row.dataset.relId, cardId));
   });
 
-  document.getElementById("gp-btn-del-concepto").addEventListener("click", () => {
-    if (!confirm(`¿Eliminar el concepto "${c.label}"?`)) return;
-    gpEliminarConcepto(c.id);
-  });
-
-  document.querySelectorAll("[data-del-rel]").forEach(btn =>
-    btn.addEventListener("click", () => gpEliminarRelacion(btn.dataset.delRel))
-  );
-
+  // Autocomplete vincular
   if (otros.length) {
-    // Autocomplete: concepto destino
-    const destinoTextEl = document.getElementById("gp-nr-destino-text");
-    const destinoHiddenEl = document.getElementById("gp-nr-destino");
-    const destinoDropEl   = document.getElementById("gp-nr-destino-dropdown");
-    _gpWireAutocomplete(destinoTextEl, destinoDropEl, () =>
-      (gpState.grafoVis?.nodes || [])
-        .filter(n => n.id !== c.id)
-        .map(n => ({
-          label: n.label, meta: "",
-          onSelect: inp => { inp.value = n.label; destinoHiddenEl.value = n.id; },
-        }))
+    const destTxt  = el.querySelector(".gp-nr-dest-txt");
+    const destId   = el.querySelector(".gp-nr-dest-id");
+    const destDrop = el.querySelector(".gp-nr-dest-drop");
+    const tipoEl   = el.querySelector(".gp-nr-tipo");
+    const tipoDrop = el.querySelector(".gp-nr-tipo-drop");
+    _gpWireAutocomplete(destTxt, destDrop, () =>
+      (gpState.grafoVis?.nodes || []).filter(n => n.id !== c.id)
+        .map(n => ({ label: n.label, meta: "", onSelect: inp => { inp.value = n.label; destId.value = n.id; } }))
     );
-    destinoTextEl.addEventListener("input", () => { destinoHiddenEl.value = ""; });
-
-    // Autocomplete: tipo de relación
-    const tipoEl    = document.getElementById("gp-nr-tipo");
-    const tipoDropEl = document.getElementById("gp-nr-tipo-dropdown");
-    _gpWireAutocomplete(tipoEl, tipoDropEl, () => {
+    destTxt.addEventListener("input", () => { destId.value = ""; });
+    _gpWireAutocomplete(tipoEl, tipoDrop, () => {
       const tipos = new Set(TIPOS_REL);
       (state.grafo?.links || []).forEach(l => { if (l.tipo) tipos.add(l.tipo); });
       (gpState.grafoVis?.links || []).forEach(l => { if (l.tipo) tipos.add(l.tipo); });
       return [...tipos].map(t => ({ label: t, meta: "", onSelect: inp => { inp.value = t; } }));
     }, { showAllOnFocus: true });
-
-    document.getElementById("gp-btn-crear-relacion").addEventListener("click", () => {
-      const destino    = destinoHiddenEl.value;
-      const tipo       = tipoEl.value.trim() || TIPOS_REL[0];
-      const etiqueta   = document.getElementById("gp-nr-etiqueta").value.trim() || tipo;
-      const bidir      = document.getElementById("gp-nr-bidir").checked;
-      const citaTxt    = document.getElementById("gp-nr-cita").value.trim();
-      const citaFuente = document.getElementById("gp-nr-fuente").value.trim();
-      const cita       = citaTxt ? { texto: citaTxt, fuente: citaFuente || null } : null;
-      const errEl      = document.getElementById("gp-nr-error");
-      if (!destino) {
-        errEl.style.display = "block";
-        destinoTextEl.focus();
-        return;
-      }
+    el.querySelector(".gp-btn-crear-rel").addEventListener("click", () => {
+      const destino  = destId.value;
+      const tipo     = tipoEl.value.trim() || TIPOS_REL[0];
+      const etiqueta = el.querySelector(".gp-nr-etiq").value.trim() || tipo;
+      const bidir    = el.querySelector(".gp-nr-bidir").checked;
+      const errEl    = el.querySelector(".gp-nr-error");
+      if (!destino) { errEl.style.display = "block"; destTxt.focus(); return; }
       errEl.style.display = "none";
-      gpCrearRelacion(c.id, destino, tipo, etiqueta, bidir, cita);
+      gpCrearRelacion(c.id, destino, tipo, etiqueta, bidir, null, cardId);
     });
   }
+
+  _gpRedrawArrows();
+  return cardId;
 }
+
+
+
+
 
 // ── Acciones CRUD ────────────────────────────────────────────────────
 
@@ -2928,46 +2996,45 @@ async function crearConceptoGP() {
   } catch(e) { alert("Error al crear concepto: " + e.message); }
 }
 
-async function gpEditarConcepto(cid, label, definicion) {
+async function gpEditarConcepto(cid, label, definicion, cardId) {
   try {
     await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/conceptos/${encodeURIComponent(cid)}`,
       { method: "PATCH", body: JSON.stringify({ label, definicion }) });
     await recargarGP();
-    // Mantener panel abierto con nodo actualizado
     const updated = gpState.grafoVis.nodes.find(n => n.id === cid);
-    if (updated) gpOnNodoSeleccionado(updated);
+    if (updated) _gpRefreshCard(cardId, updated);
   } catch(e) { alert("Error al editar concepto: " + e.message); }
 }
 
-async function gpEliminarConcepto(cid) {
+async function gpEliminarConcepto(cid, cardId) {
   try {
     await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/conceptos/${encodeURIComponent(cid)}`,
       { method: "DELETE" });
     gpState.nodoSeleccionado = null;
-    document.getElementById("gp-panel").hidden = true;
+    _gpCloseCard(cardId);
     await recargarGP();
   } catch(e) { alert("Error al eliminar: " + e.message); }
 }
 
-async function gpCrearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional, cita = null) {
+async function gpCrearRelacion(origenId, destinoId, tipo, etiqueta, bidireccional, cita = null, cardId = null) {
   try {
     await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/relaciones`,
       { method: "POST", body: JSON.stringify({ origen_id: origenId, destino_id: destinoId, tipo, etiqueta, bidireccional, cita }) });
     await recargarGP();
     const updated = gpState.grafoVis.nodes.find(n => n.id === origenId);
-    if (updated) gpOnNodoSeleccionado(updated);
+    if (updated && cardId) _gpRefreshCard(cardId, updated);
   } catch(e) { alert("Error al crear relación: " + e.message); }
 }
 
-async function gpEliminarRelacion(rid) {
+async function gpEliminarRelacion(rid, cardId = null) {
   try {
     await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/relaciones/${encodeURIComponent(rid)}`,
       { method: "DELETE" });
     await recargarGP();
-    // Refrescar panel
-    if (gpState.nodoSeleccionado) {
-      const updated = gpState.grafoVis.nodes.find(n => n.id === gpState.nodoSeleccionado.id);
-      if (updated) gpOnNodoSeleccionado(updated); else document.getElementById("gp-panel").hidden = true;
+    if (cardId) {
+      const data = _gpCards.get(cardId);
+      const updated = data && gpState.grafoVis.nodes.find(n => n.id === data.nodo.id);
+      if (updated) _gpRefreshCard(cardId, updated);
     }
   } catch(e) { alert("Error al eliminar relación: " + e.message); }
 }
@@ -3027,7 +3094,7 @@ function volverBibliotecaDesdeGP() {
   const sel = document.getElementById("gp-texto-fuente");
   if (sel) { sel.value = ""; delete sel.dataset.wired; }
   document.getElementById("gp-nuevo-concepto-form").hidden = true;
-  document.getElementById("gp-panel").hidden = true;
+  _gpCloseAllCards();
   document.getElementById("vista-gp").hidden = true;
   mostrarBiblioteca();
 }
