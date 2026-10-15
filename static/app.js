@@ -19,6 +19,7 @@ const state = {
 const tabsInit = new Set();
 const conceptosState  = { sort:{ col:"menciones", dir:"desc" }, filtroTipo:"todos", busqueda:"" };
 const relacionesState = { sort:{ col:"confianza",  dir:"desc" }, filtroTipo:"todos", busqueda:"" };
+let relacionExpandidaId = null;
 let conceptosListeners = false;
 let relacionesListeners = false;
 
@@ -912,26 +913,16 @@ function buildRelacionesHTML(nodo) {
 
 function buildNuevaRelacionHTML(nodo) {
   const TIPOS = ["fundamenta","amplifica","especifica","contraposicion","constituye","genera","presupone"];
-  // Existing links from/to this node (to mark already-connected concepts)
-  const conectados = new Set(
-    (state.grafo?.links || [])
-      .filter(l => l.source === nodo.id || l.target === nodo.id)
-      .flatMap(l => [l.source, l.target])
-  );
-  conectados.delete(nodo.id);
-
-  const otros = (state.grafo?.nodes || [])
-    .filter(n => n.id !== nodo.id)
-    .sort((a, b) => a.label.localeCompare(b.label));
 
   return `<details class="panel-seccion">
-    <summary class="panel-seccion-titulo panel-seccion-summary">${ico("link",13)} Vincular con otro concepto</summary>
+    <summary class="panel-seccion-titulo panel-seccion-summary">${ico("link",13)} Vincular</summary>
     <div class="campo">
       <span class="campo-etiq">Concepto destino</span>
-      <select id="nr-destino" class="edit-select" style="width:100%">
-        <option value="">— Seleccionar —</option>
-        ${otros.map(n => `<option value="${esc(n.id)}" ${conectados.has(n.id)?"":""}>${esc(n.label)}${conectados.has(n.id)?" ✓":""}</option>`).join("")}
-      </select>
+      <div style="position:relative">
+        <input id="nr-destino-txt" class="edit-input" placeholder="Buscar concepto…" autocomplete="off" style="width:100%">
+        <input type="hidden" id="nr-destino">
+        <ul class="gp-ac-dropdown" id="nr-destino-drop" hidden></ul>
+      </div>
     </div>
     <div class="campo">
       <span class="campo-etiq">Tipo</span>
@@ -975,13 +966,29 @@ function bindPanelListeners(el, nodo, cardId) {
     if (t) anotarEnPanel(nodo.id, t, cardId);
   });
 
-  // Nueva relación
+  // Nueva relación: autocompletar concepto destino
+  const nrDestTxt  = el.querySelector("#nr-destino-txt");
+  const nrDestId   = el.querySelector("#nr-destino");
+  const nrDestDrop = el.querySelector("#nr-destino-drop");
+  if (nrDestTxt) {
+    const conectados = new Set(
+      (state.grafo?.links || [])
+        .filter(l => l.source === nodo.id || l.target === nodo.id)
+        .flatMap(l => [l.source, l.target])
+    );
+    _gpWireAutocomplete(nrDestTxt, nrDestDrop, () =>
+      (state.grafo?.nodes || []).filter(n => n.id !== nodo.id)
+        .map(n => ({ label: n.label, meta: conectados.has(n.id) ? "vinculado" : "", onSelect: inp => { inp.value = n.label; nrDestId.value = n.id; } }))
+    );
+    nrDestTxt.addEventListener("input", () => { nrDestId.value = ""; });
+  }
+
   el.querySelector("#nr-crear")?.addEventListener("click", () => {
     const destino  = el.querySelector("#nr-destino")?.value;
     const tipo     = el.querySelector("#nr-tipo")?.value;
     const etiqueta = el.querySelector("#nr-etiqueta")?.value.trim();
     const bidir    = el.querySelector("#nr-bidir")?.checked || false;
-    if (!destino)  { el.querySelector("#nr-destino").focus();  return; }
+    if (!destino)  { nrDestTxt?.focus();  return; }
     if (!etiqueta) { el.querySelector("#nr-etiqueta").focus(); return; }
     crearRelacion(nodo.id, destino, tipo, etiqueta, bidir, cardId);
   });
@@ -1479,6 +1486,42 @@ function renderPanelSesion(cfg, sesion) {
 // ════════════════════════════════════════════════════════════════════════
 // Tab: Conceptos
 // ════════════════════════════════════════════════════════════════════════
+let conceptoExpandidoId = null;
+let _textoBusqueda = null; // { slug, oraciones: string[] } — cache de oraciones para buscar pasajes
+
+// Divide el texto fuente en oraciones (conserva el signo de puntuación final).
+function _dividirEnOraciones(texto) {
+  return (texto || "").replace(/\s+/g, " ").match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [];
+}
+
+async function _cargarTextoBusqueda() {
+  if (_textoBusqueda?.slug === state.slug) return _textoBusqueda;
+  try {
+    const { texto } = await apiFetch(`/api/transcripts/${encodeURIComponent(state.slug)}`);
+    _textoBusqueda = { slug: state.slug, oraciones: _dividirEnOraciones(texto) };
+  } catch (e) {
+    _textoBusqueda = { slug: state.slug, oraciones: [] };
+  }
+  return _textoBusqueda;
+}
+
+// Oraciones del texto que mencionan el concepto (por su label o sinónimos).
+function _pasajesDeConcepto(nodo, oraciones) {
+  const terminos = [nodo.label, ...(nodo.sinonimos_candidatos || [])]
+    .filter(Boolean).map(t => t.toLowerCase());
+  const vistos = new Set();
+  const pasajes = [];
+  for (const o of oraciones) {
+    const limpio = o.trim();
+    const lo = limpio.toLowerCase();
+    if (limpio && !vistos.has(limpio) && terminos.some(t => lo.includes(t))) {
+      vistos.add(limpio);
+      pasajes.push(limpio);
+    }
+  }
+  return pasajes;
+}
+
 async function initConceptos() {
   if (!state.grafo) await cargarGrafo();
   renderConceptos();
@@ -1505,12 +1548,33 @@ function renderConceptos() {
   const tbody=document.getElementById("conceptos-tbody"); tbody.innerHTML="";
   rows.forEach(n=>{
     const tr=document.createElement("tr"); tr.dataset.id=n.id;
+    tr.className = "concepto-fila" + (n.id===conceptoExpandidoId ? " active" : "");
     const cw=Math.round(n.confianza*56);
     const sins=(n.sinonimos_candidatos||[]).slice(0,4).map(s=>`<span class="tag">${esc(s)}</span>`).join("");
     const mas=(n.sinonimos_candidatos||[]).length>4?`<span class="muted" style="font-size:11px">+${n.sinonimos_candidatos.length-4}</span>`:"";
     tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline" data-edit-c="${esc(n.id)}">${ico("edit-2")} Editar</button></td>`;
     tbody.appendChild(tr);
+    tr.addEventListener("click", e => {
+      if (e.target.closest("[data-edit-c]")) return;
+      conceptoExpandidoId = conceptoExpandidoId === n.id ? null : n.id;
+      renderConceptos();
+    });
     tr.querySelector("[data-edit-c]").addEventListener("click",()=>abrirEditorConcepto(n,tr));
+
+    if (n.id === conceptoExpandidoId) {
+      const trDet = document.createElement("tr");
+      trDet.className = "concepto-detalle-fila";
+      trDet.innerHTML = `<td colspan="6"><div class="concepto-detalle">Buscando pasajes…</div></td>`;
+      tbody.appendChild(trDet);
+      const detEl = trDet.querySelector(".concepto-detalle");
+      _cargarTextoBusqueda().then(({ oraciones }) => {
+        if (conceptoExpandidoId !== n.id) return; // se cerró/cambió mientras cargaba
+        const pasajes = _pasajesDeConcepto(n, oraciones);
+        detEl.innerHTML = pasajes.length
+          ? pasajes.map(p => `<p class="cita">"${esc(p)}"</p>`).join("")
+          : `<p class="muted" style="font-size:var(--sn-fs-xs)">No se encontraron pasajes literales en el texto.</p>`;
+      });
+    }
   });
 }
 
@@ -1537,10 +1601,13 @@ function abrirEditorConcepto(n,tr) {
 // ════════════════════════════════════════════════════════════════════════
 async function initRelaciones() {
   if (!state.grafo) await cargarGrafo();
+  // El tipo es texto libre (ontología abierta): puede haber cientos de
+  // valores casi únicos, así que va en un <select> y no en una fila de
+  // chips (que antes crecía sin límite y rompía el layout de la pestaña).
   const tipos=[...new Set(state.grafo.links.map(l=>l.tipo).filter(Boolean))].sort();
-  const fe=document.getElementById("filtros-rel-tipo");
-  fe.innerHTML=`<button class="tipo-filtro-btn active" data-tipo="todos">Todos</button>`+
-    tipos.map(t=>`<button class="tipo-filtro-btn" data-tipo="${esc(t)}">${esc(t)}</button>`).join("");
+  const fe=document.getElementById("filtro-rel-tipo");
+  fe.innerHTML=`<option value="todos">Todos los tipos</option>`+
+    tipos.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join("");
   renderRelaciones();
   if (!relacionesListeners) {
     relacionesListeners=true;
@@ -1553,18 +1620,16 @@ async function initRelaciones() {
       else{relacionesState.sort.col=c;relacionesState.sort.dir="asc";}
       renderRelaciones();
     }));
+    fe.addEventListener("change",()=>{ relacionesState.filtroTipo=fe.value; renderRelaciones(); });
   }
-  fe.querySelectorAll(".tipo-filtro-btn").forEach(b=>b.addEventListener("click",()=>{
-    fe.querySelectorAll(".tipo-filtro-btn").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active"); relacionesState.filtroTipo=b.dataset.tipo; renderRelaciones();
-  }));
+  fe.value = relacionesState.filtroTipo;
 }
 
 function renderRelaciones() {
   const nById=Object.fromEntries(state.grafo.nodes.map(n=>[n.id,n]));
   let rows=state.grafo.links;
   if(relacionesState.filtroTipo!=="todos") rows=rows.filter(l=>l.tipo===relacionesState.filtroTipo);
-  if(relacionesState.busqueda) { const q=relacionesState.busqueda; rows=rows.filter(l=>{ const lo=nById[l.source]?.label||"",ld=nById[l.target]?.label||""; return (l.etiqueta||"").toLowerCase().includes(q)||lo.toLowerCase().includes(q)||ld.toLowerCase().includes(q); }); }
+  if(relacionesState.busqueda) { const q=relacionesState.busqueda; rows=rows.filter(l=>{ const lo=nById[l.source]?.label||"",ld=nById[l.target]?.label||""; return (l.etiqueta||"").toLowerCase().includes(q)||(l.tipo||"").toLowerCase().includes(q)||lo.toLowerCase().includes(q)||ld.toLowerCase().includes(q); }); }
   const {col,dir}=relacionesState.sort;
   rows=[...rows].sort((a,b)=>{ let av=a[col]??"",bv=b[col]??""; if(typeof av==="string")av=av.toLowerCase(); if(typeof bv==="string")bv=bv.toLowerCase(); return dir==="asc"?(av>bv?1:av<bv?-1:0):(av<bv?1:av>bv?-1:0); });
   document.querySelectorAll("#tabla-relaciones th.sortable").forEach(th=>{ th.classList.remove("sort-asc","sort-desc"); if(th.dataset.col===relacionesState.sort.col) th.classList.add(relacionesState.sort.dir==="asc"?"sort-asc":"sort-desc"); });
@@ -1574,12 +1639,45 @@ function renderRelaciones() {
     const to=nById[l.source]?.tipo, td=nById[l.target]?.tipo;
     const cw=Math.round(l.confianza*56);
     const tr=document.createElement("tr"); tr.dataset.id=l.id;
+    tr.className = "relacion-fila" + (l.id===relacionExpandidaId ? " active" : "");
     tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(l.id)}</td><td><span class="tag ${to}">${esc(lo)}</span></td><td class="r-tipo"><span class="tag">${esc(l.tipo||"—")}</span></td><td><span class="tag ${td}">${esc(ld)}</span></td><td style="text-align:center"><button class="bidir-toggle ${l.bidireccional?"on":""}" data-bidir="${l.id}" title="${l.bidireccional?"Bidireccional":"Unidireccional"}">${l.bidireccional?"↔":"→"}</button></td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${l.confianza.toFixed(2)}</span></div></td><td class="r-etiqueta">${esc(l.etiqueta||"")}${l.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td><button class="btn-inline" data-edit-r="${esc(l.id)}">${ico("edit-2")} Editar</button></td>`;
     tbody.appendChild(tr);
-    tr.querySelector("[data-bidir]").addEventListener("click",async()=>{
-      try { await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/relaciones/${encodeURIComponent(l.id)}`,{method:"PATCH",body:JSON.stringify({bidireccional:!l.bidireccional})}); await cargarGrafo(); tabsInit.delete("mapa"); renderRelaciones(); } catch(e){alert("Error: "+e.message);}
+    tr.querySelector("[data-bidir]").addEventListener("click",e=>{
+      e.stopPropagation();
+      apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/relaciones/${encodeURIComponent(l.id)}`,{method:"PATCH",body:JSON.stringify({bidireccional:!l.bidireccional})})
+        .then(()=>cargarGrafo()).then(()=>{ tabsInit.delete("mapa"); renderRelaciones(); })
+        .catch(e=>alert("Error: "+e.message));
     });
-    tr.querySelector("[data-edit-r]").addEventListener("click",()=>abrirEditorRelacion(l,tr));
+    tr.querySelector("[data-edit-r]").addEventListener("click",e=>{ e.stopPropagation(); abrirEditorRelacion(l,tr); });
+    tr.addEventListener("click", e => {
+      if (e.target.closest("[data-edit-r], [data-bidir]")) return;
+      relacionExpandidaId = relacionExpandidaId === l.id ? null : l.id;
+      renderRelaciones();
+    });
+
+    if (l.id === relacionExpandidaId) {
+      const trDet = document.createElement("tr");
+      trDet.className = "relacion-detalle-fila";
+      trDet.innerHTML = `<td colspan="8"><div class="relacion-detalle">
+        <button class="concepto-link" data-goto-concepto="${esc(l.source)}">${esc(lo)}</button>
+        <span class="relacion-detalle-tipo">${esc(l.tipo||"—")}</span>
+        <button class="concepto-link" data-goto-concepto="${esc(l.target)}">${esc(ld)}</button>
+      </div></td>`;
+      tbody.appendChild(trDet);
+      trDet.querySelectorAll("[data-goto-concepto]").forEach(btn =>
+        btn.addEventListener("click", () => irAConcepto(btn.dataset.gotoConcepto)));
+    }
+  });
+}
+
+// Lleva a la pestaña Conceptos con el concepto dado expandido y a la vista.
+function irAConcepto(conceptoId) {
+  conceptoExpandidoId = conceptoId;
+  activarTab("conceptos");
+  renderConceptos();
+  requestAnimationFrame(() => {
+    document.querySelector(`#conceptos-tbody tr[data-id="${CSS.escape(conceptoId)}"]`)
+      ?.scrollIntoView({ block: "center" });
   });
 }
 

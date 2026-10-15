@@ -686,17 +686,6 @@ details[open] > .panel-rel-grupo-hdr::before { transform: rotate(90deg); }
 }
 .buscar-input:focus { border-color: var(--sn-focus-border); box-shadow: var(--sn-focus-ring); }
 
-.tipo-filtros { display: flex; gap: var(--sn-s-1); flex-wrap: wrap; }
-
-.tipo-filtro-btn {
-  padding: var(--sn-s-1) var(--sn-s-3); font-size: var(--sn-fs-xs);
-  border: var(--sn-hair); border-radius: var(--sn-radius);
-  background: none; cursor: pointer; color: var(--sn-ink-soft);
-  font-family: var(--sn-font-text); transition: all var(--sn-dur-1);
-}
-.tipo-filtro-btn:hover  { background: var(--sn-nova-wash); color: var(--sn-nova); border-color: var(--sn-nova); }
-.tipo-filtro-btn.active { background: var(--sn-ink); color: var(--sn-paper); border-color: var(--sn-ink); }
-
 .tabla-scroll { flex: 1; overflow: auto; }
 
 table {
@@ -723,6 +712,32 @@ td {
   vertical-align: middle;
 }
 tbody tr:hover td { background: var(--sn-sunk); }
+
+.concepto-fila { cursor: pointer; }
+.concepto-fila.active td { background: var(--sn-ok-wash); }
+.concepto-detalle-fila td { padding: 0; border-bottom: 1px solid var(--sn-hairline-soft); }
+.concepto-detalle { padding: var(--sn-s-3) var(--sn-s-5); background: var(--sn-sunk); }
+.concepto-detalle .cita { margin-bottom: var(--sn-s-2); }
+.concepto-detalle .cita:last-child { margin-bottom: 0; }
+
+.relacion-fila { cursor: pointer; }
+.relacion-fila.active td { background: var(--sn-ok-wash); }
+.relacion-detalle-fila td { padding: 0; border-bottom: 1px solid var(--sn-hairline-soft); }
+.relacion-detalle {
+  padding: var(--sn-s-3) var(--sn-s-5); background: var(--sn-sunk);
+  display: flex; align-items: center; gap: var(--sn-s-3); flex-wrap: wrap;
+  font-size: var(--sn-fs-sm);
+}
+.relacion-detalle-tipo {
+  font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
+  padding: 2px var(--sn-s-2); border: var(--sn-hair); border-radius: var(--sn-radius-pill);
+}
+.concepto-link {
+  background: none; border: none; cursor: pointer; padding: 0;
+  font-size: inherit; font-weight: 600; color: var(--sn-nova);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.concepto-link:hover { color: var(--sn-ink); }
 
 .conf-bar-wrap { display: flex; align-items: center; gap: var(--sn-s-2); }
 .conf-bar { display: inline-block; height: 4px; border-radius: 2px; background: var(--sn-nova); opacity: .45; }
