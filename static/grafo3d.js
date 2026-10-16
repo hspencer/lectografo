@@ -12,6 +12,9 @@
  * three en el mismo scene graph rompen el reconocimiento de objetos WebGL.
  */
 import * as THREE from "three";
+import { Line2 } from "three/examples/jsm/lines/Line2.js";
+import { LineGeometry } from "three/examples/jsm/lines/LineGeometry.js";
+import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import ForceGraph3D from "https://esm.sh/3d-force-graph@1.79.1?external=three";
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
@@ -205,11 +208,14 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
       obj.halo.material.opacity  = (persistente && activo && isFocus) ? 1 : 0;
     });
 
-    if (_graph) {
-      _graph.linkColor(_graph.linkColor());
-      _graph.linkOpacity(_graph.linkOpacity());
-      _graph.linkWidth(_graph.linkWidth());
-    }
+    links.forEach(applyLinkStyle);
+  }
+
+  function applyLinkStyle(l) {
+    const m = l.__line?.material;
+    if (!m) return;
+    m.opacity   = linkOpac(l);
+    m.linewidth = linkW(l);
   }
 
   // En 3D muchas líneas se apilan a lo largo del rayo de vista (profundidad
@@ -219,11 +225,32 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.9 : 0.04;
     return l.investigador ? 0.22 : 0.32;
   }
-  // Ancho en unidades de mundo (tubo 3D), no en px: el grafo mide cientos
-  // de unidades, así que valores < 0.5 son invisibles.
+  // Grosor en px de pantalla (LineMaterial sin worldUnits): constante con el zoom.
   function linkW(l) {
-    if (focusState.activo && focusState.linkIds.has(l.id)) return 2.2;
-    return 1.1;
+    if (focusState.activo && focusState.linkIds.has(l.id)) return 2.5;
+    return 1.5;
+  }
+
+  function makeLinkObject(l) {
+    const material = new LineMaterial({
+      color: relColor(l.tipo || "_"),
+      linewidth: linkW(l),
+      transparent: true,
+      opacity: linkOpac(l),
+      depthWrite: false,
+    });
+    material.resolution.set(container.clientWidth || 800, container.clientHeight || 600);
+    const line = new Line2(new LineGeometry(), material);
+    line.geometry.setPositions([0, 0, 0, 0, 0, 0]);
+    l.__line = line;
+    return line;
+  }
+
+  // ponytail: setPositions realoca el buffer en cada tick de la simulación;
+  // si pesa con grafos grandes, escribir in-place en instanceStart/End.
+  function updateLinkPosition(line, { start, end }) {
+    line.geometry.setPositions([start.x, start.y, start.z, end.x, end.y, end.z]);
+    return true;
   }
 
   // path: [{ nodeId, linkId }] en orden; linkId null para el primer paso.
@@ -253,8 +280,8 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     .nodeThreeObject(createNodeObject)
     .nodeThreeObjectExtend(false)
     .linkColor(l => relColor(l.tipo || "_"))
-    .linkOpacity(linkOpac)
-    .linkWidth(linkW)
+    .linkThreeObject(makeLinkObject)
+    .linkPositionUpdate(updateLinkPosition)
     .linkDirectionalArrowLength(5)
     .linkDirectionalArrowRelPos(1)
     .onNodeClick(node => {
@@ -334,7 +361,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
       if (u) { n.decision = u.decision; n.label = u.label; n.editado = u.editado; }
       rebuildSprites(n);
     });
-    graph.linkOpacity(linkOpac);
+    links.forEach(applyLinkStyle);
   }
 
   function centerOnNode(nodeId) {
