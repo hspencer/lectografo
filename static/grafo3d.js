@@ -32,8 +32,8 @@ const REST_OPACITY  = 0.9;
 // igual que el texto 2D. Sin esto, un sprite normal se encoge con la
 // perspectiva hasta ser ilegible en cuanto el grafo se aleja de cámara.
 const FOV_DEG          = 50; // default de three-render-objects/3d-force-graph
-const LABEL_PX_NORMAL  = 26; // alto en px de pantalla, pastilla incluida
-const LABEL_PX_FOCUS   = 30;
+const LABEL_PX_NORMAL  = 17; // alto en px de pantalla, pastilla incluida
+const LABEL_PX_FOCUS   = 24;
 
 let _graph = null; // instancia activa, para poder limpiar al alternar 2D/3D
 
@@ -80,7 +80,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     ctx.font = font;
     const textW = ctx.measureText(text).width;
 
-    const padX = 16 * dpr, padY = 9 * dpr;
+    const padX = 10 * dpr, padY = 4 * dpr;
     canvas.width  = textW + padX * 2;
     canvas.height = fontPx * 1.5 + padY * 2;
 
@@ -88,12 +88,10 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // Pastilla casi opaca color-campo: separa el texto del enjambre de líneas.
-    // A diferencia del halo 2D (texto directo sobre el fondo de página), aquí
-    // el fondo detrás del sprite es la maraña de líneas 3D — necesita más
-    // cobertura para dar contraste real, no solo un halo sutil.
+    // Pastilla translúcida color-campo: da contraste al texto sin tapar
+    // los enlaces que pasan por detrás.
     ctx.fillStyle = FIELD_COLOR;
-    ctx.globalAlpha = 0.82;
+    ctx.globalAlpha = 0.5;
     const rr = canvas.height / 2;
     ctx.beginPath();
     ctx.moveTo(rr, 0);
@@ -218,14 +216,14 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
   // que el 2D no tiene), así que una opacidad que en SVG se ve sutil aquí se
   // acumula y lee como maciza — de ahí la base mucho más baja que en grafo.js.
   function linkOpac(l) {
-    if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.85 : 0.03;
-    return l.investigador ? 0.10 : 0.16;
+    if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.9 : 0.04;
+    return l.investigador ? 0.22 : 0.32;
   }
-  // 0 sería línea WebGL nativa de 1px; un tubo fino (0.12) se ve un poco
-  // más grueso sin volverse un tubo 3D pesado.
+  // Ancho en unidades de mundo (tubo 3D), no en px: el grafo mide cientos
+  // de unidades, así que valores < 0.5 son invisibles.
   function linkW(l) {
-    if (focusState.activo && focusState.linkIds.has(l.id)) return 0.85;
-    return 0.12;
+    if (focusState.activo && focusState.linkIds.has(l.id)) return 2.2;
+    return 1.1;
   }
 
   // path: [{ nodeId, linkId }] en orden; linkId null para el primer paso.
@@ -257,7 +255,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     .linkColor(l => relColor(l.tipo || "_"))
     .linkOpacity(linkOpac)
     .linkWidth(linkW)
-    .linkDirectionalArrowLength(3.2)
+    .linkDirectionalArrowLength(5)
     .linkDirectionalArrowRelPos(1)
     .onNodeClick(node => {
       if (!node) return;
