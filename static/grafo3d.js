@@ -211,13 +211,13 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
   // que el 2D no tiene), así que una opacidad que en SVG se ve sutil aquí se
   // acumula y lee como maciza — de ahí la base mucho más baja que en grafo.js.
   function linkOpac(l) {
-    if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.9 : 0.06;
-    return l.investigador ? 0.22 : 0.32;
+    if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.95 : 0.18;
+    return l.investigador ? 0.4 : 0.5;
   }
   // Grosor en px de pantalla (LineMaterial sin worldUnits): constante con el zoom.
   function linkW(l) {
-    if (focusState.activo && focusState.linkIds.has(l.id)) return 2.5;
-    return 1.5;
+    if (focusState.activo && focusState.linkIds.has(l.id)) return 3;
+    return 2;
   }
 
   function makeLinkObject(l) {

@@ -101,11 +101,20 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
         const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
         // Punto medio de la curva (no el borde superior): dos relaciones que
         // salen de la misma tarjeta ya no apilan sus etiquetas.
-        t.setAttribute("x", cx); t.setAttribute("y", (y1 + y2) / 2 - 4);
-        t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "10");
+        t.setAttribute("x", cx); t.setAttribute("y", (y1 + y2) / 2);
+        t.setAttribute("text-anchor", "middle"); t.setAttribute("dominant-baseline", "middle");
+        t.setAttribute("font-size", "10");
         t.setAttribute("fill", "var(--sn-ink-soft)");
         t.textContent = relLabel;
         arrowsEl.appendChild(t);
+        // Fondillo traslúcido detrás de la etiqueta, sobre la curva.
+        const b = t.getBBox();
+        const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        r.setAttribute("x", b.x - 4); r.setAttribute("y", b.y - 1);
+        r.setAttribute("width", b.width + 8); r.setAttribute("height", b.height + 2);
+        r.setAttribute("rx", 3);
+        r.setAttribute("fill", "var(--sn-field)"); r.setAttribute("fill-opacity", "0.8");
+        arrowsEl.insertBefore(r, t);
       }
     });
   }
