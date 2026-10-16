@@ -19,7 +19,7 @@
 --   - Persistencia y publicacion de grafos versionados
 --   - Grafos personales: mapas libres del investigador con referencias vivas
 --   - Visualizacion interactiva (contrato de superficie)
---   - Soporte de proveedores LLM remotos (anthropic, openai, gemini) y locales (ollama)
+--   - Soporte de proveedores LLM remotos (anthropic, openai, gemini) y locales (ollama, lmstudio)
 --
 -- Excludes:
 --   - Mecanismo de descarga de YouTube (se asume yt-dlp como black box)

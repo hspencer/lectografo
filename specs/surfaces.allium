@@ -8,7 +8,8 @@
 -- Includes:
 --   - Actor Investigador (humano) y actor LLM (servicio externo)
 --   - Surface de validacion de decisiones
---   - Surface de visualizacion del grafo
+--   - Surface del mapa con tarjetas de concepto encadenadas
+--   - Surfaces de tabla: conceptos (con pasajes) y relaciones
 --   - Surface de invocacion del LLM
 --   - Contrato Codec para serializar grafos
 --   - Contrato EvaluadorLLM para invocar proveedores
@@ -19,6 +20,7 @@ use "./validacion.allium" as validacion
 use "./grafo.allium" as grafo
 use "./extraccion-incremental.allium" as extraccionIncremental
 use "./edicion-texto.allium" as edicion
+use "./recorrido.allium" as recorrido
 
 ------------------------------------------------------------
 -- Actores
@@ -39,7 +41,7 @@ actor Investigador {
 }
 
 actor LLM {
-    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, ollama}
+    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, ollama, lmstudio}
 }
 
 ------------------------------------------------------------
@@ -69,8 +71,37 @@ contract EvaluadorLLM {
         -- retorna listas vacias y la falla se reporta por otro canal.
 
     @guidance
-        -- Cada proveedor (anthropic, openai, gemini, ollama) implementa este
-        -- contrato detras de la misma interfaz.
+        -- Cada proveedor (anthropic, openai, gemini, ollama, lmstudio)
+        -- implementa este contrato detras de la misma interfaz. lmstudio
+        -- habla la API compatible con OpenAI que LM Studio expone en local;
+        -- comparte con openai el protocolo, no la configuracion.
+}
+
+------------------------------------------------------------
+-- Enumeraciones
+------------------------------------------------------------
+
+enum ModoMapa {
+    tridimensional
+    bidimensional
+}
+
+------------------------------------------------------------
+-- Configuracion
+------------------------------------------------------------
+
+config {
+    -- Modo con que se abre el mapa de un grafo derivado (editor y sitio
+    -- publicado). El investigador lo alterna con un unico control; la
+    -- eleccion dura mientras la pagina siga abierta y no se guarda.
+    -- (El mapa de un grafo personal tiene su propio modo y abre en 2D.)
+    modo_mapa_inicial: ModoMapa = tridimensional
+
+    profundidad_dendrograma: Integer = 3
+    -- Profundidad inicial del árbol de expansión del NavegadorDendrograma.
+    -- 2 = solo vecinos directos (poco contexto).
+    -- 3 = vecinos y sus vecinos (equilibrio recomendado).
+    -- 4+ = potencialmente abrumador con grafos densos.
 }
 
 ------------------------------------------------------------
@@ -126,22 +157,48 @@ surface PanelValidacion {
 }
 
 ------------------------------------------------------------
--- Surface: mapa topológico (force-directed)
+-- Surface: mapa del grafo con tarjetas de concepto
 ------------------------------------------------------------
 
 -- NOTA: Esta surface fue la vista principal hasta que se comprobó que con
 -- grafos de más de ~15 nodos las frases de relación (frase_completa) son
--- completamente ilegibles: los labels se superponen, los arcos se cruzan y
--- no existe punto de entrada natural para la lectura. El mapa se mantiene
--- como vista de TOPOLOGÍA (estructura global, densidad, bucles), no como
--- superficie de lectura semántica. La navegación léxica vive en
--- NavegadorDendrograma.
+-- completamente ilegibles SOBRE EL MAPA: los labels se superponen, los
+-- arcos se cruzan y no existe punto de entrada natural para la lectura.
+-- Esa conclusión sigue en pie: el mapa no dibuja frases sobre las aristas.
+--
+-- Lo que cambió es dónde ocurre la lectura. Ya no se desplaza a otra vista:
+-- se superpone al mapa en TARJETAS FLOTANTES, una por concepto abierto,
+-- encadenadas por flechas que siguen la dirección de cada relación cruzada.
+-- El conjunto de tarjetas abiertas es el estado de los recorridos en curso
+-- (recorrido/RecorridosAbiertos); el mapa resalta esos mismos pasos. El mapa
+-- es el soporte espacial del recorrido; las tarjetas, su registro
+-- discursivo. Ver recorrido.allium, "La doble inscripcion".
+--
+-- La misma surface se publica en el sitio estático en modo de solo
+-- lectura: allí cada tarjeta muestra Concepto y Relaciones, sin Anotaciones
+-- ni Vincular, y no se ofrece ninguna acción que escriba sobre el grafo.
 
 surface VisualizacionGrafo {
     facing investigador: Investigador
     context grafo: grafo/Grafo
 
+    let abiertos = TarjetasAbiertas(grafo)
+    let modo = ModoMapaActivo(grafo)
+
     exposes:
+        modo
+        -- Cada tarjeta abierta es un paso de recorrido (nodo, arista, sentido)
+        for p in abiertos.pasos:
+            p.nodo.label                    -- cabecera de la tarjeta
+            p.direccion                     -- punta(s) de la flecha hacia el paso padre
+            p.relacion_entrada.tipo         -- rotulo de la flecha
+            -- Secciones, todas plegadas al abrir, en este orden:
+            --   Concepto     descripcion, cita directa, menciones, confianza, sinonimos
+            --   Relaciones   las conexiones del nodo (ver recorrido/OrdenDeLaOferta)
+            --   Anotaciones  validacion/AnotacionInvestigador sobre el concepto
+            --   Vincular     formulario para crear una relacion autoral
+            p.nodo.descripcion_corta
+            p.nodo.sinonimos_consolidados
         grafo.titulo
         grafo.version
         grafo.total_nodos
@@ -165,29 +222,185 @@ surface VisualizacionGrafo {
             b.nodos
 
     provides:
+        InvestigadorSeleccionaConcepto(grafo, nodo)
+            -- Clic sobre el nodo en el mapa, o eleccion en el buscador con
+            -- autocompletar. Abre una tarjeta raiz (recorrido/RecorridosAbiertos.abrir_raiz).
+            -- Si ya hay una tarjeta raiz para ese nodo, la enfoca en vez de duplicarla.
+            -- Un clic en el fondo del mapa no cierra nada.
+        InvestigadorSigueRelacion(paso, arista)
+            -- Clic en una relacion de la seccion Relaciones de una tarjeta.
+            -- Encadena una tarjeta hija (recorrido/RecorridosAbiertos.avanzar).
+            -- Si esa misma relacion ya se siguio desde esa tarjeta, enfoca la
+            -- hija existente en vez de duplicarla.
+        InvestigadorEnfocaTarjeta(paso)
+            -- Cualquier interaccion con una tarjeta (arrastrarla, hacer clic
+            -- dentro) la trae al frente y reencuadra el mapa sobre su concepto.
+        InvestigadorCierraTarjeta(paso)
+            -- Cierra la tarjeta y, en cascada, todas sus descendientes
+            -- (recorrido/RecorridosAbiertos.podar).
+        InvestigadorAlternaModoMapa(grafo)
+            -- Un unico control alterna tridimensional <-> bidimensional.
+            -- Las tarjetas abiertas sobreviven al cambio de modo.
+        InvestigadorAjustaVista(grafo)
+            -- Reencuadra el mapa para que quepa el grafo completo.
         InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
-        InvestigadorEligeNodoComoRaiz(nodo)
-            -- Pivota al NavegadorDendrograma centrado en este nodo.
-            -- Única acción de lectura disponible desde el mapa.
+            -- Desde la seccion Anotaciones de una tarjeta; objeto = el nodo.
+        InvestigadorCreaRelacion(grafo, origen, destino, tipo, etiqueta, bidireccional)
+            -- Desde la seccion Vincular de una tarjeta; origen = el nodo de la
+            -- tarjeta. Crea una relacion por la via autoral (ver recorrido.allium,
+            -- "Via 3"). Tras crearla se rehace el contenido de todas las tarjetas
+            -- abiertas, porque sus listas de relaciones pueden haber cambiado.
 
     related:
         NavegadorDendrograma(grafo)
+            -- Aspiracional: especificado mas abajo, aun no implementado.
         PanelValidacion(grafo.transcripcion)
+        TablaConceptos(grafo)
+        TablaRelaciones(grafo)
 
     contracts:
         demands Codec
 
+    @guarantee VistaInicialSegunConfig
+        -- Al abrir un grafo, el mapa se muestra en config.modo_mapa_inicial
+        -- (tridimensional). El control de alternancia indica visiblemente
+        -- cuando el modo tridimensional esta activo.
+
+    @guarantee TarjetasNacenPlegadas
+        -- Toda tarjeta se abre con todas sus secciones plegadas: al abrirla
+        -- solo se ve el nombre del concepto. El investigador despliega lo que
+        -- quiere leer. Las tarjetas se pueden arrastrar, redimensionar,
+        -- plegar enteras y cerrar.
+
+    @guarantee FlechaSigueLaDireccionDeLaRelacion
+        -- La flecha que une una tarjeta hija con su padre representa la
+        -- relacion cruzada en su sentido INSCRITO, no en el sentido del
+        -- recorrido ni en el orden de apertura:
+        --   saliente       punta hacia la tarjeta hija
+        --   entrante       punta hacia la tarjeta padre
+        --   bidireccional  punta en ambos extremos
+        -- Al mover o redimensionar las tarjetas, el lado por donde la flecha
+        -- se ancla a cada una se recalcula segun su posicion relativa actual;
+        -- el sentido de las puntas no cambia.
+
+    @guarantee MapaYTarjetasSeResaltanJuntos
+        -- Cada vez que se abre o cierra una tarjeta, el mapa resalta el
+        -- conjunto de los nodos de todas las tarjetas abiertas y de sus
+        -- relaciones de entrada. El ultimo paso abierto es el foco.
+
+    @guarantee VincularEligeDestinoDeLaLista
+        -- El concepto destino se elige con un buscador con autocompletar
+        -- sobre los conceptos del grafo, excluido el propio, que marca los
+        -- que ya estan vinculados con el. Escribir en el buscador invalida
+        -- la eleccion previa: no se crea la relacion sin un destino elegido
+        -- de la lista ni sin etiqueta. El tipo se elige del vocabulario
+        -- orientativo extraccion/TipoRelacion.
+
     @guidance
-        -- Usar como referencia topológica, no como herramienta de lectura.
-        -- El investigador puede arrastrar nodos y hacer zoom, pero la
-        -- legibilidad se degrada con densidad alta. Para leer el argumento
-        -- del texto, redirigir a NavegadorDendrograma.
+        -- El investigador puede arrastrar nodos y hacer zoom; la legibilidad
+        -- del mapa como tal se degrada con densidad alta. La lectura del
+        -- argumento ocurre en las tarjetas, no en las etiquetas del mapa.
+}
+
+------------------------------------------------------------
+-- Surfaces: tablas de conceptos y de relaciones
+------------------------------------------------------------
+
+surface TablaConceptos {
+    facing investigador: Investigador
+    context grafo: grafo/Grafo
+
+    let expandido = ConceptoExpandido(grafo)        -- a lo sumo uno, o null
+
+    exposes:
+        for n in grafo.nodos:
+            n.label
+            n.sinonimos_consolidados
+            n.conceptos_origen                       -- de aqui salen menciones y confianza
+        PasajesDeConcepto(expandido, grafo.transcripcion)
+            when expandido != null
+
+    provides:
+        InvestigadorFiltraConceptos(grafo, texto)
+            -- Filtra por coincidencia en el label o la descripcion.
+        InvestigadorExpandeConcepto(grafo, nodo)
+            -- Clic en la fila. Alterna: expande ese concepto (y pliega el que
+            -- estuviera expandido) o lo pliega si ya lo estaba.
+        InvestigadorEditaConcepto(grafo, nodo, label)
+
+    related:
+        TablaRelaciones(grafo)
+        VisualizacionGrafo(grafo)
+
+    @guarantee PasajesSonTodasLasMenciones
+        -- Al expandir un concepto se muestran TODOS los pasajes del texto
+        -- fuente que lo mencionan, no solo la cita_directa unica que guardo
+        -- la extraccion. Ver PasajesDeConcepto.
+        -- Si no hay ninguno, se dice explicitamente que no se encontraron
+        -- pasajes literales.
+}
+
+surface TablaRelaciones {
+    facing investigador: Investigador
+    context grafo: grafo/Grafo
+
+    let expandida = RelacionExpandida(grafo)        -- a lo sumo una, o null
+    let tipos_presentes = TiposPresentes(grafo)
+
+    exposes:
+        for r in grafo.relaciones:
+            r.origen.label
+            r.tipo
+            r.destino.label
+            r.bidireccional
+            r.confianza_extraccion
+            r.etiqueta
+        tipos_presentes
+        expandida.origen.label when expandida != null
+        expandida.tipo when expandida != null
+        expandida.destino.label when expandida != null
+
+    provides:
+        InvestigadorFiltraRelacionesPorTipo(grafo, tipo?)
+            -- Un solo tipo entre tipos_presentes, o todos (tipo ausente).
+        InvestigadorBuscaRelaciones(grafo, texto)
+            -- Coincidencia en la etiqueta, el tipo, o el label del concepto
+            -- origen o destino. Se combina con el filtro por tipo.
+        InvestigadorExpandeRelacion(grafo, relacion)
+            -- Clic en la fila. Alterna, igual que en TablaConceptos.
+        InvestigadorVaAConcepto(grafo, nodo)
+            when expandida != null
+            -- nodo es expandida.origen o expandida.destino. Lleva a
+            -- TablaConceptos con ese concepto expandido y desplazado a la vista.
+        InvestigadorAlternaBidireccionalidad(grafo, relacion)
+        InvestigadorEditaRelacion(grafo, relacion, tipo?, etiqueta?)
+            -- El tipo se edita como texto libre (ontologia abierta).
+
+    related:
+        TablaConceptos(grafo)
+        VisualizacionGrafo(grafo)
+
+    @guarantee FiltroPorTipoNoCreceConLaOntologia
+        -- El tipo es texto libre: un grafo puede tener cientos de tipos
+        -- casi unicos. El filtro por tipo es un unico selector con
+        -- tipos_presentes en orden alfabetico, mas la opcion "todos"; su
+        -- presencia en la superficie no aumenta con el numero de tipos.
+
+    @guarantee ParOrdenadoRespetaLaInscripcion
+        -- La relacion expandida se muestra como el par ordenado
+        -- origen — tipo — destino, en el sentido en que fue inscrita,
+        -- tambien cuando es bidireccional (ver recorrido.allium, Parte II).
+        -- Cada extremo es un enlace a ese concepto en TablaConceptos.
 }
 
 ------------------------------------------------------------
 -- Surface: navegador dendrograma — "el viñedo del texto"
 ------------------------------------------------------------
 
+-- ESTADO: aspiracional. Esta surface esta especificada pero no implementada.
+-- Hoy la lectura ocurre en las tarjetas encadenadas de VisualizacionGrafo
+-- (ver la pregunta abierta sobre la relacion entre ambas).
+--
 -- La superficie primaria de lectura semántica del grafo.
 -- Invierte la jerarquía del mapa: la FRASE DE RELACIÓN (frase_completa) es
 -- el elemento principal de cada rama; el nodo es el destino de esa frase.
@@ -272,7 +485,7 @@ surface NavegadorDendrograma {
 
     related:
         VisualizacionGrafo(grafo)
-            -- Vista de topología global; accesible desde toggle en la misma pestaña
+            -- Vista de topología global; accesible desde la misma pestaña
         PanelValidacion(grafo.transcripcion)
 
     @guarantee FrasesSiempreLegibles
@@ -432,24 +645,33 @@ rule CancelarExtraccion {
 
 surface ConfiguracionProveedor {
     facing investigador: Investigador
+    context activo: extraccion/ProveedorActivo
+
+    let modelos_locales = ModelosLocalesDisponibles(activo)
 
     exposes:
-        extraccion/ProveedorActivo where es_local = false: proveedor, modelo, api_key_presente
-        extraccion/ProveedorActivo where es_local = true:  proveedor, modelo, endpoint
+        activo.proveedor
+        activo.modelo
+        activo.api_key_presente when activo.es_local = false
+        modelos_locales when activo.es_local = true
 
     provides:
-        InvestigadorSeleccionaProveedor(proveedor, modelo, api_key?)
+        InvestigadorSeleccionaProveedor(proveedor, modelo)
             when proveedor in {anthropic, openai, gemini}
-        InvestigadorSeleccionaProveedorLocal(modelo, endpoint)
-            when proveedor = ollama
-        InvestigadorSeleccionaModeloOllama(modelo)
-            when proveedor = ollama
-            -- modelo: seleccionado de la lista devuelta por el endpoint de Ollama
+            -- modelo: de una lista sugerida por proveedor, o un nombre libre.
+            -- Se rechaza si la api_key de ese proveedor no esta configurada.
+        InvestigadorSeleccionaProveedorLocal(proveedor, modelo)
+            when proveedor in {ollama, lmstudio}
+            -- modelo: elegido de la lista que devuelve en ese momento el
+            -- endpoint local del proveedor. Si el endpoint no responde, no
+            -- hay modelos que elegir y la surface lo dice.
+            -- El endpoint local no se elige aqui: es configuracion del
+            -- sistema (por defecto Ollama en :11434, LM Studio en :1234/v1).
 
-    @guarantee ApiKeyNoSeExponeEnOtrasSuperficies
-        -- La api_key de proveedores remotos nunca aparece en otras surfaces
-        -- ni en la serializacion del grafo. Solo es visible en esta surface
-        -- para su configuracion.
+    @guarantee ApiKeyNuncaSeExpone
+        -- La api_key de proveedores remotos no aparece en ninguna surface
+        -- ni en la serializacion del grafo. Esta surface solo indica si
+        -- esta presente o no; se configura fuera de la aplicacion.
 }
 
 ------------------------------------------------------------
@@ -548,32 +770,76 @@ surface PanelBiblioteca {
 -- Deferred
 ------------------------------------------------------------
 
-deferred NodosParcialesDeSesion(sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Nodo>
+-- Las firmas van en comentario, con la misma convencion que recorrido.allium.
+
+deferred NodosParcialesDeSesion    -- see: extraccion-incremental.allium
+    -- (sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Nodo>
     -- Proyecta los ResultadoParciales acumulados hasta ahora en nodos
     -- del grafo (aplicando el tesauro y la equivalencia con grafo_preexistente).
     -- Devuelve el estado actual del grafo en construcción.
 
-deferred RelacionesParcialesdeSesion(sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Relacion>
+deferred RelacionesParcialesdeSesion    -- see: extraccion-incremental.allium
+    -- (sesion: extraccionIncremental/SesionExtraccionIncremental) -> List<grafo/Relacion>
     -- Proyecta las relaciones detectadas hasta ahora en el grafo en construcción.
+
+------------------------------------------------------------
+-- Deferred: mapa, tarjetas y tablas
+------------------------------------------------------------
+
+deferred TarjetasAbiertas    -- see: static/floatcards.js: createFloatingCards
+    -- (grafo: grafo/Grafo) -> recorrido/RecorridosAbiertos
+    -- Las tarjetas abiertas sobre el mapa de este grafo. Estado en memoria
+    -- de la pagina; vacio al abrir un grafo. Ver recorrido.allium.
+
+deferred ModoMapaActivo    -- see: static/app.js: state.modo3d
+    -- (grafo: grafo/Grafo) -> ModoMapa
+    -- config.modo_mapa_inicial hasta que el investigador lo alterne.
+
+deferred ConceptoExpandido    -- see: static/app.js: conceptoExpandidoId
+    -- (grafo: grafo/Grafo) -> grafo/Nodo?
+    -- El concepto cuya fila esta expandida en TablaConceptos, o null.
+
+deferred RelacionExpandida    -- see: static/app.js: relacionExpandidaId
+    -- (grafo: grafo/Grafo) -> grafo/Relacion?
+    -- La relacion cuya fila esta expandida en TablaRelaciones, o null.
+
+deferred TiposPresentes    -- see: static/app.js: initRelaciones
+    -- (grafo: grafo/Grafo) -> List<String>
+    -- Los valores distintos de tipo entre las relaciones del grafo, sin
+    -- vacios, en orden alfabetico.
+
+deferred PasajesDeConcepto    -- see: static/app.js: _pasajesDeConcepto
+    -- (nodo: grafo/Nodo, transcripcion: transcripcion/Transcripcion) -> List<String>
+    -- Las oraciones del texto fuente VIGENTE (el editado, si lo hay; si no,
+    -- el original) que contienen el label del nodo o alguno de sus
+    -- sinonimos, como subcadena y sin distinguir mayusculas.
+    -- Cada oracion aparece una sola vez y en el orden del texto.
+    -- Una oracion termina en . ! o ?; los espacios se normalizan antes de
+    -- dividir. Es busqueda literal: no reconoce flexiones ni parafrasis.
+
+deferred ModelosLocalesDisponibles    -- see: src/app.py: obtener_settings
+    -- (activo: extraccion/ProveedorActivo) -> List<String>
+    -- Los modelos que el endpoint local del proveedor activo reporta en el
+    -- momento de consultar (ollama: modelos instalados; lmstudio: modelos
+    -- que lista su API compatible con OpenAI). Lista vacia si no responde.
 
 ------------------------------------------------------------
 -- Deferred: NavegadorDendrograma
 ------------------------------------------------------------
 
-deferred NodoRaizActiva(grafo: grafo/Grafo) -> grafo/Nodo
+deferred NodoRaizActiva    -- see: aspiracional, sin implementacion
+    -- (grafo: grafo/Grafo) -> grafo/Nodo
     -- Devuelve el nodo con mayor out-degree (suma de salientes + entrantes).
     -- En caso de empate, el primero en orden de creacion.
 
-deferred PerspectvasActivas(grafo: grafo/Grafo) -> List<Perspectiva>
+deferred PerspectvasActivas    -- see: aspiracional, sin implementacion
+    -- (grafo: grafo/Grafo) -> List<Perspectiva>
     -- Devuelve las perspectivas abiertas por el investigador en esta sesión.
     -- Estado en memoria; no persiste entre sesiones.
     -- Al abrir el grafo, contiene una única perspectiva desde NodoRaizActiva.
 
-deferred ProyectarArbol(
-    grafo: grafo/Grafo,
-    raiz: grafo/Nodo,
-    profundidad_max: Integer
-) -> List<NodoEnContexto>
+deferred ProyectarArbol    -- see: aspiracional, sin implementacion
+    -- (grafo: grafo/Grafo, raiz: grafo/Nodo, profundidad_max: Integer) -> List<NodoEnContexto>
     -- Recorrido DFS desde raiz hasta profundidad_max.
     -- Incluye tanto relaciones SALIENTES (padre es origen) como ENTRANTES (padre es destino).
     -- Una relación bidireccional aparece UNA SOLA VEZ: como saliente desde el lado que
@@ -584,14 +850,6 @@ deferred ProyectarArbol(
     -- es_nodo_de_bucle = true si el nodo aparece en algún Bucle del grafo.
     -- Orden de los hijos: primero salientes, luego entrantes; dentro de cada grupo,
     -- orden de creacion de la relacion.
-
-config {
-    profundidad_dendrograma: Integer = 3
-    -- Profundidad inicial del árbol de expansión.
-    -- 2 = solo vecinos directos (poco contexto).
-    -- 3 = vecinos y sus vecinos (equilibrio recomendado).
-    -- 4+ = potencialmente abrumador con grafos densos.
-}
 
 ------------------------------------------------------------
 -- Preguntas abiertas
@@ -604,6 +862,10 @@ open question "La surface VisualizacionGrafo expone la densidad pero no expone l
 open question "VisualizacionGrafoEnConstruccion: ¿la frase actualmente en proceso se muestra en el mapa (p.ej. como tooltip o panel lateral con el texto fuente), o solo el mapa de nodos y relaciones?"
 
 open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstruccion cierra y muestra el grafo parcial hasta ese punto, o vuelve a PanelBiblioteca?"
+
+open question "Las tarjetas encadenadas sobre el mapa ya funcionan como superficie de lectura y, como el dendrograma, forman un arbol con varias raices y relaciones salientes y entrantes. ¿Sustituyen al NavegadorDendrograma (y se retira esa surface y su DECISIÓN RESUELTA), lo complementan (lectura elegida paso a paso frente a arbol calculado hasta cierta profundidad), o el dendrograma sigue siendo la superficie primaria pendiente de implementar?"
+
+open question "La sección Vincular de la tarjeta ofrece como tipo solo el vocabulario orientativo cerrado (fundamenta, amplifica, ...), mientras TablaRelaciones y el grafo personal permiten tipo libre. ¿Debe Vincular aceptar también tipo libre (ontologia abierta, ver recorrido.allium) o la relacion autoral debe restringirse al vocabulario orientativo?"
 
 -- DECISIÓN RESUELTA: NavegadorDendrograma incluye relaciones SALIENTES y ENTRANTES
 -- desde cada nodo padre. Las salientes se listan primero; las entrantes después.
@@ -622,11 +884,21 @@ open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstr
 -- DECISIÓN RESUELTA: La profundidad se ajusta con un SLIDER EN TIEMPO REAL por
 -- perspectiva (rango 1–6). El árbol se recalcula inmediatamente al mover el slider.
 
--- DECISIÓN RESUELTA: El investigador selecciona el modelo Ollama de una lista
--- consultada en tiempo real al endpoint /api/tags de Ollama. El panel de
--- configuración muestra los modelos instalados y guarda la selección en .env.
+-- DECISIÓN RESUELTA: El investigador selecciona el modelo local (Ollama o
+-- LM Studio) de una lista consultada en tiempo real al endpoint del proveedor
+-- (Ollama: /api/tags; LM Studio: /models de su API compatible con OpenAI).
+-- El panel de configuración muestra los modelos disponibles y guarda la
+-- selección en .env.
+
+-- DECISIÓN RESUELTA: El mapa abre en 3D por defecto (config.modo_mapa_inicial)
+-- con un único control para alternar a 2D, en una barra discreta de controles.
+
+-- DECISIÓN RESUELTA: El navegador de columnas del mapa fue reemplazado por
+-- tarjetas flotantes encadenadas (ver VisualizacionGrafo y recorrido.allium).
 
 -- DECISIÓN RESUELTA: La visualización force-directed (VisualizacionGrafo) se
 -- mantiene como vista de topología secundaria. La superficie de lectura primaria
 -- pasa a ser NavegadorDendrograma, donde la frase_completa de cada relación es
 -- el elemento dominante de cada rama del árbol.
+-- (Puesta en tension por las tarjetas encadenadas: ver la pregunta abierta
+-- sobre su relacion con el NavegadorDendrograma.)

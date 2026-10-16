@@ -32,6 +32,7 @@ enum ProveedorLLM {
     openai
     gemini
     ollama          -- modelos locales via Ollama (sin API key)
+    lmstudio        -- modelos locales via LM Studio, API compatible con OpenAI (sin API key)
 }
 
 enum TipoConcepto {
@@ -74,9 +75,11 @@ external entity Prompt {
 entity ProveedorActivo {
     proveedor: ProveedorLLM
     modelo: String                               -- nombre del modelo; para ollama ej. "llama3.2", "mistral"
-    es_local: Boolean                            -- true solo para ollama; no requiere api_key
+                                                 -- obligatorio para los proveedores locales
+    es_local: Boolean                            -- true para ollama y lmstudio; no requieren api_key
     api_key_presente: Boolean                    -- irrelevante si es_local = true
-    endpoint: String?                            -- requerido si es_local = true; ej. "http://localhost:11434"
+    endpoint: String?                            -- requerido si es_local = true; ej. "http://localhost:11434" (ollama),
+                                                 -- "http://localhost:1234/v1" (lmstudio)
 }
 
 ------------------------------------------------------------
@@ -293,6 +296,9 @@ open question "Si el LLM propone una relacion entre conceptos de transcripciones
 
 open question "El nivel de confianza debe ser auto-reportado por el LLM en su salida JSON o calculado por el sistema desde features del texto?"
 
-open question "Para ollama: el modelo activo se configura por nombre ('llama3.2', 'mistral', etc). Hay un mecanismo de discovery de modelos disponibles en el endpoint local, o el investigador configura el nombre manualmente?"
+-- DECISIÓN RESUELTA (antes pregunta abierta sobre discovery de modelos en
+-- ollama): para los proveedores locales (ollama, lmstudio) el investigador
+-- elige el modelo de la lista que reporta el endpoint local en el momento de
+-- configurar. Ver surfaces.allium, ConfiguracionProveedor.
 
 deferred ExtractorLLM.invocar    -- ver src/llm/extractor.py cuando exista

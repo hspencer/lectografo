@@ -33,7 +33,8 @@
 --   - Que significa exactamente bidireccional
 --   - Que aristas se ofrecen como continuacion y en que orden
 --   - El Recorrido como valor efimero de sesion
---   - La doble inscripcion del recorrido: columnas de lectura + resalte en el mapa
+--   - Los recorridos abiertos como arbol de pasos con varias raices
+--   - La doble inscripcion del recorrido: tarjetas encadenadas + resalte en el mapa
 --
 -- Excludes:
 --   - El dendrograma (Perspectiva / NodoEnContexto viven en surfaces.allium).
@@ -52,17 +53,25 @@ use "./grafo.allium" as grafo
 ------------------------------------------------------------
 
 -- El mismo objeto aparece hoy en el codigo con cuatro nombres distintos:
---   state.path            (static/app.js)
---   camino                (limpiarCamino, avanzarCamino)
---   Ruta                  (lector.js, ya extinto; el comentario sobrevive)
+--   card / tarjeta        (static/floatcards.js, state.mapaCards)
+--   camino                (limpiarCamino)
+--   Ruta                  (lector.js, ya extinto; el comentario sobrevive
+--                          en conexionesDe)
+--   path                  (highlightPath en grafo.js / grafo3d.js)
 --   recorrido             (surfaces.allium, prosa del dendrograma)
 --
--- Este spec fija UN nombre: Recorrido. Los otros tres son el mismo concepto
--- y deben desaparecer del codigo. No son sinonimos utiles ni matices: son
+-- Este spec fija DOS nombres: PasoDeRecorrido para cada tarjeta, y
+-- RecorridosAbiertos para el conjunto. Los demas son el mismo concepto y
+-- deben desaparecer del codigo. No son sinonimos utiles ni matices: son
 -- sedimento de refactors sucesivos. Mientras convivan, cualquier lectura del
 -- codigo tiene que decidir en cada sitio si "path" es un recorrido del grafo
 -- o una ruta de sistema de archivos (apiFetch(path) usa el segundo sentido
--- en el mismo archivo, veinte lineas mas arriba).
+-- en el mismo archivo).
+--
+-- Historia: hasta la llegada de las tarjetas, el recorrido vivia en
+-- state.path como una unica linea que se reescribia (truncar y agregar) y se
+-- mostraba como una cascada de columnas (navcols.js, eliminado). Ese modelo
+-- ya no existe; lo que sigue describe el actual.
 
 ------------------------------------------------------------
 -- PARTE I — Bajo que criterios nace una arista
@@ -276,7 +285,11 @@ value AristaOfrecida {
     --      alcanzo.
     --
     -- La presentacion agrupa en tres bloques (Salientes / Bidireccionales /
-    -- Entrantes) y abre solo el primero no vacio.
+    -- Entrantes), en ese orden, cada uno con su simbolo (→ ↔ ←) y su
+    -- cantidad. Todos los bloques nacen plegados, igual que la seccion
+    -- Relaciones de la tarjeta que los contiene. En cada fila, la frase de
+    -- la relacion (frase_revelada, ver Parte III) es el texto dominante; el
+    -- vecino y el tipo van debajo.
     --
     -- El orden salientes → bidireccionales → entrantes no es arbitrario ni
     -- cosmetico. Es una tesis sobre como se lee un argumento:
@@ -287,9 +300,10 @@ value AristaOfrecida {
     --
     -- Leer a favor de la flecha es seguir el argumento del autor. Leer en
     -- contra es reconstruir sus condiciones de posibilidad. La interfaz
-    -- ofrece ambas, pero no como iguales: pone la primera arriba y abierta,
-    -- y la segunda abajo y plegada. Es una jerarquia de lectura, y esta
-    -- inscrita en el orden de una lista.
+    -- ofrece ambas, pero no como iguales: pone la primera arriba. Hasta las
+    -- tarjetas, ademas la abria (solo el primer bloque no vacio nacia
+    -- desplegado); hoy todo nace plegado y la jerarquia de lectura queda
+    -- inscrita solo en el orden de la lista.
 
 ------------------------------------------------------------
 -- PARTE III — El Recorrido
@@ -311,24 +325,29 @@ value AristaOfrecida {
 
 value PasoDeRecorrido {
     nodo: grafo/Nodo
-    relacion_entrada: grafo/Relacion?   -- null unicamente en el primer paso
+    relacion_entrada: grafo/Relacion?   -- null unicamente en un paso raiz
     direccion: DireccionDePaso
+    padre: PasoDeRecorrido?             -- el paso desde el que se cruzo; null en un paso raiz
 
-    -- La frase que se revela al dar el paso. Es lo que la cabecera de la
-    -- columna muestra en grande, por encima del nombre del concepto: el
-    -- recorrido presenta la RELACION como titulo y el nodo como subtitulo.
+    -- La frase de la arista cruzada. Se lee en el momento de ELEGIR, como
+    -- texto dominante de la fila en la lista de relaciones del paso padre.
+    -- Una vez dado el paso, la tarjeta nueva muestra solo el nombre del
+    -- concepto, y la flecha que la une con su padre lleva como rotulo el
+    -- tipo de la relacion, no esta frase. Ver preguntas abiertas.
     frase_revelada: relacion_entrada?.frase_completa
                  ?? relacion_entrada?.etiqueta
                  ?? relacion_entrada?.tipo
 }
 
 -- ── PrimerPasoEsInmotivado ── (guidance)
-    -- relacion_entrada = null si y solo si direccion = nula. Las dos
-    -- ausencias son la misma ausencia: no hubo cruce.
+    -- relacion_entrada = null si y solo si direccion = nula si y solo si
+    -- padre = null. Las tres ausencias son la misma ausencia: no hubo cruce.
     --
-    -- El primer paso se alcanza desde FUERA del grafo (un clic en el mapa,
+    -- Un paso raiz se alcanza desde FUERA del grafo (un clic en el mapa,
     -- una busqueda por texto), no cruzando una arista. Todo recorrido empieza
-    -- con un acto que el grafo no explica.
+    -- con un acto que el grafo no explica. Puede haber varios pasos raiz a la
+    -- vez, pero nunca dos con el mismo nodo: volver a elegir ese concepto
+    -- desde fuera enfoca la raiz existente.
     --
     -- Es la contrapartida exacta del dendrograma, cuya raiz por defecto SI la
     -- elige el grafo: el nodo de mayor grado (NodoRaizActiva). Ahi la
@@ -342,8 +361,8 @@ value PasoDeRecorrido {
     --   etiqueta        -> como alguien nombro el vinculo (via autoral/topologica)
     --   tipo            -> la categoria, sin nadie        (ultimo recurso)
     --
-    -- Al caminar sobre una arista topologica o autoral, la cabecera muestra
-    -- una etiqueta donde deberia haber una cita. Visualmente son
+    -- Al elegir una arista topologica o autoral, la fila de la relacion
+    -- muestra una etiqueta donde deberia haber una cita. Visualmente son
     -- indistinguibles: el mismo tamano, la misma posicion, el mismo peso.
     -- El recorrido borra la diferencia entre citar y nombrar justo en el
     -- punto donde esa diferencia importa. Ver preguntas abiertas.
@@ -357,15 +376,38 @@ value Recorrido {
     paso_actual: pasos.last
 }
 
--- ── ContiguidadEsLoQueLoHaceUnRecorrido ── (guidance)
-    -- Para todo paso que no sea el primero, su relacion_entrada debe conectar
-    -- el nodo del paso anterior con el suyo. Sin contiguidad, un Recorrido no
-    -- es mas que una lista de nodos: la contiguidad es exactamente lo que
-    -- distingue un recorrido de una seleccion.
+-- Un Recorrido es una LINEA: la secuencia que va de un paso raiz a un paso
+-- cualquiera remontando padre. Lo que el investigador tiene abierto en un
+-- momento dado ya no es una linea sino un ARBOL de pasos, con tantas raices
+-- como conceptos haya elegido desde fuera del grafo:
+
+value RecorridosAbiertos {
+    pasos: List<PasoDeRecorrido>      -- todas las tarjetas abiertas, en orden de apertura
+
+    -- Derivados
+    raices: pasos where padre = null
+    foco: pasos.last                  -- el ultimo paso abierto; el que el mapa destaca
+}
+
+-- ── CadaRamaEsUnRecorrido ── (guidance)
+    -- RecorridosAbiertos no guarda recorridos: guarda pasos con su padre.
+    -- Cada Recorrido se lee remontando padre desde un paso hasta su raiz.
+    -- Dos ramas que salen del mismo paso comparten el tramo comun hasta el.
     --
-    -- No se expresa como invariant porque relaciona pasos consecutivos de una
-    -- secuencia, no el estado de una entidad en un instante. Ver
-    -- ContiguidadSeRompeAlRecargar: el codigo actual puede violarla.
+    -- Dentro de un mismo paso padre, una misma relacion da a lo sumo un
+    -- hijo: volver a elegirla enfoca la tarjeta hija existente.
+
+-- ── ContiguidadEsLoQueLoHaceUnRecorrido ── (guidance)
+    -- Para todo paso que no sea raiz, su relacion_entrada debe conectar el
+    -- nodo de su padre con el suyo. Sin contiguidad, un Recorrido no es mas
+    -- que una lista de nodos: la contiguidad es exactamente lo que distingue
+    -- un recorrido de una seleccion.
+    --
+    -- Hoy se cumple por construccion: un paso hijo solo nace eligiendo una
+    -- arista de la lista de conexiones de su padre. No se expresa como
+    -- invariant porque relaciona pasos entre si, no el estado de una entidad
+    -- en un instante. Ver TarjetasNoSeResincronizan: el grafo puede cambiar
+    -- bajo los pasos ya abiertos.
 
 ------------------------------------------------------------
 -- El Recorrido es un valor, no una entidad
@@ -375,9 +417,9 @@ value Recorrido {
 -- afirmacion mas fuerte de este spec. Un value no tiene identidad, no tiene
 -- ciclo de vida, no se persiste, no se referencia desde ningun otro objeto.
 --
--- Se corresponde exactamente con lo que existe: state.path vive en memoria,
--- muere al recargar, no llega a localStorage ni al fragmento de la URL (que
--- solo transporta el slug del grafo). Dos investigadores frente al mismo
+-- Se corresponde exactamente con lo que existe: las tarjetas viven en
+-- memoria, mueren al recargar, no llegan a localStorage ni al fragmento de
+-- la URL (que solo transporta el slug del grafo). Dos investigadores frente al mismo
 -- grafo no pueden compartir un recorrido. El mismo investigador manana no
 -- puede volver al suyo.
 --
@@ -391,65 +433,75 @@ value Recorrido {
 -- evaporarse.
 --
 -- NOTA SOBRE LAS ADVERTENCIAS DEL CHECKER. `allium check` reporta
--- OrigenDeRelacion, AristaOfrecida y Recorrido como declarados pero no
--- referenciados. Es correcto y es el sintoma, no el problema: ninguna regla
--- los produce ni los consume porque ninguna regla los toca. Un objeto que
--- solo existe en la memoria de una sesion no aparece en el ensures de nada.
--- Las advertencias desapareceran el dia que se responda que si a la pregunta
--- abierta sobre persistencia: ese dia Recorrido pasara a ser entity, tendra
--- reglas de creacion y fijado, y el checker dejara de senalarlo. Hasta
--- entonces, las tres advertencias son la medida exacta de cuan poco existe
--- el recorrido para el sistema.
+-- OrigenDeRelacion, AristaOfrecida, Recorrido y RecorridosAbiertos como
+-- declarados pero no referenciados (a RecorridosAbiertos solo lo nombra, en
+-- comentario, una funcion diferida de surfaces.allium). Es correcto y es el
+-- sintoma, no el problema: ninguna
+-- regla los produce ni los consume porque ninguna regla los toca. Un objeto
+-- que solo existe en la memoria de una sesion no aparece en el ensures de
+-- nada. Las advertencias desapareceran el dia que se responda que si a la
+-- pregunta abierta sobre persistencia: ese dia Recorrido pasara a ser
+-- entity, tendra reglas de creacion y fijado, y el checker dejara de
+-- senalarlo. Hasta entonces, las advertencias son la medida exacta de cuan
+-- poco existe el recorrido para el sistema.
 
 ------------------------------------------------------------
--- Como crece un Recorrido
+-- Como crecen los recorridos abiertos
 ------------------------------------------------------------
 
--- Las tres operaciones se declaran como funciones sobre valores: cada una
--- devuelve un Recorrido nuevo en vez de mutar uno existente. Es la forma
--- correcta para un value, y ademas es lo que el codigo hace (reasigna
--- state.path en cada paso, nunca lo modifica en sitio).
+-- Las operaciones se declaran como funciones sobre valores: cada una
+-- devuelve un RecorridosAbiertos nuevo. Es la forma correcta para un value.
+-- El codigo, en cambio, muta en sitio un unico conjunto de tarjetas; la
+-- diferencia es de implementacion, no de comportamiento.
 
-deferred Recorrido.iniciar    -- see: static/app.js: onNodoSeleccionado
-    -- (nodo: grafo/Nodo) -> Recorrido
-    -- Devuelve un Recorrido de un solo paso, con relacion_entrada = null y
-    -- direccion = nula. Descarta cualquier recorrido anterior sin ceremonia.
+deferred RecorridosAbiertos.abrir_raiz    -- see: static/app.js: onNodoSeleccionado
+    -- (abiertos: RecorridosAbiertos, nodo: grafo/Nodo) -> RecorridosAbiertos
+    -- Si ya hay un paso raiz con ese nodo, no agrega nada: lo enfoca.
+    -- Si no, agrega un paso raiz (relacion_entrada = null, direccion = nula,
+    -- padre = null). NO descarta los pasos ya abiertos: varias raices
+    -- conviven. Un paso NO raiz con el mismo nodo no cuenta: elegir desde
+    -- fuera un concepto que solo esta abierto como hijo abre una raiz nueva.
 
-deferred Recorrido.avanzar    -- see: static/app.js: avanzarCamino
-    -- (recorrido: Recorrido, indice_paso: Integer, arista: AristaOfrecida) -> Recorrido
+deferred RecorridosAbiertos.avanzar    -- see: static/app.js: bindPanelListeners
+    -- (abiertos: RecorridosAbiertos, paso: PasoDeRecorrido, arista: AristaOfrecida) -> RecorridosAbiertos
     --
-    -- TRUNCA Y AGREGA. Conserva los pasos 0..indice_paso y anade un paso
-    -- nuevo hacia arista.vecino, con arista.relacion como relacion_entrada y
-    -- arista.direccion como direccion.
+    -- RAMIFICA. Agrega un paso hijo de paso hacia arista.vecino, con
+    -- arista.relacion como relacion_entrada y arista.direccion como
+    -- direccion. No toca ningun otro paso.
     --
-    -- Requiere que arista pertenezca a las conexiones del nodo en indice_paso.
+    -- Requiere que arista pertenezca a las conexiones de paso.nodo.
+    -- Si paso ya tiene un hijo por esa misma relacion, no agrega nada: lo
+    -- enfoca.
     --
-    -- Elegir una arista en el paso i destruye todos los pasos posteriores a i.
-    -- No hay ramificacion y no hay historial de lo abandonado: el recorrido
-    -- es una unica linea que se reescribe.
-    --
-    -- Retroceder no es una operacion propia. Se retrocede eligiendo otra cosa
-    -- en un paso anterior, y el precio es perder lo que venia despues. La
-    -- unica manera de deshacer es rehacer.
+    -- Elegir otra arista desde un paso intermedio ya no destruye lo que
+    -- venia despues: abre una rama nueva junto a la anterior. Retroceder
+    -- sigue sin ser una operacion propia, pero tampoco hace falta: lo
+    -- anterior sigue ahi.
 
-deferred Recorrido.abandonar    -- see: static/app.js: limpiarCamino
-    -- () -> Recorrido
-    -- Devuelve el recorrido vacio. Se dispara al deseleccionar el nodo, al
-    -- cambiar de grafo y al recargar el grafo desde cero.
+deferred RecorridosAbiertos.podar    -- see: static/floatcards.js: close
+    -- (abiertos: RecorridosAbiertos, paso: PasoDeRecorrido) -> RecorridosAbiertos
+    -- Quita paso y, en cascada, todos sus descendientes. Lo que cuelga de
+    -- un paso no sobrevive a el: no hay hijos huerfanos.
+
+deferred RecorridosAbiertos.enfocar    -- see: static/floatcards.js: bringToFront
+    -- (abiertos: RecorridosAbiertos, paso: PasoDeRecorrido) -> RecorridosAbiertos
+    -- No cambia la estructura. Trae la tarjeta del paso al frente y
+    -- reencuadra el mapa sobre paso.nodo.
+
+deferred RecorridosAbiertos.abandonar    -- see: static/app.js: limpiarCamino
+    -- () -> RecorridosAbiertos
+    -- Devuelve el conjunto vacio. Se dispara al volver a la biblioteca (y
+    -- por tanto al cambiar de grafo), al iniciar una sesion de reconexion o
+    -- consolidacion, y al confirmar una de esas sesiones (que recarga el
+    -- grafo). Un clic en el fondo del mapa ya NO abandona nada.
     --
     -- No hay estado terminado ni archivado: un recorrido no se cierra, se
     -- abandona.
 
-deferred Recorrido.activo    -- see: static/app.js: state.path
-    -- () -> Recorrido
-    -- El unico recorrido de la sesion. Estado en memoria; no persiste ni en
-    -- disco ni en la URL. Vacio mientras no haya nodo seleccionado.
-
-deferred Recorrido.resincronizar    -- see: static/app.js: resincronizarPath
-    -- (recorrido: Recorrido, grafo: grafo/Grafo) -> Recorrido
-    -- Reata los pasos al grafo recien recargado, emparejando por id.
-    -- Ver ContiguidadSeRompeAlRecargar: la implementacion actual filtra pasos
-    -- individualmente en vez de truncar, y puede devolver un recorrido roto.
+deferred RecorridosAbiertos.activos    -- see: static/app.js: state.mapaCards
+    -- () -> RecorridosAbiertos
+    -- El unico conjunto de la sesion, por grafo abierto. Estado en memoria;
+    -- no persiste ni en disco ni en la URL. Vacio al abrir un grafo.
 
 ------------------------------------------------------------
 -- Funciones caja negra usadas en este modulo
@@ -495,6 +547,12 @@ deferred Recorrido.resincronizar    -- see: static/app.js: resincronizarPath
 -- el Recorrido no tiene otra cosa que autor. Un Recorrido es una rama del
 -- arbol de Perspectiva, seleccionada por una serie de actos.
 --
+-- Con las tarjetas, lo que el investigador tiene abierto (RecorridosAbiertos)
+-- ya tiene la FORMA de una Perspectiva: un arbol, con varias raices
+-- simultaneas. Pero no su ORIGEN: ningun paso se calcula, cada uno fue
+-- elegido. Es un arbol de elecciones, no de posibilidades; la poda la hace
+-- quien lee, no una profundidad maxima.
+--
 -- Difieren ademas en un punto tecnico con consecuencias:
 --
 --   Perspectiva detecta ciclos de forma PATH-LOCAL: un nodo que ya es
@@ -502,14 +560,17 @@ deferred Recorrido.resincronizar    -- see: static/app.js: resincronizarPath
 --   expande. Es necesario, porque un arbol que expande ciclos explota.
 --
 --   Recorrido NO tiene deteccion de ciclos. Nada impide volver a un nodo ya
---   visitado, ni cruzar dos veces la misma arista. Y no es una omision: en un
+--   visitado, ni cruzar dos veces la misma arista (la unica restriccion es
+--   que un mismo paso no da dos hijos por la misma relacion; el hijo puede
+--   cruzarla de vuelta). Un mismo concepto puede estar abierto en varias
+--   tarjetas a la vez. Y no es una omision: en un
 --   recorrido, volver es significativo. Llegar a FUEGO, recorrer el argumento
 --   y volver a FUEGO por otra arista es exactamente lo que un Bucle nombra en
 --   el plano semantico. Prohibirlo seria prohibir leer un circulo como
 --   circulo.
 --
--- Con lo cual, y con precision de teoria de grafos: el objeto que el codigo
--- llama path y este spec llama Recorrido es un WALK (paseo: repite nodos y
+-- Con lo cual, y con precision de teoria de grafos: cada rama de tarjetas,
+-- que este spec llama Recorrido, es un WALK (paseo: repite nodos y
 -- aristas libremente), no un TRAIL (que por definicion no repite aristas) ni
 -- un PATH (que no repite nodos). Ver preguntas abiertas: la eleccion del
 -- nombre "trail" es una apuesta sobre lo que el objeto deberia ser, no una
@@ -520,19 +581,33 @@ deferred Recorrido.resincronizar    -- see: static/app.js: resincronizarPath
 ------------------------------------------------------------
 
 -- ── RecorridoSeInscribeEnDosSuperficies ── (guarantee)
-    -- Un mismo Recorrido se manifiesta simultaneamente como:
+    -- Los recorridos abiertos se manifiestan simultaneamente como:
     --
-    --   1. COLUMNAS. Una por paso, en cascada horizontal. Cada cabecera
-    --      muestra el simbolo de direccion (→ ← ↔), la frase revelada y el
-    --      nombre del nodo. Leidas en fila, las cabeceras forman una cadena
-    --      de proposiciones: el argumento del texto reconstruido.
+    --   1. TARJETAS ENCADENADAS. Una tarjeta flotante por paso, sobre el
+    --      mapa. Cada paso hijo se une a su padre por una flecha cuyas
+    --      puntas siguen el sentido INSCRITO de la relacion cruzada
+    --      (saliente: hacia la hija; entrante: hacia la padre;
+    --      bidireccional: ambas), no el sentido en que se camino ni la
+    --      posicion de las tarjetas en pantalla. La flecha lleva el tipo de
+    --      la relacion como rotulo; la cabecera de la tarjeta, el nombre del
+    --      concepto. Las tarjetas se arrastran libremente y la flecha se
+    --      reancla por el lado que corresponda. Leida rama por rama, la
+    --      cadena reconstruye el argumento del texto.
     --
-    --   2. RESALTE EN EL MAPA. La misma secuencia, como lista de
-    --      (nodo, arista), iluminada sobre la visualizacion 2D o 3D.
+    --   2. RESALTE EN EL MAPA. Los mismos pasos, como conjunto de
+    --      (nodo, relacion_entrada), iluminados sobre la visualizacion 2D o
+    --      3D, con el ultimo paso abierto como foco. Enfocar una tarjeta
+    --      reencuadra el mapa sobre su concepto.
     --
-    -- Las dos vistas se actualizan juntas en cada paso. Son la misma
-    -- estructura leida en dos registros: uno lineal y discursivo, otro
+    -- Las dos vistas se actualizan juntas al abrir y cerrar cada paso. Son
+    -- la misma estructura leida en dos registros: uno discursivo, otro
     -- espacial y topologico. Caminar es al mismo tiempo leer y trazar.
+    --
+    -- Lo que la cascada de columnas mostraba y las tarjetas ya no: la frase
+    -- revelada como titulo de cada paso. Hoy la frase se lee solo al elegir
+    -- (en la lista de relaciones del paso padre); una vez dado el paso, la
+    -- cadena visible se compone de nombres de concepto y tipos de relacion.
+    -- Ver preguntas abiertas.
     --
     -- Ahi esta, literalmente, el nombre del proyecto. Lecto-grafo: lo que
     -- grafica la lectura. El Recorrido es el unico objeto del sistema donde
@@ -542,23 +617,31 @@ deferred Recorrido.resincronizar    -- see: static/app.js: resincronizarPath
 -- Fragilidad: el recorrido no sobrevive a su grafo
 ------------------------------------------------------------
 
--- ── ContiguidadSeRompeAlRecargar ── (guidance)
+-- ── TarjetasNoSeResincronizan ── (guidance)
     -- INCUMPLIMIENTO CONOCIDO.
     --
-    -- El Recorrido guarda referencias a objetos Nodo y Relacion. Al recargar
-    -- el grafo (tras editar, revalidar o re-extraer) esos objetos cambian de
-    -- identidad y hay que reatarlos por id. El codigo lo hace, y descarta los
-    -- pasos cuyo nodo ya no existe.
+    -- Cada paso guarda una copia del Nodo y del sentido con que se cruzo.
+    -- Al recargar el grafo hay dos casos:
     --
-    -- Descartar pasos INTERMEDIOS deja un Recorrido no contiguo: pasos
-    -- consecutivos que ya no comparten arista, y pasos cuya relacion_entrada
-    -- apunta a un nodo ausente de la secuencia. La cascada de columnas sigue
-    -- mostrandose como si nada, presentando como cadena de razonamiento lo
-    -- que ya es una lista de fragmentos.
+    --   - Tras crear una relacion (Vincular) o anotar desde una tarjeta, se
+    --     rehace el contenido de las tarjetas emparejando por id de nodo.
+    --     Si el nodo ya no existe, la tarjeta queda como estaba.
     --
-    -- Truncar en el primer paso invalido seria correcto y mas simple: si el
-    -- paso 3 desaparecio, los pasos 4 y 5 ya no son alcanzables desde el 2 y
-    -- no significan nada.
+    --   - Tras cualquier otra recarga sin abandono (editar un concepto o una
+    --     relacion en las tablas, alternar su bidireccionalidad) las
+    --     tarjetas abiertas no se tocan: siguen mostrando el contenido y el
+    --     sentido de flecha de antes del cambio.
+    --
+    -- Ya no se descartan pasos intermedios (la cascada antigua lo hacia y
+    -- rompia la contiguidad). Ahora el riesgo es el contrario: una rama que
+    -- se ve contigua pero describe un grafo que ya no es el vigente, o
+    -- tarjetas cuyo nodo desaparecio. Al pedir seguir una relacion que ya no
+    -- existe no ocurre nada.
+    --
+    -- Lo correcto seria reatar cada paso por id al grafo nuevo, actualizar
+    -- direccion si cambio la bidireccionalidad, y PODAR desde el primer paso
+    -- cuyo nodo o relacion_entrada ya no existan: lo que colgaba de el ya no
+    -- es alcanzable y no significa nada.
 
 ------------------------------------------------------------
 -- Preguntas abiertas
@@ -576,6 +659,10 @@ open question "La fusion de sinonimos descarta en silencio las relaciones que qu
 
 open question "El primer paso del recorrido es inmotivado, mientras el dendrograma propone raiz por grado. Debe el Recorrido tambien sugerir por donde empezar, o la ausencia de sugerencia es parte de lo que lo hace un acto del investigador?"
 
+open question "Con las tarjetas, la frase revelada ya no titula el paso: se lee al elegir la relacion y despues desaparece de la cadena visible, cuya flecha lleva solo el tipo. Debe la flecha (o la cabecera de la tarjeta hija) volver a mostrar frase_revelada, de modo que la cadena de tarjetas se lea como cadena de proposiciones, o basta con el tipo?"
+
+open question "Al recargar el grafo, las tarjetas abiertas no se reatan ni se podan (ver TarjetasNoSeResincronizan). Debe implementarse la resincronizacion con poda desde el primer paso invalido, o es aceptable que las tarjetas muestren un estado anterior hasta que el investigador las cierre?"
+
 -- ── ResumenParaImplementar ── (guidance)
     -- 1. Una arista puede nacer de tres criterios incompatibles (evidencia
     --    textual / reparacion topologica / autoridad del investigador) y el
@@ -588,8 +675,10 @@ open question "El primer paso del recorrido es inmotivado, mientras el dendrogra
     -- 3. Un paso es la terna (nodo, arista, sentido), no un nodo. Dos
     --    llegadas al mismo concepto por aristas distintas son dos pasos.
     --
-    -- 4. El recorrido es una linea que se reescribe, no un arbol que se
-    --    explora. Avanzar desde un paso intermedio destruye lo que seguia.
+    -- 4. Un recorrido es una linea, pero lo que se tiene abierto es un arbol
+    --    de pasos con varias raices: avanzar desde un paso intermedio abre
+    --    una rama nueva sin destruir lo que seguia, y cerrar un paso poda
+    --    todo lo que cuelga de el.
     --
     -- 5. Es efimero por construccion. Todo lo que se quiera conservar de un
     --    recorrido hay que decidirlo antes: hoy no queda nada de el.
