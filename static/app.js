@@ -667,9 +667,8 @@ async function initMapa() {
   const arrowsEl  = document.getElementById("mapa-arrows");
   if (overlayEl && arrowsEl && !state.mapaCards) {
     const { createFloatingCards } = await import("./floatcards.js");
-    state.mapaCards = createFloatingCards(overlayEl, arrowsEl, {
-      onFocus: nodeId => state.grafoCenter?.(nodeId),
-    });
+    // Sin onFocus: traer una tarjeta al frente no mueve el mapa (respeta el encuadre del usuario).
+    state.mapaCards = createFloatingCards(overlayEl, arrowsEl);
   }
 
   // ── Buscador de conceptos (en la topbar: debe quedar listo aunque la

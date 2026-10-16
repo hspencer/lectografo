@@ -477,7 +477,6 @@ kbd {
 #grafo-3d  { position: absolute; inset: 0; background: var(--sn-paper, #fff); }
 #grafo-3d canvas { outline: none; display: block; }
 #grafo-svg .node text,
-#grafo-svg .node circle.focus-halo,
 #grafo-svg .links line,
 #grafo-svg .link-labels text {
   transition: opacity 0.18s ease, fill-opacity 0.18s ease,

@@ -75,11 +75,6 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
   let linkLabelTexts;  // para sincronizar tamaño de fuente al hacer zoom
   let currentK = 1;    // último factor de zoom conocido
 
-  // Factor con el que el halo de foco debe escalar para verse screen-constant,
-  // igual que el texto (que se recalcula en px absolutos, no en unidades de grafo).
-  function haloScale() {
-    return Math.min(24, Math.max(11, BASE_NODE_PX / currentK)) / BASE_NODE_PX;
-  }
 
   function syncFontSize(k) {
     currentK = k;
@@ -87,8 +82,6 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
     // Nodos: screen-constant entre 11–24px
     const nodePx = Math.min(24, Math.max(11, BASE_NODE_PX / k));
     nodeGroups.select("text").attr("font-size", nodePx.toFixed(1) + "px");
-    nodeGroups.select("circle.focus-halo")
-      .attr("r", n => (Math.max(n._hw||34, n._hh||12)+8) * haloScale());
     // Labels de arista: screen-constant entre 7–16px
     if (linkLabelTexts) {
       const lnkPx = Math.min(16, Math.max(7, BASE_LINK_PX / k));
@@ -171,12 +164,6 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       .on("mouseleave",()=>{ hoverId = null; render(computeFocus(activePath), true); });
 
   nodeGroups.append("rect").attr("rx",2).attr("ry",2);
-  // Halo circular que marca el concepto seleccionado (foco persistente)
-  nodeGroups.append("circle")
-    .attr("class","focus-halo")
-    .attr("fill", "color-mix(in srgb, " + NOVA_COLOR + " 12%, transparent)")
-    .attr("stroke", NOVA_COLOR).attr("stroke-width", 1.2)
-    .attr("opacity", 0).attr("pointer-events","none");
   nodeGroups.append("text")
     .attr("text-anchor","middle").attr("dominant-baseline","middle")
     .attr("font-size","15px").attr("font-weight","500")
@@ -206,8 +193,6 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
       .attr("fill","transparent").attr("stroke","none")
       .attr("x", n=>-(n._hw||34)).attr("y", n=>-(n._hh||12))
       .attr("width", n=>(n._hw||34)*2).attr("height", n=>(n._hh||12)*2);
-    sel.select("circle.focus-halo")
-      .attr("r", n=>(Math.max(n._hw||34, n._hh||12)+8) * haloScale());
     sel.select("text")
       .attr("fill", NODE_COLOR)
       .attr("fill-opacity", n => nodeTOp(n))
@@ -248,8 +233,6 @@ export function initGrafo(svgEl, { nodes: rN, links: rL }, onSelect) {
         : nodeIds.has(n.id) ? "600"
         : "500");
 
-    nodeGroups.select("circle.focus-halo")
-      .attr("opacity", n => (persistente && activo && n.id === focoId) ? 1 : 0);
 
     const linkFocusOpacity = l => !activo ? linkOpac(l) : (linkIds.has(l.id) ? 0.95 : 0.06);
 

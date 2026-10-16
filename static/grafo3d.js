@@ -27,7 +27,7 @@ const _cs = getComputedStyle(document.documentElement);
 const FIELD_COLOR = (_cs.getPropertyValue("--sn-field") || "#f4f2ed").trim() || "#f4f2ed";
 const NOVA_COLOR  = (_cs.getPropertyValue("--sn-nova")  || "#ae2d13").trim() || "#ae2d13";
 
-const DIM_OPACITY   = 0.12;
+const DIM_OPACITY   = 0.2;
 const FULL_OPACITY  = 1.0;
 const REST_OPACITY  = 0.9;
 
@@ -131,44 +131,16 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     return sprite;
   }
 
-  function makeHaloSprite(worldSize) {
-    const dpr = 2, size = 128;
-    const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = size * dpr;
-    const ctx = canvas.getContext("2d");
-    const r = (size * dpr) / 2;
-    const grad = ctx.createRadialGradient(r, r, r * 0.55, r, r, r);
-    grad.addColorStop(0, NOVA_COLOR + "40");
-    grad.addColorStop(0.85, NOVA_COLOR + "22");
-    grad.addColorStop(1, NOVA_COLOR + "00");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = NOVA_COLOR;
-    ctx.lineWidth = 3 * dpr;
-    ctx.beginPath();
-    ctx.arc(r, r, r * 0.62, 0, Math.PI * 2);
-    ctx.stroke();
-
-    const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, opacity: 0, sizeAttenuation: false });
-    const sprite = new THREE.Sprite(material);
-    sprite.renderOrder = 0;
-    sprite.scale.set(worldSize, worldSize, 1);
-    return sprite;
-  }
 
   function createNodeObject(node) {
     const group = new THREE.Group();
     const normal = makeLabelSprite(node, NODE_COLOR, false);
     const focus  = makeLabelSprite(node, NOVA_COLOR, true);
-    // El halo se dimensiona a partir del sprite de foco: debe envolver la
-    // pastilla de texto más ancha (bold), no un tamaño fijo arbitrario.
-    const halo = makeHaloSprite(Math.max(focus.scale.x, focus.scale.y) * 0.85);
     normal.renderOrder = 1;
     focus.renderOrder  = 1;
     focus.visible = false;
-    group.add(halo, normal, focus);
-    group.userData = { halo, normal, focus };
+    group.add(normal, focus);
+    group.userData = { normal, focus };
     return group;
   }
 
@@ -212,7 +184,6 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
       obj.normal.material.opacity = showFocusText ? 0 : opacity;
       obj.focus.visible = showFocusText;
       obj.focus.material.opacity = showFocusText ? FULL_OPACITY : 0;
-      obj.halo.material.opacity  = (persistente && activo && isFocus) ? 1 : 0;
     });
 
     links.forEach(applyLinkStyle);
@@ -223,13 +194,24 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     if (!m) return;
     m.opacity   = linkOpac(l);
     m.linewidth = linkW(l);
+    // La librería crea la flecha con Lambert (sombreado oscuro) y opacidad fija
+    // 0.6: quedaba flotando cuando el enlace se apagaba. Se ata al enlace.
+    const a = l.__arrowObj;
+    if (a) {
+      if (!a.material.isMeshBasicMaterial) {
+        const old = a.material;
+        a.material = new THREE.MeshBasicMaterial({ color: old.color, transparent: true, depthWrite: false });
+        old.dispose();
+      }
+      a.material.opacity = linkOpac(l);
+    }
   }
 
   // En 3D muchas líneas se apilan a lo largo del rayo de vista (profundidad
   // que el 2D no tiene), así que una opacidad que en SVG se ve sutil aquí se
   // acumula y lee como maciza — de ahí la base mucho más baja que en grafo.js.
   function linkOpac(l) {
-    if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.9 : 0.04;
+    if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.9 : 0.06;
     return l.investigador ? 0.22 : 0.32;
   }
   // Grosor en px de pantalla (LineMaterial sin worldUnits): constante con el zoom.
@@ -289,7 +271,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     .linkColor(l => relColor(l.tipo || "_"))
     .linkThreeObject(makeLinkObject)
     .linkPositionUpdate(updateLinkPosition)
-    .linkDirectionalArrowLength(5)
+    .linkDirectionalArrowLength(3)
     .linkDirectionalArrowRelPos(1)
     .onNodeClick(node => {
       if (!node) return;
@@ -304,6 +286,15 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     .enableNavigationControls(true);
 
   _graph = graph;
+
+  // Las flechas nacen en el digest de la librería, después de construir el
+  // grafo: aplicar su estilo una vez que existen.
+  let arrowsStyled = false;
+  graph.onEngineTick(() => {
+    if (arrowsStyled || !links.some(l => l.__arrowObj)) return;
+    arrowsStyled = true;
+    links.forEach(applyLinkStyle);
+  });
 
   // Etiquetas ocultas mientras se arrastra la cámara (girar/desplazar).
   // Solo arrastre: la rueda (zoom) y un clic simple no las ocultan.
@@ -347,7 +338,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     });
   }
 
-  // Reconstruye los tres sprites de un nodo (halo + texto normal + texto foco)
+  // Reconstruye los sprites de un nodo (texto normal + texto foco)
   // preservando su estado de opacidad/visibilidad actual.
   function rebuildSprites(n) {
     const parent = n.__threeObj;
@@ -355,10 +346,8 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     const prev = parent.userData;
     const normal = makeLabelSprite(n, NODE_COLOR, false);
     const focus = makeLabelSprite(n, NOVA_COLOR, true);
-    const halo = makeHaloSprite(Math.max(focus.scale.x, focus.scale.y) * 0.85);
     normal.renderOrder = 1; focus.renderOrder = 1;
     if (prev) {
-      halo.material.opacity   = prev.halo.material.opacity;
       normal.material.opacity = prev.normal.material.opacity;
       focus.material.opacity  = prev.focus.material.opacity;
       focus.visible = prev.focus.visible;
@@ -366,8 +355,8 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
       focus.visible = false;
     }
     parent.remove(...parent.children);
-    parent.add(halo, normal, focus);
-    parent.userData = { halo, normal, focus };
+    parent.add(normal, focus);
+    parent.userData = { normal, focus };
   }
 
   // Re-generar sprites tras cargar la fuente real (IBM Plex vs. fallback)

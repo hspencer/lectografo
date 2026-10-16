@@ -48,10 +48,10 @@ async function init() {
   document.title = `Lectógrafo — ${state.grafo.titulo || slug}`;
   document.getElementById("grafo-titulo").textContent = state.grafo.titulo || slug;
 
+  // Sin onFocus: traer una tarjeta al frente no mueve el mapa (respeta el encuadre del usuario).
   state.mapaCards = createFloatingCards(
     document.getElementById("mapa-overlay"),
     document.getElementById("mapa-arrows"),
-    { onFocus: nodeId => state.grafoCenter?.(nodeId) },
   );
 
   document.getElementById("btn-fit").onclick = () => state.grafoFit?.();

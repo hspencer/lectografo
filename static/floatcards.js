@@ -6,6 +6,9 @@
 
 export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
   const cards = new Map(); // cardId → { el, parentCardId, nodeId, linkId, relLabel, dir }
+  // Relaciones hacia una tarjeta que ya estaba abierta: se dibujan como
+  // flecha entre ambas sin duplicar la tarjeta ni volverla hija.
+  let extras = []; // { fromCardId, toCardId, linkId, relLabel, dir }
   let z = 100;
 
   function close(cardId) {
@@ -14,6 +17,7 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
     [...cards.entries()].forEach(([id, d]) => { if (d.parentCardId === cardId) close(id); });
     data.el.remove();
     cards.delete(cardId);
+    extras = extras.filter(x => x.fromCardId !== cardId && x.toCardId !== cardId);
     redrawArrows();
   }
 
@@ -21,8 +25,8 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
     [...cards.keys()].forEach(close);
   }
 
-  // Trae la tarjeta al frente y la marca como "seleccionada": reenfoca el
-  // mapa en su concepto (ver onFocus, pasado por el llamador).
+  // Trae la tarjeta al frente y la marca como "seleccionada"; onFocus
+  // (opcional) avisa al llamador.
   function bringToFront(cardId) {
     const data = cards.get(cardId);
     if (!data) return;
@@ -31,12 +35,13 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
   }
 
   function findByNodeId(nodeId) {
-    for (const [id, d] of cards) if (d.nodeId === nodeId && !d.parentCardId) return id;
+    for (const [id, d] of cards) if (d.nodeId === nodeId) return id;
     return null;
   }
 
   function findChildByLink(parentCardId, linkId) {
     for (const [id, d] of cards) if (d.parentCardId === parentCardId && d.linkId === linkId) return id;
+    for (const x of extras) if (x.fromCardId === parentCardId && x.linkId === linkId) return x.toCardId;
     return null;
   }
 
@@ -63,10 +68,13 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
 
   function redrawArrows() {
     [...arrowsEl.children].forEach(c => { if (c.tagName !== "defs") c.remove(); });
-    cards.forEach(data => {
-      if (!data.parentCardId) return;
-      const pd = cards.get(data.parentCardId);
-      if (!pd) return;
+    const conectores = [
+      ...[...cards.values()].filter(d => d.parentCardId)
+        .map(d => ({ pd: cards.get(d.parentCardId), data: d, dir: d.dir, relLabel: d.relLabel })),
+      ...extras.map(x => ({ pd: cards.get(x.fromCardId), data: cards.get(x.toCardId), dir: x.dir, relLabel: x.relLabel })),
+    ];
+    conectores.forEach(({ pd, data, dir, relLabel }) => {
+      if (!pd || !data) return;
       // El punto de anclaje se recalcula según la posición relativa actual
       // (no la de apertura): si al arrastrar la tarjeta hija queda a la
       // izquierda de la padre, la flecha sale por el borde izquierdo de
@@ -86,15 +94,17 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
       // La flecha respeta la dirección real de la relación, no el orden de
       // apertura: saliente apunta hacia la tarjeta hija, entrante hacia la
       // padre, bidireccional lleva punta en ambos extremos.
-      if (data.dir !== "entrante") p.setAttribute("marker-end", "url(#mapa-arrowhead)");
-      if (data.dir === "entrante" || data.dir === "bidireccional") p.setAttribute("marker-start", "url(#mapa-arrowhead)");
+      if (dir !== "entrante") p.setAttribute("marker-end", "url(#mapa-arrowhead)");
+      if (dir === "entrante" || dir === "bidireccional") p.setAttribute("marker-start", "url(#mapa-arrowhead)");
       arrowsEl.appendChild(p);
-      if (data.relLabel) {
+      if (relLabel) {
         const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        t.setAttribute("x", cx); t.setAttribute("y", Math.min(y1, y2) - 4);
+        // Punto medio de la curva (no el borde superior): dos relaciones que
+        // salen de la misma tarjeta ya no apilan sus etiquetas.
+        t.setAttribute("x", cx); t.setAttribute("y", (y1 + y2) / 2 - 4);
         t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "10");
         t.setAttribute("fill", "var(--sn-ink-soft)");
-        t.textContent = data.relLabel;
+        t.textContent = relLabel;
         arrowsEl.appendChild(t);
       }
     });
@@ -104,6 +114,23 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
   // de dónde viene al encadenarse (null para una tarjeta raíz). onBind recibe
   // el elemento y el cardId para enganchar sus propios listeners.
   function open({ nodeId, title, bodyHtml, onBind, parentCardId = null, linkId = null, relLabel = null, dir = null }) {
+    // Una sola tarjeta por concepto en pantalla: si ya está abierta (como raíz
+    // o encadenada desde otra relación), se trae al frente en vez de duplicarla.
+    // Si se llega por una relación, igual se dibuja la conexión entre ambas.
+    const abierta = findByNodeId(nodeId);
+    if (abierta) {
+      const yaConectada = abierta === parentCardId
+        || cards.get(abierta).parentCardId === parentCardId && cards.get(abierta).linkId === linkId
+        || cards.get(parentCardId)?.parentCardId === abierta && cards.get(parentCardId)?.linkId === linkId
+        || extras.some(x => x.linkId === linkId && (x.fromCardId === parentCardId && x.toCardId === abierta
+                                                 || x.fromCardId === abierta && x.toCardId === parentCardId));
+      if (parentCardId && !yaConectada) {
+        extras.push({ fromCardId: parentCardId, toCardId: abierta, linkId, relLabel, dir });
+        redrawArrows();
+      }
+      bringToFront(abierta);
+      return abierta;
+    }
     const cardId = `fc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     let left = 24 + (cards.size % 6) * 24, top = 16 + (cards.size % 6) * 24;
     if (parentCardId) {
@@ -147,7 +174,10 @@ export function createFloatingCards(overlayEl, arrowsEl, { onFocus } = {}) {
   }
 
   function highlightList() {
-    return [...cards.values()].map(d => ({ nodeId: d.nodeId, linkId: d.linkId }));
+    return [
+      ...[...cards.values()].map(d => ({ nodeId: d.nodeId, linkId: d.linkId })),
+      ...extras.map(x => ({ nodeId: cards.get(x.toCardId)?.nodeId, linkId: x.linkId })),
+    ];
   }
 
   function listOpen() {
