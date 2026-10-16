@@ -46,8 +46,10 @@ html, body {
   color: var(--sn-ink-faint);
 }
 
-#transcripcion-titulo {
+#transcripcion-titulo,
+#grafo-titulo {
   font-size: var(--sn-fs-xs);
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
