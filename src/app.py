@@ -106,12 +106,18 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
                     labels_prev[key] = nuevo_id
 
             rels_prev_keys = {(r.origen_id, r.destino_id, r.tipo) for r in ext_previa.relaciones}
+            # Las relaciones nuevas traen IDs r_001… que chocan con los previos:
+            # se renumeran a continuación, igual que los conceptos.
+            nums_rel = [int(m.group(1)) for r in ext_previa.relaciones for m in [_re.match(r"r_(\d+)$", r.id)] if m]
+            next_rel = max(nums_rel, default=0) + 1
             relaciones_nuevas = []
             for r in resultado.relaciones:
                 r2 = _copy.copy(r)
                 r2.origen_id = id_remap.get(r.origen_id, r.origen_id)
                 r2.destino_id = id_remap.get(r.destino_id, r.destino_id)
                 if (r2.origen_id, r2.destino_id, r2.tipo) not in rels_prev_keys:
+                    r2.id = f"r_{next_rel:03d}"
+                    next_rel += 1
                     relaciones_nuevas.append(r2)
 
             ext_fusionada = ResultadoExtraccion(
@@ -495,6 +501,14 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
 
         llm = get_llm()
 
+        labels_previos: list[str] = []
+        rv_prev = ruta_validacion(slug, GRAFOS)
+        if rv_prev.exists():
+            try:
+                labels_previos = [c.label for c in cargar(rv_prev).extraccion.conceptos]
+            except Exception:
+                pass
+
         # Acumuladores globales entre lotes
         conceptos_globales:    list = []
         relaciones_globales:   list = []
@@ -519,9 +533,12 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
                     for r in relaciones_globales[:20]
                 ]
 
+            # Al re-extraer, el tesauro parte con los conceptos ya guardados: así el
+            # LLM reutiliza sus labels exactos y el merge aditivo no crea casi-duplicados.
+            labels_tesauro = list(dict.fromkeys(labels_previos + [c.label for c in conceptos_globales]))
             tesauro_context = (
-                "\n".join(f"- {c.label}" for c in conceptos_globales)
-                if conceptos_globales else "(ninguno aún)"
+                "\n".join(f"- {l}" for l in labels_tesauro)
+                if labels_tesauro else "(ninguno aún)"
             )
             texto_lote     = "\n\n".join(p.texto for p in lote)
             system_prompt  = prompt_fragmento.replace("{tesauro_context}", tesauro_context)
