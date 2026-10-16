@@ -35,8 +35,8 @@ const REST_OPACITY  = 0.9;
 // igual que el texto 2D. Sin esto, un sprite normal se encoge con la
 // perspectiva hasta ser ilegible en cuanto el grafo se aleja de cámara.
 const FOV_DEG          = 50; // default de three-render-objects/3d-force-graph
-const LABEL_PX_NORMAL  = 17; // alto en px de pantalla, pastilla incluida
-const LABEL_PX_FOCUS   = 24;
+const LABEL_PX_NORMAL  = 22; // alto en px de pantalla de la pastilla
+const LABEL_PX_FOCUS   = 28;
 
 let _graph = null; // instancia activa, para poder limpiar al alternar 2D/3D
 
@@ -83,28 +83,34 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     ctx.font = font;
     const textW = ctx.measureText(text).width;
 
-    const padX = 10 * dpr, padY = 4 * dpr;
-    canvas.width  = textW + padX * 2;
-    canvas.height = fontPx * 1.5 + padY * 2;
+    const padX = 8 * dpr, padY = 2 * dpr;
+    const blur = 8 * dpr; // margen para que el difuminado no se recorte
+    const pillW = textW + padX * 2;
+    const pillH = fontPx * 1.4 + padY * 2;
+    canvas.width  = pillW + blur * 2;
+    canvas.height = pillH + blur * 2;
 
     ctx.font = font;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // Pastilla translúcida color-campo: da contraste al texto sin tapar
-    // los enlaces que pasan por detrás.
+    // Pastilla opaca color-campo con borde difuminado (shadowBlur, que a
+    // diferencia de ctx.filter funciona en todos los navegadores).
     ctx.fillStyle = FIELD_COLOR;
-    ctx.globalAlpha = 0.5;
-    const rr = canvas.height / 2;
+    ctx.shadowColor = FIELD_COLOR;
+    ctx.shadowBlur = blur;
+    ctx.globalAlpha = 0.85;
+    const rr = pillH / 2;
     ctx.beginPath();
-    ctx.moveTo(rr, 0);
-    ctx.lineTo(canvas.width - rr, 0);
-    ctx.arc(canvas.width - rr, rr, rr, -Math.PI / 2, Math.PI / 2);
-    ctx.lineTo(rr, canvas.height);
-    ctx.arc(rr, rr, rr, Math.PI / 2, -Math.PI / 2);
+    ctx.moveTo(blur + rr, blur);
+    ctx.lineTo(blur + pillW - rr, blur);
+    ctx.arc(blur + pillW - rr, blur + rr, rr, -Math.PI / 2, Math.PI / 2);
+    ctx.lineTo(blur + rr, blur + pillH);
+    ctx.arc(blur + rr, blur + rr, rr, Math.PI / 2, -Math.PI / 2);
     ctx.closePath();
     ctx.fill();
 
+    ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
     ctx.fillStyle = color;
     ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 1);
@@ -117,7 +123,8 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     // fijamos bastante por encima de ese piso para que se lea cómodo).
     const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, sizeAttenuation: false });
     const sprite = new THREE.Sprite(material);
-    const pxH = bold ? LABEL_PX_FOCUS : LABEL_PX_NORMAL;
+    // LABEL_PX_* es el alto de la pastilla; el sprite incluye el margen del blur
+    const pxH = (bold ? LABEL_PX_FOCUS : LABEL_PX_NORMAL) * (canvas.height / pillH);
     const pxW = pxH * (canvas.width / canvas.height);
     const perPx = worldScalePerPx();
     sprite.scale.set(pxW * perPx, pxH * perPx, 1);
@@ -297,6 +304,21 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     .enableNavigationControls(true);
 
   _graph = graph;
+
+  // Etiquetas ocultas mientras se arrastra la cámara (girar/desplazar).
+  // Solo arrastre: la rueda (zoom) y un clic simple no las ocultan.
+  let dragging = false, labelsHidden = false;
+  const setLabels = visible => {
+    if (labelsHidden === !visible) return;
+    labelsHidden = !visible;
+    nodes.forEach(n => { if (n.__threeObj) n.__threeObj.visible = visible; });
+  };
+  const abort = new AbortController();
+  container.addEventListener("pointerdown", () => { dragging = true; }, { capture: true, signal: abort.signal });
+  window.addEventListener("pointerup", () => { dragging = false; setLabels(true); }, { signal: abort.signal });
+  graph.controls().addEventListener("change", () => { if (dragging) setLabels(false); });
+  const baseDestructor = graph._destructor?.bind(graph);
+  graph._destructor = () => { abort.abort(); baseDestructor?.(); };
 
   // Ajustar tamaño al contenedor y reaccionar a cambios (paneles, resize).
   // viewportH alimenta worldScalePerPx(): si cambia, los sprites screen-
