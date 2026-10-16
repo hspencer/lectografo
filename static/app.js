@@ -2300,6 +2300,24 @@ async function initTexto() {
   _renderTextoRevisiones();
 
   const textoWrap = document.getElementById("texto-wrap");
+  const tabTexto  = document.getElementById("tab-texto");
+
+  // Scroll sincronizado entre editor y preview (proporcional, codo a codo).
+  // El guard se libera en el siguiente frame, no de inmediato: el scroll
+  // programático de dst dispara su propio evento "scroll" de forma
+  // asíncrona, y si limpiáramos la bandera antes de que llegue, ese evento
+  // re-entra y arma un loop que dispara el scroll contrario a los extremos.
+  let _syncingScroll = false;
+  function _scrollSync(src, dst) {
+    if (_syncingScroll || !_textoModoEdicion) return;
+    _syncingScroll = true;
+    const srcRange = src.scrollHeight - src.clientHeight;
+    const ratio = srcRange > 0 ? src.scrollTop / srcRange : 0;
+    dst.scrollTop = ratio * (dst.scrollHeight - dst.clientHeight);
+    requestAnimationFrame(() => { _syncingScroll = false; });
+  }
+  editorEl.addEventListener("scroll", () => _scrollSync(editorEl, renderEl));
+  renderEl.addEventListener("scroll", () => _scrollSync(renderEl, editorEl));
 
   function _entrarEdicion() {
     _textoModoEdicion = true;
@@ -2307,6 +2325,7 @@ async function initTexto() {
     editorEl.hidden = false;
     renderEl.hidden = false;          // visible como preview en vivo
     textoWrap.classList.add("editando");
+    tabTexto.classList.add("editando");
     btnEditar.hidden = true;
     btnGuardar.hidden = false;
     btnCancelar.hidden = false;
@@ -2321,6 +2340,7 @@ async function initTexto() {
     editorEl.hidden = true;
     editorEl.oninput = null;
     textoWrap.classList.remove("editando");
+    tabTexto.classList.remove("editando");
     renderEl.hidden = false;
     btnEditar.hidden = false;
     btnGuardar.hidden = true;

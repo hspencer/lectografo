@@ -93,7 +93,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     // el fondo detrás del sprite es la maraña de líneas 3D — necesita más
     // cobertura para dar contraste real, no solo un halo sutil.
     ctx.fillStyle = FIELD_COLOR;
-    ctx.globalAlpha = 0.97;
+    ctx.globalAlpha = 0.82;
     const rr = canvas.height / 2;
     ctx.beginPath();
     ctx.moveTo(rr, 0);
@@ -221,10 +221,11 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     if (focusState.activo) return focusState.linkIds.has(l.id) ? 0.85 : 0.03;
     return l.investigador ? 0.10 : 0.16;
   }
-  // 0 = línea WebGL nativa de 1px screen-constant (fina, no un tubo 3D grueso)
+  // 0 sería línea WebGL nativa de 1px; un tubo fino (0.12) se ve un poco
+  // más grueso sin volverse un tubo 3D pesado.
   function linkW(l) {
-    if (focusState.activo && focusState.linkIds.has(l.id)) return 0.6;
-    return 0;
+    if (focusState.activo && focusState.linkIds.has(l.id)) return 0.85;
+    return 0.12;
   }
 
   // path: [{ nodeId, linkId }] en orden; linkId null para el primer paso.
