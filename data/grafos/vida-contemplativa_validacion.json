@@ -769,7 +769,7 @@
         "contexto": null
       },
       {
-        "id": "r_001",
+        "id": "r_021",
         "origen_id": "c_002",
         "destino_id": "c_009",
         "tipo": "da_lugar_a",
@@ -781,7 +781,7 @@
         "contexto": "párrafo sobre el lujo y la utilidad"
       },
       {
-        "id": "r_002",
+        "id": "r_022",
         "origen_id": "c_002",
         "destino_id": "c_008",
         "tipo": "es_una_postura_de",
@@ -793,7 +793,7 @@
         "contexto": "párrafo sobre figuras de la inactividad"
       },
       {
-        "id": "r_003",
+        "id": "r_023",
         "origen_id": "c_002",
         "destino_id": "c_009",
         "tipo": "requiere_para_existir",
@@ -805,7 +805,7 @@
         "contexto": "párrafo sobre el lenguaje y la información"
       },
       {
-        "id": "r_004",
+        "id": "r_024",
         "origen_id": "c_010",
         "destino_id": "c_005",
         "tipo": "se_contrapone_a",
@@ -817,7 +817,7 @@
         "contexto": "párrafo sobre acción e historia"
       },
       {
-        "id": "r_005",
+        "id": "r_025",
         "origen_id": "c_012",
         "destino_id": "c_005",
         "tipo": "provoca_en_respuesta_a",
@@ -829,7 +829,7 @@
         "contexto": "párrafo sobre el vacío simbólico"
       },
       {
-        "id": "r_006",
+        "id": "r_026",
         "origen_id": "c_012",
         "destino_id": "c_005",
         "tipo": "se_manifiesta_como",
@@ -841,7 +841,7 @@
         "contexto": "párrafo sobre el sentimiento de falta"
       },
       {
-        "id": "r_007",
+        "id": "r_027",
         "origen_id": "c_013",
         "destino_id": "c_004",
         "tipo": "construye_mediante",
@@ -853,7 +853,7 @@
         "contexto": "párrafo sobre la comunidad y los símbolos"
       },
       {
-        "id": "r_008",
+        "id": "r_028",
         "origen_id": "c_016",
         "destino_id": "c_012",
         "tipo": "conduce_a",
@@ -865,7 +865,7 @@
         "contexto": "párrafo sobre la conexión y el tú"
       },
       {
-        "id": "r_009",
+        "id": "r_029",
         "origen_id": "c_014",
         "destino_id": "c_010",
         "tipo": "requiere_de",
@@ -877,7 +877,7 @@
         "contexto": "párrafo sobre crisis religiosa"
       },
       {
-        "id": "r_010",
+        "id": "r_030",
         "origen_id": "c_015",
         "destino_id": "c_009",
         "tipo": "restaura_mediante",
@@ -889,7 +889,7 @@
         "contexto": "párrafo sobre romanticismo"
       },
       {
-        "id": "r_011",
+        "id": "r_031",
         "origen_id": "c_002",
         "destino_id": "c_005",
         "tipo": "es_una_forma_de",
@@ -901,7 +901,7 @@
         "contexto": "párrafo sobre competencia"
       },
       {
-        "id": "r_012",
+        "id": "r_032",
         "origen_id": "c_004",
         "destino_id": "c_016",
         "tipo": "se_disuelve_ante",
@@ -913,7 +913,7 @@
         "contexto": "párrafo sobre comunidad digital"
       },
       {
-        "id": "r_013",
+        "id": "r_033",
         "origen_id": "c_005",
         "destino_id": "c_002",
         "tipo": "pertenece_al_orden_de",
@@ -925,7 +925,7 @@
         "contexto": "párrafo sobre lujo vs supervivencia"
       },
       {
-        "id": "r_014",
+        "id": "r_034",
         "origen_id": "c_005",
         "destino_id": "c_012",
         "tipo": "genera_en_el_individuo",
@@ -937,7 +937,7 @@
         "contexto": "párrafo sobre crisis temporal"
       },
       {
-        "id": "r_015",
+        "id": "r_035",
         "origen_id": "c_009",
         "destino_id": "c_014",
         "tipo": "se_vincula_con_la_capacidad_de",
@@ -949,7 +949,7 @@
         "contexto": "párrafo sobre pensamiento y fe"
       },
       {
-        "id": "r_016",
+        "id": "r_036",
         "origen_id": "c_008",
         "destino_id": "c_012",
         "tipo": "mitiga_mediante_la_ausencia_de",
@@ -961,7 +961,7 @@
         "contexto": "párrafo sobre tedio y umbral"
       },
       {
-        "id": "r_017",
+        "id": "r_037",
         "origen_id": "c_013",
         "destino_id": "c_014",
         "tipo": "se_basa_en_la_tradición_de",
@@ -973,7 +973,7 @@
         "contexto": "párrafo sobre Platón y símbolos"
       },
       {
-        "id": "r_018",
+        "id": "r_038",
         "origen_id": "c_002",
         "destino_id": "c_016",
         "tipo": "se_intensifica_mediante",
@@ -1009,7 +1009,7 @@
         "contexto": "párrafo sobre antropoceno"
       },
       {
-        "id": "r_001",
+        "id": "r_039",
         "origen_id": "c_002",
         "destino_id": "c_002",
         "tipo": "se_nutre_de",
@@ -1021,7 +1021,7 @@
         "contexto": null
       },
       {
-        "id": "r_002",
+        "id": "r_040",
         "origen_id": "c_014",
         "destino_id": "c_003",
         "tipo": "impulsa",
@@ -1033,7 +1033,7 @@
         "contexto": null
       },
       {
-        "id": "r_003",
+        "id": "r_041",
         "origen_id": "c_014",
         "destino_id": "c_005",
         "tipo": "transforma_en",
@@ -1045,7 +1045,7 @@
         "contexto": null
       },
       {
-        "id": "r_004",
+        "id": "r_042",
         "origen_id": "c_005",
         "destino_id": "c_006",
         "tipo": "crea",
@@ -1057,7 +1057,7 @@
         "contexto": null
       },
       {
-        "id": "r_005",
+        "id": "r_043",
         "origen_id": "c_016",
         "destino_id": "c_005",
         "tipo": "se_forma_por",
@@ -1069,7 +1069,7 @@
         "contexto": null
       },
       {
-        "id": "r_006",
+        "id": "r_044",
         "origen_id": "c_015",
         "destino_id": "c_009",
         "tipo": "destruye",
@@ -1081,7 +1081,7 @@
         "contexto": null
       },
       {
-        "id": "r_007",
+        "id": "r_045",
         "origen_id": "c_015",
         "destino_id": "c_006",
         "tipo": "impide",
@@ -1093,7 +1093,7 @@
         "contexto": null
       },
       {
-        "id": "r_008",
+        "id": "r_046",
         "origen_id": "c_012",
         "destino_id": "c_006",
         "tipo": "construye",
@@ -1105,7 +1105,7 @@
         "contexto": null
       },
       {
-        "id": "r_009",
+        "id": "r_047",
         "origen_id": "c_012",
         "destino_id": "c_013",
         "tipo": "recupera_en",
@@ -1117,7 +1117,7 @@
         "contexto": null
       },
       {
-        "id": "r_010",
+        "id": "r_048",
         "origen_id": "c_013",
         "destino_id": "c_007",
         "tipo": "fomenta",
@@ -1129,7 +1129,7 @@
         "contexto": null
       },
       {
-        "id": "r_011",
+        "id": "r_049",
         "origen_id": "c_012",
         "destino_id": "c_014",
         "tipo": "provoca_en",
@@ -1141,7 +1141,7 @@
         "contexto": null
       },
       {
-        "id": "r_012",
+        "id": "r_050",
         "origen_id": "c_012",
         "destino_id": "c_009",
         "tipo": "requiere_de",
@@ -1153,7 +1153,7 @@
         "contexto": null
       },
       {
-        "id": "r_013",
+        "id": "r_051",
         "origen_id": "c_017",
         "destino_id": "c_009",
         "tipo": "empobrece",
@@ -1165,7 +1165,7 @@
         "contexto": null
       },
       {
-        "id": "r_014",
+        "id": "r_052",
         "origen_id": "c_013",
         "destino_id": "c_017",
         "tipo": "reemplaza_por",
@@ -1177,7 +1177,7 @@
         "contexto": null
       },
       {
-        "id": "r_015",
+        "id": "r_053",
         "origen_id": "c_017",
         "destino_id": "c_012",
         "tipo": "genera",
@@ -1189,7 +1189,7 @@
         "contexto": null
       },
       {
-        "id": "r_016",
+        "id": "r_054",
         "origen_id": "c_007",
         "destino_id": "c_012",
         "tipo": "se_fragmenta_sin",
@@ -1201,7 +1201,7 @@
         "contexto": null
       },
       {
-        "id": "r_017",
+        "id": "r_055",
         "origen_id": "c_002",
         "destino_id": "c_012",
         "tipo": "desmantela_en_cuanto",
@@ -1213,7 +1213,7 @@
         "contexto": null
       },
       {
-        "id": "r_018",
+        "id": "r_056",
         "origen_id": "c_009",
         "destino_id": "c_007",
         "tipo": "permite",

@@ -1977,8 +1977,27 @@
   "anotaciones": [],
   "completado": true,
   "creado_en": "2026-07-06T15:55:40.332610",
-  "actualizado_en": "2026-07-06T15:57:25.591198",
-  "conceptos_editados": {},
+  "actualizado_en": "2026-10-16T17:19:26.246602",
+  "conceptos_editados": {
+    "c_002": {
+      "label": "verdad del ser"
+    },
+    "c_031": {
+      "label": "lucha (mundo y tierra)"
+    },
+    "c_017": {
+      "label": "ocultación"
+    },
+    "c_024": {
+      "label": "cosa (cosidad)"
+    },
+    "c_020": {
+      "label": "historia (historicidad)"
+    },
+    "c_021": {
+      "label": "dios (divinidad)"
+    }
+  },
   "relaciones_editadas": {},
   "relaciones_investigador": [
     {
@@ -2182,7 +2201,14 @@
       "bidireccional": false
     }
   ],
-  "conceptos_fusionados": {},
+  "conceptos_fusionados": {
+    "c_061": "c_002",
+    "c_010": "c_031",
+    "c_030": "c_017",
+    "c_029": "c_024",
+    "c_034": "c_020",
+    "c_036": "c_021"
+  },
   "metadatos": {
     "titulo": "Arte y Poesía",
     "autores": [

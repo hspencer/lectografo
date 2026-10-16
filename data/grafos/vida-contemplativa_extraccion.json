@@ -3,6 +3,7 @@
     {
       "id": "c_001",
       "label": "Vida Contemplativa",
+      "tipo": "primitivo",
       "descripcion": "Estado de ser humano que se desprende del propósito y la utilidad para entregarse a lo que acontece, reavivando la vida.",
       "sinonimos_candidatos": [
         ""
@@ -15,6 +16,7 @@
     {
       "id": "c_002",
       "label": "Inactividad",
+      "tipo": "primitivo",
       "descripcion": "No es ausencia de actividad ni debilidad, sino una forma de intensidad y esplendor con su propia lógica y temporalidad.",
       "sinonimos_candidatos": [
         ""
@@ -27,6 +29,7 @@
     {
       "id": "c_003",
       "label": "Actividad y Acción",
+      "tipo": "primitivo",
       "descripcion": "Modo de existencia dominado por el rendimiento, la utilidad y la historia lineal que puede llevar al apocalipsis.",
       "sinonimos_candidatos": [
         ""
@@ -39,6 +42,7 @@
     {
       "id": "c_004",
       "label": "Trabajo y Rendimiento",
+      "tipo": "primitivo",
       "descripcion": "Lógica capitalista que absorbe la existencia humana, reduciendo el tiempo libre a descanso del trabajo.",
       "sinonimos_candidatos": [
         ""
@@ -51,6 +55,7 @@
     {
       "id": "c_005",
       "label": "Capitalismo",
+      "tipo": "primitivo",
       "descripcion": "Sistema que absolutiza la supervivencia, convierte el lujo en mercancía y transforma las fiestas en consumo.",
       "sinonimos_candidatos": [
         ""
@@ -63,6 +68,7 @@
     {
       "id": "c_006",
       "label": "Tiempo Verdaderamente Libre",
+      "tipo": "primitivo",
       "descripcion": "Espacio que no pertenece al orden del trabajo ni de la producción, necesario para lo auténticamente humano.",
       "sinonimos_candidatos": [
         ""
@@ -75,6 +81,7 @@
     {
       "id": "c_007",
       "label": "Comunidad / Nosotros",
+      "tipo": "primitivo",
       "descripcion": "Sentimiento colectivo que surge en las fiestas o inactividades, opuesto a la soledad digital individualista.",
       "sinonimos_candidatos": [
         ""
@@ -87,6 +94,7 @@
     {
       "id": "c_008",
       "label": "Fiesta / Shabat",
+      "tipo": "primitivo",
       "descripcion": "Ritual de suspensión económica y actividad que establece la comunidad, modelo teológico del reposo divino.",
       "sinonimos_candidatos": [
         ""
@@ -99,6 +107,7 @@
     {
       "id": "c_009",
       "label": "Felicidad",
+      "tipo": "primitivo",
       "descripcion": "Surge de lo vano, inútil e improductivo; se opone a la felicidad basada en el éxito veloz y la utilidad.",
       "sinonimos_candidatos": [
         ""
@@ -111,6 +120,7 @@
     {
       "id": "c_010",
       "label": "Silencio",
+      "tipo": "primitivo",
       "descripcion": "Condición necesaria para el lenguaje contemplativo y la poesía, opuesto al ruido informativo.",
       "sinonimos_candidatos": [
         ""
@@ -123,6 +133,7 @@
     {
       "id": "c_011",
       "label": "Información y Comunicación Activa",
+      "tipo": "primitivo",
       "descripcion": "Modo del lenguaje en modo trabajo que degrada la comunicación a portador de información, destruyendo el silencio.",
       "sinonimos_candidatos": [
         ""
@@ -135,6 +146,7 @@
     {
       "id": "c_012",
       "label": "Espera y Duda",
+      "tipo": "primitivo",
       "descripcion": "Figuras constitutivas de la inactividad que permiten el acontecer inconsciente y nuevos hechos.",
       "sinonimos_candidatos": [
         ""
@@ -147,6 +159,7 @@
     {
       "id": "c_013",
       "label": "Ignorancia Voluntaria",
+      "tipo": "primitivo",
       "descripcion": "Condición para que lo vivo se conserve y crezca, elevada por Nietzsche al núcleo de la vida.",
       "sinonimos_candidatos": [
         ""
@@ -159,6 +172,7 @@
     {
       "id": "c_014",
       "label": "Ser con / Relación Interhumana",
+      "tipo": "primitivo",
       "descripcion": "Estado existencial que se desmantela bajo el capitalismo y la digitalización, reemplazado por soledad primordial.",
       "sinonimos_candidatos": [
         ""
@@ -169,8 +183,9 @@
       "cita_directa": "la digitalización desmantela al ser en cuanto ser con"
     },
     {
-      "id": "c_002",
+      "id": "c_018",
       "label": "Actividad / Rendimiento",
+      "tipo": "primitivo",
       "descripcion": "Modo de vida impulsado por la producción y el trabajo, característico del capitalismo neoliberal que absorbe a la existencia.",
       "sinonimos_candidatos": [
         "Acción productiva"
@@ -181,8 +196,9 @@
       "cita_directa": "absorbidos completamente por la acción y el rendimiento / exceso neoliberal de libertad y rendimiento"
     },
     {
-      "id": "c_004",
+      "id": "c_019",
       "label": "Comunidad",
+      "tipo": "primitivo",
       "descripcion": "Sentimiento compartido construido a través del símbolo y la fiesta; se disuelve en las conexiones digitales mercantiles.",
       "sinonimos_candidatos": [
         "Nosotros"
@@ -193,8 +209,9 @@
       "cita_directa": "no establecen comunidad / hoy se habla de Community Pero eso se trata de una forma mercantil"
     },
     {
-      "id": "c_005",
+      "id": "c_020",
       "label": "Supervivencia",
+      "tipo": "primitivo",
       "descripcion": "Orden del trabajo y rendimiento que absolutiza la necesidad, opuesto a la vida plena o el lujo.",
       "sinonimos_candidatos": [
         "Mera existencia"
@@ -205,8 +222,9 @@
       "cita_directa": "trabajo y el rendimiento pertenecen al orden de la supervivencia / cuando la vida degenera en supervivencia"
     },
     {
-      "id": "c_008",
+      "id": "c_021",
       "label": "Espera",
+      "tipo": "primitivo",
       "descripcion": "Postura mental de quien está inactivo y contemplativo; sin ella no hay gracia ni acontecimiento nuevo.",
       "sinonimos_candidatos": [
         "Paciencia"
@@ -217,8 +235,9 @@
       "cita_directa": "la espera es la postura mental de quien está inactivo y contemplativo / sin ella no sucede nada"
     },
     {
-      "id": "c_009",
+      "id": "c_022",
       "label": "Pensamiento",
+      "tipo": "primitivo",
       "descripcion": "Capacidad que requiere pausa e interrupción; se diferencia del observador por carecer de propósito concreto.",
       "sinonimos_candidatos": [
         "Meditación"
@@ -229,8 +248,9 @@
       "cita_directa": "el pensador no tiene un propósito carece de un objetivo en mente / la inteligencia artificial no puede pensar"
     },
     {
-      "id": "c_010",
+      "id": "c_023",
       "label": "Acción",
+      "tipo": "primitivo",
       "descripcion": "Fuerza formadora de historia pero que sin interrupción conduce al apocalipsis; se nutre de la inactividad.",
       "sinonimos_candidatos": [
         "Hacer"
@@ -241,8 +261,9 @@
       "cita_directa": "la acción forma parte de la historia / para Walter Benjamin la inactividad es el núcleo de lo nuevo"
     },
     {
-      "id": "c_011",
+      "id": "c_024",
       "label": "Ser Con",
+      "tipo": "primitivo",
       "descripcion": "Dimensión relacional del ser humano que se disuelve ante la digitalización y falta de símbolos compartidos.",
       "sinonimos_candidatos": [
         "Vivir con otros"
@@ -253,8 +274,9 @@
       "cita_directa": "el ser humano es un animal que narra / la digitalización desmantela al ser en cuanto ser con"
     },
     {
-      "id": "c_012",
+      "id": "c_025",
       "label": "Falta de Ser",
+      "tipo": "primitivo",
       "descripcion": "Estado resultante del cortoplacismo y el vacío simbólico; impulsa a la hiperactividad para suplir lo ausente.",
       "sinonimos_candidatos": [
         "Fragmentación"
@@ -265,8 +287,9 @@
       "cita_directa": "ante la falta de ser se provoca un exceso de producción / el vacío simbólico narrativo"
     },
     {
-      "id": "c_013",
+      "id": "c_026",
       "label": "Símbolo",
+      "tipo": "primitivo",
       "descripcion": "Elemento que une a los humanos en una totalidad sana; permite construir comunidad y sentido compartido.",
       "sinonimos_candidatos": [
         "Significado"
@@ -277,8 +300,9 @@
       "cita_directa": "solo a partir de lo simbólico se construye el sentir compartido / cada parte aspira a reunirse con su otra mitad"
     },
     {
-      "id": "c_014",
+      "id": "c_027",
       "label": "Religión / Atención",
+      "tipo": "primitivo",
       "descripcion": "Requiere capacidad contemplativa y pausa; la crisis actual es una crisis de atención más que de fe.",
       "sinonimos_candidatos": [
         "Espiritualidad"
@@ -291,6 +315,7 @@
     {
       "id": "c_015",
       "label": "Naturaleza",
+      "tipo": "primitivo",
       "descripcion": "Fuente del encanto y misterio en el romanticismo; la libertad romántica renuncia a la soberanía ante ella.",
       "sinonimos_candidatos": [
         "Mundo natural"
@@ -303,6 +328,7 @@
     {
       "id": "c_016",
       "label": "Digitalización",
+      "tipo": "primitivo",
       "descripcion": "Tecnología que conecta pero aísla, transformando al otro en objeto consumible y desmantelando el ser con.",
       "sinonimos_candidatos": [
         "Conexión digital"
@@ -313,8 +339,9 @@
       "cita_directa": "con la ayuda de la conexión digital hacemos del otro un hecho a disposición / estamos más solos que nunca"
     },
     {
-      "id": "c_002",
+      "id": "c_028",
       "label": "Actividad",
+      "tipo": "primitivo",
       "descripcion": "Acción orientada a objetivos y utilidad que forma parte de la historia pero no es fuerza formadora de cultura.",
       "sinonimos_candidatos": [
         "Hacer",
@@ -326,8 +353,9 @@
       "cita_directa": "la acción forma parte de la historia pero no es una fuerza formadora de cultura"
     },
     {
-      "id": "c_003",
+      "id": "c_029",
       "label": "Trabajo/Producción",
+      "tipo": "primitivo",
       "descripcion": "Orden lógico que absorbe la existencia humana y define el tiempo libre como descanso del trabajo.",
       "sinonimos_candidatos": [
         "Rendimiento"
@@ -338,8 +366,9 @@
       "cita_directa": "en las relaciones de producción capitalistas a la inactividad la llamamos tiempo libre"
     },
     {
-      "id": "c_004",
+      "id": "c_030",
       "label": "Tiempo Libre Capitalista",
+      "tipo": "primitivo",
       "descripcion": "Concepto derivado del trabajo que encuadra el descanso dentro de la lógica productiva.",
       "sinonimos_candidatos": [
         "Descanso"
@@ -350,8 +379,9 @@
       "cita_directa": "si la consideramos un derivado del trabajo la inactividad se entiende Como una forma funcional a la producción"
     },
     {
-      "id": "c_005",
+      "id": "c_031",
       "label": "Fiesta/Celebración",
+      "tipo": "primitivo",
       "descripcion": "Evento comunitario que suspende la economía y permite el lujo, esencial para crear comunidad.",
       "sinonimos_candidatos": [
         "Shabat"
@@ -362,8 +392,9 @@
       "cita_directa": "el origen de la cultura no es el arma sino el adorno"
     },
     {
-      "id": "c_006",
+      "id": "c_032",
       "label": "Comunidad/Sociedad",
+      "tipo": "primitivo",
       "descripcion": "Totalidad asociativa construida simbólicamente, amenazada por la fragmentación digital.",
       "sinonimos_candidatos": [
         "Nosotros"
@@ -374,8 +405,9 @@
       "cita_directa": "hoy se habla de Community Pero eso se trata de una forma mercantil"
     },
     {
-      "id": "c_007",
+      "id": "c_033",
       "label": "Contemplación/Meditación",
+      "tipo": "primitivo",
       "descripcion": "Capacidad que no actúa, supone la pausa y conduce a donde ya estamos desde siempre.",
       "sinonimos_candidatos": [
         "Pensamiento"
@@ -386,8 +418,9 @@
       "cita_directa": "la meditación como dimensión de la contemplación nos conduce de vuelta a donde ya estamos"
     },
     {
-      "id": "c_008",
+      "id": "c_034",
       "label": "Silencio/Pausa",
+      "tipo": "primitivo",
       "descripcion": "Condición necesaria para el lenguaje poético y la aparición del acontecer inconsciente.",
       "sinonimos_candidatos": [
         "Quietud"
@@ -398,8 +431,9 @@
       "cita_directa": "solo el silencio nos permite decir algo inaudito"
     },
     {
-      "id": "c_009",
+      "id": "c_035",
       "label": "Ser Humano/Dasein",
+      "tipo": "primitivo",
       "descripcion": "Entidad que narra y crece en el tiempo, desmantelada por la falta de ser actual.",
       "sinonimos_candidatos": [
         "Viviente"
@@ -410,8 +444,9 @@
       "cita_directa": "el saber no logra reflejar la vida completamente porque la vida completamente consciente es una vida muerta"
     },
     {
-      "id": "c_010",
+      "id": "c_036",
       "label": "Cortoplacismo/Urgencia",
+      "tipo": "primitivo",
       "descripcion": "Actitud que desmantela al ser y convierte las acciones en reacciones inmediatas.",
       "sinonimos_candidatos": [
         "Aceleración"
@@ -422,8 +457,9 @@
       "cita_directa": "hoy se impone por todas partes la forma de una vida consumista en la que toda necesidad debe ser satisfecha de inmediato"
     },
     {
-      "id": "c_011",
+      "id": "c_037",
       "label": "Símbolo/Narrativa",
+      "tipo": "primitivo",
       "descripcion": "Estructura temporal y afectiva que fija ejes estables, perdida por el vacío simbólico actual.",
       "sinonimos_candidatos": [
         "Relato"
@@ -434,8 +470,9 @@
       "cita_directa": "los rituales y las fiestas esas arquitecturas temporales desaparecidas"
     },
     {
-      "id": "c_012",
+      "id": "c_038",
       "label": "Naturaleza/Romanticismo",
+      "tipo": "primitivo",
       "descripcion": "Fuente de libertad auténtica que devuelve encanto a la vida frente al rendimiento.",
       "sinonimos_candidatos": [
         "Infinitud"
@@ -446,8 +483,9 @@
       "cita_directa": "la libertad romántica no se basa en el quererse sino en el ser con"
     },
     {
-      "id": "c_013",
+      "id": "c_039",
       "label": "Religión/Faith",
+      "tipo": "primitivo",
       "descripcion": "Experiencia que requiere desprendimiento y atención, actualmente en crisis por la falta de contemplación.",
       "sinonimos_candidatos": [
         "Fe"
@@ -458,8 +496,9 @@
       "cita_directa": "la crisis actual de la religión no puede atribuirse simplemente al hecho de que hayamos perdido toda fe en Dios"
     },
     {
-      "id": "c_014",
+      "id": "c_040",
       "label": "Capitalismo/Neoliberalismo",
+      "tipo": "primitivo",
       "descripcion": "Sistema basado en el rendimiento y la supervivencia, que transforma fiestas en negocios.",
       "sinonimos_candidatos": [
         "Mercantilización"
@@ -470,8 +509,9 @@
       "cita_directa": "el capital es actividad en estado puro"
     },
     {
-      "id": "c_015",
+      "id": "c_041",
       "label": "Digitalización/Conectividad",
+      "tipo": "primitivo",
       "descripcion": "Tecnología que desmantela el ser al convertir a los otros en objetos consumibles.",
       "sinonimos_candidatos": [
         "Redes"
@@ -482,8 +522,9 @@
       "cita_directa": "la digitalización desmantela al ser en cuanto ser con"
     },
     {
-      "id": "c_016",
+      "id": "c_042",
       "label": "Cultura",
+      "tipo": "primitivo",
       "descripcion": "Formada por digresiones y excesos (fiesta), no por la acción directa o el arma.",
       "sinonimos_candidatos": [
         "Magia"
@@ -496,6 +537,7 @@
     {
       "id": "c_017",
       "label": "Experiencia/Vivencia",
+      "tipo": "primitivo",
       "descripcion": "La experiencia profunda se pierde al reducirse a vivencias y emociones superficiales.",
       "sinonimos_candidatos": [
         "Información"
@@ -724,7 +766,7 @@
       "contexto": null
     },
     {
-      "id": "r_001",
+      "id": "r_021",
       "origen_id": "c_002",
       "destino_id": "c_009",
       "tipo": "da_lugar_a",
@@ -736,7 +778,7 @@
       "contexto": "párrafo sobre el lujo y la utilidad"
     },
     {
-      "id": "r_002",
+      "id": "r_022",
       "origen_id": "c_002",
       "destino_id": "c_008",
       "tipo": "es_una_postura_de",
@@ -748,7 +790,7 @@
       "contexto": "párrafo sobre figuras de la inactividad"
     },
     {
-      "id": "r_003",
+      "id": "r_023",
       "origen_id": "c_002",
       "destino_id": "c_009",
       "tipo": "requiere_para_existir",
@@ -760,7 +802,7 @@
       "contexto": "párrafo sobre el lenguaje y la información"
     },
     {
-      "id": "r_004",
+      "id": "r_024",
       "origen_id": "c_010",
       "destino_id": "c_005",
       "tipo": "se_contrapone_a",
@@ -772,7 +814,7 @@
       "contexto": "párrafo sobre acción e historia"
     },
     {
-      "id": "r_005",
+      "id": "r_025",
       "origen_id": "c_012",
       "destino_id": "c_005",
       "tipo": "provoca_en_respuesta_a",
@@ -784,7 +826,7 @@
       "contexto": "párrafo sobre el vacío simbólico"
     },
     {
-      "id": "r_006",
+      "id": "r_026",
       "origen_id": "c_012",
       "destino_id": "c_005",
       "tipo": "se_manifiesta_como",
@@ -796,7 +838,7 @@
       "contexto": "párrafo sobre el sentimiento de falta"
     },
     {
-      "id": "r_007",
+      "id": "r_027",
       "origen_id": "c_013",
       "destino_id": "c_004",
       "tipo": "construye_mediante",
@@ -808,7 +850,7 @@
       "contexto": "párrafo sobre la comunidad y los símbolos"
     },
     {
-      "id": "r_008",
+      "id": "r_028",
       "origen_id": "c_016",
       "destino_id": "c_012",
       "tipo": "conduce_a",
@@ -820,7 +862,7 @@
       "contexto": "párrafo sobre la conexión y el tú"
     },
     {
-      "id": "r_009",
+      "id": "r_029",
       "origen_id": "c_014",
       "destino_id": "c_010",
       "tipo": "requiere_de",
@@ -832,7 +874,7 @@
       "contexto": "párrafo sobre crisis religiosa"
     },
     {
-      "id": "r_010",
+      "id": "r_030",
       "origen_id": "c_015",
       "destino_id": "c_009",
       "tipo": "restaura_mediante",
@@ -844,7 +886,7 @@
       "contexto": "párrafo sobre romanticismo"
     },
     {
-      "id": "r_011",
+      "id": "r_031",
       "origen_id": "c_002",
       "destino_id": "c_005",
       "tipo": "es_una_forma_de",
@@ -856,7 +898,7 @@
       "contexto": "párrafo sobre competencia"
     },
     {
-      "id": "r_012",
+      "id": "r_032",
       "origen_id": "c_004",
       "destino_id": "c_016",
       "tipo": "se_disuelve_ante",
@@ -868,7 +910,7 @@
       "contexto": "párrafo sobre comunidad digital"
     },
     {
-      "id": "r_013",
+      "id": "r_033",
       "origen_id": "c_005",
       "destino_id": "c_002",
       "tipo": "pertenece_al_orden_de",
@@ -880,7 +922,7 @@
       "contexto": "párrafo sobre lujo vs supervivencia"
     },
     {
-      "id": "r_014",
+      "id": "r_034",
       "origen_id": "c_005",
       "destino_id": "c_012",
       "tipo": "genera_en_el_individuo",
@@ -892,7 +934,7 @@
       "contexto": "párrafo sobre crisis temporal"
     },
     {
-      "id": "r_015",
+      "id": "r_035",
       "origen_id": "c_009",
       "destino_id": "c_014",
       "tipo": "se_vincula_con_la_capacidad_de",
@@ -904,7 +946,7 @@
       "contexto": "párrafo sobre pensamiento y fe"
     },
     {
-      "id": "r_016",
+      "id": "r_036",
       "origen_id": "c_008",
       "destino_id": "c_012",
       "tipo": "mitiga_mediante_la_ausencia_de",
@@ -916,7 +958,7 @@
       "contexto": "párrafo sobre tedio y umbral"
     },
     {
-      "id": "r_017",
+      "id": "r_037",
       "origen_id": "c_013",
       "destino_id": "c_014",
       "tipo": "se_basa_en_la_tradición_de",
@@ -928,7 +970,7 @@
       "contexto": "párrafo sobre Platón y símbolos"
     },
     {
-      "id": "r_018",
+      "id": "r_038",
       "origen_id": "c_002",
       "destino_id": "c_016",
       "tipo": "se_intensifica_mediante",
@@ -964,7 +1006,7 @@
       "contexto": "párrafo sobre antropoceno"
     },
     {
-      "id": "r_001",
+      "id": "r_039",
       "origen_id": "c_002",
       "destino_id": "c_002",
       "tipo": "se_nutre_de",
@@ -976,7 +1018,7 @@
       "contexto": null
     },
     {
-      "id": "r_002",
+      "id": "r_040",
       "origen_id": "c_014",
       "destino_id": "c_003",
       "tipo": "impulsa",
@@ -988,7 +1030,7 @@
       "contexto": null
     },
     {
-      "id": "r_003",
+      "id": "r_041",
       "origen_id": "c_014",
       "destino_id": "c_005",
       "tipo": "transforma_en",
@@ -1000,7 +1042,7 @@
       "contexto": null
     },
     {
-      "id": "r_004",
+      "id": "r_042",
       "origen_id": "c_005",
       "destino_id": "c_006",
       "tipo": "crea",
@@ -1012,7 +1054,7 @@
       "contexto": null
     },
     {
-      "id": "r_005",
+      "id": "r_043",
       "origen_id": "c_016",
       "destino_id": "c_005",
       "tipo": "se_forma_por",
@@ -1024,7 +1066,7 @@
       "contexto": null
     },
     {
-      "id": "r_006",
+      "id": "r_044",
       "origen_id": "c_015",
       "destino_id": "c_009",
       "tipo": "destruye",
@@ -1036,7 +1078,7 @@
       "contexto": null
     },
     {
-      "id": "r_007",
+      "id": "r_045",
       "origen_id": "c_015",
       "destino_id": "c_006",
       "tipo": "impide",
@@ -1048,7 +1090,7 @@
       "contexto": null
     },
     {
-      "id": "r_008",
+      "id": "r_046",
       "origen_id": "c_012",
       "destino_id": "c_006",
       "tipo": "construye",
@@ -1060,7 +1102,7 @@
       "contexto": null
     },
     {
-      "id": "r_009",
+      "id": "r_047",
       "origen_id": "c_012",
       "destino_id": "c_013",
       "tipo": "recupera_en",
@@ -1072,7 +1114,7 @@
       "contexto": null
     },
     {
-      "id": "r_010",
+      "id": "r_048",
       "origen_id": "c_013",
       "destino_id": "c_007",
       "tipo": "fomenta",
@@ -1084,7 +1126,7 @@
       "contexto": null
     },
     {
-      "id": "r_011",
+      "id": "r_049",
       "origen_id": "c_012",
       "destino_id": "c_014",
       "tipo": "provoca_en",
@@ -1096,7 +1138,7 @@
       "contexto": null
     },
     {
-      "id": "r_012",
+      "id": "r_050",
       "origen_id": "c_012",
       "destino_id": "c_009",
       "tipo": "requiere_de",
@@ -1108,7 +1150,7 @@
       "contexto": null
     },
     {
-      "id": "r_013",
+      "id": "r_051",
       "origen_id": "c_017",
       "destino_id": "c_009",
       "tipo": "empobrece",
@@ -1120,7 +1162,7 @@
       "contexto": null
     },
     {
-      "id": "r_014",
+      "id": "r_052",
       "origen_id": "c_013",
       "destino_id": "c_017",
       "tipo": "reemplaza_por",
@@ -1132,7 +1174,7 @@
       "contexto": null
     },
     {
-      "id": "r_015",
+      "id": "r_053",
       "origen_id": "c_017",
       "destino_id": "c_012",
       "tipo": "genera",
@@ -1144,7 +1186,7 @@
       "contexto": null
     },
     {
-      "id": "r_016",
+      "id": "r_054",
       "origen_id": "c_007",
       "destino_id": "c_012",
       "tipo": "se_fragmenta_sin",
@@ -1156,7 +1198,7 @@
       "contexto": null
     },
     {
-      "id": "r_017",
+      "id": "r_055",
       "origen_id": "c_002",
       "destino_id": "c_012",
       "tipo": "desmantela_en_cuanto",
@@ -1168,7 +1210,7 @@
       "contexto": null
     },
     {
-      "id": "r_018",
+      "id": "r_056",
       "origen_id": "c_009",
       "destino_id": "c_007",
       "tipo": "permite",

@@ -7934,7 +7934,7 @@
         "contexto": "Lista de obras incluidas en el volumen que abordan temas hegelianos"
       },
       {
-        "id": "r_001",
+        "id": "r_175",
         "origen_id": "c_001",
         "destino_id": "c_028",
         "tipo": "es_un_pensador_del",
@@ -7946,7 +7946,7 @@
         "contexto": "Introducción a los pensadores iniciales"
       },
       {
-        "id": "r_003",
+        "id": "r_176",
         "origen_id": "c_001",
         "destino_id": "c_029",
         "tipo": "tiene_proximidad_esencial_a",
@@ -7958,7 +7958,7 @@
         "contexto": "Caracterización de lo pensable en Heráclito"
       },
       {
-        "id": "r_004",
+        "id": "r_177",
         "origen_id": "c_001",
         "destino_id": "c_005",
         "tipo": "se_caracteriza_por_proximidad_a",
@@ -7970,7 +7970,7 @@
         "contexto": "Primera historia del horno"
       },
       {
-        "id": "r_005",
+        "id": "r_178",
         "origen_id": "c_001",
         "destino_id": "c_030",
         "tipo": "piensa_la_lucha_como",
@@ -7982,7 +7982,7 @@
         "contexto": "Relación entre Heráclito y Ártemis"
       },
       {
-        "id": "r_006",
+        "id": "r_179",
         "origen_id": "c_001",
         "destino_id": "c_006",
         "tipo": "se_caracteriza_por_proximidad_a",
@@ -7994,7 +7994,7 @@
         "contexto": "Segunda historia con los dados"
       },
       {
-        "id": "r_007",
+        "id": "r_180",
         "origen_id": "c_001",
         "destino_id": "c_031",
         "tipo": "experimenta_proximidad_a",
@@ -8006,7 +8006,7 @@
         "contexto": "Conclusión de las dos historias"
       },
       {
-        "id": "r_008",
+        "id": "r_181",
         "origen_id": "c_001",
         "destino_id": "c_003",
         "tipo": "tiene_como_diosa",
@@ -8018,7 +8018,7 @@
         "contexto": "Identificación de Ártemis como diosa de Heráclito"
       },
       {
-        "id": "r_009",
+        "id": "r_182",
         "origen_id": "c_002",
         "destino_id": "c_028",
         "tipo": "constituye_la_esencia_del",
@@ -8030,7 +8030,7 @@
         "contexto": "Definición del pensar occidental"
       },
       {
-        "id": "r_010",
+        "id": "r_183",
         "origen_id": "c_029",
         "destino_id": "c_033",
         "tipo": "comparte_esencia_con",
@@ -8042,7 +8042,7 @@
         "contexto": "Relación entre physis y phos"
       },
       {
-        "id": "r_011",
+        "id": "r_184",
         "origen_id": "c_029",
         "destino_id": "c_032",
         "tipo": "se_funda_en",
@@ -8054,7 +8054,7 @@
         "contexto": "Análisis de la esencia inicial"
       },
       {
-        "id": "r_012",
+        "id": "r_185",
         "origen_id": "c_005",
         "destino_id": "c_033",
         "tipo": "comparte_esencia_con",
@@ -8066,7 +8066,7 @@
         "contexto": "Primera historia del horno"
       },
       {
-        "id": "r_013",
+        "id": "r_186",
         "origen_id": "c_030",
         "destino_id": "c_038",
         "tipo": "es_esencia_de",
@@ -8078,7 +8078,7 @@
         "contexto": "Definición de contienda en Heráclito"
       },
       {
-        "id": "r_014",
+        "id": "r_187",
         "origen_id": "c_006",
         "destino_id": "c_003",
         "tipo": "caracteriza_a",
@@ -8090,7 +8090,7 @@
         "contexto": "Caracterización de Ártemis"
       },
       {
-        "id": "r_015",
+        "id": "r_188",
         "origen_id": "c_031",
         "destino_id": "c_035",
         "tipo": "actúan_en",
@@ -8102,7 +8102,7 @@
         "contexto": "Primera historia: el horno"
       },
       {
-        "id": "r_016",
+        "id": "r_189",
         "origen_id": "c_031",
         "destino_id": "c_036",
         "tipo": "son_manifestación_de",
@@ -8114,7 +8114,7 @@
         "contexto": "Explicación de la primera historia"
       },
       {
-        "id": "r_017",
+        "id": "r_190",
         "origen_id": "c_003",
         "destino_id": "c_004",
         "tipo": "es_hermana_de",
@@ -8126,7 +8126,7 @@
         "contexto": "Identificación genealógica divina"
       },
       {
-        "id": "r_018",
+        "id": "r_191",
         "origen_id": "c_003",
         "destino_id": "c_029",
         "tipo": "es_diosa_de",
@@ -8138,7 +8138,7 @@
         "contexto": "Identificación de Ártemis con physis"
       },
       {
-        "id": "r_019",
+        "id": "r_192",
         "origen_id": "c_003",
         "destino_id": "c_045",
         "tipo": "es_diosa_tanto_de_como_de",
@@ -8150,7 +8150,7 @@
         "contexto": "Análisis de la esencia de Ártemis"
       },
       {
-        "id": "r_020",
+        "id": "r_193",
         "origen_id": "c_003",
         "destino_id": "c_041",
         "tipo": "porta_como_símbolos",
@@ -8162,7 +8162,7 @@
         "contexto": "Descripción de los atributos de Ártemis"
       },
       {
-        "id": "r_021",
+        "id": "r_194",
         "origen_id": "c_004",
         "destino_id": "c_001",
         "tipo": "determina_la_proximidad_del_pensar_de",
@@ -8174,7 +8174,7 @@
         "contexto": "Determinación del carácter apolíneo de Heráclito"
       },
       {
-        "id": "r_022",
+        "id": "r_195",
         "origen_id": "c_032",
         "destino_id": "c_029",
         "tipo": "encubre_la_unidad_de",
@@ -8186,7 +8186,7 @@
         "contexto": "Explicación de aletheia como concepto fundamental"
       },
       {
-        "id": "r_023",
+        "id": "r_196",
         "origen_id": "c_001",
         "destino_id": "c_003",
         "tipo": "está_bajo_la_protección_de",
@@ -8198,7 +8198,7 @@
         "contexto": "Introducción fundamental que establece la relación esencial entre el pensador y la diosa"
       },
       {
-        "id": "r_024",
+        "id": "r_197",
         "origen_id": "c_002",
         "destino_id": "c_005",
         "tipo": "se_manifiesta_en",
@@ -8210,7 +8210,7 @@
         "contexto": "Las dos historias sobre Heráclito"
       },
       {
-        "id": "r_025",
+        "id": "r_198",
         "origen_id": "c_002",
         "destino_id": "c_006",
         "tipo": "se_manifiesta_en",
@@ -8222,7 +8222,7 @@
         "contexto": "Las dos historias sobre Heráclito"
       },
       {
-        "id": "r_026",
+        "id": "r_199",
         "origen_id": "c_006",
         "destino_id": "c_029",
         "tipo": "pertenece_a",
@@ -8234,7 +8234,7 @@
         "contexto": "Definición de la esencia del juego"
       },
       {
-        "id": "r_027",
+        "id": "r_200",
         "origen_id": "c_003",
         "destino_id": "c_030",
         "tipo": "es_portadora_de",
@@ -8246,7 +8246,7 @@
         "contexto": "Esencia de Ártemis como manifestación de lo contrario"
       },
       {
-        "id": "r_028",
+        "id": "r_201",
         "origen_id": "c_003",
         "destino_id": "c_036",
         "tipo": "permite_mirar",
@@ -8258,7 +8258,7 @@
         "contexto": "Función reveladora de la diosa"
       },
       {
-        "id": "r_029",
+        "id": "r_202",
         "origen_id": "c_003",
         "destino_id": "c_045",
         "tipo": "revela_la_copertenencia_de",
@@ -8270,7 +8270,7 @@
         "contexto": "Los contrarios en la aparecer de Ártemis"
       },
       {
-        "id": "r_030",
+        "id": "r_203",
         "origen_id": "c_038",
         "destino_id": "c_030",
         "tipo": "expresan",
@@ -8282,7 +8282,7 @@
         "contexto": "Copertenencia de los contrarios"
       },
       {
-        "id": "r_031",
+        "id": "r_204",
         "origen_id": "c_047",
         "destino_id": "c_001",
         "tipo": "caracteriza_a",
@@ -8294,7 +8294,7 @@
         "contexto": "Explicación de la oscuridad como rasgo esencial del pensar"
       },
       {
-        "id": "r_032",
+        "id": "r_205",
         "origen_id": "c_049",
         "destino_id": "c_038",
         "tipo": "piensa",
@@ -8306,7 +8306,7 @@
         "contexto": "Desde Platón e Idealismo Alemán"
       },
       {
-        "id": "r_033",
+        "id": "r_206",
         "origen_id": "c_001",
         "destino_id": "c_047",
         "tipo": "es_conocido_como",
@@ -8318,7 +8318,7 @@
         "contexto": "Designación consagrada a través de los siglos"
       },
       {
-        "id": "r_034",
+        "id": "r_207",
         "origen_id": "c_001",
         "destino_id": "c_048",
         "tipo": "es_transmitido_en_forma_de",
@@ -8330,7 +8330,7 @@
         "contexto": "Estado de la tradición textual"
       },
       {
-        "id": "r_035",
+        "id": "r_208",
         "origen_id": "c_048",
         "destino_id": "c_042",
         "tipo": "requieren",
@@ -8342,7 +8342,7 @@
         "contexto": "Método hermenéutico"
       },
       {
-        "id": "r_036",
+        "id": "r_209",
         "origen_id": "c_028",
         "destino_id": "c_001",
         "tipo": "abandona_el_inicio_con",
@@ -8354,7 +8354,7 @@
         "contexto": "Ruptura entre el pensar griego inicial y la metafísica moderna"
       },
       {
-        "id": "r_037",
+        "id": "r_210",
         "origen_id": "c_028",
         "destino_id": "c_018",
         "tipo": "se_consolida_en",
@@ -8366,7 +8366,7 @@
         "contexto": "Historia del pensar occidental"
       },
       {
-        "id": "r_038",
+        "id": "r_211",
         "origen_id": "c_027",
         "destino_id": "c_001",
         "tipo": "interpreta",
@@ -8378,7 +8378,7 @@
         "contexto": "Influencia de la metafísica moderna en la comprensión de Heráclito"
       },
       {
-        "id": "r_039",
+        "id": "r_212",
         "origen_id": "c_027",
         "destino_id": "c_001",
         "tipo": "malinterpreta",
@@ -8390,7 +8390,7 @@
         "contexto": "crítica de Hegel"
       },
       {
-        "id": "r_040",
+        "id": "r_213",
         "origen_id": "c_018",
         "destino_id": "c_025",
         "tipo": "pregunta_fundamental",
@@ -8402,7 +8402,7 @@
         "contexto": "definición de la metafísica"
       },
       {
-        "id": "r_041",
+        "id": "r_214",
         "origen_id": "c_018",
         "destino_id": "c_056",
         "tipo": "traspasa_hacia",
@@ -8414,7 +8414,7 @@
         "contexto": "caracterización de la metafísica"
       },
       {
-        "id": "r_042",
+        "id": "r_215",
         "origen_id": "c_052",
         "destino_id": "c_014",
         "tipo": "es_manifestación_de",
@@ -8426,7 +8426,7 @@
         "contexto": "interpretación griega versus moderna"
       },
       {
-        "id": "r_043",
+        "id": "r_216",
         "origen_id": "c_053",
         "destino_id": "c_014",
         "tipo": "se_opone_a",
@@ -8438,7 +8438,7 @@
         "contexto": "análisis del fragmento 16"
       },
       {
-        "id": "r_044",
+        "id": "r_217",
         "origen_id": "c_053",
         "destino_id": "c_054",
         "tipo": "determina_la_relación_de",
@@ -8450,7 +8450,7 @@
         "contexto": "relación fundamental del fragmento"
       },
       {
-        "id": "r_045",
+        "id": "r_218",
         "origen_id": "c_037",
         "destino_id": "c_001",
         "tipo": "incluye_a",
@@ -8462,7 +8462,7 @@
         "contexto": "caracterización de Heráclito"
       },
       {
-        "id": "r_046",
+        "id": "r_219",
         "origen_id": "c_037",
         "destino_id": "c_018",
         "tipo": "precede_a",
@@ -8474,7 +8474,7 @@
         "contexto": "distinción histórica del pensar"
       },
       {
-        "id": "r_047",
+        "id": "r_220",
         "origen_id": "c_055",
         "destino_id": "c_053",
         "tipo": "es_la_forma_gramatical_de",
@@ -8486,7 +8486,7 @@
         "contexto": "análisis gramatical"
       },
       {
-        "id": "r_048",
+        "id": "r_221",
         "origen_id": "c_055",
         "destino_id": "c_025",
         "tipo": "análogo_a",
@@ -8498,7 +8498,7 @@
         "contexto": "analogía metodológica"
       },
       {
-        "id": "r_049",
+        "id": "r_222",
         "origen_id": "c_021",
         "destino_id": "c_018",
         "tipo": "funda",
@@ -8510,7 +8510,7 @@
         "contexto": "historia de la metafísica occidental"
       },
       {
-        "id": "r_050",
+        "id": "r_223",
         "origen_id": "c_067",
         "destino_id": "c_056",
         "tipo": "caracteriza_mediante",
@@ -8522,7 +8522,7 @@
         "contexto": "La relación entre ser y olvido define la historia occidental"
       },
       {
-        "id": "r_051",
+        "id": "r_224",
         "origen_id": "c_002",
         "destino_id": "c_001",
         "tipo": "es_atribuido_a",
@@ -8534,7 +8534,7 @@
         "contexto": null
       },
       {
-        "id": "r_052",
+        "id": "r_225",
         "origen_id": "c_053",
         "destino_id": "c_052",
         "tipo": "es_contrario_de",
@@ -8546,7 +8546,7 @@
         "contexto": "Ambos términos definen la dinámica fundamental del ser"
       },
       {
-        "id": "r_053",
+        "id": "r_226",
         "origen_id": "c_052",
         "destino_id": "c_014",
         "tipo": "significa",
@@ -8558,7 +8558,7 @@
         "contexto": null
       },
       {
-        "id": "r_054",
+        "id": "r_227",
         "origen_id": "c_014",
         "destino_id": "c_032",
         "tipo": "mantiene_relación_esencial_con",
@@ -8570,7 +8570,7 @@
         "contexto": "La verdad como despejamiento requiere del ocultamiento"
       },
       {
-        "id": "r_055",
+        "id": "r_228",
         "origen_id": "c_042",
         "destino_id": "c_009",
         "tipo": "caracteriza_la_relación_con",
@@ -8582,7 +8582,7 @@
         "contexto": "La palabra griega requiere interpretación para ser comprendida"
       },
       {
-        "id": "r_056",
+        "id": "r_229",
         "origen_id": "c_055",
         "destino_id": "c_009",
         "tipo": "es_forma_gramatical_de",
@@ -8594,7 +8594,7 @@
         "contexto": null
       },
       {
-        "id": "r_057",
+        "id": "r_230",
         "origen_id": "c_025",
         "destino_id": "c_018",
         "tipo": "es_objeto_fundamental_de",
@@ -8606,7 +8606,7 @@
         "contexto": null
       },
       {
-        "id": "r_058",
+        "id": "r_231",
         "origen_id": "c_020",
         "destino_id": "c_021",
         "tipo": "antecede_a",
@@ -8618,7 +8618,7 @@
         "contexto": null
       },
       {
-        "id": "r_059",
+        "id": "r_232",
         "origen_id": "c_021",
         "destino_id": "c_068",
         "tipo": "desarrolla_mediante_el_concepto_de",
@@ -8630,7 +8630,7 @@
         "contexto": null
       },
       {
-        "id": "r_060",
+        "id": "r_233",
         "origen_id": "c_037",
         "destino_id": "c_001",
         "tipo": "incluye",
@@ -8642,7 +8642,7 @@
         "contexto": null
       },
       {
-        "id": "r_061",
+        "id": "r_234",
         "origen_id": "c_037",
         "destino_id": "c_020",
         "tipo": "preceden_a",
@@ -8654,7 +8654,7 @@
         "contexto": null
       },
       {
-        "id": "r_062",
+        "id": "r_235",
         "origen_id": "c_028",
         "destino_id": "c_067",
         "tipo": "se_caracteriza_por",
@@ -8666,7 +8666,7 @@
         "contexto": null
       },
       {
-        "id": "r_063",
+        "id": "r_236",
         "origen_id": "c_076",
         "destino_id": "c_002",
         "tipo": "accede_a_mediante",
@@ -8678,7 +8678,7 @@
         "contexto": null
       },
       {
-        "id": "r_064",
+        "id": "r_237",
         "origen_id": "c_009",
         "destino_id": "c_079",
         "tipo": "ha_degenerado_en_la",
@@ -8690,7 +8690,7 @@
         "contexto": null
       },
       {
-        "id": "r_065",
+        "id": "r_238",
         "origen_id": "c_012",
         "destino_id": "c_054",
         "tipo": "caracteriza_al",
@@ -8702,7 +8702,7 @@
         "contexto": null
       },
       {
-        "id": "r_066",
+        "id": "r_239",
         "origen_id": "c_054",
         "destino_id": "c_025",
         "tipo": "determina_la_verdad_de",
@@ -8714,7 +8714,7 @@
         "contexto": null
       },
       {
-        "id": "r_067",
+        "id": "r_240",
         "origen_id": "c_046",
         "destino_id": "c_037",
         "tipo": "nos_viene_de",
@@ -8726,7 +8726,7 @@
         "contexto": null
       },
       {
-        "id": "r_068",
+        "id": "r_241",
         "origen_id": "c_001",
         "destino_id": "c_053",
         "tipo": "piensa_mediante",
@@ -8738,7 +8738,7 @@
         "contexto": null
       },
       {
-        "id": "r_069",
+        "id": "r_242",
         "origen_id": "c_053",
         "destino_id": "c_056",
         "tipo": "abre_la_pregunta_por",
@@ -8750,7 +8750,7 @@
         "contexto": null
       },
       {
-        "id": "r_070",
+        "id": "r_243",
         "origen_id": "c_055",
         "destino_id": "c_025",
         "tipo": "forma_gramatical_de",
@@ -8762,7 +8762,7 @@
         "contexto": null
       },
       {
-        "id": "r_071",
+        "id": "r_244",
         "origen_id": "c_055",
         "destino_id": "c_056",
         "tipo": "preserva_la_ambigüedad_de",
@@ -8774,7 +8774,7 @@
         "contexto": null
       },
       {
-        "id": "r_072",
+        "id": "r_245",
         "origen_id": "c_056",
         "destino_id": "c_009",
         "tipo": "es_nombrado_mediante",
@@ -8786,7 +8786,7 @@
         "contexto": "El ser se expresa fundamentalmente a través de la palabra"
       },
       {
-        "id": "r_073",
+        "id": "r_246",
         "origen_id": "c_056",
         "destino_id": "c_067",
         "tipo": "es_olvidado_mediante",
@@ -8798,7 +8798,7 @@
         "contexto": "La modernidad se caracteriza por el olvido del ser"
       },
       {
-        "id": "r_074",
+        "id": "r_247",
         "origen_id": "c_054",
         "destino_id": "c_009",
         "tipo": "se_distingue_por_poseer",
@@ -8810,7 +8810,7 @@
         "contexto": "La definición occidental del hombre"
       },
       {
-        "id": "r_075",
+        "id": "r_248",
         "origen_id": "c_029",
         "destino_id": "c_053",
         "tipo": "fundamenta",
@@ -8822,7 +8822,7 @@
         "contexto": "La traducción positiva de la expresión heraclítea revela la physis"
       },
       {
-        "id": "r_076",
+        "id": "r_249",
         "origen_id": "c_052",
         "destino_id": "c_053",
         "tipo": "es_negado_en",
@@ -8834,7 +8834,7 @@
         "contexto": "La estructura fundamental de la sentencia heraclítea"
       },
       {
-        "id": "r_077",
+        "id": "r_250",
         "origen_id": "c_001",
         "destino_id": "c_053",
         "tipo": "formula",
@@ -8846,7 +8846,7 @@
         "contexto": "La sentencia heraclítea como punto de partida del análisis"
       },
       {
-        "id": "r_078",
+        "id": "r_251",
         "origen_id": "c_037",
         "destino_id": "c_029",
         "tipo": "utilizan_como_palabra_fundamental",
@@ -8858,7 +8858,7 @@
         "contexto": "La centralidad de physis en el pensamiento griego primitivo"
       },
       {
-        "id": "r_079",
+        "id": "r_252",
         "origen_id": "c_018",
         "destino_id": "c_056",
         "tipo": "deja_incuestionado",
@@ -8870,7 +8870,7 @@
         "contexto": "La limitación fundamental de la metafísica occidental"
       },
       {
-        "id": "r_080",
+        "id": "r_253",
         "origen_id": "c_029",
         "destino_id": "c_052",
         "tipo": "copertenencia_esencial_que_incluye_paradójicamente",
@@ -8882,7 +8882,7 @@
         "contexto": null
       },
       {
-        "id": "r_081",
+        "id": "r_254",
         "origen_id": "c_029",
         "destino_id": "c_032",
         "tipo": "expresión_simultánea_de",
@@ -8894,7 +8894,7 @@
         "contexto": null
       },
       {
-        "id": "r_082",
+        "id": "r_255",
         "origen_id": "c_029",
         "destino_id": "c_081",
         "tipo": "identificación_originaria",
@@ -8906,7 +8906,7 @@
         "contexto": null
       },
       {
-        "id": "r_083",
+        "id": "r_256",
         "origen_id": "c_001",
         "destino_id": "c_029",
         "tipo": "piensa_esencialmente",
@@ -8918,7 +8918,7 @@
         "contexto": null
       },
       {
-        "id": "r_084",
+        "id": "r_257",
         "origen_id": "c_083",
         "destino_id": "c_091",
         "tipo": "se_diferencia_radicalmente_de",
@@ -8930,7 +8930,7 @@
         "contexto": null
       },
       {
-        "id": "r_085",
+        "id": "r_258",
         "origen_id": "c_091",
         "destino_id": "c_015",
         "tipo": "se_rige_por",
@@ -8942,7 +8942,7 @@
         "contexto": null
       },
       {
-        "id": "r_086",
+        "id": "r_259",
         "origen_id": "c_029",
         "destino_id": "c_014",
         "tipo": "se_encuentra_en_relación_esencial_con",
@@ -8954,7 +8954,7 @@
         "contexto": null
       },
       {
-        "id": "r_087",
+        "id": "r_260",
         "origen_id": "c_014",
         "destino_id": "c_052",
         "tipo": "es_sinónimo_de",
@@ -8966,7 +8966,7 @@
         "contexto": null
       },
       {
-        "id": "r_088",
+        "id": "r_261",
         "origen_id": "c_029",
         "destino_id": "c_101",
         "tipo": "se_relaciona_mediante",
@@ -8978,7 +8978,7 @@
         "contexto": null
       },
       {
-        "id": "r_089",
+        "id": "r_262",
         "origen_id": "c_101",
         "destino_id": "c_102",
         "tipo": "constituye_el_fundamento_de",
@@ -8990,7 +8990,7 @@
         "contexto": null
       },
       {
-        "id": "r_090",
+        "id": "r_263",
         "origen_id": "c_015",
         "destino_id": "c_103",
         "tipo": "no_es_fuente_de",
@@ -9002,7 +9002,7 @@
         "contexto": null
       },
       {
-        "id": "r_091",
+        "id": "r_264",
         "origen_id": "c_049",
         "destino_id": "c_038",
         "tipo": "reconoce_como_válida",
@@ -9014,7 +9014,7 @@
         "contexto": null
       },
       {
-        "id": "r_092",
+        "id": "r_265",
         "origen_id": "c_076",
         "destino_id": "c_091",
         "tipo": "se_diferencia_de",
@@ -9026,7 +9026,7 @@
         "contexto": null
       },
       {
-        "id": "r_093",
+        "id": "r_266",
         "origen_id": "c_042",
         "destino_id": "c_029",
         "tipo": "permite_acceso_a",
@@ -9038,7 +9038,7 @@
         "contexto": null
       },
       {
-        "id": "r_094",
+        "id": "r_267",
         "origen_id": "c_102",
         "destino_id": "c_038",
         "tipo": "es_ensamble_de",
@@ -9050,7 +9050,7 @@
         "contexto": null
       },
       {
-        "id": "r_095",
+        "id": "r_268",
         "origen_id": "c_104",
         "destino_id": "c_029",
         "tipo": "es_característica_esencial_de",
@@ -9062,7 +9062,7 @@
         "contexto": null
       },
       {
-        "id": "r_096",
+        "id": "r_269",
         "origen_id": "c_105",
         "destino_id": "c_104",
         "tipo": "ejemplifica",
@@ -9074,7 +9074,7 @@
         "contexto": null
       },
       {
-        "id": "r_097",
+        "id": "r_270",
         "origen_id": "c_016",
         "destino_id": "c_105",
         "tipo": "desesencializa",
@@ -9086,7 +9086,7 @@
         "contexto": null
       },
       {
-        "id": "r_098",
+        "id": "r_271",
         "origen_id": "c_079",
         "destino_id": "c_113",
         "tipo": "caracteriza_mediante",
@@ -9098,7 +9098,7 @@
         "contexto": null
       },
       {
-        "id": "r_099",
+        "id": "r_272",
         "origen_id": "c_112",
         "destino_id": "c_076",
         "tipo": "debe_transformarse_para_acceder_a",
@@ -9110,7 +9110,7 @@
         "contexto": null
       },
       {
-        "id": "r_100",
+        "id": "r_273",
         "origen_id": "c_108",
         "destino_id": "c_014",
         "tipo": "es_sentido_profundo_de",
@@ -9122,7 +9122,7 @@
         "contexto": null
       },
       {
-        "id": "r_101",
+        "id": "r_274",
         "origen_id": "c_029",
         "destino_id": "c_102",
         "tipo": "es",
@@ -9134,7 +9134,7 @@
         "contexto": "Definición fundamental de physis"
       },
       {
-        "id": "r_102",
+        "id": "r_275",
         "origen_id": "c_102",
         "destino_id": "c_107",
         "tipo": "ensambla_retrospectivamente",
@@ -9146,7 +9146,7 @@
         "contexto": "Estructura de la armonía"
       },
       {
-        "id": "r_103",
+        "id": "r_276",
         "origen_id": "c_102",
         "destino_id": "c_014",
         "tipo": "ensambla_retrospectivamente",
@@ -9158,7 +9158,7 @@
         "contexto": null
       },
       {
-        "id": "r_104",
+        "id": "r_277",
         "origen_id": "c_029",
         "destino_id": "c_005",
         "tipo": "es_nombrada_por",
@@ -9170,7 +9170,7 @@
         "contexto": "Equivalencia terminológica fundamental"
       },
       {
-        "id": "r_105",
+        "id": "r_278",
         "origen_id": "c_107",
         "destino_id": "c_014",
         "tipo": "brota_esencialmente_desde",
@@ -9182,7 +9182,7 @@
         "contexto": "Estructura fundamental de la physis"
       },
       {
-        "id": "r_106",
+        "id": "r_279",
         "origen_id": "c_005",
         "destino_id": "c_107",
         "tipo": "ensambla",
@@ -9194,7 +9194,7 @@
         "contexto": null
       },
       {
-        "id": "r_107",
+        "id": "r_280",
         "origen_id": "c_005",
         "destino_id": "c_014",
         "tipo": "ensambla_y_desensambla",
@@ -9206,7 +9206,7 @@
         "contexto": null
       },
       {
-        "id": "r_108",
+        "id": "r_281",
         "origen_id": "c_083",
         "destino_id": "c_029",
         "tipo": "acompaña",
@@ -9218,7 +9218,7 @@
         "contexto": null
       },
       {
-        "id": "r_109",
+        "id": "r_282",
         "origen_id": "c_091",
         "destino_id": "c_083",
         "tipo": "se_opone_a",
@@ -9230,7 +9230,7 @@
         "contexto": "Caracterización de sus diferencias"
       },
       {
-        "id": "r_110",
+        "id": "r_283",
         "origen_id": "c_091",
         "destino_id": "c_029",
         "tipo": "no_puede_pensar",
@@ -9242,7 +9242,7 @@
         "contexto": null
       },
       {
-        "id": "r_111",
+        "id": "r_284",
         "origen_id": "c_002",
         "destino_id": "c_091",
         "tipo": "es_inaccessible_a",
@@ -9254,7 +9254,7 @@
         "contexto": null
       },
       {
-        "id": "r_112",
+        "id": "r_285",
         "origen_id": "c_041",
         "destino_id": "c_102",
         "tipo": "manifiesta_visualmente",
@@ -9266,7 +9266,7 @@
         "contexto": null
       },
       {
-        "id": "r_113",
+        "id": "r_286",
         "origen_id": "c_117",
         "destino_id": "c_041",
         "tipo": "esencia_se_muestra_en",
@@ -9278,7 +9278,7 @@
         "contexto": null
       },
       {
-        "id": "r_114",
+        "id": "r_287",
         "origen_id": "c_117",
         "destino_id": "c_029",
         "tipo": "representa",
@@ -9290,7 +9290,7 @@
         "contexto": null
       },
       {
-        "id": "r_115",
+        "id": "r_288",
         "origen_id": "c_029",
         "destino_id": "c_122",
         "tipo": "esencia_de",
@@ -9302,7 +9302,7 @@
         "contexto": null
       },
       {
-        "id": "r_116",
+        "id": "r_289",
         "origen_id": "c_122",
         "destino_id": "c_005",
         "tipo": "se_manifiesta_como",
@@ -9314,7 +9314,7 @@
         "contexto": null
       },
       {
-        "id": "r_117",
+        "id": "r_290",
         "origen_id": "c_005",
         "destino_id": "c_134",
         "tipo": "confiere",
@@ -9326,7 +9326,7 @@
         "contexto": null
       },
       {
-        "id": "r_118",
+        "id": "r_291",
         "origen_id": "c_029",
         "destino_id": "c_032",
         "tipo": "funda_esencialmente",
@@ -9338,7 +9338,7 @@
         "contexto": null
       },
       {
-        "id": "r_119",
+        "id": "r_292",
         "origen_id": "c_029",
         "destino_id": "c_014",
         "tipo": "implica_necesariamente",
@@ -9350,7 +9350,7 @@
         "contexto": null
       },
       {
-        "id": "r_120",
+        "id": "r_293",
         "origen_id": "c_032",
         "destino_id": "c_014",
         "tipo": "se_funda_en",
@@ -9362,7 +9362,7 @@
         "contexto": null
       },
       {
-        "id": "r_121",
+        "id": "r_294",
         "origen_id": "c_122",
         "destino_id": "c_102",
         "tipo": "es",
@@ -9374,7 +9374,7 @@
         "contexto": null
       },
       {
-        "id": "r_122",
+        "id": "r_295",
         "origen_id": "c_001",
         "destino_id": "c_122",
         "tipo": "piensa",
@@ -9386,7 +9386,7 @@
         "contexto": null
       },
       {
-        "id": "r_123",
+        "id": "r_296",
         "origen_id": "c_015",
         "destino_id": "c_039",
         "tipo": "es_expresión_abreviada_de_episteme_que_concierne_a",
@@ -9398,7 +9398,7 @@
         "contexto": null
       },
       {
-        "id": "r_124",
+        "id": "r_297",
         "origen_id": "c_015",
         "destino_id": "c_156",
         "tipo": "presupone",
@@ -9410,7 +9410,7 @@
         "contexto": null
       },
       {
-        "id": "r_125",
+        "id": "r_298",
         "origen_id": "c_015",
         "destino_id": "c_160",
         "tipo": "pretende_enseñar",
@@ -9422,7 +9422,7 @@
         "contexto": null
       },
       {
-        "id": "r_126",
+        "id": "r_299",
         "origen_id": "c_015",
         "destino_id": "c_017",
         "tipo": "es_un_tipo_específico_de",
@@ -9434,7 +9434,7 @@
         "contexto": null
       },
       {
-        "id": "r_127",
+        "id": "r_300",
         "origen_id": "c_156",
         "destino_id": "c_158",
         "tipo": "se_relaciona_fundamentalmente_con",
@@ -9446,7 +9446,7 @@
         "contexto": null
       },
       {
-        "id": "r_128",
+        "id": "r_301",
         "origen_id": "c_156",
         "destino_id": "c_029",
         "tipo": "se_divide_en",
@@ -9458,7 +9458,7 @@
         "contexto": null
       },
       {
-        "id": "r_129",
+        "id": "r_302",
         "origen_id": "c_156",
         "destino_id": "c_164",
         "tipo": "se_divide_en",
@@ -9470,7 +9470,7 @@
         "contexto": null
       },
       {
-        "id": "r_130",
+        "id": "r_303",
         "origen_id": "c_156",
         "destino_id": "c_157",
         "tipo": "está_esencialmente_emparentada_con",
@@ -9482,7 +9482,7 @@
         "contexto": null
       },
       {
-        "id": "r_131",
+        "id": "r_304",
         "origen_id": "c_016",
         "destino_id": "c_159",
         "tipo": "es_esencia_de",
@@ -9494,7 +9494,7 @@
         "contexto": null
       },
       {
-        "id": "r_132",
+        "id": "r_305",
         "origen_id": "c_016",
         "destino_id": "c_012",
         "tipo": "se_funda_en",
@@ -9506,7 +9506,7 @@
         "contexto": null
       },
       {
-        "id": "r_133",
+        "id": "r_306",
         "origen_id": "c_157",
         "destino_id": "c_158",
         "tipo": "tiene_referencia_esencial_a",
@@ -9518,7 +9518,7 @@
         "contexto": null
       },
       {
-        "id": "r_134",
+        "id": "r_307",
         "origen_id": "c_177",
         "destino_id": "c_002",
         "tipo": "se_abre_hacia",
@@ -9530,7 +9530,7 @@
         "contexto": "Lo por-pensar solo viene al encuentro del pensar cuando este ha pensado profundamente"
       },
       {
-        "id": "r_135",
+        "id": "r_308",
         "origen_id": "c_177",
         "destino_id": "c_178",
         "tipo": "alcanza",
@@ -9542,7 +9542,7 @@
         "contexto": "La profundidad se abre únicamente cuando el pensar ha pensado purammente"
       },
       {
-        "id": "r_136",
+        "id": "r_309",
         "origen_id": "c_177",
         "destino_id": "c_017",
         "tipo": "se_inflexiona_mediante",
@@ -9554,7 +9554,7 @@
         "contexto": "La reflexión originaria es el viraje de retorno fundamental del pensar"
       },
       {
-        "id": "r_137",
+        "id": "r_310",
         "origen_id": "c_015",
         "destino_id": "c_207",
         "tipo": "ha_tomado_bajo_custodia",
@@ -9566,7 +9566,7 @@
         "contexto": "La lógica impide el despliegue esencial del Logos"
       },
       {
-        "id": "r_138",
+        "id": "r_311",
         "origen_id": "c_207",
         "destino_id": "c_208",
         "tipo": "reduce_a",
@@ -9578,7 +9578,7 @@
         "contexto": "La lógica comprende el Logos solo como razón"
       },
       {
-        "id": "r_139",
+        "id": "r_312",
         "origen_id": "c_015",
         "destino_id": "c_039",
         "tipo": "es_la_metafísica_de",
@@ -9590,7 +9590,7 @@
         "contexto": null
       },
       {
-        "id": "r_140",
+        "id": "r_313",
         "origen_id": "c_039",
         "destino_id": "c_180",
         "tipo": "se_concibe_como",
@@ -9602,7 +9602,7 @@
         "contexto": null
       },
       {
-        "id": "r_141",
+        "id": "r_314",
         "origen_id": "c_180",
         "destino_id": "c_210",
         "tipo": "anuncia_el_qué_de",
@@ -9614,7 +9614,7 @@
         "contexto": null
       },
       {
-        "id": "r_142",
+        "id": "r_315",
         "origen_id": "c_210",
         "destino_id": "c_018",
         "tipo": "funda_el_pensamiento",
@@ -9626,7 +9626,7 @@
         "contexto": null
       },
       {
-        "id": "r_143",
+        "id": "r_316",
         "origen_id": "c_403",
         "destino_id": "c_056",
         "tipo": "olvida",
@@ -9638,7 +9638,7 @@
         "contexto": "caracterzación de la hybris"
       },
       {
-        "id": "r_144",
+        "id": "r_317",
         "origen_id": "c_136",
         "destino_id": "c_032",
         "tipo": "se_refiere_a",
@@ -9650,7 +9650,7 @@
         "contexto": "conexión fundamental entre decir y verdad"
       },
       {
-        "id": "r_145",
+        "id": "r_318",
         "origen_id": "c_032",
         "destino_id": "c_158",
         "tipo": "es_idéntico_a",
@@ -9662,7 +9662,7 @@
         "contexto": "reinterpretación fundamental de aletheia"
       },
       {
-        "id": "r_146",
+        "id": "r_319",
         "origen_id": "c_405",
         "destino_id": "c_026",
         "tipo": "cuidado_de",
@@ -9674,7 +9674,7 @@
         "contexto": "definición de la filosofía originaria"
       },
       {
-        "id": "r_147",
+        "id": "r_320",
         "origen_id": "c_406",
         "destino_id": "c_029",
         "tipo": "se_atiene_a",
@@ -9686,7 +9686,7 @@
         "contexto": "relación entre hacer humano y naturaleza"
       },
       {
-        "id": "r_148",
+        "id": "r_321",
         "origen_id": "c_407",
         "destino_id": "c_406",
         "tipo": "determina",
@@ -9698,7 +9698,7 @@
         "contexto": "esencia del hacer conforme al ser"
       },
       {
-        "id": "r_149",
+        "id": "r_322",
         "origen_id": "c_014",
         "destino_id": "c_158",
         "tipo": "funda",
@@ -9710,7 +9710,7 @@
         "contexto": "secreto íntimo del pensar griego"
       },
       {
-        "id": "r_150",
+        "id": "r_323",
         "origen_id": "c_029",
         "destino_id": "c_056",
         "tipo": "es_nombrada_como",
@@ -9722,7 +9722,7 @@
         "contexto": "esencia del ser en el pensamiento griego"
       },
       {
-        "id": "r_151",
+        "id": "r_324",
         "origen_id": "c_136",
         "destino_id": "c_259",
         "tipo": "realiza",
@@ -9734,7 +9734,7 @@
         "contexto": "esencia activa del logos"
       },
       {
-        "id": "r_152",
+        "id": "r_325",
         "origen_id": "c_026",
         "destino_id": "c_032",
         "tipo": "consiste_en",
@@ -9746,7 +9746,7 @@
         "contexto": "naturaleza del saber originario"
       },
       {
-        "id": "r_153",
+        "id": "r_326",
         "origen_id": "c_039",
         "destino_id": "c_409",
         "tipo": "es_idéntico_a",
@@ -9758,7 +9758,7 @@
         "contexto": "unidad esencial del ser"
       },
       {
-        "id": "r_154",
+        "id": "r_327",
         "origen_id": "c_273",
         "destino_id": "c_039",
         "tipo": "participa_en",
@@ -9770,7 +9770,7 @@
         "contexto": "esencia del alma humana"
       },
       {
-        "id": "r_155",
+        "id": "r_328",
         "origen_id": "c_410",
         "destino_id": "c_039",
         "tipo": "dirigida_a",
@@ -9782,7 +9782,7 @@
         "contexto": "actitud fundamental del pensar"
       },
       {
-        "id": "r_156",
+        "id": "r_329",
         "origen_id": "c_412",
         "destino_id": "c_136",
         "tipo": "posee_el_modo_de",
@@ -9794,7 +9794,7 @@
         "contexto": "definición originaria del hombre"
       },
       {
-        "id": "r_157",
+        "id": "r_330",
         "origen_id": "c_001",
         "destino_id": "c_039",
         "tipo": "se_vuelven_contra",
@@ -9806,7 +9806,7 @@
         "contexto": "Explicación de cómo Heráclito entiende la relación entre los hombres y el Logos"
       },
       {
-        "id": "r_158",
+        "id": "r_331",
         "origen_id": "c_054",
         "destino_id": "c_453",
         "tipo": "actúan_mediante",
@@ -9818,7 +9818,7 @@
         "contexto": "Caracterización de los modos de desviación humana del Logos"
       },
       {
-        "id": "r_159",
+        "id": "r_332",
         "origen_id": "c_278",
         "destino_id": "c_039",
         "tipo": "expresa",
@@ -9830,7 +9830,7 @@
         "contexto": "Exposición de lo que significa el Logos para Heráclito"
       },
       {
-        "id": "r_160",
+        "id": "r_333",
         "origen_id": "c_456",
         "destino_id": "c_001",
         "tipo": "interpreta_el_pensar_de",
@@ -9842,7 +9842,7 @@
         "contexto": "Presentación de los cursos de Heidegger sobre Heráclito"
       },
       {
-        "id": "r_161",
+        "id": "r_334",
         "origen_id": "c_456",
         "destino_id": "c_454",
         "tipo": "analiza_los",
@@ -9854,7 +9854,7 @@
         "contexto": "Metodología hermenéutica de Heidegger"
       },
       {
-        "id": "r_162",
+        "id": "r_335",
         "origen_id": "c_047",
         "destino_id": "c_001",
         "tipo": "es_característica_de",
@@ -9866,7 +9866,7 @@
         "contexto": "Discusión sobre la interpretación del sobrenombre de Heráclito"
       },
       {
-        "id": "r_163",
+        "id": "r_336",
         "origen_id": "c_050",
         "destino_id": "c_047",
         "tipo": "interpreta_como",
@@ -9878,7 +9878,7 @@
         "contexto": "Historia de las interpretaciones sobre la oscuridad de Heráclito"
       },
       {
-        "id": "r_164",
+        "id": "r_337",
         "origen_id": "c_027",
         "destino_id": "c_050",
         "tipo": "rechaza_la_interpretación_de",
@@ -9890,7 +9890,7 @@
         "contexto": "Historia de las interpretaciones de Heráclito"
       },
       {
-        "id": "r_165",
+        "id": "r_338",
         "origen_id": "c_027",
         "destino_id": "c_047",
         "tipo": "fundamenta_en",
@@ -9902,7 +9902,7 @@
         "contexto": "Interpretación hegeliana de Heráclito"
       },
       {
-        "id": "r_166",
+        "id": "r_339",
         "origen_id": "c_458",
         "destino_id": "c_037",
         "tipo": "caracteriza_el_lenguaje_de",

@@ -121,6 +121,112 @@
       "confianza": 1.0,
       "timestamp_primera_aparicion": null,
       "cita_directa": "puesto que para los que le escuchan, es el intérprete del pensamiento de aquél"
+    },
+    {
+      "id": "c_010",
+      "label": "Arte / Ciencia (Tékhne)",
+      "tipo": "primitivo",
+      "descripcion": "Un cuerpo de conocimiento sistemático y racional sobre un dominio completo (ej. medicina, pilotaje), que permite a su poseedor juzgar con pericia tanto lo bueno como lo malo dentro de ese dominio.",
+      "sinonimos_candidatos": [
+        "habilidad",
+        "ciencia",
+        "conocimiento"
+      ],
+      "menciones": 40,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Es evidente, que tú no eres capaz de hablar sobre Homero, ni por el arte, ni por la ciencia. Porque si pudieses hablar por el arte, estarías en estado de hacer lo mismo respecto todos los demás poetas."
+    },
+    {
+      "id": "c_011",
+      "label": "Homero",
+      "tipo": "primitivo",
+      "descripcion": "El poeta por excelencia en el diálogo, considerado 'el más grande y más divino de todos'. La habilidad de Ion se limita exclusivamente a su obra, lo que sirve como prueba de que su talento no es un arte.",
+      "sinonimos_candidatos": [],
+      "menciones": 35,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "me lisonjeo de explicar a Homero mejor que nadie."
+    },
+    {
+      "id": "c_012",
+      "label": "Conocimiento Especializado",
+      "tipo": "derivado",
+      "descripcion": "El saber específico y técnico sobre un tema particular (conducir carros, medicina, pesca), que sólo posee el practicante del arte correspondiente y que le permite juzgar la corrección de las descripciones poéticas sobre dicho tema.",
+      "sinonimos_candidatos": [
+        "conocimiento técnico"
+      ],
+      "menciones": 15,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Por consiguiente, el que no posee un arte, no está en estado de juzgar bien de lo que se dice o se hace en virtud de este arte."
+    },
+    {
+      "id": "c_013",
+      "label": "Crítica / Juicio",
+      "tipo": "metalenguaje",
+      "descripcion": "La capacidad de discernir y evaluar correctamente la calidad (lo bueno y lo malo) en un campo determinado. Sócrates argumenta que esta capacidad es inseparable del arte y se aplica a todo el dominio del arte, no solo a una parte.",
+      "sinonimos_candidatos": [
+        "discernimiento",
+        "juzgar"
+      ],
+      "menciones": 20,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "cuando se abraza un arte en toda su extensión, una misma crítica sirve para juzgar de todas las demás artes"
+    },
+    {
+      "id": "c_014",
+      "label": "Virtud Divina",
+      "tipo": "derivado",
+      "descripcion": "El poder o fuerza específica que emana de la divinidad y se transmite a través de la cadena de inspirados. Se la compara con el poder de una piedra magnética.",
+      "sinonimos_candidatos": [
+        "poder divino"
+      ],
+      "menciones": 5,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "no es en ti un efecto del arte, como decía antes, sino que es no sé qué virtud divina que te transporta, virtud semejante a la piedra que Eurípides ha llamado magnética"
+    },
+    {
+      "id": "c_015",
+      "label": "Cadena de Inspirados",
+      "tipo": "derivado",
+      "descripcion": "La metáfora central del diálogo, que describe la transmisión de la inspiración divina desde la Musa, pasando por el poeta y el rapsodista, hasta llegar al espectador, como una cadena de anillos de hierro suspendidos de un imán.",
+      "sinonimos_candidatos": [
+        "cadena de trozos de hierro y de anillos"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "se ve algunas veces una larga cadena de trozos de hierro y de anillos suspendidos los unos de los otros, y todos estos anillos sacan su virtud de esta piedra. En igual forma, la musa inspira a los poetas"
+    },
+    {
+      "id": "c_016",
+      "label": "Espectador",
+      "tipo": "derivado",
+      "descripcion": "El público que asiste a la recitación del rapsodista. Es el último eslabón de la cadena de inspiración, que experimenta las mismas emociones (llanto, terror) que el rapsodista sin estar directamente en la escena.",
+      "sinonimos_candidatos": [
+        "oyentes"
+      ],
+      "menciones": 5,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "¿Ves ahora cómo el espectador es el último de estos anillos, que como yo decía, reciben los unos de los otros la virtud que les comunica la piedra de Heráclea?"
+    },
+    {
+      "id": "c_017",
+      "label": "Divinidad / Musa",
+      "tipo": "primitivo",
+      "descripcion": "La fuente original y última de la creación poética. Es la entidad que inicia la cadena de inspiración, privando de sentido a sus elegidos para hablar a través de ellos.",
+      "sinonimos_candidatos": [
+        "Dios",
+        "los dioses"
+      ],
+      "menciones": 15,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El objeto que Dios se propone al privarles del sentido, y servirse de ellos como ministros... es que, al oírles nosotros, tengamos entendido que no son ellos los que dicen cosas tan maravillosas... sino que son los órganos de la divinidad que nos habla por su boca."
     }
   ],
   "relaciones": [
@@ -255,6 +361,198 @@
       "frase_completa": "me parece que los poetas, por un favor divino, son para con nosotros los intérpretes de los dioses.",
       "matiz": "Define la función del poeta como mediador entre lo divino y lo humano.",
       "contexto": "Ion acepta la explicación de Sócrates sobre el origen divino de la poesía."
+    },
+    {
+      "id": "r_018",
+      "origen_id": "c_001",
+      "destino_id": "c_010",
+      "tipo": "no_es_un_efecto_de",
+      "etiqueta": "no es en ti un efecto del arte",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Ese talento, que tienes, de hablar bien sobre Homero, no es en ti un efecto del arte, como decía antes, sino que es no sé qué virtud divina que te transporta.",
+      "matiz": "Sócrates niega que la habilidad del rapsodista sea un arte porque carece de universalidad.",
+      "contexto": null
+    },
+    {
+      "id": "r_019",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "es_un_efecto_de",
+      "etiqueta": "sino por una inspiración y una posesión divinas",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Porque no es en virtud del arte, ni de la ciencia, el hablar tú de Homero como lo haces, sino por una inspiración y una posesión divinas.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_020",
+      "origen_id": "c_010",
+      "destino_id": "c_013",
+      "tipo": "implica",
+      "etiqueta": "una misma crítica sirve para juzgar",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "¿No es cierto, que cuando se abraza un arte en toda su extensión, una misma crítica sirve para juzgar de todas las demás artes?",
+      "matiz": "Quien posee un arte puede juzgar todas las obras de ese arte, no solo las de un autor.",
+      "contexto": null
+    },
+    {
+      "id": "r_021",
+      "origen_id": "c_001",
+      "destino_id": "c_013",
+      "tipo": "carece_de",
+      "etiqueta": "no puedo decir nada que valga la pena",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Pero entonces, Sócrates, ¿me dirás por qué, cuando se me habla de cualquiera otro poeta, no puedo fijar la atención, ni puedo decir nada que valga la pena...?",
+      "matiz": "La incapacidad de Ion para juzgar a otros poetas es la prueba de que no posee un arte.",
+      "contexto": null
+    },
+    {
+      "id": "r_022",
+      "origen_id": "c_001",
+      "destino_id": "c_004",
+      "tipo": "es_intérprete_de",
+      "etiqueta": "intérpretes de los poetas",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Y vosotros los rapsodistas ¿no sois los intérpretes de los poetas?",
+      "matiz": "Esto los convierte en 'intérpretes de intérpretes'.",
+      "contexto": null
+    },
+    {
+      "id": "r_023",
+      "origen_id": "c_004",
+      "destino_id": "c_017",
+      "tipo": "es_intérprete_de",
+      "etiqueta": "intérpretes de los dioses",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "y me parece que los poetas, por un favor divino, son para con nosotros los intérpretes de los dioses.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_024",
+      "origen_id": "c_014",
+      "destino_id": "c_015",
+      "tipo": "crea_la",
+      "etiqueta": "se ve algunas veces una larga cadena",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Esta piedra, no sólo atrae los anillos de hierro, sino que les comunica la virtud de producir el mismo efecto y de atraer otros anillos, de suerte que se ve algunas veces una larga cadena de trozos de hierro y de anillos suspendidos los unos de los otros, y todos estos anillos sacan su virtud de esta piedra.",
+      "matiz": "La virtud divina es la fuerza que une los eslabones de la cadena.",
+      "contexto": null
+    },
+    {
+      "id": "r_025",
+      "origen_id": "c_015",
+      "destino_id": "c_004",
+      "tipo": "incluye_como_primer_eslabón_al",
+      "etiqueta": "el primer anillo es el poeta mismo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El rapsodista, tal como tú, el actor, es el anillo intermedio, y el primer anillo es el poeta mismo.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_026",
+      "origen_id": "c_015",
+      "destino_id": "c_001",
+      "tipo": "incluye_como_eslabón_intermedio_al",
+      "etiqueta": "es el anillo intermedio",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El rapsodista, tal como tú, el actor, es el anillo intermedio, y el primer anillo es el poeta mismo.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_027",
+      "origen_id": "c_015",
+      "destino_id": "c_016",
+      "tipo": "incluye_como_último_eslabón_al",
+      "etiqueta": "el espectador es el último de estos anillos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "¿Ves ahora cómo el espectador es el último de estos anillos, que como yo decía, reciben los unos de los otros la virtud que les comunica la piedra de Heráclea?",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_001",
+      "destino_id": "c_012",
+      "tipo": "carece_de",
+      "etiqueta": "no está en estado de juzgar bien",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Con relación a los versos que acabas de citar, ¿juzgarás tú mejor que el cochero, si Homero habla bien o mal? / El cochero juzgará mejor. / Porque tú eres rapsodista y no eres cochero.",
+      "matiz": "El rapsodista no posee el conocimiento técnico de los temas sobre los que recita, como la conducción de carros o la medicina.",
+      "contexto": null
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_012",
+      "destino_id": "c_010",
+      "tipo": "es_el_objeto_de_un",
+      "etiqueta": "la ciencia de un objeto",
+      "bidireccional": true,
+      "confianza": 0.95,
+      "frase_completa": "En cuanto puede conjeturarse, digo, que una es diferente de otra, porque esta es la ciencia de un objeto y aquella de otro.",
+      "matiz": "Cada arte se define por su objeto de conocimiento específico.",
+      "contexto": null
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_001",
+      "destino_id": "c_011",
+      "tipo": "se_especializa_exclusivamente_en",
+      "etiqueta": "yo me he limitado a Homero",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "De ninguna manera; yo me he limitado a Homero, y me parece que basta.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_015",
+      "destino_id": "c_017",
+      "tipo": "se_origina_en_la",
+      "etiqueta": "van directamente a la musa",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por medio de estos anillos el Dios atrae el alma de los hombres, por donde quiere, haciendo pasar su virtud de los unos a los otros, y lo mismo que sucede con la piedra imán, está pendiente de él una larga cadena de coristas... ligados por los lados a los anillos que van directamente a la musa.",
+      "matiz": "La Musa o la Divinidad es el imán original que sostiene toda la cadena.",
+      "contexto": null
+    },
+    {
+      "id": "r_016",
+      "origen_id": "c_003",
+      "destino_id": "c_014",
+      "tipo": "se_describe_como_una",
+      "etiqueta": "virtud divina que te transporta",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Ese talento, que tienes, de hablar bien sobre Homero, no es en ti un efecto del arte, como decía antes, sino que es no sé qué virtud divina que te transporta...",
+      "matiz": "La 'virtud divina' es la explicación positiva que Sócrates ofrece para el fenómeno de la inspiración.",
+      "contexto": null
+    },
+    {
+      "id": "r_017",
+      "origen_id": "c_001",
+      "destino_id": "c_016",
+      "tipo": "transmite_emociones_a",
+      "etiqueta": "trasmitís los mismos sentimientos",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "¿Sabes tú, si trasmitís los mismos sentimientos al alma de vuestros espectadores?",
+      "matiz": "El rapsodista actúa como un conductor de las emociones del poema hacia el público.",
+      "contexto": null
     }
   ],
   "bucles": [],
