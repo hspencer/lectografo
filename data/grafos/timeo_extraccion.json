@@ -1,0 +1,1524 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "Ser (lo que es siempre)",
+      "tipo": "primitivo",
+      "descripcion": "La realidad inmutable, eterna, que no deviene y es comprensible únicamente por la inteligencia mediante el razonamiento.",
+      "sinonimos_candidatos": [
+        "lo que es siempre y no deviene",
+        "ser inmutable",
+        "modelo eterno"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "¿Qué es lo que es siempre y no deviene...?"
+    },
+    {
+      "id": "c_002",
+      "label": "Devenir (lo que deviene continuamente)",
+      "tipo": "primitivo",
+      "descripcion": "La realidad sensible, que nace y fenece continuamente sin ser nunca realmente. Es visible, tangible y captable por la opinión unida a la percepción.",
+      "sinonimos_candidatos": [
+        "lo que deviene continuamente, pero nunca es",
+        "lo generado",
+        "lo sensible"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "...y qué, lo que deviene continuamente, pero nunca es?"
+    },
+    {
+      "id": "c_003",
+      "label": "Artífice (Demiurgo)",
+      "tipo": "primitivo",
+      "descripcion": "El hacedor, creador y padre del universo. Es una causa buena que ordena la materia caótica preexistente fijando su mirada en un modelo eterno.",
+      "sinonimos_candidatos": [
+        "hacedor",
+        "padre de este universo",
+        "creador",
+        "dios"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Cuando el artífice de algo, al construir su forma y cualidad, fija constantemente su mirada en el ser inmutable..."
+    },
+    {
+      "id": "c_004",
+      "label": "Modelo (paradigma)",
+      "tipo": "primitivo",
+      "descripcion": "El patrón eterno e inmutable que el Artífice contempla para crear el universo. Es el ser inteligible perfecto que contiene todas las formas de vida.",
+      "sinonimos_candidatos": [
+        "ser inmutable",
+        "modelo eterno",
+        "el que es inmutable y permanente",
+        "ser vivo perfecto"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "...qué modelo contempló su artífice al hacerlo, el que es inmutable y permanente o el generado."
+    },
+    {
+      "id": "c_005",
+      "label": "Universo (Cosmos)",
+      "tipo": "primitivo",
+      "descripcion": "El mundo generado, visible y tangible. Es un ser viviente único, dotado de alma y razón, creado por el Artífice como una imagen del modelo eterno.",
+      "sinonimos_candidatos": [
+        "mundo",
+        "cosmos",
+        "viviente provisto de alma y razón"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Acerca del universo —o cosmos o si en alguna ocasión se le hubiera dado otro nombre más apropiado, usémoslo— debemos indagar primero..."
+    },
+    {
+      "id": "c_006",
+      "label": "Bien (lo bueno)",
+      "tipo": "primitivo",
+      "descripcion": "La naturaleza esencial del Artífice, carente de toda mezquindad, que actúa como causa y principio fundamental para la creación del universo, con el deseo de que todo sea lo más semejante posible a él.",
+      "sinonimos_candidatos": [
+        "bueno",
+        "óptimo"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Es bueno y el bueno nunca anida ninguna mezquindad acerca de nada. Al carecer de ésta, quería que todo llegara a ser lo más semejante posible a él mismo."
+    },
+    {
+      "id": "c_007",
+      "label": "Alma (Psique)",
+      "tipo": "primitivo",
+      "descripcion": "Principio creado por el Artífice, anterior y superior al cuerpo, que actúa como su dueña y gobernante. En ella se inserta la razón y se extiende por todo el universo.",
+      "sinonimos_candidatos": [],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El demiurgo hizo al alma primera en origen y en virtud y más antigua que el cuerpo. La creó dueña y gobernante del gobernado..."
+    },
+    {
+      "id": "c_008",
+      "label": "Cuerpo (Soma) del Universo",
+      "tipo": "primitivo",
+      "descripcion": "La dimensión física, visible y tangible del cosmos, construida por el Artífice a partir de los cuatro elementos y gobernada por el Alma.",
+      "sinonimos_candidatos": [
+        "cuerpo de este mundo"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Ciertamente, lo generado debe ser corpóreo, visible y tangible..."
+    },
+    {
+      "id": "c_009",
+      "label": "Razón (Nous)",
+      "tipo": "primitivo",
+      "descripcion": "La inteligencia o intelecto que el Artífice coloca en el Alma para que la obra de la creación sea la más bella y mejor por naturaleza.",
+      "sinonimos_candidatos": [
+        "inteligencia",
+        "intelecto"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "...es imposible que ésta se genere en algo sin alma. A causa de este razonamiento, al ensamblar el mundo, colocó la razón en el alma y el alma en el cuerpo..."
+    },
+    {
+      "id": "c_010",
+      "label": "Desorden (Caos pre-cósmico)",
+      "tipo": "primitivo",
+      "descripcion": "El estado inicial de lo visible, caracterizado por un movimiento caótico y desordenado, antes de la intervención ordenadora del Artífice.",
+      "sinonimos_candidatos": [
+        "movimiento caótico y desordenado"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "...tomó todo cuanto es visible, que se movía sin reposo de manera caótica y desordenada, y lo condujo del desorden al orden..."
+    },
+    {
+      "id": "c_011",
+      "label": "Orden (Kosmos)",
+      "tipo": "primitivo",
+      "descripcion": "La disposición estructurada y armoniosa que el Artífice impone sobre la materia caótica, considerada en todo sentido mejor que el desorden.",
+      "sinonimos_candidatos": [
+        "organización política"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "...y lo condujo del desorden al orden, porque pensó que éste es en todo sentido mejor que aquél."
+    },
+    {
+      "id": "c_012",
+      "label": "Imagen (eikon)",
+      "tipo": "primitivo",
+      "descripcion": "La condición del universo generado, que es una copia o semejanza de un modelo eterno y perfecto. Su realidad es verosímil, no absolutamente verdadera.",
+      "sinonimos_candidatos": [
+        "copia",
+        "semejanza"
+      ],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Si esto es así, es de total necesidad que este mundo sea una imagen de algo."
+    },
+    {
+      "id": "c_013",
+      "label": "Tiempo (Chronos)",
+      "tipo": "primitivo",
+      "descripcion": "Una 'imagen móvil de la eternidad' creada por el Artífice junto con el universo. Marcha según el número y se manifiesta en los ciclos de días, noches, meses y años, medidos por los movimientos de los cuerpos celestes.",
+      "sinonimos_candidatos": [
+        "magnitudes temporales",
+        "número perfecto de tiempo"
+      ],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "hizo de la eternidad que permanece siempre en un punto una imagen eterna que marchaba según el número, eso que llamamos tiempo."
+    },
+    {
+      "id": "c_014",
+      "label": "Eternidad (Aion)",
+      "tipo": "primitivo",
+      "descripcion": "La naturaleza atemporal e inmutable del Modelo inteligible, que 'permanece siempre en un punto'. El tiempo es su imitación en el mundo sensible.",
+      "sinonimos_candidatos": [
+        "naturaleza sempiterna"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la naturaleza del mundo ideal es sempiterna y esta cualidad no se le puede otorgar completamente a lo generado, procuró realizar una cierta imagen móvil de la eternidad"
+    },
+    {
+      "id": "c_015",
+      "label": "Necesidad (Ananké)",
+      "tipo": "primitivo",
+      "descripcion": "Un principio fundamental del cosmos junto a la Inteligencia, descrita como la 'causa errante'. Representa las condiciones materiales y desordenadas que la Razón debe 'persuadir' para generar un cosmos ordenado.",
+      "sinonimos_candidatos": [
+        "causa errante"
+      ],
+      "menciones": 4,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "debemos adjuntarle también lo que es producto de la necesidad. El universo nació, efectivamente, por la combinación de necesidad e inteligencia."
+    },
+    {
+      "id": "c_016",
+      "label": "Receptáculo (Hypodoche / Chora)",
+      "tipo": "primitivo",
+      "descripcion": "Un 'tercer género' de realidad, además del Modelo y la Imagen. Es un sustrato amorfo, invisible y eterno, como una 'nodriza' o 'espacio', que recibe todas las formas del devenir sin tener forma propia.",
+      "sinonimos_candidatos": [
+        "nodriza",
+        "espacio",
+        "madre"
+      ],
+      "menciones": 6,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la de ser un receptáculo de toda la generación, como si fuera su nodriza."
+    },
+    {
+      "id": "c_017",
+      "label": "Dioses menores (dioses generados)",
+      "tipo": "primitivo",
+      "descripcion": "Divinidades creadas por el Artífice principal (como los astros), a quienes se les encarga la tarea de crear los cuerpos mortales de los demás seres vivos, imitando el poder creador de su progenitor.",
+      "sinonimos_candidatos": [
+        "dioses hijos de dioses",
+        "dioses jóvenes"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "«Dioses hijos de dioses, las obras de las que soy artesano y padre, por haberlas yo generado, no se destruyen si yo no lo quiero... aplicaos a la creación de los seres vivos de acuerdo con la naturaleza e imitad mi poder en vuestra generación.»"
+    },
+    {
+      "id": "c_018",
+      "label": "Elementos (Stoicheia)",
+      "tipo": "primitivo",
+      "descripcion": "Los cuatro cuerpos primarios (fuego, agua, tierra y aire) a los que el dios dio forma y número al ordenar el universo. Originalmente existían como 'huellas' en un estado desproporcionado.",
+      "sinonimos_candidatos": [
+        "cuatro elementos",
+        "cuerpos"
+      ],
+      "menciones": 15,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "primero dio forma y número al fuego, agua, tierra y aire, de los que, si bien había algunas huellas, se encontraban en el estado en que probablemente se halle todo cuando dios está ausente."
+    },
+    {
+      "id": "c_019",
+      "label": "Triángulos (elementales)",
+      "tipo": "primitivo",
+      "descripcion": "Las figuras planas fundamentales a partir de las cuales se componen todos los cuerpos sólidos de los elementos. Se distinguen dos tipos principales: el isósceles (para la tierra) y un tipo específico de escaleno (para fuego, aire y agua).",
+      "sinonimos_candidatos": [],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Todos los triángulos se desarrollan a partir de dos, cada uno con un ángulo recto y los otros agudos."
+    },
+    {
+      "id": "c_020",
+      "label": "Formas geométricas (Sólidos platónicos)",
+      "tipo": "primitivo",
+      "descripcion": "Las figuras sólidas tridimensionales que constituyen la estructura de cada uno de los cuatro elementos, compuestas a partir de los triángulos elementales. Son la pirámide (fuego), el octaedro (aire), el icosaedro (agua) y el cubo (tierra).",
+      "sinonimos_candidatos": [
+        "cuerpos más perfectos",
+        "figura sólida"
+      ],
+      "menciones": 8,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Ciertamente, debemos explicar cuáles serían los cuatro cuerpos más perfectos, que, aunque disímiles entre sí, podrían nacer unos de otros cuando se desintegran."
+    },
+    {
+      "id": "c_021",
+      "label": "Movimiento (Kinesis)",
+      "tipo": "primitivo",
+      "descripcion": "Fenómeno perpetuo en el universo, causado por la falta de equilibrio y la desigualdad. El movimiento del receptáculo agita los elementos, y la transformación de los elementos entre sí genera cambios de lugar.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el movimiento nunca existirá donde haya un estado de equilibrio."
+    },
+    {
+      "id": "c_022",
+      "label": "Desequilibrio",
+      "tipo": "primitivo",
+      "descripcion": "La causa fundamental del movimiento. Se origina por la naturaleza desigual de las fuerzas dentro del receptáculo y se preserva continuamente, garantizando el movimiento perpetuo de los cuerpos.",
+      "sinonimos_candidatos": [
+        "desigualdad"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "hemos de identificar el descanso con el equilibrio y el movimiento con el desequilibrio. La causa es, a su vez, la desigualdad..."
+    },
+    {
+      "id": "c_023",
+      "label": "Discurso probable (Eikos logos)",
+      "tipo": "primitivo",
+      "descripcion": "El método epistemológico utilizado para describir el origen y la naturaleza del universo sensible. Se reconoce que no es un conocimiento absoluto (propio de dios), sino una explicación verosímil y coherente.",
+      "sinonimos_candidatos": [
+        "razonamiento probable",
+        "mitos probables"
+      ],
+      "menciones": 6,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "En nuestra marcha según el discurso probable acompañado de necesidad, suponemos que éste es el principio del fuego y de los otros cuerpos."
+    },
+    {
+      "id": "c_024",
+      "label": "Cualidades sensibles (Pathemata)",
+      "tipo": "primitivo",
+      "descripcion": "Las afecciones o percepciones que experimenta el cuerpo, como calor, frío, dureza, placer y dolor. Se explican como el resultado de la interacción de las formas geométricas de los elementos con el cuerpo del perceptor.",
+      "sinonimos_candidatos": [
+        "afecciones"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Ya están casi totalmente expuestas las especies en su variedad de figuras, rasgos comunes y cambios de unas en otras, pero todavía he de intentar aclarar las causas que dan lugar a sus cualidades."
+    },
+    {
+      "id": "c_025",
+      "label": "Dolor (Algos)",
+      "tipo": "primitivo",
+      "descripcion": "Una cualidad sensible que se produce cuando un proceso ocurre de manera súbita, violenta y contra la naturaleza del cuerpo.",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Doloroso es el proceso que, de manera súbita, se produce en nosotros con violencia y contra la naturaleza."
+    },
+    {
+      "id": "c_026",
+      "label": "Placer (Hedone)",
+      "tipo": "primitivo",
+      "descripcion": "Una cualidad sensible que se produce cuando un proceso nos hace retornar de forma repentina a nuestro estado natural.",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el que nos hace retornar repentinamente a nuestra situación natural es placentero."
+    },
+    {
+      "id": "c_027",
+      "label": "Quinta composición (Dodecaedro)",
+      "tipo": "primitivo",
+      "descripcion": "Una quinta forma geométrica, además de las cuatro correspondientes a los elementos, que el dios utilizó para la totalidad del universo, 'cuando lo pintó'.",
+      "sinonimos_candidatos": [],
+      "menciones": 1,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Puesto que todavía había una quinta composición, el dios la utilizó para el universo cuando lo pintó."
+    },
+    {
+      "id": "c_028",
+      "label": "Causa divina",
+      "tipo": "primitivo",
+      "descripcion": "El segundo tipo de causa, asociada al propósito del Artífice, al Bien y a la Razón. Debe ser buscada por encima de la causa necesaria para alcanzar la felicidad y comprender el orden del universo.",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "con el fin de alcanzar la felicidad hay que buscar lo divino en todas partes, en la medida en que nos lo permita nuestra naturaleza."
+    },
+    {
+      "id": "c_029",
+      "label": "Alma mortal",
+      "tipo": "primitivo",
+      "descripcion": "Una especie de alma inferior a la divina, creada por los dioses menores y alojada en el tronco. Es la sede de pasiones necesarias e irracionales como el placer, el dolor, el temor y el apetito.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "anidaron otra especie de alma, la mortal, que tiene en sí procesos terribles y necesarios"
+    },
+    {
+      "id": "c_030",
+      "label": "Parte belicosa del alma (Thymoeides)",
+      "tipo": "primitivo",
+      "descripcion": "La parte del alma mortal asociada a la valentía, el coraje y la ira (thymos), situada en el tórax, cerca de la cabeza, para que pueda escuchar y aliarse con la razón contra los apetitos.",
+      "sinonimos_candidatos": [
+        "parte volitiva",
+        "coraje",
+        "furia"
+      ],
+      "menciones": 4,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Implantaron la parte belicosa del alma que participa de la valentía y el coraje más cerca de la cabeza, entre el diafragma y el cuello, para que escuche a la razón"
+    },
+    {
+      "id": "c_031",
+      "label": "Parte apetitiva del alma (Epithymetikon)",
+      "tipo": "primitivo",
+      "descripcion": "La parte del alma mortal asociada a los apetitos de comida, bebida y otras necesidades corporales. Está situada en el abdomen, lejos de la razón para no perturbarla, y es comparada con una 'fiera salvaje'.",
+      "sinonimos_candidatos": [
+        "apetito",
+        "alma apetitiva"
+      ],
+      "menciones": 5,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "hicieron habitar a la parte del alma que siente apetito de comidas y bebidas y de todo lo que necesita la naturaleza corporal"
+    },
+    {
+      "id": "c_032",
+      "label": "Hígado",
+      "tipo": "primitivo",
+      "descripcion": "Órgano situado en el abdomen, junto a la parte apetitiva del alma, que sirve como un espejo para los pensamientos de la inteligencia, atemorizando o calmando al alma apetitiva y siendo el centro de la adivinación.",
+      "sinonimos_candidatos": [],
+      "menciones": 6,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "a esto mismo tendió un dios cuando construyó el hígado y lo colocó en su habitáculo. Lo ideó denso, suave, brillante [...] para que la fuerza de los pensamientos proveniente de la inteligencia, reflejada en él como en un espejo [...] atemorice al alma apetitiva."
+    },
+    {
+      "id": "c_033",
+      "label": "Adivinación (Mantiké)",
+      "tipo": "primitivo",
+      "descripcion": "El arte profético otorgado por dios a la irracionalidad humana, que se manifiesta en sueños o estados de trance. Sus visiones, reflejadas en el hígado, deben ser interpretadas posteriormente por la persona prudente.",
+      "sinonimos_candidatos": [
+        "arte adivinatoria"
+      ],
+      "menciones": 7,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Hay una prueba convincente de que dios otorgó a la irracionalidad humana el arte adivinatoria."
+    },
+    {
+      "id": "c_034",
+      "label": "Enfermedad",
+      "tipo": "primitivo",
+      "descripcion": "Estado patológico del cuerpo causado por un desequilibrio (exceso o carencia) de los cuatro elementos fundamentales o por su desplazamiento a un lugar que no les corresponde, generando un estado 'contra la naturaleza'.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "su exceso o carencia contra la naturaleza y el cambio de la región propia a una ajena producen guerras internas y enfermedades"
+    },
+    {
+      "id": "c_035",
+      "label": "Vejez",
+      "tipo": "primitivo",
+      "descripcion": "Proceso de decadencia del cuerpo que ocurre cuando los triángulos elementales de su estructura se debilitan y ya no pueden asimilar los nutrientes, siendo divididos por los elementos que ingresan del exterior.",
+      "sinonimos_candidatos": [],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "todo el animal se consume vencido en este proceso y el fenómeno recibe el nombre de vejez."
+    },
+    {
+      "id": "c_036",
+      "label": "Muerte (natural)",
+      "tipo": "primitivo",
+      "descripcion": "El final de la vida que ocurre por vejez, cuando los vínculos de la médula se sueltan y el alma se libera. Es un proceso que ocurre 'según la naturaleza' y, por tanto, es placentero.",
+      "sinonimos_candidatos": [],
+      "menciones": 1,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la que llega al fin de manera natural con la edad es la menos penosa de las muertes y sucede más con placer que con dolor."
+    },
+    {
+      "id": "c_037",
+      "label": "Color",
+      "tipo": "primitivo",
+      "descripcion": "Una cualidad sensible explicada como el efecto de partículas que fluyen de los cuerpos y que, según su tamaño en relación con las partículas visuales, dilatan (blanco) o contraen (negro) el rayo visual. Los demás colores son mezclas.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "esas grandes variedades que llamamos colores, llama que fluye de cada uno de los cuerpos y con sus partículas proporcionales a nuestra visión posibilita la percepción."
+    },
+    {
+      "id": "c_038",
+      "label": "Salud",
+      "tipo": "primitivo",
+      "descripcion": "Estado de bienestar corporal y anímico que resulta del orden natural de los procesos fisiológicos y, fundamentalmente, de la proporción y equilibrio entre el alma y el cuerpo.",
+      "sinonimos_candidatos": [
+        "bienestar"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Cuando todo sucede de esta manera, la salud es buena; las enfermedades se producen en el caso contrario."
+    },
+    {
+      "id": "c_039",
+      "label": "Humores corporales",
+      "tipo": "primitivo",
+      "descripcion": "Sustancias fluidas del cuerpo (bilis, flema, suero, sangre) cuyo desequilibrio, corrupción o movimiento anómalo son la causa principal de las enfermedades físicas.",
+      "sinonimos_candidatos": [
+        "bilis",
+        "flema",
+        "suero",
+        "flujos"
+      ],
+      "menciones": 10,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el tercer tipo de enfermedades se ocasiona de manera triple: por el aire, la flema y la bilis."
+    },
+    {
+      "id": "c_040",
+      "label": "Enfermedades del alma",
+      "tipo": "primitivo",
+      "descripcion": "Afecciones del alma, como la demencia (locura e ignorancia), que son una consecuencia directa de un mal estado del cuerpo, como los placeres y dolores excesivos o la desproporción física.",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "mientras las enfermedades del cuerpo suceden de la manera antedicha, las del alma que son consecuencia del estado del cuerpo se dan del siguiente modo."
+    },
+    {
+      "id": "c_041",
+      "label": "Demencia",
+      "tipo": "primitivo",
+      "descripcion": "Término genérico para la enfermedad del alma, que se divide en dos clases: la locura (manía) y la ignorancia (amathia).",
+      "sinonimos_candidatos": [],
+      "menciones": 2,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Es necesario acordar, ciertamente, que la demencia es una enfermedad del alma y que hay dos clases de demencia, la locura y la ignorancia."
+    },
+    {
+      "id": "c_042",
+      "label": "Ignorancia (Amathia)",
+      "tipo": "primitivo",
+      "descripcion": "Considerada la enfermedad más grave del alma, causada por la desproporción entre un cuerpo grande y un alma débil, o por una educación inadecuada. Es una de las dos formas de demencia.",
+      "sinonimos_candidatos": [
+        "dificultad de aprendizaje",
+        "olvido"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "hacen el alma estólida, con dificultades de aprendizaje y olvidadiza, de modo tal que ocasionan la enfermedad más grave, la ignorancia."
+    },
+    {
+      "id": "c_043",
+      "label": "Proporción (alma-cuerpo)",
+      "tipo": "primitivo",
+      "descripcion": "El equilibrio y la medida correcta entre el desarrollo y la fuerza del alma y del cuerpo. Es la condición fundamental para la salud, la virtud y la belleza.",
+      "sinonimos_candidatos": [
+        "equilibrio",
+        "medida",
+        "simetría"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "para la salud y la enfermedad, para la virtud y el vicio, ninguna proporción o desproporción es mayor que la del alma respecto del cuerpo."
+    },
+    {
+      "id": "c_044",
+      "label": "Cuidado (Therapeia)",
+      "tipo": "primitivo",
+      "descripcion": "Conjunto de prácticas y regímenes destinados a conservar la proporción entre cuerpo y alma. Incluye la gimnasia para el cuerpo y la música y filosofía para el alma.",
+      "sinonimos_candidatos": [
+        "conservación",
+        "régimen"
+      ],
+      "menciones": 8,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Sería razonable y conveniente ofrecer a su vez lo que completa a esto, lo concerniente al cuidado del cuerpo y de la inteligencia, los principios con los que se conservan."
+    },
+    {
+      "id": "c_045",
+      "label": "Transmigración de las almas (Metempsicosis)",
+      "tipo": "primitivo",
+      "descripcion": "Proceso de reencarnación en formas de vida progresivamente inferiores (de hombre a mujer, pájaro, bestia y pez) como consecuencia de una vida injusta, cobarde o ignorante.",
+      "sinonimos_candidatos": [
+        "cambio",
+        "transformación"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "todos los animales, entonces y ahora, se convierten unos en otros y se transforman según la pérdida o adquisición de inteligencia o demencia."
+    },
+    {
+      "id": "c_046",
+      "label": "Parte divina del alma",
+      "tipo": "primitivo",
+      "descripcion": "La especie más importante del alma, asociada a la razón y el conocimiento, situada en la cabeza. Su cuidado y ejercicio conducen a la inmortalidad y la felicidad.",
+      "sinonimos_candidatos": [
+        "lo divino en nosotros",
+        "especie más importante del alma"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "debemos pensar que dios nos otorgó a cada uno la especie más importante en nosotros como algo divino"
+    },
+    {
+      "id": "c_047",
+      "label": "Cuerpo (Soma)",
+      "tipo": "primitivo",
+      "descripcion": "El componente físico del ser viviente, compuesto de tejidos y elementos. Su mal estado o desproporción es la causa de las enfermedades físicas y anímicas.",
+      "sinonimos_candidatos": [
+        "ser viviente",
+        "animal"
+      ],
+      "menciones": 25,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "mientras las enfermedades del cuerpo suceden de la manera antedicha"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "es_distinto_de",
+      "etiqueta": "hay que diferenciar primero",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Pues bien, en mi opinión hay que diferenciar primero lo siguiente: ¿Qué es lo que es siempre y no deviene y qué, lo que deviene continuamente, pero nunca es?",
+      "matiz": "Distinción ontológica fundamental",
+      "contexto": "Inicio del discurso de Timeo sobre la cosmología."
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_003",
+      "destino_id": "c_004",
+      "tipo": "contempla_el",
+      "etiqueta": "fija constantemente su mirada en",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Cuando el artífice de algo, al construir su forma y cualidad, fija constantemente su mirada en el ser inmutable y lo usa de modelo, lo así hecho será necesariamente bello.",
+      "matiz": "La contemplación del modelo es condición para la belleza de la obra.",
+      "contexto": "Explicación del proceso de creación."
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_004",
+      "destino_id": "c_001",
+      "tipo": "pertenece_al_ámbito_del",
+      "etiqueta": "el que es inmutable y permanente",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Por otra parte, hay que observar acerca de él lo siguiente: qué modelo contempló su artífice al hacerlo, el que es inmutable y permanente o el generado.",
+      "matiz": "El modelo verdadero es identificado con la realidad inmutable (Ser).",
+      "contexto": "Discusión sobre qué tipo de modelo usó el creador."
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_003",
+      "destino_id": "c_005",
+      "tipo": "crea_el",
+      "etiqueta": "hacedor hizo el devenir y este universo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Digamos ahora por qué causa el hacedor hizo el devenir y este universo.",
+      "matiz": "El Artífice es la causa eficiente del Cosmos.",
+      "contexto": "Pregunta por la causa de la creación."
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_005",
+      "destino_id": "c_012",
+      "tipo": "es_una",
+      "etiqueta": "sea una imagen de algo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Si esto es así, es de total necesidad que este mundo sea una imagen de algo.",
+      "matiz": "El estatus ontológico del universo es el de una copia.",
+      "contexto": "Consecuencia de la distinción entre ser y devenir aplicada al mundo."
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_012",
+      "destino_id": "c_004",
+      "tipo": "es_copia_de",
+      "etiqueta": "acerca de la imagen y de su modelo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Entonces, acerca de la imagen y de su modelo hay que hacer la siguiente distinción en la convicción de que los discursos están emparentados con aquellas cosas que explican.",
+      "matiz": "La relación imagen-modelo es fundamental y determina el tipo de discurso posible.",
+      "contexto": "Reflexión metodológica sobre el discurso cosmológico."
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_005",
+      "destino_id": "c_002",
+      "tipo": "pertenece_al_ámbito_del",
+      "etiqueta": "es visible y tangible y tiene un cuerpo y tales cosas son todas sensibles",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Es generado, pues es visible y tangible y tiene un cuerpo y tales cosas son todas sensibles y lo sensible, captado por la opinión unida a la sensación, se mostró generado y engendrado.",
+      "matiz": "El carácter sensible y generado del universo lo sitúa en la esfera del Devenir.",
+      "contexto": "Argumento para demostrar que el universo fue generado."
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_003",
+      "destino_id": "c_006",
+      "tipo": "es",
+      "etiqueta": "su creador bueno",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Bien, si este mundo es bello y su creador bueno, es evidente que miró el modelo eterno.",
+      "matiz": "La bondad es una cualidad intrínseca del creador.",
+      "contexto": "Argumento sobre la naturaleza del modelo utilizado."
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_006",
+      "destino_id": "c_003",
+      "tipo": "motiva_al",
+      "etiqueta": "quería que todo llegara a ser lo más semejante posible a él mismo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Es bueno y el bueno nunca anida ninguna mezquindad acerca de nada. Al carecer de ésta, quería que todo llegara a ser lo más semejante posible a él mismo.",
+      "matiz": "La bondad no es una cualidad estática, sino la causa dinámica de la creación.",
+      "contexto": "Explicación de la causa final de la creación del universo."
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_003",
+      "destino_id": "c_010",
+      "tipo": "conduce_desde_el",
+      "etiqueta": "lo condujo del desorden al orden",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Como el dios quería que todas las cosas fueran buenas y no hubiera en lo posible nada malo, tomó todo cuanto es visible, que se movía sin reposo de manera caótica y desordenada, y lo condujo del desorden al orden, porque pensó que éste es en todo sentido mejor que aquél.",
+      "matiz": "La creación no es ex nihilo, sino una acción ordenadora sobre un sustrato preexistente.",
+      "contexto": "Descripción del acto creador."
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_010",
+      "destino_id": "c_011",
+      "tipo": "es_transformado_en",
+      "etiqueta": "lo condujo del desorden al orden",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Como el dios quería que todas las cosas fueran buenas y no hubiera en lo posible nada malo, tomó todo cuanto es visible, que se movía sin reposo de manera caótica y desordenada, y lo condujo del desorden al orden, porque pensó que éste es en todo sentido mejor que aquél.",
+      "matiz": "El orden es el resultado de la intervención divina sobre el desorden.",
+      "contexto": "Descripción del acto creador."
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_003",
+      "destino_id": "c_009",
+      "tipo": "coloca_la",
+      "etiqueta": "colocó la razón en el alma",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "A causa de este razonamiento, al ensamblar el mundo, colocó la razón en el alma y el alma en el cuerpo, para que su obra fuera la más bella y mejor por naturaleza.",
+      "matiz": "La Razón no es inherente a la materia, sino que es introducida por el Artífice a través del Alma.",
+      "contexto": "Explicación de cómo el universo se convierte en un ser inteligente."
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_009",
+      "destino_id": "c_007",
+      "tipo": "es_colocada_en_el",
+      "etiqueta": "colocó la razón en el alma",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "A causa de este razonamiento, al ensamblar el mundo, colocó la razón en el alma y el alma en el cuerpo, para que su obra fuera la más bella y mejor por naturaleza.",
+      "matiz": "El Alma es el receptáculo de la Razón.",
+      "contexto": "Explicación de la estructura jerárquica del ser vivo cósmico."
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_007",
+      "destino_id": "c_008",
+      "tipo": "gobierna_al",
+      "etiqueta": "La creó dueña y gobernante del gobernado",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por el contrario, el demiurgo hizo al alma primera en origen y en virtud y más antigua que el cuerpo. La creó dueña y gobernante del gobernado a partir de los siguientes elementos y como se expone a continuación.",
+      "matiz": "Establece una jerarquía ontológica y funcional entre el alma y el cuerpo.",
+      "contexto": "Descripción de la primacía del Alma sobre el Cuerpo en la creación."
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_005",
+      "destino_id": "c_007",
+      "tipo": "está_compuesto_de",
+      "etiqueta": "llegó a ser verdaderamente un viviente provisto de alma y razón",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Es así que según el discurso probable debemos afirmar que este universo llegó a ser verdaderamente un viviente provisto de alma y razón por la providencia divina.",
+      "matiz": "El Alma es un componente esencial del Universo, que lo convierte en un ser vivo.",
+      "contexto": "Conclusión sobre la naturaleza del cosmos."
+    },
+    {
+      "id": "r_016",
+      "origen_id": "c_003",
+      "destino_id": "c_013",
+      "tipo": "crea",
+      "etiqueta": "planeó su generación",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "La decisión divina de crear el tiempo hizo que surgieran el sol, la luna y los otros cinco cuerpos celestes que llevan el nombre de planetas para que dividieran y guardaran las magnitudes temporales.",
+      "matiz": null,
+      "contexto": "Creación del Tiempo"
+    },
+    {
+      "id": "r_017",
+      "origen_id": "c_013",
+      "destino_id": "c_014",
+      "tipo": "es_imagen_móvil_de",
+      "etiqueta": "imagen móvil de la eternidad",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "procuró realizar una cierta imagen móvil de la eternidad y, al ordenar el cielo, hizo de la eternidad que permanece siempre en un punto una imagen eterna que marchaba según el número, eso que llamamos tiempo.",
+      "matiz": "El tiempo imita la eternidad en el ámbito del devenir.",
+      "contexto": "Definición del Tiempo"
+    },
+    {
+      "id": "r_018",
+      "origen_id": "c_014",
+      "destino_id": "c_004",
+      "tipo": "es_cualidad_de",
+      "etiqueta": "la naturaleza del mundo ideal es sempiterna",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Pero dado que la naturaleza del mundo ideal es sempiterna y esta cualidad no se le puede otorgar completamente a lo generado, procuró realizar una cierta imagen móvil de la eternidad.",
+      "matiz": null,
+      "contexto": "Naturaleza del Modelo"
+    },
+    {
+      "id": "r_019",
+      "origen_id": "c_005",
+      "destino_id": "c_004",
+      "tipo": "es_imagen_de",
+      "etiqueta": "imagen generada de los dioses eternos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Cuando su padre y progenitor vio que el universo se movía y vivía como imagen generada de los dioses eternos, se alegró y, feliz, tomó la decisión de hacerlo todavía más semejante al modelo.",
+      "matiz": null,
+      "contexto": "Relación entre el Cosmos y su Paradigma"
+    },
+    {
+      "id": "r_020",
+      "origen_id": "c_013",
+      "destino_id": "c_005",
+      "tipo": "nace_con",
+      "etiqueta": "nació con el universo",
+      "bidireccional": true,
+      "confianza": 1.0,
+      "frase_completa": "El tiempo, por tanto, nació con el universo, para que, generados simultáneamente, también desaparezcan a la vez, si en alguna ocasión tiene lugar una eventual disolución suya.",
+      "matiz": "Son co-generados y co-dependientes.",
+      "contexto": "Origen del Tiempo"
+    },
+    {
+      "id": "r_021",
+      "origen_id": "c_003",
+      "destino_id": "c_007",
+      "tipo": "compone",
+      "etiqueta": "la compuso de estos tres elementos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Puesto que el dios la compuso de estos tres elementos —la naturaleza de lo mismo, la de lo otro y el ser—, la dividió proporcionalmente y después la unió.",
+      "matiz": null,
+      "contexto": "Creación del Alma"
+    },
+    {
+      "id": "r_022",
+      "origen_id": "c_007",
+      "destino_id": "c_005",
+      "tipo": "gobierna",
+      "etiqueta": "comenzó el gobierno divino",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Ésta, después de ser entrelazada por doquier desde el centro hacia los extremos del universo y cubrirlo exteriormente en círculo, se puso a girar sobre sí misma y comenzó el gobierno divino de una vida inextinguible e inteligente que durará eternamente.",
+      "matiz": null,
+      "contexto": "Función del Alma del Mundo"
+    },
+    {
+      "id": "r_023",
+      "origen_id": "c_005",
+      "destino_id": "c_009",
+      "tipo": "nace_de_la_combinación_con",
+      "etiqueta": "combinación de necesidad e inteligencia",
+      "bidireccional": true,
+      "confianza": 1.0,
+      "frase_completa": "El universo nació, efectivamente, por la combinación de necesidad e inteligencia.",
+      "matiz": "Esta relación también se establece con Necesidad (c_008).",
+      "contexto": "Principios de la Cosmogonía"
+    },
+    {
+      "id": "r_024",
+      "origen_id": "c_009",
+      "destino_id": "c_015",
+      "tipo": "persuade_a",
+      "etiqueta": "la inteligencia se impuso a la necesidad y la convenció",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Se formó al principio por medio de la necesidad sometida a la convicción inteligente, ya que la inteligencia se impuso a la necesidad y la convenció de ordenar la mayor parte del devenir de la mejor manera posible.",
+      "matiz": "La relación no es de dominación violenta, sino de persuasión.",
+      "contexto": "Interacción de los Principios"
+    },
+    {
+      "id": "r_025",
+      "origen_id": "c_002",
+      "destino_id": "c_016",
+      "tipo": "acontece_en",
+      "etiqueta": "aquello en lo que deviene",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Ciertamente, ahora necesitamos diferenciar conceptualmente tres géneros: lo que deviene, aquello en lo que deviene y aquello a través de cuya imitación nace lo que deviene.",
+      "matiz": null,
+      "contexto": "Introducción del Tercer Género"
+    },
+    {
+      "id": "r_026",
+      "origen_id": "c_016",
+      "destino_id": "c_012",
+      "tipo": "es_sede_de",
+      "etiqueta": "tiene que surgir en alguna otra cosa",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "que una imagen tiene que surgir en alguna otra cosa y depender de una cierta manera de la esencia o no ha de existir en absoluto, puesto que ni siquiera le pertenece aquello mismo en lo que deviene",
+      "matiz": "El Receptáculo es la condición de posibilidad para la existencia de la Imagen.",
+      "contexto": "Naturaleza de la Imagen"
+    },
+    {
+      "id": "r_027",
+      "origen_id": "c_003",
+      "destino_id": "c_017",
+      "tipo": "encarga_la_creación_de_mortales_a",
+      "etiqueta": "aplicaos a la creación de los seres vivos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Entonces, para que sean mortales y este universo sea realmente un todo, aplicaos a la creación de los seres vivos de acuerdo con la naturaleza e imitad mi poder en vuestra generación.",
+      "matiz": null,
+      "contexto": "Delegación de la Creación"
+    },
+    {
+      "id": "r_028",
+      "origen_id": "c_007",
+      "destino_id": "c_001",
+      "tipo": "está_compuesta_de",
+      "etiqueta": "la compuso de estos tres elementos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Puesto que el dios la compuso de estos tres elementos —la naturaleza de lo mismo, la de lo otro y el ser—, la dividió proporcionalmente y después la unió.",
+      "matiz": null,
+      "contexto": "Composición del Alma"
+    },
+    {
+      "id": "r_029",
+      "origen_id": "c_016",
+      "destino_id": "c_002",
+      "tipo": "es_la_nodriza_de",
+      "etiqueta": "La nodriza del devenir",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "La nodriza del devenir mientras se humedece y quema y admite las formas de la tierra y el aire...",
+      "matiz": null,
+      "contexto": "Describe la relación funcional entre el espacio como contenedor y el proceso de cambio que ocurre en él."
+    },
+    {
+      "id": "r_030",
+      "origen_id": "c_003",
+      "destino_id": "c_018",
+      "tipo": "da_forma_y_número_a",
+      "etiqueta": "dio forma y número al fuego, agua, tierra y aire",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Cuando dios se puso a ordenar el universo, primero dio forma y número al fuego, agua, tierra y aire...",
+      "matiz": null,
+      "contexto": "Explica el acto demiúrgico de transformar las 'huellas' pre-cósmicas de los elementos en entidades matemáticas y estructuradas."
+    },
+    {
+      "id": "r_031",
+      "origen_id": "c_018",
+      "destino_id": "c_020",
+      "tipo": "están_constituidos_por",
+      "etiqueta": "los cuatro géneros de cuerpos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Debemos, entonces, esforzarnos por componer estos cuatro géneros de cuerpos de extraordinaria belleza y decir que hemos captado su naturaleza suficientemente.",
+      "matiz": "Cada elemento corresponde a una forma geométrica específica.",
+      "contexto": "Establece la base de la física platónica: la materia se reduce a geometría."
+    },
+    {
+      "id": "r_032",
+      "origen_id": "c_020",
+      "destino_id": "c_019",
+      "tipo": "se_construyen_a_partir_de",
+      "etiqueta": "están construidos el cuerpo del fuego y el de los otros elementos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Sean elegidos, por tanto, dos triángulos de los cuales están construidos el cuerpo del fuego y el de los otros elementos: uno de ellos isósceles, el otro con un lado mayor...",
+      "matiz": null,
+      "contexto": "Detalla el principio de construcción geométrica, desde las figuras 2D (triángulos) a los sólidos 3D (elementos)."
+    },
+    {
+      "id": "r_033",
+      "origen_id": "c_022",
+      "destino_id": "c_021",
+      "tipo": "es_la_causa_de",
+      "etiqueta": "el movimiento con el desequilibrio",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Así, pues, hemos de identificar el descanso con el equilibrio y el movimiento con el desequilibrio.",
+      "matiz": null,
+      "contexto": "Define el principio dinámico fundamental del cosmos: la ausencia de equilibrio genera movimiento."
+    },
+    {
+      "id": "r_034",
+      "origen_id": "c_016",
+      "destino_id": "c_022",
+      "tipo": "se_encuentra_en",
+      "etiqueta": "se encuentra toda ella en desequilibrio",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "como está llena de fuerzas disímiles que no mantienen un equilibrio entre sí, se encuentra toda ella en desequilibrio: se cimbrea de manera desigual en todas partes, es agitada por aquéllas y, en su movimiento, las agita a su vez.",
+      "matiz": "El desequilibrio es una propiedad intrínseca del Receptáculo pre-cósmico.",
+      "contexto": "Localiza el origen del desequilibrio en la naturaleza misma del espacio/receptáculo."
+    },
+    {
+      "id": "r_035",
+      "origen_id": "c_018",
+      "destino_id": "c_024",
+      "tipo": "producen",
+      "etiqueta": "aclarar las causas que dan lugar a sus cualidades",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Ya están casi totalmente expuestas las especies en su variedad de figuras, rasgos comunes y cambios de unas en otras, pero todavía he de intentar aclarar las causas que dan lugar a sus cualidades.",
+      "matiz": "La interacción de los elementos con los cuerpos vivos es la causa de las percepciones.",
+      "contexto": "Conecta la teoría física de los elementos con la teoría de la percepción."
+    },
+    {
+      "id": "r_036",
+      "origen_id": "c_025",
+      "destino_id": "c_026",
+      "tipo": "es_opuesto_a",
+      "etiqueta": "El proceso contrario a éste",
+      "bidireccional": true,
+      "confianza": 1.0,
+      "frase_completa": "Doloroso es el proceso que, de manera súbita, se produce en nosotros con violencia y contra la naturaleza; el que nos hace retornar repentinamente a nuestra situación natural es placentero.",
+      "matiz": null,
+      "contexto": "Define el placer y el dolor como procesos contrarios relacionados con el estado natural del cuerpo."
+    },
+    {
+      "id": "r_037",
+      "origen_id": "c_003",
+      "destino_id": "c_015",
+      "tipo": "actúa_con_la_anuencia_de",
+      "etiqueta": "permitió de buen grado y obediente la necesidad",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "que en todas partes dios adecuó la cantidad, movimientos y otras características de manera proporcional y que todo lo hizo con la exactitud que permitió de buen grado y obediente la necesidad.",
+      "matiz": "La creación no es un acto de poder absoluto, sino una persuasión de la Necesidad.",
+      "contexto": "Describe la relación entre la inteligencia ordenadora (Demiurgo) y las constricciones materiales/causales (Necesidad)."
+    },
+    {
+      "id": "r_038",
+      "origen_id": "c_001",
+      "destino_id": "c_023",
+      "tipo": "es_objeto_de_un_discurso_diferente_a",
+      "etiqueta": "descansar de los discursos sobre los seres eternos, se dedica a los probables acerca de la generación",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "uno podría practicar en su vida como un juego moderado y prudente cuando, para descansar de los discursos sobre los seres eternos, se dedica a los probables acerca de la generación y alcanza un placer despreocupado.",
+      "matiz": "El Ser eterno es objeto de un discurso superior, mientras que el mundo generado (devenir) es objeto del discurso probable.",
+      "contexto": "Establece una jerarquía epistemológica entre el estudio del Ser y el estudio del Devenir."
+    },
+    {
+      "id": "r_039",
+      "origen_id": "c_003",
+      "destino_id": "c_027",
+      "tipo": "utilizó_para",
+      "etiqueta": "el dios la utilizó para el universo cuando lo pintó",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Puesto que todavía había una quinta composición, el dios la utilizó para el universo cuando lo pintó.",
+      "matiz": null,
+      "contexto": "Asigna la quinta forma geométrica a la estructura global del cosmos."
+    },
+    {
+      "id": "r_040",
+      "origen_id": "c_027",
+      "destino_id": "c_005",
+      "tipo": "da_forma_a",
+      "etiqueta": "la utilizó para el universo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Puesto que todavía había una quinta composición, el dios la utilizó para el universo cuando lo pintó.",
+      "matiz": null,
+      "contexto": "Relaciona la forma geométrica del dodecaedro con la totalidad del universo."
+    },
+    {
+      "id": "r_041",
+      "origen_id": "c_003",
+      "destino_id": "c_015",
+      "tipo": "utiliza",
+      "etiqueta": "utilizó para ello todas estas causas auxiliares",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Aunque utilizó para ello todas estas causas auxiliares, fue él quien ensambló en todo lo que deviene la buena disposición.",
+      "matiz": "instrumental",
+      "contexto": "Creación del cosmos"
+    },
+    {
+      "id": "r_042",
+      "origen_id": "c_003",
+      "destino_id": "c_028",
+      "tipo": "se_guía_por",
+      "etiqueta": "ensambló en todo lo que deviene la buena disposición",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Aunque utilizó para ello todas estas causas auxiliares, fue él quien ensambló en todo lo que deviene la buena disposición.",
+      "matiz": "teleológico",
+      "contexto": "Creación del cosmos"
+    },
+    {
+      "id": "r_043",
+      "origen_id": "c_015",
+      "destino_id": "c_028",
+      "tipo": "se_debe_distinguir_de",
+      "etiqueta": "es, necesario distinguir entre dos tipos de causas, uno necesario, el otro divino",
+      "bidireccional": true,
+      "confianza": 1.0,
+      "frase_completa": "Para ello es, necesario distinguir entre dos tipos de causas, uno necesario, el otro divino, y con el fin de alcanzar la felicidad hay que buscar lo divino en todas partes, en la medida en que nos lo permita nuestra naturaleza.",
+      "matiz": "ontológico y metodológico",
+      "contexto": "Análisis filosófico"
+    },
+    {
+      "id": "r_044",
+      "origen_id": "c_003",
+      "destino_id": "c_017",
+      "tipo": "ordena_a",
+      "etiqueta": "manda a sus criaturas llevar a cabo el nacimiento de los mortales",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El dios en persona se convierte en artífice de los seres divinos y manda a sus criaturas llevar a cabo el nacimiento de los mortales.",
+      "matiz": "jerárquico",
+      "contexto": "Creación de los seres vivos"
+    },
+    {
+      "id": "r_045",
+      "origen_id": "c_017",
+      "destino_id": "c_029",
+      "tipo": "crean",
+      "etiqueta": "compusieron con necesidad el alma mortal",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por medio de la mezcla de todos estos elementos con la sensibilidad irracional y el deseo que todo lo intenta compusieron con necesidad el alma mortal.",
+      "matiz": "constructivo",
+      "contexto": "Creación de los seres vivos"
+    },
+    {
+      "id": "r_046",
+      "origen_id": "c_029",
+      "destino_id": "c_030",
+      "tipo": "se_divide_en",
+      "etiqueta": "una parte del alma mortal es por naturaleza mejor",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Puesto que una parte del alma mortal es por naturaleza mejor y otra peor, volvieron a dividir la cavidad del tórax y la separaron con el diafragma colocado en el medio...",
+      "matiz": "partitivo",
+      "contexto": "Psicología platónica"
+    },
+    {
+      "id": "r_047",
+      "origen_id": "c_029",
+      "destino_id": "c_031",
+      "tipo": "se_divide_en",
+      "etiqueta": "otra [parte del alma mortal] peor",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Puesto que una parte del alma mortal es por naturaleza mejor y otra peor, volvieron a dividir la cavidad del tórax...",
+      "matiz": "partitivo",
+      "contexto": "Psicología platónica"
+    },
+    {
+      "id": "r_048",
+      "origen_id": "c_009",
+      "destino_id": "c_030",
+      "tipo": "debe_ser_escuchada_por",
+      "etiqueta": "para que escuche a la razón",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Implantaron la parte belicosa del alma que participa de la valentía y el coraje más cerca de la cabeza, entre el diafragma y el cuello, para que escuche a la razón y junto con ella coaccione violentamente la parte apetitiva...",
+      "matiz": "jerárquico/normativo",
+      "contexto": "Ética y psicología"
+    },
+    {
+      "id": "r_049",
+      "origen_id": "c_030",
+      "destino_id": "c_031",
+      "tipo": "debe_coaccionar_a",
+      "etiqueta": "coaccione violentamente la parte apetitiva",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "para que escuche a la razón y junto con ella coaccione violentamente la parte apetitiva, cuando ésta no se encuentre en absoluto dispuesta a cumplir voluntariamente la orden y la palabra proveniente de la acrópolis.",
+      "matiz": "de control",
+      "contexto": "Conflicto intrapsíquico"
+    },
+    {
+      "id": "r_050",
+      "origen_id": "c_031",
+      "destino_id": "c_032",
+      "tipo": "habita_cerca_del",
+      "etiqueta": "la parte del alma que habita en el hígado",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Entonces, endereza todo el órgano, lo suaviza y libera y hace agradable y de buen carácter a la parte del alma que habita en el hígado...",
+      "matiz": "localización fisiológica",
+      "contexto": "Anatomía teleológica"
+    },
+    {
+      "id": "r_051",
+      "origen_id": "c_032",
+      "destino_id": "c_033",
+      "tipo": "es_el_órgano_de_la",
+      "etiqueta": "la naturaleza del hígado es tal y se encuentra en el lugar que dijimos, a saber, para la adivinación.",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por eso, la naturaleza del hígado es tal y se encuentra en el lugar que dijimos, a saber, para la adivinación.",
+      "matiz": "funcional",
+      "contexto": "Fisiología mística"
+    },
+    {
+      "id": "r_052",
+      "origen_id": "c_034",
+      "destino_id": "c_022",
+      "tipo": "es_causada_por",
+      "etiqueta": "su exceso o carencia contra la naturaleza [...] producen guerras internas y enfermedades",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Dado que los elementos de los que se compone el cuerpo son cuatro, tierra, aire, agua y fuego, su exceso o carencia contra la naturaleza y el cambio de la región propia a una ajena producen guerras internas y enfermedades...",
+      "matiz": "etiológico",
+      "contexto": "Patología"
+    },
+    {
+      "id": "r_053",
+      "origen_id": "c_022",
+      "destino_id": "c_018",
+      "tipo": "es_un_desorden_de_los",
+      "etiqueta": "los elementos de los que se compone el cuerpo son cuatro [...] su exceso o carencia [...] producen enfermedades",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Dado que los elementos de los que se compone el cuerpo son cuatro, tierra, aire, agua y fuego, su exceso o carencia contra la naturaleza y el cambio de la región propia a una ajena producen guerras internas y enfermedades...",
+      "matiz": "material",
+      "contexto": "Patología"
+    },
+    {
+      "id": "r_054",
+      "origen_id": "c_035",
+      "destino_id": "c_019",
+      "tipo": "es_causada_por_el_debilitamiento_de_los",
+      "etiqueta": "Cuando la raíz de los triángulos se afloja [...] todo el animal se consume vencido en este proceso y el fenómeno recibe el nombre de vejez.",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Cuando la raíz de los triángulos se afloja, porque han combatido intensamente durante mucho tiempo contra muchos adversarios, ya no pueden cortar [...] sino que ellos mismos son divididos con facilidad por los que entran del exterior. Entonces, todo el animal se consume vencido en este proceso y el fenómeno recibe el nombre de vejez.",
+      "matiz": "causal/material",
+      "contexto": "Fisiología del envejecimiento"
+    },
+    {
+      "id": "r_055",
+      "origen_id": "c_036",
+      "destino_id": "c_026",
+      "tipo": "produce",
+      "etiqueta": "sucede más con placer que con dolor",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Así, la muerte que se produce por enfermedad o heridas es dolorosa y violenta, pero la que llega al fin de manera natural con la edad es la menos penosa de las muertes y sucede más con placer que con dolor.",
+      "matiz": "afectivo",
+      "contexto": "Filosofía de la vida y la muerte"
+    },
+    {
+      "id": "r_056",
+      "origen_id": "c_034",
+      "destino_id": "c_025",
+      "tipo": "causa_una_muerte_con",
+      "etiqueta": "la muerte que se produce por enfermedad o heridas es dolorosa y violenta",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Así, la muerte que se produce por enfermedad o heridas es dolorosa y violenta, pero la que llega al fin de manera natural con la edad es la menos penosa de las muertes y sucede más con placer que con dolor.",
+      "matiz": "afectivo",
+      "contexto": "Filosofía de la vida y la muerte"
+    },
+    {
+      "id": "r_057",
+      "origen_id": "c_023",
+      "destino_id": "c_029",
+      "tipo": "califica_la_exposición_sobre",
+      "etiqueta": "sólo afirmaríamos que así como está expuesto es verdadero, si un dios lo aprobara",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "En lo que concierne al alma, cuánto tiene de mortal y cuánto de divino [...] sólo afirmaríamos que así como está expuesto es verdadero, si un dios lo aprobara. Sin embargo, tanto ahora como después de una consideración más detallada hemos de arriesgarnos a sostener que hemos expuesto al menos lo probable.",
+      "matiz": "epistemológico",
+      "contexto": "Metadiscurso del narrador"
+    },
+    {
+      "id": "r_058",
+      "origen_id": "c_023",
+      "destino_id": "c_037",
+      "tipo": "califica_la_exposición_sobre",
+      "etiqueta": "Es casi evidente a partir de estos ejemplos con qué mezclas el resto podría salvar el mito probable.",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Es casi evidente a partir de estos ejemplos con qué mezclas el resto podría salvar el mito probable.",
+      "matiz": "epistemológico",
+      "contexto": "Metadiscurso del narrador"
+    },
+    {
+      "id": "r_059",
+      "origen_id": "c_034",
+      "destino_id": "c_038",
+      "tipo": "es_lo_contrario_de",
+      "etiqueta": "la salud es buena; las enfermedades se producen en el caso contrario",
+      "bidireccional": true,
+      "confianza": 1.0,
+      "frase_completa": "Cuando todo sucede de esta manera, la salud es buena; las enfermedades se producen en el caso contrario.",
+      "matiz": null,
+      "contexto": "Fisiología platónica"
+    },
+    {
+      "id": "r_060",
+      "origen_id": "c_034",
+      "destino_id": "c_039",
+      "tipo": "es_causada_por",
+      "etiqueta": "se ocasiona por el aire, la flema y la bilis",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Debemos pensar que el tercer tipo de enfermedades se ocasiona de manera triple: por el aire, la flema y la bilis.",
+      "matiz": "Causalidad material",
+      "contexto": "Etiología de las enfermedades"
+    },
+    {
+      "id": "r_061",
+      "origen_id": "c_040",
+      "destino_id": "c_047",
+      "tipo": "es_consecuencia_del_estado_del",
+      "etiqueta": "son consecuencia del estado del cuerpo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Mientras las enfermedades del cuerpo suceden de la manera antedicha, las del alma que son consecuencia del estado del cuerpo se dan del siguiente modo.",
+      "matiz": "Dependencia somatopsíquica",
+      "contexto": "Psicopatología platónica"
+    },
+    {
+      "id": "r_062",
+      "origen_id": "c_041",
+      "destino_id": "c_040",
+      "tipo": "es_un_tipo_de",
+      "etiqueta": "la demencia es una enfermedad del alma",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Es necesario acordar, ciertamente, que la demencia es una enfermedad del alma y que hay dos clases de demencia, la locura y la ignorancia.",
+      "matiz": "Clasificación",
+      "contexto": "Psicopatología platónica"
+    },
+    {
+      "id": "r_063",
+      "origen_id": "c_042",
+      "destino_id": "c_041",
+      "tipo": "es_una_clase_de",
+      "etiqueta": "hay dos clases de demencia, la locura y la ignorancia",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Es necesario acordar, ciertamente, que la demencia es una enfermedad del alma y que hay dos clases de demencia, la locura y la ignorancia.",
+      "matiz": "Clasificación",
+      "contexto": "Psicopatología platónica"
+    },
+    {
+      "id": "r_064",
+      "origen_id": "c_040",
+      "destino_id": "c_026",
+      "tipo": "es_causada_por_exceso_de",
+      "etiqueta": "los placeres y dolores excesivos son las enfermedades mayores",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por tanto debemos llamar enfermedad a todo lo que produce uno de estos dos estados cuando alguien lo sufre y hay que suponer que para el alma los placeres y dolores excesivos son las enfermedades mayores.",
+      "matiz": "Causalidad afectiva",
+      "contexto": "Etiología de las enfermedades del alma"
+    },
+    {
+      "id": "r_065",
+      "origen_id": "c_040",
+      "destino_id": "c_025",
+      "tipo": "es_causada_por_exceso_de",
+      "etiqueta": "los placeres y dolores excesivos son las enfermedades mayores",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por tanto debemos llamar enfermedad a todo lo que produce uno de estos dos estados cuando alguien lo sufre y hay que suponer que para el alma los placeres y dolores excesivos son las enfermedades mayores.",
+      "matiz": "Causalidad afectiva",
+      "contexto": "Etiología de las enfermedades del alma"
+    },
+    {
+      "id": "r_066",
+      "origen_id": "c_038",
+      "destino_id": "c_043",
+      "tipo": "depende_de_la",
+      "etiqueta": "ninguna proporción o desproporción es mayor que la del alma respecto del cuerpo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "En efecto, para la salud y la enfermedad, para la virtud y el vicio, ninguna proporción o desproporción es mayor que la del alma respecto del cuerpo.",
+      "matiz": "Condición fundamental",
+      "contexto": "Principios de la salud"
+    },
+    {
+      "id": "r_067",
+      "origen_id": "c_044",
+      "destino_id": "c_043",
+      "tipo": "busca_mantener_la",
+      "etiqueta": "lleguen a ser equilibrados y sanos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Para ambos desequilibrios hay un método de salvación: no mover el alma sin el cuerpo ni el cuerpo sin el alma, para que ambos, contrarrestándose, lleguen a ser equilibrados y sanos.",
+      "matiz": "Finalidad terapéutica",
+      "contexto": "Medicina preventiva platónica"
+    },
+    {
+      "id": "r_068",
+      "origen_id": "c_044",
+      "destino_id": "c_021",
+      "tipo": "se_realiza_mediante",
+      "etiqueta": "la mejor es la que se da a través de la gimnasia",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Por ello, ciertamente, de las purificaciones y acumulaciones del cuerpo, la mejor es la que se da a través de la gimnasia, en segundo lugar, el balanceo en los viajes por agua o de cualquier manera en la que el medio de transporte no cause fatiga.",
+      "matiz": "Método terapéutico",
+      "contexto": "Medicina preventiva platónica"
+    },
+    {
+      "id": "r_069",
+      "origen_id": "c_044",
+      "destino_id": "c_005",
+      "tipo": "debe_imitar_al",
+      "etiqueta": "imitando al universo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Así debe cuidar el cuerpo, el alma y sus partes, imitando al universo.",
+      "matiz": "Principio mimético",
+      "contexto": "Cosmología y ética"
+    },
+    {
+      "id": "r_070",
+      "origen_id": "c_045",
+      "destino_id": "c_042",
+      "tipo": "es_consecuencia_de_la",
+      "etiqueta": "se transforman según la pérdida o adquisición de inteligencia o demencia",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "De esta manera, todos los animales, entonces y ahora, se convierten unos en otros y se transforman según la pérdida o adquisición de inteligencia o demencia.",
+      "matiz": "Causalidad moral y noética",
+      "contexto": "Escatología platónica"
+    },
+    {
+      "id": "r_071",
+      "origen_id": "c_045",
+      "destino_id": "c_023",
+      "tipo": "es_explicado_como_un",
+      "etiqueta": "según el discurso probable",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Todos los varones cobardes y que llevaron una vida injusta, según el discurso probable, cambiaron a mujeres en la segunda encarnación.",
+      "matiz": "Calificación epistemológica",
+      "contexto": "Metodología del discurso"
+    },
+    {
+      "id": "r_072",
+      "origen_id": "c_046",
+      "destino_id": "c_007",
+      "tipo": "es_la_especie_más_importante_del",
+      "etiqueta": "la especie más importante en nosotros como algo divino",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Debemos pensar que dios nos otorgó a cada uno la especie más importante en nosotros como algo divino, y sostenemos con absoluta corrección que aquello de lo que decimos que habita en la cúspide de nuestro cuerpo nos eleva hacia la familia celeste desde la tierra, como si fuéramos una planta no terrestre, sino celeste.",
+      "matiz": "Jerarquía ontológica",
+      "contexto": "Antropología platónica"
+    },
+    {
+      "id": "r_073",
+      "origen_id": "c_007",
+      "destino_id": "c_047",
+      "tipo": "debe_estar_en_proporción_con_el",
+      "etiqueta": "la del alma respecto del cuerpo",
+      "bidireccional": true,
+      "confianza": 1.0,
+      "frase_completa": "En efecto, para la salud y la enfermedad, para la virtud y el vicio, ninguna proporción o desproporción es mayor que la del alma respecto del cuerpo.",
+      "matiz": "Relación normativa",
+      "contexto": "Antropología platónica"
+    },
+    {
+      "id": "r_074",
+      "origen_id": "c_006",
+      "destino_id": "c_043",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "todo lo bueno es bello y lo bello no es desmesurado",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Por cierto, todo lo bueno es bello y lo bello no es desmesurado; por tanto, hay que suponer que un ser viviente que ha de ser bello será proporcionado.",
+      "matiz": "Identidad ético-estética",
+      "contexto": "Metafísica platónica"
+    },
+    {
+      "id": "r_075",
+      "origen_id": "c_005",
+      "destino_id": "c_006",
+      "tipo": "es_el_mejor_y_más",
+      "etiqueta": "llegó a ser el mayor y mejor, el más bello y perfecto",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Y ahora también afirmemos que nuestro discurso acerca del universo ha alcanzado ya su fin, pues este mundo, tras recibir los animales mortales e inmortales y llenarse de esta manera, ser viviente visible que comprende los objetos visibles, imagen sensible del dios inteligible, llegó a ser el mayor y mejor, el más bello y perfecto, porque este universo es uno y único.",
+      "matiz": "Calificación superlativa",
+      "contexto": "Conclusión de la cosmogonía"
+    }
+  ],
+  "bucles": [],
+  "metalenguaje": []
+}

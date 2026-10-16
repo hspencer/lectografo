@@ -1,0 +1,1021 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "Amor (Eros)",
+      "tipo": "primitivo",
+      "descripcion": "Tema central de la conversación. Es presentado como un dios antiguo y poderoso, una fuerza que influye en el comportamiento humano, la virtud y el orden del cosmos. Su naturaleza es debatida, distinguiéndose diferentes tipos.",
+      "sinonimos_candidatos": [
+        "Eros"
+      ],
+      "menciones": 25,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Se dice que toda la conversación versó sobre el Amor."
+    },
+    {
+      "id": "c_002",
+      "label": "Filosofía",
+      "tipo": "primitivo",
+      "descripcion": "Actividad o modo de vida consistente en el estudio y la discusión de conceptos, como las palabras y acciones de Sócrates. Se presenta como la ocupación más provechosa, en contraste con la búsqueda de riqueza.",
+      "sinonimos_candidatos": [],
+      "menciones": 3,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "además de lo provechoso que es hablar u oír hablar de filosofía, no hay nada en el mundo en lo que con más gusto tome parte"
+    },
+    {
+      "id": "c_003",
+      "label": "Virtud",
+      "tipo": "primitivo",
+      "descripcion": "Excelencia moral y conducta honorable. El Amor es presentado como el principal inspirador de la virtud, generando en los amantes la vergüenza por lo malo y la emulación por el bien.",
+      "sinonimos_candidatos": [
+        "vida honorable",
+        "honorabilidad"
+      ],
+      "menciones": 10,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "de todos los dioses, el Amor es el más antiguo, el más augusto y el más apto para hacer virtuoso y feliz al hombre durante su vida y después de su muerte"
+    },
+    {
+      "id": "c_004",
+      "label": "Amor Celestial",
+      "tipo": "primitivo",
+      "descripcion": "Según Pausanias, es la forma superior de amor, asociada a la Venus Celestial (Urania). No busca el cuerpo sino el alma, se dirige al sexo masculino por ser más fuerte e inteligente, y tiene como fin la adquisición de la virtud y la sabiduría.",
+      "sinonimos_candidatos": [
+        "Amor de Venus Celestial"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el Amor que la acompaña no busca más que a los niños. Afecto a una diosa de más edad y que por tanto no tiene los fogosos sentidos de la juventud, aquellos a quienes inspira no aman más que al sexo masculino naturalmente más fuerte y más inteligente."
+    },
+    {
+      "id": "c_005",
+      "label": "Amor Popular",
+      "tipo": "primitivo",
+      "descripcion": "Según Pausanias, es la forma inferior y vulgar de amor, asociada a la Venus Popular (Pandemos). Se dirige indiscriminadamente a mujeres y jóvenes, buscando solo el goce sensual del cuerpo sin preocuparse por el alma o la virtud.",
+      "sinonimos_candidatos": [
+        "Amor de Venus Popular"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "El Amor de la Venus popular es popular también y no inspira más que bajezas; el Amor que reina entre los malos, que aman sin selección lo mismo a las mujeres que a los jóvenes, al cuerpo más que al alma"
+    },
+    {
+      "id": "c_006",
+      "label": "Amante",
+      "tipo": "primitivo",
+      "descripcion": "El individuo activo en la relación amorosa, que persigue al amado. Se le considera más divino que el amado porque está 'poseído por un dios'. Sus acciones, incluso las que serían vergonzosas en otros contextos, son permitidas y celebradas si su fin es la virtud.",
+      "sinonimos_candidatos": [],
+      "menciones": 15,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "En efecto, el que ama es algo más divino que el que es amado, porque está poseído de un dios."
+    },
+    {
+      "id": "c_007",
+      "label": "Amado",
+      "tipo": "primitivo",
+      "descripcion": "El individuo más joven en la relación amorosa, objeto del afecto del amante. Su honorabilidad reside en no ceder por motivos viles (dinero, poder), sino únicamente a un amante virtuoso con el fin de mejorar y adquirir sabiduría.",
+      "sinonimos_candidatos": [],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "si el amado tiene un verdadero deseo de adquirir instrucción y ciencia, si todas estas condiciones se reúnen, únicamente entonces será decoroso conceder sus favores a quien nos ama."
+    },
+    {
+      "id": "c_008",
+      "label": "Amor Cósmico",
+      "tipo": "primitivo",
+      "descripcion": "La concepción de Eryximacos que extiende el Amor más allá de las almas humanas, presentándolo como un principio universal que opera en todos los seres: en los cuerpos (medicina), en los sonidos (música), en las estaciones (astronomía), estableciendo orden y armonía.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el amor no reside solamente en el alma de los hombres, donde tiene por objeto la belleza, sino que también tiene otros muchos objetos, que se encuentran en muchas otras cosas, en los cuerpos de todos los animales, en los productos de la tierra, en una palabra, en todos los seres"
+    },
+    {
+      "id": "c_009",
+      "label": "Armonía",
+      "tipo": "primitivo",
+      "descripcion": "Principio de concordia y consonancia entre elementos opuestos (frío/calor, grave/agudo). Según Eryximacos, es el producto de un amor ordenado y es fundamental en artes como la medicina y la música.",
+      "sinonimos_candidatos": [
+        "concordia",
+        "consonancia"
+      ],
+      "menciones": 8,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la armonía es una consonancia y la consonancia un acorde, y no pueden ser acordes dos cosas opuestas mientras estén opuestas"
+    },
+    {
+      "id": "c_010",
+      "label": "Sabiduría",
+      "tipo": "primitivo",
+      "descripcion": "Conocimiento profundo y virtud intelectual. Sócrates cuestiona su naturaleza al sugerir irónicamente que no puede transmitirse como el agua entre copas. Pausanias la establece como el fin legítimo por el cual un amado puede entregarse a un amante.",
+      "sinonimos_candidatos": [
+        "ciencia",
+        "instrucción"
+      ],
+      "menciones": 6,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "¡Ojalá pluguiera a los dioses que la sabiduría, Agatón, fuera una cosa que pudiera verterse de una inteligencia a otra cuando dos hombres están en contacto, como el agua pasa de una copa llena a otra vacía a través de una tira de lana!"
+    },
+    {
+      "id": "c_011",
+      "label": "Naturaleza Humana Primitiva",
+      "tipo": "primitivo",
+      "descripcion": "Según el mito de Aristófanes, el estado original de la humanidad consistía en seres esféricos y completos con cuatro brazos, cuatro piernas y dos caras, existiendo en tres géneros: masculino, femenino y andrógino.",
+      "sinonimos_candidatos": [
+        "antiguo estado",
+        "primitiva naturaleza"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La naturaleza humana era antes muy diferente de como es hoy día. Al principio hubo tres clases de hombres..."
+    },
+    {
+      "id": "c_012",
+      "label": "División",
+      "tipo": "primitivo",
+      "descripcion": "El acto de castigo de Júpiter (Zeus) que cortó a los seres humanos primitivos en dos mitades para debilitarlos, dando origen a la condición actual de incompletitud y a la búsqueda amorosa.",
+      "sinonimos_candidatos": [
+        "separación"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Los separaré en dos y así los debilitaré y al mismo tiempo tendremos la ventaja de aumentar el número de los que nos sirvan."
+    },
+    {
+      "id": "c_013",
+      "label": "Unidad Original",
+      "tipo": "primitivo",
+      "descripcion": "El estado de plenitud y completitud que los seres humanos perdieron tras ser divididos. El amor es el impulso fundamental para recuperar esta unidad perdida al encontrar la 'otra mitad'.",
+      "sinonimos_candidatos": [
+        "primitiva unidad",
+        "antigua perfección"
+      ],
+      "menciones": 3,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "...en su deseo de volver a la primitiva unidad, que perecían de hambre y de inanición en aquel abrazo..."
+    },
+    {
+      "id": "c_014",
+      "label": "Belleza",
+      "tipo": "primitivo",
+      "descripcion": "Cualidad central en la discusión sobre el Amor. Agatón la presenta como una posesión intrínseca del dios Amor, mientras que Sócrates argumenta que es el objeto de deseo del Amor, y por tanto, algo de lo que carece.",
+      "sinonimos_candidatos": [
+        "lo bello"
+      ],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Digo, pues, que de todos los dioses, si puede decirse sin cometer un crimen, es el más feliz, porque es el más bello y el mejor."
+    },
+    {
+      "id": "c_015",
+      "label": "Deseo",
+      "tipo": "primitivo",
+      "descripcion": "En el argumento de Sócrates, el deseo es la esencia del Amor. Se caracteriza por anhelar aquello que no se posee, lo que le falta al que desea.",
+      "sinonimos_candidatos": [
+        "anhelo",
+        "querer"
+      ],
+      "menciones": 12,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "dime si el Amor desea la cosa de la que es amor."
+    },
+    {
+      "id": "c_016",
+      "label": "Carencia",
+      "tipo": "primitivo",
+      "descripcion": "La condición fundamental que, según Sócrates, da origen al deseo. Se desea lo que no se tiene, por lo que el Amor, al ser deseo, es una manifestación de una carencia o privación.",
+      "sinonimos_candidatos": [
+        "falta",
+        "privación"
+      ],
+      "menciones": 6,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "quienquiera que desee, desea lo que no está seguro de poseer en aquel momento, lo que no posee, lo que no tiene y lo que le falta."
+    },
+    {
+      "id": "c_017",
+      "label": "Demon (Daimon)",
+      "tipo": "primitivo",
+      "descripcion": "La verdadera naturaleza del Amor según Diotima. No es un dios ni un mortal, sino un ser intermedio (demonio) que sirve de puente entre el mundo divino y el humano.",
+      "sinonimos_candidatos": [
+        "gran demonio"
+      ],
+      "menciones": 6,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Un gran demonio, Sócrates, porque todo demonio ocupa el medio entre los dioses y los hombres."
+    },
+    {
+      "id": "c_018",
+      "label": "Intermediario",
+      "tipo": "primitivo",
+      "descripcion": "La función del demonio (y por tanto del Amor) es actuar como intérprete y mensajero entre dioses y hombres, transmitiendo las plegarias humanas y los mandatos divinos.",
+      "sinonimos_candidatos": [
+        "intérprete",
+        "lazo"
+      ],
+      "menciones": 3,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Ser los intérpretes e intermediarios entre los dioses y los hombres, llevar al Cielo las plegarias y sacrificios de los hombres y transmitir a éstos los mandatos de los dioses..."
+    },
+    {
+      "id": "c_019",
+      "label": "Opinión Verdadera",
+      "tipo": "primitivo",
+      "descripcion": "Un estado cognitivo intermedio entre la sabiduría (conocimiento razonado) y la ignorancia. Diotima lo usa como analogía para explicar la naturaleza intermedia del Amor, que no es ni bello ni feo, ni bueno ni malo, sino algo en el medio.",
+      "sinonimos_candidatos": [
+        "justo término"
+      ],
+      "menciones": 3,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "La opinión verdadera ocupa, pues, el justo término entre la ciencia y la ignorancia."
+    },
+    {
+      "id": "c_020",
+      "label": "Penia (Pobreza)",
+      "tipo": "primitivo",
+      "descripcion": "Personificación mítica de la pobreza y la carencia. Es la madre del Amor, quien hereda de ella su estado de necesidad y falta perpetua.",
+      "sinonimos_candidatos": [
+        "penuria",
+        "carencia"
+      ],
+      "menciones": 3,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Penia entonces, instigada por su penuria, ideó tener un hijo de Poros; se acostó a su lado y fue madre del Amor."
+    },
+    {
+      "id": "c_021",
+      "label": "Poros (Recurso)",
+      "tipo": "primitivo",
+      "descripcion": "Personificación mítica de la abundancia, el recurso y la astucia. Es el padre del Amor, quien hereda de él su habilidad para buscar y conseguir lo bello y lo bueno.",
+      "sinonimos_candidatos": [
+        "abundancia",
+        "astucia"
+      ],
+      "menciones": 3,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "entre ellos se encontraba Poros, hijo de Metis."
+    },
+    {
+      "id": "c_022",
+      "label": "Ignorancia",
+      "tipo": "primitivo",
+      "descripcion": "El estado de no saber, con el agravante de creer que se sabe. Impide el deseo de saber y, por tanto, la filosofía. Es uno de los extremos entre los que se sitúa el Amor.",
+      "sinonimos_candidatos": [],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "la ignorancia tiene el enojoso defecto de convencer a los que no son hermosos, ni buenos, ni sabios, de que poseen estas cualidades"
+    },
+    {
+      "id": "c_023",
+      "label": "Bien",
+      "tipo": "primitivo",
+      "descripcion": "El objeto último del deseo de todos los seres humanos. Se identifica con lo que produce felicidad. El Amor es el deseo de poseer el Bien perpetuamente.",
+      "sinonimos_candidatos": [
+        "lo bueno"
+      ],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "en suma, pues, consiste el amor en querer poseer siempre lo bueno."
+    },
+    {
+      "id": "c_024",
+      "label": "Inmortalidad",
+      "tipo": "primitivo",
+      "descripcion": "El objetivo último del Amor, que se busca a través de la generación. Es la forma en que la naturaleza mortal participa de lo eterno, ya sea a través de la descendencia física o de la creación de obras y virtudes imperecederas.",
+      "sinonimos_candidatos": [
+        "perpetuidad",
+        "gloria inmortal"
+      ],
+      "menciones": 12,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "De esto se deduce que la inmortalidad es también un objetivo del amor."
+    },
+    {
+      "id": "c_025",
+      "label": "Generación (Producción en la Belleza)",
+      "tipo": "primitivo",
+      "descripcion": "El acto específico en que se manifiesta el Amor. Es el proceso de crear o dar a luz, ya sea hijos (fecundidad corporal) o virtudes y obras (fecundidad espiritual), en el medio propicio de la Belleza.",
+      "sinonimos_candidatos": [
+        "producción en la belleza",
+        "fecundación",
+        "procreación"
+      ],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "es la producción en la belleza, sea por el cuerpo o sea por el alma."
+    },
+    {
+      "id": "c_026",
+      "label": "Ascenso Erótico",
+      "tipo": "primitivo",
+      "descripcion": "El camino gradual de iniciación en los misterios del Amor, que lleva al amante desde la atracción por un cuerpo bello hasta la contemplación de la Belleza Absoluta, pasando por la belleza de las almas, las leyes y las ciencias.",
+      "sinonimos_candidatos": [
+        "camino recto del amor",
+        "escala de lo bello"
+      ],
+      "menciones": 5,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "el camino recto del amor... hay que empezarlo por las bellezas de aquí abajo hasta elevarse a las alturas en que impera la belleza suprema, pasando, por decirlo así, por todos los peldaños de la escala"
+    },
+    {
+      "id": "c_027",
+      "label": "Belleza Absoluta",
+      "tipo": "primitivo",
+      "descripcion": "La forma pura, eterna, inmutable y divina de la Belleza. Es el fin último del ascenso erótico y su contemplación es lo que da valor a la vida humana y permite engendrar la verdadera virtud.",
+      "sinonimos_candidatos": [
+        "belleza en sí",
+        "belleza divina",
+        "ciencia de lo bello"
+      ],
+      "menciones": 8,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "descubrirá de repente una maravillosa belleza, la que era el objetivo de todos sus trabajos anteriores: belleza eterna, increada e imperecedera"
+    },
+    {
+      "id": "c_028",
+      "label": "Sócrates (como arquetipo)",
+      "tipo": "primitivo",
+      "descripcion": "Presentado por Alcibíades como la encarnación del amante filosófico. Su apariencia externa (como un Sileno) oculta una belleza y sabiduría divinas en su interior, atrayendo a otros no por su físico, sino por el poder de sus discursos.",
+      "sinonimos_candidatos": [
+        "Sileno",
+        "Sátiro Marsyas"
+      ],
+      "menciones": 20,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Sócrates se asemeja a esos Silenos que vemos expuestos en los estudios de los escultores... si separáis las dos piezas de que se componen estas estatuas, encontraréis en su interior la imagen de alguna divinidad."
+    },
+    {
+      "id": "c_029",
+      "label": "Apariencia vs. Realidad",
+      "tipo": "primitivo",
+      "descripcion": "La dualidad entre el exterior engañoso y la verdad interior. Se manifiesta en la figura de Sócrates (feo por fuera, divino por dentro) y en el Ascenso Erótico (que va de la belleza aparente de los cuerpos a la belleza real en sí).",
+      "sinonimos_candidatos": [
+        "exterior vs. interior"
+      ],
+      "menciones": 5,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "en vez de la apariencia de lo bello quieres adquirir la realidad y darme cobre para recibir oro."
+    },
+    {
+      "id": "c_030",
+      "label": "Autodominio (Templanza)",
+      "tipo": "primitivo",
+      "descripcion": "Una de las virtudes cardinales de Sócrates, manifestada en su capacidad para soportar penalidades físicas extremas (hambre, frío) y resistir los placeres (bebida, seducción) sin alterarse.",
+      "sinonimos_candidatos": [
+        "paciencia",
+        "dominio sobre sí mismo"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "admiraba su carácter, su temperancia y la fortaleza de su alma, y me parecía imposible encontrar un hombre que le igualara en sabiduría y en dominio sobre sí mismo"
+    },
+    {
+      "id": "c_031",
+      "label": "Fortaleza (Valor)",
+      "tipo": "primitivo",
+      "descripcion": "La valentía y entereza de Sócrates demostrada en el campo de batalla, tanto al salvar la vida de Alcibíades en Potidaia como en su serena retirada en Delium.",
+      "sinonimos_candidatos": [
+        "ánimo",
+        "conducta en los combates"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Desde el primer momento me di cuenta de que Sócrates era mucho más animoso que Laches"
+    },
+    {
+      "id": "c_032",
+      "label": "Discursos Socráticos",
+      "tipo": "primitivo",
+      "descripcion": "Las conversaciones de Sócrates, que externamente parecen vulgares y repetitivas (hablando de 'asnos embastados, forjadores, zapateros'), pero que internamente contienen un sentido profundo, divino y virtuoso.",
+      "sinonimos_candidatos": [
+        "lo que dice Sócrates"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Pero que se abra ese discurso y examine su interior y se encontrará en seguida que está lleno de sentido y después que es divino"
+    },
+    {
+      "id": "c_033",
+      "label": "Unicidad de Sócrates",
+      "tipo": "primitivo",
+      "descripcion": "La cualidad de Sócrates de ser incomparable, sin semejante entre los hombres, ni antiguos ni contemporáneos, tanto en su persona como en sus discursos.",
+      "sinonimos_candidatos": [
+        "sin semejantes"
+      ],
+      "menciones": 2,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "lo que hace a Sócrates digno de particular admiración es no tener semejantes ni entre los antiguos ni los contemporáneos"
+    },
+    {
+      "id": "c_034",
+      "label": "Poeta Trágico y Cómico",
+      "tipo": "primitivo",
+      "descripcion": "Concepto final del diálogo, donde Sócrates argumenta que la misma persona debe ser capaz de escribir tanto tragedia como comedia, sugiriendo una unidad subyacente en el conocimiento artístico.",
+      "sinonimos_candidatos": [],
+      "menciones": 2,
+      "confianza": 0.85,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Sócrates había forzado a sus dos interlocutores a que reconocieran que un mismo hombre debe ser a la vez poeta trágico y poeta cómico"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_002",
+      "destino_id": "c_001",
+      "tipo": "toma_como_objeto_de_discurso",
+      "etiqueta": "toda la conversación versó sobre el Amor",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Se dice que toda la conversación versó sobre el Amor.",
+      "matiz": null,
+      "contexto": "Introducción de Apolodoros"
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "inspira_la",
+      "etiqueta": "nada puede inspirar al hombre como el Amor lo que es necesario para llevar una vida honorable",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Abolengo, honores, riquezas, nada puede inspirar al hombre como el Amor lo que es necesario para llevar una vida honorable: quiero decir la vergüenza de lo malo y la emulación del bien.",
+      "matiz": "Según el discurso de Fedro.",
+      "contexto": "Discurso de Fedro"
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_001",
+      "destino_id": "c_004",
+      "tipo": "se_divide_en",
+      "etiqueta": "puesto que hay dos Venus, tiene que haber también dos Amores",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "si ésta fuera solamente una no habría más que un Amor, pero puesto que hay dos Venus, tiene que haber también dos Amores.",
+      "matiz": "Según el discurso de Pausanias.",
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_001",
+      "destino_id": "c_005",
+      "tipo": "se_divide_en",
+      "etiqueta": "puesto que hay dos Venus, tiene que haber también dos Amores",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "si ésta fuera solamente una no habría más que un Amor, pero puesto que hay dos Venus, tiene que haber también dos Amores.",
+      "matiz": "Según el discurso de Pausanias.",
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_004",
+      "destino_id": "c_005",
+      "tipo": "se_opone_a",
+      "etiqueta": "distingamos bien las funciones de estos dos amores",
+      "bidireccional": true,
+      "confianza": 0.95,
+      "frase_completa": "Todos los dioses, sin duda, son dignos de ser venerados, pero distingamos bien las funciones de estos dos amores.",
+      "matiz": "La oposición es la tesis central del discurso de Pausanias.",
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_004",
+      "destino_id": "c_003",
+      "tipo": "tiene_como_fin_la",
+      "etiqueta": "Es hermoso, pues, amar por la virtud",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Es hermoso, pues, amar por la virtud; este Amor es el de Venus celestial, y es celestial por sí mismo, beneficioso para los particulares y los Estados y digno de ser objeto de sus principales estudios, puesto que obliga al amante y al amado a velar por ellos mismos a fin de esforzarse en ser mutuamente virtuosos.",
+      "matiz": null,
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_006",
+      "destino_id": "c_007",
+      "tipo": "busca_educar_en_virtud_al",
+      "etiqueta": "si el amante es verdaderamente capaz de infundir ciencia y virtud al que ama",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "si el amante es verdaderamente capaz de infundir ciencia y virtud al que ama, y el amado tiene un verdadero deseo de adquirir instrucción y ciencia, si todas estas condiciones se reúnen, únicamente entonces será decoroso conceder sus favores a quien nos ama.",
+      "matiz": "Esta es la única justificación honorable para la relación, según Pausanias.",
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_001",
+      "destino_id": "c_008",
+      "tipo": "es_generalizado_como",
+      "etiqueta": "el amor no reside solamente en el alma de los hombres... sino que se encuentran en muchas otras cosas",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Apruebo la distinción que ha hecho de los dos amores, pero creo haber descubierto por mi parte, la medicina, que el amor no reside solamente en el alma de los hombres, donde tiene por objeto la belleza, sino que también tiene otros muchos objetos, que se encuentran en muchas otras cosas, en los cuerpos de todos los animales, en los productos de la tierra, en una palabra, en todos los seres.",
+      "matiz": "Según el discurso de Erixímaco.",
+      "contexto": "Discurso de Erixímaco"
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_008",
+      "destino_id": "c_009",
+      "tipo": "produce_la",
+      "etiqueta": "estableciendo el amor y la concordia entre los contrarios",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Por haber encontrado el medio de establecer el amor y la concordia entre estos contrarios es por lo que Esculapio, el jefe de nuestra familia, inventó la medicina, como dicen los poetas, y yo lo creo.",
+      "matiz": null,
+      "contexto": "Discurso de Erixímaco"
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_007",
+      "destino_id": "c_010",
+      "tipo": "puede_adquirir",
+      "etiqueta": "el amado tiene un verdadero deseo de adquirir instrucción y ciencia",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "si el amante es verdaderamente capaz de infundir ciencia y virtud al que ama, y el amado tiene un verdadero deseo de adquirir instrucción y ciencia, si todas estas condiciones se reúnen, únicamente entonces será decoroso conceder sus favores a quien nos ama.",
+      "matiz": null,
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_010",
+      "destino_id": "c_002",
+      "tipo": "es_el_fin_de_la",
+      "etiqueta": "si un hombre se une a otro en la esperanza de perfeccionarse, gracias a él, en una ciencia o en la virtud",
+      "bidireccional": false,
+      "confianza": 0.8,
+      "frase_completa": "Nosotros estimamos que si un hombre se une a otro en la esperanza de perfeccionarse, gracias a él, en una ciencia o en la virtud, esta servidumbre voluntaria no tiene nada de vergonzosa y no puede ser calificada de adulación.",
+      "matiz": "La relación entre sabiduría y filosofía es implícita pero fundamental en el contexto platónico.",
+      "contexto": "Discurso de Pausanias"
+    },
+    {
+      "id": "r_012",
+      "origen_id": "c_012",
+      "destino_id": "c_011",
+      "tipo": "altera_la",
+      "etiqueta": "fuimos separados por Júpiter",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Primitivamente, como ya he dicho, éramos uno, pero después en castigo a nuestra iniquidad, fuimos separados por Júpiter.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_013",
+      "origen_id": "c_001",
+      "destino_id": "c_013",
+      "tipo": "es_el_deseo_de_recobrar_la",
+      "etiqueta": "Se da el nombre de amor al deseo de volver a recobrar aquel antiguo estado",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Se da el nombre de amor al deseo de volver a recobrar aquel antiguo estado.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_014",
+      "origen_id": "c_013",
+      "destino_id": "c_011",
+      "tipo": "corresponde_a_la",
+      "etiqueta": "nuestra primitiva naturaleza era una y que nosotros éramos un todo completo",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "La causa es que nuestra primitiva naturaleza era una y que nosotros éramos un todo completo.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_015",
+      "origen_id": "c_001",
+      "destino_id": "c_015",
+      "tipo": "es_una_forma_de",
+      "etiqueta": "el Amor desea la cosa de la que es amor",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Procura, pues, replicó Sócrates, mostrarnos si el Amor no es el amor de nada o si lo es de alguna cosa. —De alguna cosa seguramente. —Retén en tu memoria lo que afirmas y no olvides que el Amor es amor; pero antes de ir más lejos, dime si el Amor desea la cosa de la que es amor.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_016",
+      "origen_id": "c_015",
+      "destino_id": "c_016",
+      "tipo": "implica",
+      "etiqueta": "al que desea le falta la cosa que desea",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Piensa más bien si no es preciso que al que desea le falta la cosa que desea o bien que no la desee si no le falta.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_017",
+      "origen_id": "c_001",
+      "destino_id": "c_014",
+      "tipo": "carece_de",
+      "etiqueta": "el Amor carece de belleza y no la posee",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Pero ¿no convinimos en que se aman las cosas que nos hacen falta y que no poseemos? —Sí. —Entonces el Amor carece de belleza y no la posee.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_018",
+      "origen_id": "c_001",
+      "destino_id": "c_017",
+      "tipo": "es_definido_como_un",
+      "etiqueta": "Un gran demonio, Sócrates",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "—Un gran demonio, Sócrates, porque todo demonio ocupa el medio entre los dioses y los hombres.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_019",
+      "origen_id": "c_017",
+      "destino_id": "c_018",
+      "tipo": "actúa_como",
+      "etiqueta": "Ser los intérpretes e intermediarios entre los dioses y los hombres",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "¿Qué función tienen los demonios?, pregunté. —Ser los intérpretes e intermediarios entre los dioses y los hombres...",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_020",
+      "origen_id": "c_001",
+      "destino_id": "c_019",
+      "tipo": "es_análogo_a_la",
+      "etiqueta": "es un término medio entre lo uno y lo otro",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "Y por haber tenido que reconocer que el Amor no es bello ni bueno, no vayas a creer que necesariamente sea feo y malo; creo solamente que es un término medio entre lo uno y lo otro, o sea, entre los contrarios.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_021",
+      "origen_id": "c_019",
+      "destino_id": "c_010",
+      "tipo": "es_un_estado_intermedio_(junto_a_la_ignorancia)",
+      "etiqueta": "La opinión verdadera ocupa, pues, el justo término entre la ciencia y la ignorancia",
+      "bidireccional": true,
+      "confianza": 0.9,
+      "frase_completa": "La opinión verdadera ocupa, pues, el justo término entre la ciencia y la ignorancia.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_022",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "posee_(según_agatón)",
+      "etiqueta": "Hablemos ahora de su virtud",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Después de haber hablado de la justicia, de la templanza y de la fuerza de este dios, nos resta todavía probar su habilidad.",
+      "matiz": null,
+      "contexto": null
+    },
+    {
+      "id": "r_023",
+      "origen_id": "c_001",
+      "destino_id": "c_020",
+      "tipo": "es_hijo_de",
+      "etiqueta": "fue madre del Amor",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Penia entonces, instigada por su penuria, ideó tener un hijo de Poros; se acostó a su lado y fue madre del Amor.",
+      "matiz": "Mítico/Alegórico",
+      "contexto": "Mito del nacimiento de Eros narrado por Diotima."
+    },
+    {
+      "id": "r_024",
+      "origen_id": "c_001",
+      "destino_id": "c_021",
+      "tipo": "es_hijo_de",
+      "etiqueta": "tener un hijo de Poros",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Penia entonces, instigada por su penuria, ideó tener un hijo de Poros; se acostó a su lado y fue madre del Amor.",
+      "matiz": "Mítico/Alegórico",
+      "contexto": "Mito del nacimiento de Eros narrado por Diotima."
+    },
+    {
+      "id": "r_025",
+      "origen_id": "c_001",
+      "destino_id": "c_010",
+      "tipo": "ocupa_un_lugar_intermedio_hacia",
+      "etiqueta": "ocupa el lugar entre el sabio y el ignorante",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "La sabiduría es una de las cosas más bellas del mundo; ahora bien: el Amor ama lo que es bello, luego hay que convenir en que el Amor es amante de la sabiduría, es decir, filósofo, y como tal ocupa el lugar entre el sabio y el ignorante.",
+      "matiz": "Definitorio",
+      "contexto": "Explicación de la naturaleza filosófica del Amor."
+    },
+    {
+      "id": "r_026",
+      "origen_id": "c_001",
+      "destino_id": "c_022",
+      "tipo": "ocupa_un_lugar_intermedio_desde",
+      "etiqueta": "ocupa el lugar entre el sabio y el ignorante",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "son los que están entre los ignorantes y los sabios, y el Amor es de ese número.",
+      "matiz": "Definitorio",
+      "contexto": "Explicación de la naturaleza filosófica del Amor."
+    },
+    {
+      "id": "r_027",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "es_la_encarnación_de_la",
+      "etiqueta": "el Amor es amante de la sabiduría, es decir, filósofo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "el Amor es amante de la sabiduría, es decir, filósofo, y como tal ocupa el lugar entre el sabio y el ignorante.",
+      "matiz": "Identidad",
+      "contexto": "Definición de la naturaleza del Amor."
+    },
+    {
+      "id": "r_028",
+      "origen_id": "c_001",
+      "destino_id": "c_023",
+      "tipo": "consiste_en_querer_poseer_siempre_el",
+      "etiqueta": "consiste el amor en querer poseer siempre lo bueno",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "En suma, pues, consiste el amor en querer poseer siempre lo bueno.",
+      "matiz": "Definitorio",
+      "contexto": "Definición general del Amor antes de especificar su acto."
+    },
+    {
+      "id": "r_029",
+      "origen_id": "c_001",
+      "destino_id": "c_024",
+      "tipo": "tiene_como_objetivo_la",
+      "etiqueta": "la inmortalidad es también un objetivo del amor",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "De esto se deduce que la inmortalidad es también un objetivo del amor.",
+      "matiz": "Teleológico",
+      "contexto": "Explicación del fin último del deseo amoroso."
+    },
+    {
+      "id": "r_030",
+      "origen_id": "c_001",
+      "destino_id": "c_025",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "es la producción en la belleza",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Pues te lo voy a decir: es la producción en la belleza, sea por el cuerpo o sea por el alma.",
+      "matiz": "Definición del acto",
+      "contexto": "Especificación del acto propio del Amor."
+    },
+    {
+      "id": "r_031",
+      "origen_id": "c_025",
+      "destino_id": "c_014",
+      "tipo": "requiere_la",
+      "etiqueta": "ésta no puede producir en la fealdad, sino en la belleza",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Pero ésta no puede producir en la fealdad, sino en la belleza; la unión del hombre y de la mujer es una producción",
+      "matiz": "Condición necesaria",
+      "contexto": "Explicación de las condiciones para la procreación."
+    },
+    {
+      "id": "r_032",
+      "origen_id": "c_025",
+      "destino_id": "c_024",
+      "tipo": "es_el_medio_para_la",
+      "etiqueta": "la generación es la que perpetúa la familia de los seres animados y le da inmortalidad",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Porque la generación es la que perpetúa la familia de los seres animados y le da inmortalidad compatible con la naturaleza mortal.",
+      "matiz": "Causal/Final",
+      "contexto": "Relación entre el acto de amar y su fin último."
+    },
+    {
+      "id": "r_033",
+      "origen_id": "c_026",
+      "destino_id": "c_027",
+      "tipo": "es_el_camino_hacia_la",
+      "etiqueta": "elevarse a las alturas en que impera la belleza suprema",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "porque el camino recto del amor... hay que empezarlo por las bellezas de aquí abajo hasta elevarse a las alturas en que impera la belleza suprema",
+      "matiz": "Procesual",
+      "contexto": "Descripción de la iniciación en los misterios del Amor."
+    },
+    {
+      "id": "r_034",
+      "origen_id": "c_026",
+      "destino_id": "c_014",
+      "tipo": "comienza_con_la_contemplación_de_la",
+      "etiqueta": "debe empezar a buscar los cuerpos bellos",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El que quiera llegar a este fin por el camino verdadero debe empezar a buscar los cuerpos bellos y hermosos desde su edad temprana",
+      "matiz": "Punto de partida",
+      "contexto": "Primer peldaño de la escala del Amor."
+    },
+    {
+      "id": "r_035",
+      "origen_id": "c_027",
+      "destino_id": "c_003",
+      "tipo": "permite_engendrar_la_verdadera",
+      "etiqueta": "podría él solo engendrar no imágenes de la virtud... sino verdaderas virtudes",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "¿No crees, al contrario, que el hombre, que fuera el único aquí abajo que percibiera lo bello por el órgano al cual lo bello le es perceptible, podría él solo engendrar no imágenes de la virtud, puesto que no se une a imágenes, sino verdaderas virtudes, ya que con lo que se une es la verdad?",
+      "matiz": "Resultado final",
+      "contexto": "Culminación del Ascenso Erótico."
+    },
+    {
+      "id": "r_036",
+      "origen_id": "c_028",
+      "destino_id": "c_002",
+      "tipo": "ejemplifica_la",
+      "etiqueta": "he sido mordido y estoy herido por los discursos de la filosofía",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Y yo, que me siento mordido por algo más doloroso y en el sitio más sensible... yo que he sido mordido y estoy herido por los discursos de la filosofía",
+      "matiz": "Ejemplificación",
+      "contexto": "Alcibíades describe el efecto de los discursos de Sócrates, que son la manifestación de su filosofía."
+    },
+    {
+      "id": "r_037",
+      "origen_id": "c_028",
+      "destino_id": "c_029",
+      "tipo": "se_describe_mediante_la_dualidad",
+      "etiqueta": "Sócrates se asemeja a esos Silenos... encontraréis en su interior la imagen de alguna divinidad",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Sócrates se asemeja a esos Silenos que vemos expuestos en los estudios de los escultores... si separáis las dos piezas de que se componen estas estatuas, encontraréis en su interior la imagen de alguna divinidad.",
+      "matiz": "Metafórico",
+      "contexto": "Elogio de Sócrates por Alcibíades."
+    },
+    {
+      "id": "r_038",
+      "origen_id": "c_028",
+      "destino_id": "c_003",
+      "tipo": "posee",
+      "etiqueta": "admiraba su carácter, su temperancia y la fortaleza de su alma",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Por una parte, me considera menospreciado y por otra admiraba su carácter, su temperancia y la fortaleza de su alma, y me parecía imposible encontrar un hombre que le igualara en sabiduría y en dominio sobre sí mismo.",
+      "matiz": null,
+      "contexto": "Alcibíades describe las cualidades que admira en Sócrates a pesar de sentirse rechazado por él."
+    },
+    {
+      "id": "r_039",
+      "origen_id": "c_003",
+      "destino_id": "c_030",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "soportaba el hambre y la sed mucho mejor",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Si como suele ocurrir en campaña nos faltaban víveres, Sócrates soportaba el hambre y la sed mucho mejor que todos nosotros, y si teníamos abundancia, sabía disfrutar de ella mejor que los demás.",
+      "matiz": null,
+      "contexto": "Descripción del comportamiento de Sócrates durante la expedición militar a Potidaia."
+    },
+    {
+      "id": "r_040",
+      "origen_id": "c_003",
+      "destino_id": "c_031",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "se conduce en los combates",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "¿Queréis saber cómo se conduce en los combates? Es una justicia que hay que rendirle todavía.",
+      "matiz": null,
+      "contexto": "Alcibíades introduce la descripción del valor de Sócrates en la guerra."
+    },
+    {
+      "id": "r_041",
+      "origen_id": "c_028",
+      "destino_id": "c_029",
+      "tipo": "es_análogo_a",
+      "etiqueta": "compararle... a los silenos y a los sátiros",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Pero no se encontrará ninguno entre los antiguos ni entre los modernos que se aproxime en nada a este hombre en sus discursos y en sus originalidades, a menos de compararle, como he hecho, a él y a sus discursos, a los silenos y a los sátiros.",
+      "matiz": null,
+      "contexto": "Alcibíades utiliza la metáfora de los silenos para explicar la dualidad apariencia/realidad en Sócrates."
+    },
+    {
+      "id": "r_042",
+      "origen_id": "c_032",
+      "destino_id": "c_029",
+      "tipo": "ejemplifican",
+      "etiqueta": "parecido con los silenos que se abren",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "me olvidé de deciros al empezar que sus discursos tienen también un perfecto parecido con los silenos que se abren.",
+      "matiz": null,
+      "contexto": "Los discursos de Sócrates son el principal ejemplo de la dualidad entre una apariencia vulgar y un contenido divino."
+    },
+    {
+      "id": "r_043",
+      "origen_id": "c_032",
+      "destino_id": "c_003",
+      "tipo": "contienen",
+      "etiqueta": "encierra las imágenes más nobles de la virtud",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Pero que se abra ese discurso y examine su interior y se encontrará en seguida que está lleno de sentido y después que es divino y que encierra las imágenes más nobles de la virtud.",
+      "matiz": null,
+      "contexto": "Alcibíades revela el contenido valioso que se encuentra al analizar en profundidad los discursos de Sócrates."
+    },
+    {
+      "id": "r_044",
+      "origen_id": "c_028",
+      "destino_id": "c_033",
+      "tipo": "se_caracteriza_por",
+      "etiqueta": "no tener semejantes",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Pero lo que hace a Sócrates digno de particular admiración es no tener semejantes ni entre los antiguos ni los contemporáneos.",
+      "matiz": null,
+      "contexto": "Alcibíades enfatiza la singularidad absoluta de Sócrates en la historia humana."
+    },
+    {
+      "id": "r_045",
+      "origen_id": "c_028",
+      "destino_id": "c_007",
+      "tipo": "invierte_el_rol_de",
+      "etiqueta": "representaba... el papel del bien amado",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "Y no soy yo solo a quien ha tratado así, porque también ha engañado a Charmides, hijo de Glauco, a Authydemos, hijo de Diocles, y a una porción más de jóvenes aparentando ser su amante cuando más bien representaba cerca de ellos el papel del bien amado.",
+      "matiz": "Sócrates invierte la dinámica erótica esperada, donde él, el mayor, se convierte en el objeto de deseo (amado) en lugar del perseguidor (amante).",
+      "contexto": null
+    },
+    {
+      "id": "r_046",
+      "origen_id": "c_007",
+      "destino_id": "c_006",
+      "tipo": "frustra_a",
+      "etiqueta": "ha engañado a... jóvenes",
+      "bidireccional": false,
+      "confianza": 0.85,
+      "frase_completa": "Y no soy yo solo a quien ha tratado así, porque también ha engañado a Charmides, hijo de Glauco, a Authydemos, hijo de Diocles, y a una porción más de jóvenes aparentando ser su amante...",
+      "matiz": null,
+      "contexto": "La postura de Sócrates como 'amado' frustra y es percibida como un engaño por aquellos que intentan ser sus 'amantes'."
+    },
+    {
+      "id": "r_047",
+      "origen_id": "c_028",
+      "destino_id": "c_034",
+      "tipo": "argumenta_que_deben_unificarse",
+      "etiqueta": "un mismo hombre debe ser a la vez poeta trágico y poeta cómico",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Sócrates había forzado a sus dos interlocutores a que reconocieran que un mismo hombre debe ser a la vez poeta trágico y poeta cómico, y que cuando se sabe tratar la tragedia según las reglas del arte, se debe saber Igualmente tratar la comedia.",
+      "matiz": null,
+      "contexto": "En la conclusión del banquete, Sócrates expone una teoría sobre la unidad del conocimiento artístico."
+    }
+  ],
+  "bucles": [],
+  "metalenguaje": []
+}

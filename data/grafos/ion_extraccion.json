@@ -1,0 +1,262 @@
+{
+  "conceptos": [
+    {
+      "id": "c_001",
+      "label": "Rapsodista",
+      "tipo": "primitivo",
+      "descripcion": "Intérprete y recitador profesional de poesía épica, especialmente de Homero. Su habilidad es el tema central del diálogo, cuestionándose si proviene del arte (conocimiento técnico) o de una inspiración divina.",
+      "sinonimos_candidatos": [
+        "intérprete de los poetas"
+      ],
+      "menciones": 30,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Muchas veces, mi querido Ion, os he tenido envidia a los que sois rapsodistas, a causa de vuestra profesión."
+    },
+    {
+      "id": "c_002",
+      "label": "Arte / Técnica",
+      "tipo": "primitivo",
+      "descripcion": "Un cuerpo de conocimiento sistemático y racional (techne) que permite a una persona juzgar de manera competente y universal sobre todos los trabajos dentro de su dominio específico. Sócrates lo contrapone a la inspiración.",
+      "sinonimos_candidatos": [
+        "ciencia",
+        "habilidad"
+      ],
+      "menciones": 35,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Porque si pudieses hablar por el arte, estarías en estado de hacer lo mismo respecto todos los demás poetas."
+    },
+    {
+      "id": "c_003",
+      "label": "Inspiración Divina",
+      "tipo": "primitivo",
+      "descripcion": "Una fuerza no racional y de origen divino que posee a los poetas y rapsodistas, permitiéndoles crear y recitar obras bellas sin tener un conocimiento técnico o científico del contenido.",
+      "sinonimos_candidatos": [
+        "virtud divina",
+        "posesión divina",
+        "favor divino"
+      ],
+      "menciones": 10,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "no es en ti un efecto del arte, como decía antes, sino que es no sé qué virtud divina que te transporta"
+    },
+    {
+      "id": "c_004",
+      "label": "Poeta",
+      "tipo": "primitivo",
+      "descripcion": "El creador original de los poemas. Según Sócrates, no es un artesano que trabaja con una técnica, sino un ser 'alado, ligero y sagrado' que actúa como intérprete de los dioses bajo su inspiración.",
+      "sinonimos_candidatos": [
+        "intérprete de los dioses"
+      ],
+      "menciones": 25,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "los poetas no son más que sus intérpretes, cualquiera que sea el Dios que los posea."
+    },
+    {
+      "id": "c_005",
+      "label": "Entusiasmo / Posesión",
+      "tipo": "primitivo",
+      "descripcion": "Estado de éxtasis o 'fuera de sí' en el que se encuentran los poetas y rapsodistas al crear o actuar. Es la manifestación de la inspiración divina, en contraste con la deliberación racional del arte.",
+      "sinonimos_candidatos": [
+        "furor",
+        "delirio",
+        "estar fuera de sí mismo"
+      ],
+      "menciones": 8,
+      "confianza": 0.95,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "No es mediante el arte, sino por el entusiasmo y la inspiración, que los buenos poetas épicos componen sus bellos poemas."
+    },
+    {
+      "id": "c_006",
+      "label": "Cadena Magnética",
+      "tipo": "primitivo",
+      "descripcion": "Metáfora utilizada por Sócrates para describir la transmisión de la inspiración divina. La Musa es el imán (piedra de Heráclea) que atrae al poeta (primer anillo), quien a su vez atrae al rapsodista (anillo intermedio), y este al público (último anillo).",
+      "sinonimos_candidatos": [
+        "piedra de Heráclea"
+      ],
+      "menciones": 4,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "se ve algunas veces una larga cadena de trozos de hierro y de anillos suspendidos los unos de los otros, y todos estos anillos sacan su virtud de esta piedra."
+    },
+    {
+      "id": "c_007",
+      "label": "La Musa",
+      "tipo": "primitivo",
+      "descripcion": "La fuente divina original de la inspiración poética. Es el inicio de la cadena de transmisión de entusiasmo que llega hasta el público.",
+      "sinonimos_candidatos": [
+        "divinidad",
+        "Dios"
+      ],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "En igual forma, la musa inspira a los poetas, éstos comunican a otros su entusiasmo, y se forma una cadena de inspirados."
+    },
+    {
+      "id": "c_008",
+      "label": "Conocimiento",
+      "tipo": "primitivo",
+      "descripcion": "Entendimiento verdadero y justificado sobre un tema específico. Sócrates argumenta que el conocimiento de los temas tratados en la poesía (guerra, medicina, etc.) pertenece a los expertos de las artes correspondientes, no al poeta o al rapsodista.",
+      "sinonimos_candidatos": [
+        "saber",
+        "inteligencia"
+      ],
+      "menciones": 15,
+      "confianza": 0.9,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "Por consiguiente, el que no posee un arte, no está en estado de juzgar bien de lo que se dice o se hace en virtud de este arte."
+    },
+    {
+      "id": "c_009",
+      "label": "Intérprete",
+      "tipo": "primitivo",
+      "descripcion": "Aquel que transmite el pensamiento de otro. En la jerarquía de Sócrates, el rapsodista interpreta al poeta, y el poeta interpreta a los dioses.",
+      "sinonimos_candidatos": [],
+      "menciones": 5,
+      "confianza": 1.0,
+      "timestamp_primera_aparicion": null,
+      "cita_directa": "puesto que para los que le escuchan, es el intérprete del pensamiento de aquél"
+    }
+  ],
+  "relaciones": [
+    {
+      "id": "r_001",
+      "origen_id": "c_001",
+      "destino_id": "c_002",
+      "tipo": "es_refutado_por_carecer_de",
+      "etiqueta": "no eres capaz de hablar sobre Homero, ni por el arte, ni por la ciencia",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Es evidente, que tú no eres capaz de hablar sobre Homero, ni por el arte, ni por la ciencia.",
+      "matiz": "Argumento socrático principal: la habilidad del rapsodista no es una técnica.",
+      "contexto": "Sócrates explica por qué Ion solo puede hablar de Homero y no de otros poetas."
+    },
+    {
+      "id": "r_002",
+      "origen_id": "c_001",
+      "destino_id": "c_003",
+      "tipo": "es_explicado_por",
+      "etiqueta": "no es en tí efecto del arte, sino de una inspiración divina",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El talento, que tienes para alabar a Homero, no es en tí efecto del arte, sino de una inspiración divina.",
+      "matiz": "Socrates ofrece una explicación alternativa a la habilidad de Ion.",
+      "contexto": "Conclusión del argumento socrático sobre la naturaleza del talento de Ion."
+    },
+    {
+      "id": "r_003",
+      "origen_id": "c_004",
+      "destino_id": "c_003",
+      "tipo": "crea_mediante",
+      "etiqueta": "no componen merced al arte, sino por una inspiración divina",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Como los poetas no componen merced al arte, sino por una inspiración divina, y dicen sobre diversos objetos muchas cosas y muy bellas, tales como las que tú dices sobre Homero, cada uno de ellos sólo puede sobresalir en la clase de composición a que le arrastra la musa.",
+      "matiz": "La creatividad poética es presentada como un acto no-racional.",
+      "contexto": "Sócrates generaliza su argumento sobre Ion a todos los poetas."
+    },
+    {
+      "id": "r_004",
+      "origen_id": "c_003",
+      "destino_id": "c_005",
+      "tipo": "se_manifiesta_como",
+      "etiqueta": "entran en furor, y se ven arrastrados por un entusiasmo",
+      "bidireccional": false,
+      "confianza": 0.9,
+      "frase_completa": "los poetas no están con la sangre fría cuando componen sus preciosas odas, sino que desde el momento en que toman el tono de la armonía y el ritmo, entran en furor, y se ven arrastrados por un entusiasmo igual al de las bacantes",
+      "matiz": "El estado de posesión es la condición necesaria para la creación poética.",
+      "contexto": "Descripción del estado mental del poeta durante la composición."
+    },
+    {
+      "id": "r_005",
+      "origen_id": "c_003",
+      "destino_id": "c_006",
+      "tipo": "se_transmite_a_través_de_la",
+      "etiqueta": "virtud semejante a la piedra que... ha llamado magnética",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Ese talento, que tienes, de hablar bien sobre Homero, no es en ti un efecto del arte, como decía antes, sino que es no sé qué virtud divina que te transporta, virtud semejante a la piedra que Eurípides ha llamado magnética, y que los más llaman piedra de Heráclea.",
+      "matiz": "Metáfora central para explicar la transmisión no-racional de la inspiración.",
+      "contexto": "Sócrates introduce la analogía del imán para explicar la conexión entre la Musa, el poeta y el rapsodista."
+    },
+    {
+      "id": "r_006",
+      "origen_id": "c_006",
+      "destino_id": "c_007",
+      "tipo": "se_origina_en",
+      "etiqueta": "la musa inspira a los poetas",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "En igual forma, la musa inspira a los poetas, éstos comunican a otros su entusiasmo, y se forma una cadena de inspirados.",
+      "matiz": "La Musa es la fuente primera e iniciadora de la cadena de inspiración.",
+      "contexto": "Explicación del funcionamiento de la cadena magnética."
+    },
+    {
+      "id": "r_007",
+      "origen_id": "c_006",
+      "destino_id": "c_004",
+      "tipo": "incluye_como_primer_eslabón_al",
+      "etiqueta": "el primer anillo es el poeta mismo",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El rapsodista, tal como tú, el actor, es el anillo intermedio, y el primer anillo es el poeta mismo.",
+      "matiz": "El poeta es el primer receptor humano de la inspiración divina.",
+      "contexto": "Detalle de la estructura de la cadena de inspiración."
+    },
+    {
+      "id": "r_008",
+      "origen_id": "c_006",
+      "destino_id": "c_001",
+      "tipo": "incluye_como_eslabón_intermedio_al",
+      "etiqueta": "El rapsodista... es el anillo intermedio",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "El rapsodista, tal como tú, el actor, es el anillo intermedio, y el primer anillo es el poeta mismo.",
+      "matiz": "El rapsodista no origina, sino que transmite la inspiración que recibe del poeta.",
+      "contexto": "Detalle de la estructura de la cadena de inspiración."
+    },
+    {
+      "id": "r_009",
+      "origen_id": "c_002",
+      "destino_id": "c_008",
+      "tipo": "es_la_base_del",
+      "etiqueta": "el que no posee un arte, no está en estado de juzgar bien",
+      "bidireccional": false,
+      "confianza": 0.95,
+      "frase_completa": "Por consiguiente, el que no posee un arte, no está en estado de juzgar bien de lo que se dice o se hace en virtud de este arte.",
+      "matiz": "El conocimiento y el juicio correcto se derivan de la posesión de una técnica específica.",
+      "contexto": "Argumento socrático sobre la especialización del conocimiento."
+    },
+    {
+      "id": "r_010",
+      "origen_id": "c_001",
+      "destino_id": "c_009",
+      "tipo": "es_un",
+      "etiqueta": "sois los intérpretes de los poetas",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "Y vosotros los rapsodistas ¿no sois los intérpretes de los poetas?",
+      "matiz": "Define la función del rapsodista en la cadena de comunicación.",
+      "contexto": "Sócrates establece la jerarquía de interpretación."
+    },
+    {
+      "id": "r_011",
+      "origen_id": "c_004",
+      "destino_id": "c_009",
+      "tipo": "es_un",
+      "etiqueta": "los poetas... son para con nosotros los intérpretes de los dioses",
+      "bidireccional": false,
+      "confianza": 1.0,
+      "frase_completa": "me parece que los poetas, por un favor divino, son para con nosotros los intérpretes de los dioses.",
+      "matiz": "Define la función del poeta como mediador entre lo divino y lo humano.",
+      "contexto": "Ion acepta la explicación de Sócrates sobre el origen divino de la poesía."
+    }
+  ],
+  "bucles": [],
+  "metalenguaje": []
+}
