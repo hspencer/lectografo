@@ -96,12 +96,6 @@ config {
     -- eleccion dura mientras la pagina siga abierta y no se guarda.
     -- (El mapa de un grafo personal tiene su propio modo y abre en 2D.)
     modo_mapa_inicial: ModoMapa = tridimensional
-
-    profundidad_dendrograma: Integer = 3
-    -- Profundidad inicial del árbol de expansión del NavegadorDendrograma.
-    -- 2 = solo vecinos directos (poco contexto).
-    -- 3 = vecinos y sus vecinos (equilibrio recomendado).
-    -- 4+ = potencialmente abrumador con grafos densos.
 }
 
 ------------------------------------------------------------
@@ -252,8 +246,6 @@ surface VisualizacionGrafo {
             -- abiertas, porque sus listas de relaciones pueden haber cambiado.
 
     related:
-        NavegadorDendrograma(grafo)
-            -- Aspiracional: especificado mas abajo, aun no implementado.
         PanelValidacion(grafo.transcripcion)
         TablaConceptos(grafo)
         TablaRelaciones(grafo)
@@ -293,8 +285,10 @@ surface VisualizacionGrafo {
         -- sobre los conceptos del grafo, excluido el propio, que marca los
         -- que ya estan vinculados con el. Escribir en el buscador invalida
         -- la eleccion previa: no se crea la relacion sin un destino elegido
-        -- de la lista ni sin etiqueta. El tipo se elige del vocabulario
-        -- orientativo extraccion/TipoRelacion.
+        -- de la lista ni sin etiqueta. El tipo tambien se escribe en un
+        -- campo con autocompletar — sugiere extraccion/TipoRelacion mas los
+        -- tipos ya presentes en el grafo, pero acepta cualquier texto libre
+        -- (ontologia abierta, igual que TablaRelaciones y el grafo personal).
 
     @guidance
         -- El investigador puede arrastrar nodos y hacer zoom; la legibilidad
@@ -391,127 +385,6 @@ surface TablaRelaciones {
         -- origen — tipo — destino, en el sentido en que fue inscrita,
         -- tambien cuando es bidireccional (ver recorrido.allium, Parte II).
         -- Cada extremo es un enlace a ese concepto en TablaConceptos.
-}
-
-------------------------------------------------------------
--- Surface: navegador dendrograma — "el viñedo del texto"
-------------------------------------------------------------
-
--- ESTADO: aspiracional. Esta surface esta especificada pero no implementada.
--- Hoy la lectura ocurre en las tarjetas encadenadas de VisualizacionGrafo
--- (ver la pregunta abierta sobre la relacion entre ambas).
---
--- La superficie primaria de lectura semántica del grafo.
--- Invierte la jerarquía del mapa: la FRASE DE RELACIÓN (frase_completa) es
--- el elemento principal de cada rama; el nodo es el destino de esa frase.
--- Leer el árbol equivale a leer las proposiciones del texto en cadena:
---   "FUEGO —[todo es transformación de]→ LOGOS —[gobierna]→ COSMOS"
---
--- El investigador elige un nodo raíz y el árbol se bifurca desde ahí.
--- Los ciclos se muestran como referencias colapsadas; no se expanden para
--- evitar explosión combinatoria. La profundidad es configurable.
-
--- NodoEnContexto representa un nodo tal y como aparece en el recorrido:
--- con la frase que lo conecta a su padre, la dirección y su posición.
-value NodoEnContexto {
-    nodo: grafo/Nodo
-    relacion_entrada: grafo/Relacion?      -- null solo para la raíz
-    frase_entrada: String?                 -- relacion_entrada.frase_completa
-                                           -- la "frase oculta" que se revela al navegar
-    direccion_entrada: saliente | entrante | nula
-                                           -- saliente: padre→este; entrante: este→padre
-                                           -- Las relaciones bidireccionales se muestran
-                                           -- una sola vez con indicador ↔ (relacion_entrada.bidireccional)
-    profundidad: Integer                   -- 0 = raíz
-    es_referencia_ciclica: Boolean         -- ya aparece como ancestro en esta rama → no expandir
-                                           -- Un mismo nodo puede ser raíz en otra Perspectiva
-    es_nodo_de_bucle: Boolean              -- pertenece a algún Bucle del grafo (semántico, no de traversal)
-    expandido: Boolean                     -- el investigador abrió esta rama
-}
-
--- Perspectiva representa un árbol independiente con su propia raíz y profundidad.
--- El investigador puede abrir múltiples perspectivas simultáneas del mismo grafo.
-value Perspectiva {
-    id: String
-    raiz: grafo/Nodo
-    profundidad: Integer        -- 1..6; ajustable con slider por perspectiva
-    arbol: List<NodoEnContexto>
-}
-
-surface NavegadorDendrograma {
-    facing investigador: Investigador
-    context grafo: grafo/Grafo
-
-    -- Múltiples perspectivas simultáneas; la primera se abre automáticamente
-    -- desde el nodo con mayor out-degree.
-    let perspectivas = PerspectvasActivas(grafo)     -- inicialmente una
-
-    exposes:
-        grafo.titulo
-        for p in perspectivas:
-            p.id
-            p.raiz.label
-            p.raiz.descripcion_corta
-            p.profundidad
-            -- El árbol completo de esta perspectiva
-            for nec in p.arbol:
-                nec.nodo.label
-                nec.nodo.descripcion_corta
-                nec.nodo.tipos
-                nec.frase_entrada              -- proposición completa; el corazón del texto
-                nec.relacion_entrada.tipo
-                nec.relacion_entrada.bidireccional
-                nec.direccion_entrada
-                nec.profundidad
-                nec.es_referencia_ciclica
-                nec.es_nodo_de_bucle
-                nec.expandido
-
-    provides:
-        InvestigadorAbrePerspectiva(grafo, nodo)
-            -- Abre una nueva perspectiva centrada en nodo.
-            -- Cualquier nodo visible en cualquier perspectiva puede ser raíz.
-        InvestigadorCierraPerspectiva(perspectiva)
-            when perspectivas.count > 1
-            -- Se puede cerrar cualquier perspectiva salvo la última.
-        InvestigadorAjustaProfundidad(perspectiva, nueva_profundidad)
-            -- Slider 1–6 por perspectiva; recalcula el árbol inmediatamente.
-        InvestigadorExpandeRama(nodo_en_contexto)
-            when not nodo_en_contexto.es_referencia_ciclica
-             and not nodo_en_contexto.expandido
-        InvestigadorColapsaRama(nodo_en_contexto)
-            when nodo_en_contexto.expandido
-        InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
-
-    related:
-        VisualizacionGrafo(grafo)
-            -- Vista de topología global; accesible desde la misma pestaña
-        PanelValidacion(grafo.transcripcion)
-
-    @guarantee FrasesSiempreLegibles
-        -- Cada rama del árbol muestra frase_completa de la relación que la
-        -- conecta con su nodo padre. La frase es siempre el elemento
-        -- dominante, independientemente del número total de nodos del grafo.
-
-    @guarantee CiclosNoProducenExplosion
-        -- Un nodo que ya aparece como ancestro directo en la misma rama se
-        -- representa como referencia colapsada. No se expande.
-        -- Un nodo ya visitado en OTRA rama puede expandirse de nuevo.
-
-    @guarantee DireccionYBidireccionalidadVisibles
-        -- La dirección de cada relación (→ saliente, ← entrante, ↔ bidireccional)
-        -- es visible como indicador tipográfico en cada rama.
-        -- Una relación bidireccional aparece UNA SOLA VEZ; nunca se duplica.
-
-    @guarantee BuclesSemanticosDistinguibles
-        -- Los nodos que participan en un Bucle detectado por el LLM se
-        -- muestran con color diferente al de nodos no-bucle, distinguiéndolos
-        -- visualmente de los artefactos de traversal (es_referencia_ciclica).
-
-    @guarantee PerspectividadSimultanea
-        -- El investigador puede tener abiertas N perspectivas del mismo grafo.
-        -- Cada perspectiva tiene su propia raíz, profundidad y estado de expansión.
-        -- Las perspectivas no comparten estado entre sí.
 }
 
 ------------------------------------------------------------
@@ -824,34 +697,6 @@ deferred ModelosLocalesDisponibles    -- see: src/app.py: obtener_settings
     -- que lista su API compatible con OpenAI). Lista vacia si no responde.
 
 ------------------------------------------------------------
--- Deferred: NavegadorDendrograma
-------------------------------------------------------------
-
-deferred NodoRaizActiva    -- see: aspiracional, sin implementacion
-    -- (grafo: grafo/Grafo) -> grafo/Nodo
-    -- Devuelve el nodo con mayor out-degree (suma de salientes + entrantes).
-    -- En caso de empate, el primero en orden de creacion.
-
-deferred PerspectvasActivas    -- see: aspiracional, sin implementacion
-    -- (grafo: grafo/Grafo) -> List<Perspectiva>
-    -- Devuelve las perspectivas abiertas por el investigador en esta sesión.
-    -- Estado en memoria; no persiste entre sesiones.
-    -- Al abrir el grafo, contiene una única perspectiva desde NodoRaizActiva.
-
-deferred ProyectarArbol    -- see: aspiracional, sin implementacion
-    -- (grafo: grafo/Grafo, raiz: grafo/Nodo, profundidad_max: Integer) -> List<NodoEnContexto>
-    -- Recorrido DFS desde raiz hasta profundidad_max.
-    -- Incluye tanto relaciones SALIENTES (padre es origen) como ENTRANTES (padre es destino).
-    -- Una relación bidireccional aparece UNA SOLA VEZ: como saliente desde el lado que
-    -- inicia el recorrido, con relacion_entrada.bidireccional = true.
-    -- Cycle detection es PATH-LOCAL: un nodo ya en la ruta de ancestros directos
-    -- → es_referencia_ciclica = true y no se expande.
-    -- Un mismo nodo puede expandirse en distintas ramas si no es ancestro directo en esa rama.
-    -- es_nodo_de_bucle = true si el nodo aparece en algún Bucle del grafo.
-    -- Orden de los hijos: primero salientes, luego entrantes; dentro de cada grupo,
-    -- orden de creacion de la relacion.
-
-------------------------------------------------------------
 -- Preguntas abiertas
 ------------------------------------------------------------
 
@@ -862,27 +707,6 @@ open question "La surface VisualizacionGrafo expone la densidad pero no expone l
 open question "VisualizacionGrafoEnConstruccion: ¿la frase actualmente en proceso se muestra en el mapa (p.ej. como tooltip o panel lateral con el texto fuente), o solo el mapa de nodos y relaciones?"
 
 open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstruccion cierra y muestra el grafo parcial hasta ese punto, o vuelve a PanelBiblioteca?"
-
-open question "Las tarjetas encadenadas sobre el mapa ya funcionan como superficie de lectura y, como el dendrograma, forman un arbol con varias raices y relaciones salientes y entrantes. ¿Sustituyen al NavegadorDendrograma (y se retira esa surface y su DECISIÓN RESUELTA), lo complementan (lectura elegida paso a paso frente a arbol calculado hasta cierta profundidad), o el dendrograma sigue siendo la superficie primaria pendiente de implementar?"
-
-open question "La sección Vincular de la tarjeta ofrece como tipo solo el vocabulario orientativo cerrado (fundamenta, amplifica, ...), mientras TablaRelaciones y el grafo personal permiten tipo libre. ¿Debe Vincular aceptar también tipo libre (ontologia abierta, ver recorrido.allium) o la relacion autoral debe restringirse al vocabulario orientativo?"
-
--- DECISIÓN RESUELTA: NavegadorDendrograma incluye relaciones SALIENTES y ENTRANTES
--- desde cada nodo padre. Las salientes se listan primero; las entrantes después.
-
--- DECISIÓN RESUELTA: Las relaciones bidireccionales aparecen UNA SOLA VEZ con
--- el indicador ↔. No se duplican.
-
--- DECISIÓN RESUELTA: El investigador puede tener MÚLTIPLES perspectivas simultáneas.
--- Cada perspectiva es una columna independiente con su propia raíz y profundidad.
--- Se pueden abrir desde cualquier nodo visible. La última perspectiva no se puede cerrar.
-
--- DECISIÓN RESUELTA: Los nodos que pertenecen a un Bucle semántico detectado por el
--- LLM se muestran con color distinto (amber/warning). Los artefactos de traversal
--- (es_referencia_ciclica) se muestran colapsados con icono ↺. Son categorías distintas.
-
--- DECISIÓN RESUELTA: La profundidad se ajusta con un SLIDER EN TIEMPO REAL por
--- perspectiva (rango 1–6). El árbol se recalcula inmediatamente al mover el slider.
 
 -- DECISIÓN RESUELTA: El investigador selecciona el modelo local (Ollama o
 -- LM Studio) de una lista consultada en tiempo real al endpoint del proveedor
@@ -896,9 +720,15 @@ open question "La sección Vincular de la tarjeta ofrece como tipo solo el vocab
 -- DECISIÓN RESUELTA: El navegador de columnas del mapa fue reemplazado por
 -- tarjetas flotantes encadenadas (ver VisualizacionGrafo y recorrido.allium).
 
--- DECISIÓN RESUELTA: La visualización force-directed (VisualizacionGrafo) se
--- mantiene como vista de topología secundaria. La superficie de lectura primaria
--- pasa a ser NavegadorDendrograma, donde la frase_completa de cada relación es
--- el elemento dominante de cada rama del árbol.
--- (Puesta en tension por las tarjetas encadenadas: ver la pregunta abierta
--- sobre su relacion con el NavegadorDendrograma.)
+-- DECISIÓN RESUELTA: Las tarjetas flotantes encadenadas SUSTITUYEN al
+-- NavegadorDendrograma: esa surface, sus value NodoEnContexto/Perspectiva y
+-- sus deferred (NodoRaizActiva, PerspectvasActivas, ProyectarArbol) se
+-- retiraron de este spec. La superficie de lectura primaria del grafo es
+-- VisualizacionGrafo; la visualización force-directed es su soporte
+-- espacial, no una vista secundaria aparte.
+
+-- DECISIÓN RESUELTA: La sección Vincular de la tarjeta acepta tipo de
+-- relación LIBRE (ontología abierta), igual que TablaRelaciones y el grafo
+-- personal — ya no está restringida al vocabulario orientativo cerrado. El
+-- campo se autocompleta con ese vocabulario mas los tipos ya presentes en
+-- el grafo, pero admite cualquier texto. Ver VincularEligeDestinoDeLaLista.

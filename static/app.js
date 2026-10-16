@@ -912,8 +912,6 @@ function buildRelacionesHTML(nodo) {
 }
 
 function buildNuevaRelacionHTML(nodo) {
-  const TIPOS = ["fundamenta","amplifica","especifica","contraposicion","constituye","genera","presupone"];
-
   return `<details class="panel-seccion">
     <summary class="panel-seccion-titulo panel-seccion-summary">${ico("link",13)} Vincular</summary>
     <div class="campo">
@@ -926,9 +924,10 @@ function buildNuevaRelacionHTML(nodo) {
     </div>
     <div class="campo">
       <span class="campo-etiq">Tipo</span>
-      <select id="nr-tipo" class="edit-select" style="width:100%">
-        ${TIPOS.map(t=>`<option value="${t}">${t}</option>`).join("")}
-      </select>
+      <div style="position:relative">
+        <input id="nr-tipo" class="edit-input" placeholder="Tipo…" autocomplete="off" value="${esc(TIPOS_REL[0])}" style="width:100%">
+        <ul class="gp-ac-dropdown" id="nr-tipo-drop" hidden></ul>
+      </div>
     </div>
     <div class="campo">
       <span class="campo-etiq">Etiqueta de la relación</span>
@@ -981,6 +980,18 @@ function bindPanelListeners(el, nodo, cardId) {
         .map(n => ({ label: n.label, meta: conectados.has(n.id) ? "vinculado" : "", onSelect: inp => { inp.value = n.label; nrDestId.value = n.id; } }))
     );
     nrDestTxt.addEventListener("input", () => { nrDestId.value = ""; });
+  }
+
+  // Tipo: autocompletar con el vocabulario orientativo + los tipos ya usados
+  // en el grafo, pero acepta cualquier texto libre (ontología abierta).
+  const nrTipo     = el.querySelector("#nr-tipo");
+  const nrTipoDrop = el.querySelector("#nr-tipo-drop");
+  if (nrTipo) {
+    _gpWireAutocomplete(nrTipo, nrTipoDrop, () => {
+      const tipos = new Set(TIPOS_REL);
+      (state.grafo?.links || []).forEach(l => { if (l.tipo) tipos.add(l.tipo); });
+      return [...tipos].sort().map(t => ({ label: t, meta: "", onSelect: inp => { inp.value = t; } }));
+    }, { showAllOnFocus: true });
   }
 
   el.querySelector("#nr-crear")?.addEventListener("click", () => {

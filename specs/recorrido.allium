@@ -37,9 +37,12 @@
 --   - La doble inscripcion del recorrido: tarjetas encadenadas + resalte en el mapa
 --
 -- Excludes:
---   - El dendrograma (Perspectiva / NodoEnContexto viven en surfaces.allium).
---     El dendrograma es el ARBOL de recorridos posibles; el Recorrido es UNA
---     linea elegida dentro de ese arbol. Ver "Recorrido frente a Perspectiva".
+--   - El dendrograma (NavegadorDendrograma, Perspectiva / NodoEnContexto):
+--     retirado de surfaces.allium, sustituido por las tarjetas encadenadas.
+--     La comparacion con Perspectiva se conserva como nota historica en
+--     "Recorrido frente a Perspectiva" porque explica por que el Recorrido
+--     es, en teoria de grafos, un WALK y no un TRAIL — pero Perspectiva ya
+--     no esta especificada en ningun modulo.
 --   - La mecanica de la sesion de reconexion (vive en getYourStuffTogether.allium);
 --     aqui solo se destila su CRITERIO de aceptacion.
 --   - La materializacion de relaciones desde decisiones validadas (vive en
@@ -530,10 +533,17 @@ deferred RecorridosAbiertos.activos    -- see: static/app.js: state.mapaCards
 --     Implementado en filtrar_conexiones_que_reducen_componentes.
 
 ------------------------------------------------------------
--- Recorrido frente a Perspectiva: eleccion frente a posibilidad
+-- Recorrido frente a Perspectiva: eleccion frente a posibilidad (historico)
 ------------------------------------------------------------
 
--- surfaces.allium ya define Perspectiva: un ARBOL proyectado desde una raiz
+-- NOTA: Perspectiva pertenecia a NavegadorDendrograma, retirado de
+-- surfaces.allium (las tarjetas encadenadas lo sustituyen). Ya no existe
+-- como spec. Esta comparacion se conserva porque el contraste con ese
+-- diseño descartado es lo que mejor explica, por oposicion, que el
+-- Recorrido es un WALK y no un TRAIL (ver el cierre de esta seccion) — no
+-- porque Perspectiva siga vigente en algun modulo.
+--
+-- surfaces.allium definia Perspectiva como un ARBOL proyectado desde una raiz
 -- hasta cierta profundidad, con todas las ramas simultaneamente visibles.
 -- Recorrido y Perspectiva se construyen sobre las mismas aristas y con el
 -- mismo criterio de oferta (salientes y entrantes por igual), pero son
