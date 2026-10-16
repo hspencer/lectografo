@@ -30,7 +30,7 @@ html, body {
 #topbar-left {
   flex: 1;
   min-width: 0;
-  display: flex; align-items: baseline; gap: var(--sn-s-3);
+  display: flex; align-items: center; gap: var(--sn-s-2);
 }
 
 #app-name {
@@ -41,7 +41,13 @@ html, body {
   white-space: nowrap;
 }
 
+#topbar-chevron {
+  display: flex; align-items: center; flex-shrink: 0;
+  color: var(--sn-ink-faint);
+}
+
 #transcripcion-titulo {
+  font-size: var(--sn-fs-xs);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -68,16 +74,14 @@ html, body {
 .tab-btn:hover { background: var(--sn-sunk); color: var(--sn-ink); }
 .tab-btn.active { background: var(--sn-ink); color: var(--sn-paper); }
 
-/* ── Buscador de conceptos (mapa) ─────────────────────────────────── */
+/* ── Buscador de conceptos (en la topbar) ─────────────────────────── */
 #mapa-buscar-wrap {
-  position: absolute;
-  top: var(--sn-s-4);
-  left: var(--sn-s-4);
-  z-index: 10;
-  pointer-events: auto;
+  position: relative;
+  flex-shrink: 0;
+  margin-left: var(--sn-s-2);
 }
-#mapa-buscar-wrap .buscar-input { width: 200px; }
-#mapa-buscar-wrap .buscar-input:focus { width: 260px; }
+#mapa-buscar-wrap .buscar-input { width: 180px; }
+#mapa-buscar-wrap .buscar-input:focus { width: 240px; }
 
 .mapa-buscar-dropdown {
   position: absolute;
@@ -945,11 +949,12 @@ tbody tr:hover td { background: var(--sn-sunk); }
 .bib-vacia p { margin-bottom: var(--sn-s-2); }
 
 .btn-back {
-  padding: var(--sn-s-1) var(--sn-s-3); font-size: var(--sn-fs-sm);
-  border: var(--sn-hair); border-radius: var(--sn-radius);
+  display: flex; align-items: center; justify-content: center;
+  width: var(--sn-ctl); height: var(--sn-ctl); flex-shrink: 0;
+  border: none; border-radius: var(--sn-radius);
   background: none; cursor: pointer;
-  color: var(--sn-ink-soft); font-family: var(--sn-font-text);
-  transition: all var(--sn-dur-1); white-space: nowrap;
+  color: var(--sn-ink-soft);
+  transition: all var(--sn-dur-1);
 }
 .btn-back:hover { background: var(--sn-sunk); color: var(--sn-ink); }
 

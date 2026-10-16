@@ -26,9 +26,19 @@
   <!-- ── Topbar ──────────────────────────────────────────────────── -->
   <header id="topbar">
     <div id="topbar-left">
-      <button id="btn-biblioteca" class="btn-back" hidden>← Biblioteca</button>
+      <button id="btn-biblioteca" class="btn-back" hidden title="Volver a la biblioteca" aria-label="Volver a la biblioteca">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
       <span id="app-name">Lectógrafo</span>
+      <span id="topbar-chevron" hidden aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
       <span id="transcripcion-titulo" class="muted"></span>
+      <div id="mapa-buscar-wrap" hidden>
+        <input id="mapa-buscar" class="buscar-input" type="text"
+               placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
+        <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
+      </div>
     </div>
 
     <nav id="tabs" hidden>
@@ -163,12 +173,6 @@
       <div id="grafo-canvas">
         <svg id="grafo-svg"></svg>
         <div id="grafo-3d" hidden></div>
-        <!-- Buscador de conceptos: overlay sobre el canvas -->
-        <div id="mapa-buscar-wrap">
-          <input id="mapa-buscar" class="buscar-input" type="text"
-                 placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
-          <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
-        </div>
         <div id="grafo-controles">
           <button id="btn-fit" class="grafo-ctrl-btn" title="Ajustar vista">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>

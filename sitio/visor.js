@@ -60,9 +60,37 @@ async function init() {
     renderMapa();
   };
 
+  document.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => activarTab(b.dataset.tab)));
+
   initMapaBuscar();
   renderMapa();
 }
+
+function activarTab(nombre) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === nombre));
+  document.getElementById("tab-mapa").hidden  = nombre !== "mapa";
+  document.getElementById("tab-texto").hidden = nombre !== "texto";
+  if (nombre === "texto") renderTexto();
+}
+
+function renderTexto() {
+  const el = document.getElementById("texto-render");
+  const texto = state.grafo?.texto || "";
+  if (!texto) { el.innerHTML = `<p class="muted">No hay texto fuente disponible.</p>`; return; }
+  if (window._marked) {
+    el.innerHTML = window._marked.parse(texto);
+  } else {
+    el.innerHTML = texto.split(/\n{2,}/).map(p => `<p>${esc(p.trim()).replace(/\n/g, "<br>")}</p>`).join("");
+  }
+}
+
+// Cargar marked.js de forma diferida (solo se usa si se abre el tab Texto)
+(async () => {
+  try {
+    const { marked } = await import("https://cdn.jsdelivr.net/npm/marked@12/+esm");
+    window._marked = { parse: marked };
+  } catch(_) { /* fallback a párrafos planos */ }
+})();
 
 async function renderMapa() {
   const gen = ++renderGen;
@@ -88,13 +116,23 @@ async function renderMapa() {
   state.grafoDestroy = null;
 
   if (state.modo3d) {
-    const { fitView, highlightPath, centerOnNode, destroy } = modulo.initGrafo3D(el3d, state.grafo, onNodoSeleccionado);
+    let res;
+    try {
+      res = modulo.initGrafo3D(el3d, state.grafo, onNodoSeleccionado);
+    } catch (e) {
+      // WebGL puede fallar en tiempo de init (GPU no disponible/bloqueada).
+      // En vez de dejar el mapa en blanco, caer a la vista 2D.
+      console.warn("Vista 3D no disponible, se usa 2D:", e.message);
+      state.modo3d = false;
+      return renderMapa();
+    }
+    const { fitView, highlightPath, centerOnNode, destroy, relColorScale, relTypes } = res;
     state.grafoFit      = fitView;
     state.grafoHighlight = highlightPath;
     state.grafoCenter   = centerOnNode;
     state.grafoDestroy  = destroy;
-    state.relColor      = null;
-    document.getElementById("leyenda-tipos").innerHTML = "";
+    state.relColor      = relColorScale;
+    renderLeyenda(relColorScale, relTypes);
   } else {
     const { relColorScale, relTypes, highlightPath, centerOnNode, fitView } = modulo.initGrafo(svgEl, state.grafo, onNodoSeleccionado);
     state.grafoFit       = fitView;

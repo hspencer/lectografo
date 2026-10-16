@@ -373,5 +373,7 @@ export function initGrafo3D(container, { nodes: rN, links: rL }, onSelect, { aut
     panBy,
     fitView: () => graph.zoomToFit(400, 60),
     destroy: () => { ro.disconnect(); destroyGrafo3D(); },
+    relColorScale: relColor,
+    relTypes,
   };
 }

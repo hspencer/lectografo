@@ -23,10 +23,25 @@
 
   <header id="topbar">
     <div id="topbar-left">
-      <a id="btn-biblioteca" class="btn-back" href="./index.html">← Biblioteca</a>
+      <a id="btn-biblioteca" class="btn-back" href="./index.html" title="Volver a la biblioteca" aria-label="Volver a la biblioteca">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </a>
       <span id="app-name">Lectógrafo</span>
+      <span id="topbar-chevron" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
       <span id="grafo-titulo" class="muted"></span>
+      <div id="mapa-buscar-wrap">
+        <input id="mapa-buscar" class="buscar-input" type="text"
+               placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
+        <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
+      </div>
     </div>
+
+    <nav id="tabs">
+      <button class="tab-btn active" data-tab="mapa">Mapa</button>
+      <button class="tab-btn" data-tab="texto">Texto</button>
+    </nav>
   </header>
 
   <!-- Mismo layout que el tab Mapa de la app: .tab-panel se posiciona
@@ -36,13 +51,6 @@
       <div id="grafo-canvas">
         <svg id="grafo-svg" aria-label="Mapa de conceptos"></svg>
         <div id="grafo-3d" hidden aria-label="Mapa de conceptos en 3D"></div>
-
-        <!-- Buscador de conceptos: overlay sobre el canvas -->
-        <div id="mapa-buscar-wrap">
-          <input id="mapa-buscar" class="buscar-input" type="text"
-                 placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
-          <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
-        </div>
 
         <div id="grafo-controles">
           <button id="btn-fit" class="grafo-ctrl-btn" title="Ajustar vista">
@@ -70,6 +78,12 @@
           </svg>
         </div>
       </div>
+    </div>
+  </main>
+
+  <main id="tab-texto" class="tab-panel" hidden>
+    <div id="texto-wrap">
+      <div id="texto-render"></div>
     </div>
   </main>
 

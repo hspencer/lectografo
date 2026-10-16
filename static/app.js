@@ -134,6 +134,8 @@ async function mostrarBiblioteca(extData) {
   // Topbar: modo biblioteca
   document.getElementById("btn-biblioteca").hidden = true;
   document.getElementById("tabs").hidden = true;
+  document.getElementById("topbar-chevron").hidden = true;
+  document.getElementById("mapa-buscar-wrap").hidden = true;
   document.getElementById("transcripcion-titulo").textContent = "";
 
   // Ocultar paneles de texto y vista GP, mostrar biblioteca
@@ -603,6 +605,8 @@ async function abrirTexto(slug) {
   // Topbar: modo texto
   document.getElementById("btn-biblioteca").hidden = false;
   document.getElementById("tabs").hidden = false;
+  document.getElementById("topbar-chevron").hidden = false;
+  document.getElementById("mapa-buscar-wrap").hidden = false;
 
   // Cargar datos del texto
   await cargarValidacion(slug);
@@ -668,11 +672,12 @@ async function initMapa() {
     });
   }
 
+  // ── Buscador de conceptos (en la topbar: debe quedar listo aunque la
+  // inicialización del mapa de fuerza falle, p.ej. sin WebGL) ──────────
+  initMapaBuscar();
+
   // ── Grafo de fuerza (raíz de la navegación) ────────────────────────
   await initMapaForce();
-
-  // ── Buscador de conceptos ──────────────────────────────────────────
-  initMapaBuscar();
 
   // ── Botones de mantenimiento del grafo ─────────────────────────────
   await actualizarBotonSesion(SESION_RECONEXION);
@@ -699,13 +704,25 @@ async function initMapaForce() {
   if (state.modo3d) {
     svgEl.setAttribute("hidden", ""); el3d.removeAttribute("hidden");
     const { initGrafo3D } = await import("./grafo3d.js");
-    const { updateVisuals, highlightPath, centerOnNode, panBy, fitView, destroy } = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
+    let res;
+    try {
+      res = initGrafo3D(el3d, state.grafo, onNodoSeleccionado, { autoFit: !yaEn3D });
+    } catch (e) {
+      // WebGL puede fallar en tiempo de init (GPU no disponible/bloqueada).
+      // En vez de dejar el mapa en blanco, caer a la vista 2D.
+      console.warn("Vista 3D no disponible, se usa 2D:", e.message);
+      state.modo3d = false;
+      return initMapaForce();
+    }
+    const { updateVisuals, highlightPath, centerOnNode, panBy, fitView, destroy, relColorScale, relTypes } = res;
     state.grafoUpdate    = updateVisuals;
     state.grafoHighlight = highlightPath;
     state.grafoCenter    = centerOnNode;
     state.grafoPan       = panBy;
     state.grafoFit       = fitView;
     state.grafoDestroy   = destroy;
+    state.relColor       = relColorScale;
+    renderLeyenda(relColorScale, relTypes);
   } else {
     svgEl.removeAttribute("hidden"); el3d.setAttribute("hidden", "");
     const { initGrafo } = await import("./grafo.js");
@@ -2530,6 +2547,9 @@ async function abrirGrafoPersonal(slug) {
   document.getElementById("vista-gp").hidden = false;
   document.getElementById("btn-biblioteca").hidden = false;
   document.getElementById("tabs").hidden = true;
+  document.getElementById("topbar-chevron").hidden = true;
+  document.getElementById("mapa-buscar-wrap").hidden = true;
+  document.getElementById("transcripcion-titulo").textContent = "";
   document.querySelectorAll(".tab-panel").forEach(p => { p.hidden = true; });
 
   history.pushState(null, "", `#gp:${slug}`);

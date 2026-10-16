@@ -17,14 +17,29 @@ import shutil
 import sys
 from pathlib import Path
 
-RAIZ    = Path(__file__).parent
-GRAFOS  = RAIZ / "data" / "grafos"
-SITIO   = RAIZ / "sitio"
-STATIC  = RAIZ / "static"
-DOCS    = RAIZ / "docs"
+RAIZ        = Path(__file__).parent
+GRAFOS      = RAIZ / "data" / "grafos"
+SITIO       = RAIZ / "sitio"
+STATIC      = RAIZ / "static"
+DOCS        = RAIZ / "docs"
+TRANSCRIPTS = RAIZ / "transcripts"
 
 ASSETS_ESTATICOS = ["grafo.js", "grafo3d.js", "floatcards.js", "style.css", "sistema/tokens.css"]
 PAGINAS           = ["index.html", "index.js", "visor.html", "visor.js"]
+
+_EXTS_TRANSCRIPT = ("txt", "md", "vtt", "srt")
+
+
+def _slug_de_archivo(ruta: Path) -> str:
+    return ruta.stem.lower().replace(" ", "_")[:50]
+
+
+def _texto_original(slug: str) -> str:
+    for ext in _EXTS_TRANSCRIPT:
+        for f in TRANSCRIPTS.glob(f"*.{ext}"):
+            if _slug_de_archivo(f) == slug:
+                return f.read_text(encoding="utf-8", errors="replace")
+    return ""
 
 
 def main():
@@ -50,6 +65,7 @@ def main():
         serializado = serializar_para_d3(grafo)
         serializado["slug"] = slug
         serializado["titulo"] = grafo.titulo
+        serializado["texto"] = estado.texto_editado or _texto_original(slug)
 
         (DOCS / "data" / f"{slug}.json").write_text(
             json.dumps(serializado, ensure_ascii=False), encoding="utf-8"
