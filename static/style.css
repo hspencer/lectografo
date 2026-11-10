@@ -1368,6 +1368,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 #gp-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-items: start;  /* si no, el grid estira la tarjeta y con overflow:hidden colapsa */
   gap: var(--sn-s-3);
 }
 
