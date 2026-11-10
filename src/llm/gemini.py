@@ -15,6 +15,9 @@ class GeminiLLM(EvaluadorLLM):
         self._client = genai.Client(api_key=settings.gemini_api_key)
         self.model_name = settings.gemini_model
 
+    # invocar() es idéntico para Gemini (API key) y Vertex AI (ADC, sin
+    # key): google-genai unifica ambos backends detrás del mismo Client.
+
     def invocar(self, prompt_sistema: str, texto: str, on_token=None, on_texto=None, should_cancel=None) -> str:
         from google.genai import types
 

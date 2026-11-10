@@ -17,7 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.config import settings
-from src.contexto_biblioteca import _DirectorioPorBiblioteca, middleware_biblioteca
+from src.contexto_biblioteca import _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca
 from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import (
     AnotacionInvestigador,
@@ -1801,6 +1801,7 @@ def _leer_key_env(nombre: str) -> str | None:
 @app.get("/api/settings")
 async def obtener_settings():
     """Configuración actual + modelos disponibles y estado por proveedor."""
+    exigir_admin()
     modelos: list[str] = []
     ollama_ok = False
     lmstudio_ok = False
@@ -1850,6 +1851,10 @@ async def obtener_settings():
                 "model":   settings.gemini_model,
                 "has_key": bool(_leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key),
             },
+            "vertexai": {
+                "model":   settings.vertexai_model,
+                "has_key": True,  # ADC de la cuenta de servicio, no requiere key
+            },
         },
     }
 
@@ -1862,7 +1867,8 @@ class SettingsPayload(BaseModel):
 @app.patch("/api/settings")
 async def actualizar_settings(payload: SettingsPayload):
     """Cambia el proveedor y/o modelo en uso. Escribe .env y actualiza en memoria."""
-    valid_providers = {"ollama", "lmstudio", "anthropic", "openai", "gemini"}
+    exigir_admin()
+    valid_providers = {"ollama", "lmstudio", "anthropic", "openai", "gemini", "vertexai"}
     new_provider = (payload.provider or "").strip() or None
     if new_provider and new_provider not in valid_providers:
         raise HTTPException(400, f"Proveedor no reconocido: '{new_provider}'")
@@ -1904,6 +1910,10 @@ async def actualizar_settings(payload: SettingsPayload):
             new_model = env_model
         else:
             new_model = _GEMINI_DEFAULT
+    elif target == "vertexai":
+        # Sin API key: ADC de la cuenta de servicio de Cloud Run factura al
+        # proyecto. Ver src/llm/vertexai.py.
+        new_model = (payload.model or "").strip() or settings.vertexai_model
 
     if new_provider and new_provider != settings.provider:
         _actualizar_env("PROVIDER", new_provider)

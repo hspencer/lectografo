@@ -100,9 +100,13 @@ async function initTab(nombre) {
 // ════════════════════════════════════════════════════════════════════════
 async function init() {
   const exts = await apiFetch("/api/extracciones");
+  initSettingsPanel();
   const h = location.hash.slice(1);
   if (h.startsWith("gp:")) {
     await abrirGrafoPersonal(h.slice(3));
+  } else if (h === "config") {
+    await mostrarBiblioteca(exts);
+    abrirConfig();
   } else if (h && exts.find(e => e.slug === h)) {
     await abrirTexto(h);
   } else {
@@ -110,7 +114,6 @@ async function init() {
   }
   initNuevoGPForm();
   initFichaModal();
-  initSettingsPanel();
   initMapaArrows();
 }
 
@@ -631,8 +634,26 @@ async function abrirTexto(slug) {
   _actualizarFaviconParaTexto(slug);
 }
 
+function abrirConfig() {
+  document.getElementById("vista-biblioteca").hidden = true;
+  document.getElementById("vista-gp").hidden = true;
+  document.getElementById("vista-config").hidden = false;
+  document.getElementById("btn-biblioteca").hidden = false;
+  document.getElementById("tabs").hidden = true;
+  document.getElementById("topbar-chevron").hidden = true;
+  document.getElementById("mapa-buscar-wrap").hidden = true;
+  history.pushState(null, "", "#config");
+  window._cargarConfig?.();
+}
+
 function volverBiblioteca() {
   if (_pollingBiblioteca) { clearInterval(_pollingBiblioteca); _pollingBiblioteca = null; }
+  const vistaConfig = document.getElementById("vista-config");
+  if (!vistaConfig.hidden) {
+    vistaConfig.hidden = true;
+    mostrarBiblioteca();
+    return;
+  }
   // Si estamos en un grafo personal, limpiar ese estado
   if (gpState.slug) { volverBibliotecaDesdeGP(); return; }
   // Invalidar caché del mini-mapa del texto activo para que se recargue con cambios
@@ -1751,6 +1772,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const h = location.hash.slice(1);
     if (!h) volverBiblioteca();
     else if (h.startsWith("gp:")) abrirGrafoPersonal(h.slice(3));
+    else if (h === "config") abrirConfig();
   });
 
   // Firebase restaura la sesión de forma async (lee IndexedDB); sin esto
@@ -1777,8 +1799,6 @@ function esc(str) {
 
 function initSettingsPanel() {
   const btn       = document.getElementById("btn-settings");
-  const panel     = document.getElementById("settings-panel");
-  const cerrar    = document.getElementById("settings-panel-cerrar");
   const modelSel  = document.getElementById("settings-model-sel");
   const modelCustom = document.getElementById("settings-model-custom");
   const keyStatus = document.getElementById("settings-key-status");
@@ -1792,6 +1812,7 @@ function initSettingsPanel() {
     anthropic: ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-5-20251001"],
     openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
     gemini:    ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
+    vertexai:  ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
   };
 
   let _cfg = null;       // última config recibida del servidor
@@ -1809,7 +1830,7 @@ function initSettingsPanel() {
     });
 
     // Indicadores ✓/✗ de API keys
-    ["anthropic", "openai", "gemini"].forEach(p => {
+    ["anthropic", "openai", "gemini", "vertexai"].forEach(p => {
       const ind = document.getElementById(`settings-key-${p}`);
       if (!ind) return;
       const ok = (ps[p] || {}).has_key;
@@ -1868,9 +1889,12 @@ function initSettingsPanel() {
 
     _toggleCustomInput();
 
-    // Estado: locales no necesitan API key
+    // Estado: locales no necesitan API key; Vertex AI factura al proyecto
     if (isLocal) {
       keyStatus.textContent = "";
+    } else if (provider === "vertexai") {
+      keyStatus.innerHTML = ico("check", 10) + " Factura a la cuenta de Google Cloud del proyecto";
+      keyStatus.style.color = "var(--sn-ok)";
     } else {
       const ok = ps.has_key;
       keyStatus.innerHTML = ok
@@ -1901,30 +1925,9 @@ function initSettingsPanel() {
     }
   }
 
-  // ── Abrir / cerrar panel ─────────────────────────────────────────
-  btn.addEventListener("click", () => {
-    if (!panel.hidden) { _cerrar(); return; }
-    // Abrir inmediatamente
-    panel.hidden = false;
-    btn.classList.add("active");
-    // Renderizar con cache si existe, luego actualizar en segundo plano
-    if (_cfg) _render();
-    _cargar();  // no se awaita — actualiza en background
-  });
-
-  function _cerrar() {
-    panel.hidden = true;
-    btn.classList.remove("active");
-  }
-
-  cerrar.addEventListener("click", _cerrar);
-
-  // Cerrar al clic fuera
-  document.addEventListener("click", e => {
-    if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) {
-      _cerrar();
-    }
-  });
+  // ── Abrir la vista de configuración (página propia, no overlay) ──
+  btn.addEventListener("click", abrirConfig);
+  window._cargarConfig = () => { if (_cfg) _render(); _cargar(); };
 
   // ── Cambio de proveedor ──────────────────────────────────────────
   document.querySelectorAll('input[name="settings-provider"]').forEach(r => {

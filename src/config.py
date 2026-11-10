@@ -17,6 +17,12 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4o"
     gemini_model: str = "gemini-2.0-flash"
 
+    # Vertex AI: factura al proyecto GCP (sin API key personal), vía la
+    # cuenta de servicio de Cloud Run. Ver block:lectografo:firebase:* en Vera.
+    vertexai_project: str = "lectografo"
+    vertexai_location: str = "us-central1"
+    vertexai_model: str = "gemini-2.5-flash"
+
     # Ollama local
     ollama_endpoint: str = "http://localhost:11434"
     ollama_model: Optional[str] = None
@@ -41,7 +47,7 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validar_proveedor(self):
-        validos = {"anthropic", "openai", "gemini", "ollama", "lmstudio"}
+        validos = {"anthropic", "openai", "gemini", "vertexai", "ollama", "lmstudio"}
         if self.provider not in validos:
             raise ValueError(f"PROVIDER='{self.provider}' no reconocido. Opciones: {validos}")
         if self.provider == "ollama" and not self.ollama_model:

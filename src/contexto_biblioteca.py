@@ -14,6 +14,7 @@ from contextvars import ContextVar
 from pathlib import Path
 
 import firebase_admin
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from firebase_admin import auth as fb_auth, firestore
 
@@ -33,18 +34,21 @@ except Exception:
 
 biblioteca_actual: ContextVar[str | None] = ContextVar("biblioteca_actual", default=None)
 persona_actual: ContextVar[str | None] = ContextVar("persona_actual", default=None)
+es_admin_actual: ContextVar[bool] = ContextVar("es_admin_actual", default=False)
 
-_cache_biblioteca: dict[str, str | None] = {}
+_cache_persona: dict[str, tuple[str | None, bool]] = {}
 
 
-def _biblioteca_de(uid: str) -> str | None:
-    if uid in _cache_biblioteca:
-        return _cache_biblioteca[uid]
+def _datos_persona(uid: str) -> tuple[str | None, bool]:
+    """(bibliotecaId principal, esAdmin) -- una sola lectura de Firestore por uid."""
+    if uid in _cache_persona:
+        return _cache_persona[uid]
     doc = firestore.client().collection("personas").document(uid).get()
-    ids = doc.to_dict().get("bibliotecaIds") or [] if doc.exists else []
-    bib = ids[0] if ids else None
-    _cache_biblioteca[uid] = bib
-    return bib
+    datos = doc.to_dict() or {} if doc.exists else {}
+    ids = datos.get("bibliotecaIds") or []
+    resultado = (ids[0] if ids else None, datos.get("esAdmin") is True)
+    _cache_persona[uid] = resultado
+    return resultado
 
 
 async def middleware_biblioteca(request, call_next):
@@ -55,6 +59,7 @@ async def middleware_biblioteca(request, call_next):
     # ID token como query param en vez de Authorization.
     crudo = header[7:] if header.startswith("Bearer ") else request.query_params.get("token")
     bib = None
+    admin = False
     autenticado = False
     token_persona = persona_actual.set(None)
     if crudo:
@@ -62,7 +67,7 @@ async def middleware_biblioteca(request, call_next):
             decoded = fb_auth.verify_id_token(crudo)
             persona_actual.reset(token_persona)
             token_persona = persona_actual.set(decoded["uid"])
-            bib = _biblioteca_de(decoded["uid"])
+            bib, admin = _datos_persona(decoded["uid"])
             autenticado = True
         except Exception:
             bib = None
@@ -70,11 +75,20 @@ async def middleware_biblioteca(request, call_next):
         persona_actual.reset(token_persona)
         return JSONResponse({"detail": "No autenticado"}, status_code=401)
     token_bib = biblioteca_actual.set(bib)
+    token_admin = es_admin_actual.set(admin)
     try:
         return await call_next(request)
     finally:
         biblioteca_actual.reset(token_bib)
         persona_actual.reset(token_persona)
+        es_admin_actual.reset(token_admin)
+
+
+def exigir_admin() -> None:
+    """Solo se exige en Cloud Run -- mismo criterio que el 401 de arriba.
+    En local (run.sh, sin K_SERVICE) no hay nadie a quien exigirle nada."""
+    if _EN_CLOUD_RUN and not es_admin_actual.get():
+        raise HTTPException(403, "Solo la administradora puede ver o cambiar la configuración del modelo.")
 
 
 class _DirectorioPorBiblioteca:

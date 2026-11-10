@@ -54,7 +54,7 @@
       <button id="btn-admin" class="btn btn-neutro small" hidden title="Consola de administración" aria-label="Consola de administración">Admin</button>
       <span id="auth-user-nombre" class="muted" style="font-size:var(--sn-fs-xs)"></span>
       <button id="auth-btn-signout" class="btn btn-neutro small" title="Cerrar sesión" aria-label="Cerrar sesión">Salir</button>
-      <button id="btn-settings" title="Configuración" aria-label="Configuración">
+      <button id="btn-settings" hidden title="Configuración" aria-label="Configuración">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"
              fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -468,55 +468,66 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- Panel: Settings (proveedor LLM)                              -->
+  <!-- VISTA: Configuración (solo persona.esAdmin)                     -->
   <!-- ══════════════════════════════════════════════════════════════ -->
-  <div id="settings-panel" hidden>
-    <div id="settings-panel-header">
-      <span class="campo-etiq">Configuración LLM</span>
-      <button id="settings-panel-cerrar" title="Cerrar" aria-label="Cerrar configuración">×</button>
+  <div id="vista-config" hidden>
+    <div id="config-header">
+      <h1 class="bib-titulo">Configuración</h1>
     </div>
-    <div id="settings-panel-body">
-      <div class="campo">
-        <span class="campo-etiq">Proveedor</span>
-        <div id="settings-providers">
-          <label class="settings-provider-opt">
-            <input type="radio" name="settings-provider" value="ollama">
-            <span>Ollama</span>
-            <span class="settings-badge-local">local</span>
-          </label>
-          <label class="settings-provider-opt">
-            <input type="radio" name="settings-provider" value="lmstudio">
-            <span>LM Studio</span>
-            <span class="settings-badge-local">local</span>
-          </label>
-          <label class="settings-provider-opt">
-            <input type="radio" name="settings-provider" value="anthropic">
-            <span>Anthropic</span>
-            <span id="settings-key-anthropic" class="settings-key-ind"></span>
-          </label>
-          <label class="settings-provider-opt">
-            <input type="radio" name="settings-provider" value="openai">
-            <span>OpenAI</span>
-            <span id="settings-key-openai" class="settings-key-ind"></span>
-          </label>
-          <label class="settings-provider-opt">
-            <input type="radio" name="settings-provider" value="gemini">
-            <span>Gemini</span>
-            <span id="settings-key-gemini" class="settings-key-ind"></span>
-          </label>
-        </div>
-      </div>
+    <div id="config-layout">
+      <nav id="config-tabs">
+        <button class="config-tab-btn active" data-config-tab="modelo">Modelo IA</button>
+      </nav>
+      <div id="config-panel">
+        <section id="config-tab-modelo" class="config-tab-panel">
+          <div class="campo">
+            <span class="campo-etiq">Proveedor</span>
+            <div id="settings-providers">
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="vertexai">
+                <span>Vertex AI</span>
+                <span class="settings-badge-local">cuenta del proyecto</span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="ollama">
+                <span>Ollama</span>
+                <span class="settings-badge-local">local</span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="lmstudio">
+                <span>LM Studio</span>
+                <span class="settings-badge-local">local</span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="anthropic">
+                <span>Anthropic</span>
+                <span id="settings-key-anthropic" class="settings-key-ind"></span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="openai">
+                <span>OpenAI</span>
+                <span id="settings-key-openai" class="settings-key-ind"></span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="gemini">
+                <span>Gemini (API key propia)</span>
+                <span id="settings-key-gemini" class="settings-key-ind"></span>
+              </label>
+            </div>
+          </div>
 
-      <div id="settings-model-section" class="campo" style="margin-top:var(--sn-s-3)">
-        <span class="campo-etiq">Modelo</span>
-        <select id="settings-model-sel" class="edit-input" style="width:100%;margin-top:var(--sn-s-2)"></select>
-        <input id="settings-model-custom" class="edit-input" style="width:100%;margin-top:var(--sn-s-2);display:none" placeholder="nombre del modelo">
-        <div id="settings-key-status" style="font-size:var(--sn-fs-xs);margin-top:var(--sn-s-1)"></div>
-      </div>
+          <div id="settings-model-section" class="campo" style="margin-top:var(--sn-s-3)">
+            <span class="campo-etiq">Modelo</span>
+            <select id="settings-model-sel" class="edit-input" style="width:100%;margin-top:var(--sn-s-2)"></select>
+            <input id="settings-model-custom" class="edit-input" style="width:100%;margin-top:var(--sn-s-2);display:none" placeholder="nombre del modelo">
+            <div id="settings-key-status" style="font-size:var(--sn-fs-xs);margin-top:var(--sn-s-1)"></div>
+          </div>
 
-      <div style="margin-top:var(--sn-s-3);display:flex;align-items:center;gap:var(--sn-s-2)">
-        <button id="settings-guardar" class="btn btn-aceptar small">Guardar</button>
-        <span id="settings-model-status" class="muted" style="font-size:var(--sn-fs-xs)"></span>
+          <div style="margin-top:var(--sn-s-3);display:flex;align-items:center;gap:var(--sn-s-2)">
+            <button id="settings-guardar" class="btn btn-aceptar small">Guardar</button>
+            <span id="settings-model-status" class="muted" style="font-size:var(--sn-fs-xs)"></span>
+          </div>
+        </section>
       </div>
     </div>
   </div>

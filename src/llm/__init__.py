@@ -19,5 +19,8 @@ def get_llm() -> EvaluadorLLM:
         case "gemini":
             from src.llm.gemini import GeminiLLM
             return GeminiLLM()
+        case "vertexai":
+            from src.llm.vertexai import VertexAILLM
+            return VertexAILLM()
         case _:
             raise NotImplementedError(f"Proveedor '{settings.provider}' no implementado")
