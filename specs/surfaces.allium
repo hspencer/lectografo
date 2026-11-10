@@ -21,15 +21,13 @@ use "./grafo.allium" as grafo
 use "./extraccion-incremental.allium" as extraccionIncremental
 use "./edicion-texto.allium" as edicion
 use "./recorrido.allium" as recorrido
+use "./multiusuario.allium" as multiusuario
 
 ------------------------------------------------------------
 -- Actores
 ------------------------------------------------------------
 
-external entity Persona {
-    nombre: String
-    email: String?
-}
+-- Persona ya no es externa: vive en multiusuario.allium.
 
 external entity ServicioLLM {
     proveedor: extraccion/ProveedorLLM
@@ -37,11 +35,11 @@ external entity ServicioLLM {
 }
 
 actor Investigador {
-    identified_by: Persona where nombre != ""
+    identified_by: multiusuario/Persona where nombre != ""
 }
 
 actor LLM {
-    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, ollama, lmstudio}
+    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, ollama, lmstudio, openrouter}
 }
 
 ------------------------------------------------------------

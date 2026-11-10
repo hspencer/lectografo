@@ -11,6 +11,8 @@
 -- Scope: extraccion y refinamiento de grafos conceptuales desde transcripciones
 -- de analisis filosoficos. El sistema toma texto, propone un grafo via LLM,
 -- guia al investigador para validar puntos de decision, y persiste el resultado.
+-- Es multiusuario: cada persona trabaja en su biblioteca, comparte de forma
+-- explicita y paga su propia inferencia.
 --
 -- Includes:
 --   - Ingesta de transcripciones (txt, md, VTT, salida de yt-dlp)
@@ -19,13 +21,17 @@
 --   - Persistencia y publicacion de grafos versionados
 --   - Grafos personales: mapas libres del investigador con referencias vivas
 --   - Visualizacion interactiva (contrato de superficie)
---   - Soporte de proveedores LLM remotos (anthropic, openai, gemini) y locales (ollama, lmstudio)
+--   - Soporte de proveedores LLM remotos (anthropic, openai, gemini, openrouter) y locales (ollama, lmstudio)
+--   - Multiusuario: personas, bibliotecas aisladas, membresias, compartir revocable,
+--     versiones publicadas inmutables y conexiones de inferencia por persona
 --
 -- Excludes:
 --   - Mecanismo de descarga de YouTube (se asume yt-dlp como black box)
 --   - Transcripcion de audio (se asume Whisper o similar como black box)
---   - Autenticacion (el sistema es local, monousuario por instancia)
---   - Sincronizacion en la nube (todo es local y soberano)
+--   - Mecanismo concreto de identidad/autenticacion (open question en multiusuario.allium)
+--   - Sincronizacion entre instancias o dispositivos
+--   - Corte de alojamiento y despliegue (decision de infraestructura, no de comportamiento)
+--   - Benchmark de proveedores (plan de pruebas, no comportamiento)
 --
 -- Modulos:
 --   transcripcion.allium          -> ciclo de vida del texto de entrada
@@ -37,6 +43,7 @@
 --   grafos-personales.allium      -> mapas libres del investigador
 --   surfaces.allium               -> contratos de UI e integracion LLM
 --   edicion-texto.allium          -> edicion del texto fuente y revision historica
+--   multiusuario.allium           -> personas, bibliotecas, compartir e inferencia por persona
 
 use "./transcripcion.allium" as transcripcion
 use "./extraccion.allium" as extraccion
@@ -47,6 +54,7 @@ use "./recorrido.allium" as recorrido
 use "./grafos-personales.allium" as personal
 use "./surfaces.allium" as surfaces
 use "./edicion-texto.allium" as edicion
+use "./multiusuario.allium" as multiusuario
 
 ------------------------------------------------------------
 -- Configuracion del modulo
@@ -115,7 +123,7 @@ open question "Un bucle de retroalimentacion detectado por el LLM y rechazado po
 
 open question "Re-extraccion: cuando un Nodo de un GrafoDerivado desaparece tras re-extraer el texto (el LLM ya no lo detecta), ¿las ReferenciaConcepto de grafos personales que apuntaban a ese Nodo se convierten en referencias huerfanas o se eliminan en cascada?"
 
-@guidance
+-- Guidance:
     -- El investigador es la autoridad final en cualquier interpretacion.
     -- El LLM solo propone; nunca cierra una decision por timeout o por
     -- defecto. Una decision sin resolver bloquea la publicacion del grafo.

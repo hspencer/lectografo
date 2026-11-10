@@ -13,6 +13,9 @@
 --   - Descarga real de YouTube (black box: YtDlp.descargar)
 --   - Transcripcion de audio a texto (black box: TranscripcionAutomatica.transcribir)
 
+use "./edicion-texto.allium" as edicion
+use "./multiusuario.allium" as multiusuario
+
 ------------------------------------------------------------
 -- Tipos auxiliares
 ------------------------------------------------------------
@@ -62,6 +65,7 @@ external entity TranscripcionAutomatica {
 
 entity Transcripcion {
     id: String                                   -- slug derivado del titulo
+    biblioteca: multiusuario/Biblioteca          -- unica; Grafo y PuntoDecision la heredan
     titulo: String
     fuente_origen: FuenteOrigen
     url_fuente: String?
@@ -101,13 +105,14 @@ entity Transcripcion {
 ------------------------------------------------------------
 
 rule IngestarTextoPegado {
-    when: InvestigadorIngresaTexto(titulo, texto, idioma, autor_contenido?, autor_texto_original?)
+    when: InvestigadorIngresaTexto(biblioteca, titulo, texto, idioma, autor_contenido?, autor_texto_original?)
 
     requires: length(texto) > 0
-    requires: not exists Transcripcion{titulo: titulo}
+    requires: not exists Transcripcion{titulo: titulo, biblioteca: biblioteca}
 
     ensures: Transcripcion.created(
         id: slugify(titulo),
+        biblioteca: biblioteca,
         titulo: titulo,
         fuente_origen: texto_pegado,
         autor_contenido: autor_contenido,
@@ -122,14 +127,15 @@ rule IngestarTextoPegado {
 }
 
 rule IngestarArchivoLocal {
-    when: InvestigadorIngresaArchivo(ruta, titulo, idioma)
+    when: InvestigadorIngresaArchivo(biblioteca, ruta, titulo, idioma)
 
     requires: archivo_existe(ruta)
     requires: extension(ruta) in {"txt", "md", "vtt", "srt"}
-    requires: not exists Transcripcion{titulo: titulo}
+    requires: not exists Transcripcion{titulo: titulo, biblioteca: biblioteca}
 
     ensures: Transcripcion.created(
         id: slugify(titulo),
+        biblioteca: biblioteca,
         titulo: titulo,
         fuente_origen: archivo_local,
         url_fuente: ruta,
@@ -143,16 +149,17 @@ rule IngestarArchivoLocal {
 }
 
 rule IngestarYoutube {
-    when: InvestigadorIngresaUrl(url, titulo, idioma)
+    when: InvestigadorIngresaUrl(biblioteca, url, titulo, idioma)
 
     requires: es_url_https(url)
     requires: dominio(url) in {"youtube.com", "youtu.be"}
-    requires: not exists Transcripcion{titulo: titulo}
+    requires: not exists Transcripcion{titulo: titulo, biblioteca: biblioteca}
 
     ensures:
         let texto = YtDlp.descargar_subtitulos(url) ?? TranscripcionAutomatica.transcribir(YtDlp.descargar_audio(url))
         Transcripcion.created(
             id: slugify(titulo),
+            biblioteca: biblioteca,
             titulo: titulo,
             fuente_origen: youtube,
             url_fuente: url,

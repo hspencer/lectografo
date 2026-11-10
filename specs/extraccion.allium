@@ -33,6 +33,9 @@ enum ProveedorLLM {
     gemini
     ollama          -- modelos locales via Ollama (sin API key)
     lmstudio        -- modelos locales via LM Studio, API compatible con OpenAI (sin API key)
+    openrouter      -- remoto via OAuth PKCE con la cuenta de cada persona (ver multiusuario.allium)
+    vertexai        -- remoto via el proyecto GCP del operador del sistema, no de
+                    -- la persona (ver multiusuario.allium, conexion compartida v1)
 }
 
 enum TipoConcepto {

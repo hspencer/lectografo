@@ -31,6 +31,7 @@
 
 use "./grafo.allium" as grafo
 use "./extraccion.allium" as extraccion
+use "./multiusuario.allium" as multiusuario
 
 
 ------------------------------------------------------------
@@ -55,6 +56,7 @@ value CitaPasaje {
 -- El GrafoPersonal no tiene estados. Siempre está en proceso.
 -- El investigador añade, quita y conecta conceptos libremente.
 entity GrafoPersonal {
+    biblioteca: multiusuario/Biblioteca
     titulo: String
     slug: String
     descripcion: String?
@@ -261,9 +263,10 @@ config {
 -- ════ Creación y gestión de grafos personales ═══════════
 
 rule CrearGrafoPersonal {
-    when: InvestigadorCreaGrafoPersonal(titulo, descripcion?)
-    requires: not exists GrafoPersonal{slug: slugify(titulo)}
+    when: InvestigadorCreaGrafoPersonal(biblioteca, titulo, descripcion?)
+    requires: not exists GrafoPersonal{slug: slugify(titulo), biblioteca: biblioteca}
     ensures: GrafoPersonal.created(
+        biblioteca: biblioteca,
         titulo: titulo,
         slug: slugify(titulo),
         descripcion: descripcion,
