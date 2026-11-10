@@ -9,6 +9,15 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "lectografo-api",
+          "region": "us-central1"
+        }
+      }
     ]
   }
 }

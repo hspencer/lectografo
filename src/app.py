@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Optional
 
 import asyncio
+import contextvars
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -16,6 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.config import settings
+from src.contexto_biblioteca import _DirectorioPorBiblioteca, middleware_biblioteca
 from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import (
     AnotacionInvestigador,
@@ -52,10 +54,11 @@ from src.models.grafo_personal import (
 )
 
 app = FastAPI(title="Lectógrafo", docs_url="/api/docs")
+app.middleware("http")(middleware_biblioteca)
 
 STATIC      = Path(__file__).parent.parent / "static"
-GRAFOS      = settings.grafos_dir
-TRANSCRIPTS = settings.transcripts_dir
+GRAFOS      = _DirectorioPorBiblioteca(settings.grafos_dir)
+TRANSCRIPTS = _DirectorioPorBiblioteca(settings.transcripts_dir)
 
 class _ExtraccionCancelada(Exception):
     """Señal interna para abortar limpiamente una extracción cancelada."""
@@ -667,7 +670,11 @@ async def procesar_extraccion(slug: str, payload: ProcesarPayload = ProcesarPayl
     }
     tarea_fn = _tarea_extraer_incremental if modo == "incremental" else _tarea_extraer
     loop = asyncio.get_event_loop()
-    loop.run_in_executor(_executor, tarea_fn, slug, ruta)
+    # run_in_executor no copia contextvars al hilo nuevo (a diferencia de
+    # BackgroundTasks); sin esto, GRAFOS resolvería a la carpeta raíz dentro
+    # de la extracción en vez de a la biblioteca de quien la pidió.
+    ctx = contextvars.copy_context()
+    loop.run_in_executor(_executor, ctx.run, tarea_fn, slug, ruta)
     return {"ok": True, "estado": "procesando", "modo": modo}
 
 

@@ -1,0 +1,11 @@
+.git
+.venv
+__pycache__
+*.pyc
+.env
+docs/
+specs/
+.github/
+firebase-debug.log
+firestore-debug.log
+node_modules
