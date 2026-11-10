@@ -614,6 +614,25 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
         _TAREAS[slug] = {"estado": f"error:{exc}", "inicio": inicio, "fase": "error"}
 
 
+class ImportarTranscriptPayload(BaseModel):
+    nombre: str
+    contenido: str
+
+
+@app.post("/api/transcripts")
+async def importar_transcript(payload: ImportarTranscriptPayload):
+    """Importa un texto nuevo (Markdown o TXT) a la biblioteca de quien llama."""
+    nombre = Path(payload.nombre).name  # descarta cualquier ruta, solo el archivo
+    ext = nombre.rsplit(".", 1)[-1].lower() if "." in nombre else ""
+    if ext not in _EXTS_TRANSCRIPT:
+        raise HTTPException(400, f"Extensión no soportada: '.{ext}'")
+    ruta = TRANSCRIPTS / nombre
+    if ruta.exists():
+        raise HTTPException(409, f"Ya existe un texto con ese nombre: '{nombre}'")
+    ruta.write_text(payload.contenido, encoding="utf-8")
+    return {"ok": True, "slug": _slug_de_archivo(ruta)}
+
+
 class ProcesarPayload(BaseModel):
     force: bool = False  # True = re-extraer aunque ya exista extracción
     modo: str  = "auto"  # "auto" | "rapido" | "incremental"

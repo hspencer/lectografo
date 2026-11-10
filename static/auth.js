@@ -6,7 +6,7 @@ import {
   getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, onIdTokenChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getFirestore, doc, collection, getDoc, getDocs, setDoc, updateDoc, addDoc,
+  getFirestore, doc, collection, getDoc, getDocs, setDoc, updateDoc,
   arrayUnion, serverTimestamp, getCountFromServer,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -110,21 +110,20 @@ async function crearBibliotecaPropia(user) {
   return bibRef.id;
 }
 
-// Importar texto (transcripcion.allium: ingesta txt/md) directo a Firestore,
-// sin extraccion todavia -- "procesar con Gemini" es un paso aparte.
-const FORMATOS = { ".md": "markdown", ".markdown": "markdown", ".txt": "texto" };
+// Importar texto: va al backend (FastAPI sigue persistiendo en disco,
+// escopado por biblioteca -- ver contexto_biblioteca.py), no a Firestore.
+// Firestore solo guarda personas/bibliotecas/membresias.
 async function importarArchivo(file) {
-  const { uid, bibliotecaId } = window.lectografoAuth;
-  if (!uid || !bibliotecaId) return;
-  const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
-  const formato = FORMATOS[ext] || "texto";
-  const texto = await file.text();
-  const titulo = file.name.replace(/\.[^.]+$/, "");
-  await addDoc(collection(db, "bibliotecas", bibliotecaId, "transcripciones"), {
-    titulo, texto, formato,
-    creadaPor: uid,
-    creadaEn: serverTimestamp(),
+  const { uid } = window.lectografoAuth;
+  if (!uid) return;
+  const contenido = await file.text();
+  const token = await window.lectografoAuth.getIdToken();
+  const r = await fetch("/api/transcripts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ nombre: file.name, contenido }),
   });
+  if (!r.ok) throw new Error(`${r.status}: ${await r.text()}`);
 }
 
 btnImportar?.addEventListener("click", () => importFileInput?.click());
@@ -135,6 +134,7 @@ importFileInput?.addEventListener("change", async () => {
   try {
     await importarArchivo(file);
     alert(`"${file.name}" importado a tu biblioteca.`);
+    location.reload();
   } catch (err) {
     console.error("Error al importar:", err);
     alert("No se pudo importar el archivo: " + err.message);
