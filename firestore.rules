@@ -1,10 +1,88 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Candado por defecto: nada se lee ni escribe hasta modelar las reglas
-    // reales de Persona/Biblioteca/Membresia (ver specs/multiusuario.allium).
+
+    // Candado por defecto: lo que no se abre explicitamente abajo, cerrado.
+    // Ver specs/multiusuario.allium para las entidades e invariantes que
+    // esto traduce (version minima: Persona, Biblioteca, Membresia).
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // OJO: no uses esto (ni nada que dependa de exists()/get() de OTRA
+    // biblioteca) para autorizar un `list`/collectionGroup query que cruce
+    // bibliotecas -- Firestore niega ese `list` si no puede demostrarse
+    // valido de antemano, y en el primer login de una persona no existe
+    // membresia alguna todavia (huevo y gallina). Por eso personas/{uid}
+    // guarda su propio bibliotecaIds en vez de descubrirse con una query.
+    function esMiembroDe(bibId) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/bibliotecas/$(bibId)/membresias/$(request.auth.uid));
+    }
+
+    function esPropietariaDe(bibId) {
+      return signedIn() &&
+        get(/databases/$(database)/documents/bibliotecas/$(bibId)/membresias/$(request.auth.uid)).data.rol == 'propietaria';
+    }
+
+    function puedeEditar(bibId) {
+      return signedIn() &&
+        get(/databases/$(database)/documents/bibliotecas/$(bibId)/membresias/$(request.auth.uid)).data.rol in ['propietaria', 'editora'];
+    }
+
+    // Superusuario: get() sobre el propio documento (ruta fija, conocida),
+    // no sobre el de otra persona -- no sufre el gotcha de esMiembroDe.
+    function esAdmin() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/personas/$(request.auth.uid)).data.esAdmin == true;
+    }
+
+    // Persona: cada quien escribe solo su propio documento. Lectura propia,
+    // o de cualquiera si quien pide es admin (consola de administracion).
+    match /personas/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || esAdmin());
+      allow write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Biblioteca: "cada usuario, su biblioteca" (RegistrarPersona). Crear
+    // exige declararse creadoPor = quien la crea; eso habilita la primera
+    // Membresia propietaria de abajo. Leer y actualizar exige membresia
+    // vigente (co-propiedad simetrica: cualquier propietaria actualiza), o
+    // ser admin para leer.
+    match /bibliotecas/{bibId} {
+      allow create: if signedIn() && request.resource.data.creadoPor == request.auth.uid;
+      allow read: if esMiembroDe(bibId) || esAdmin();
+      allow update: if esPropietariaDe(bibId);
+      allow delete: if false; // no modelado todavia
+
+      match /membresias/{personaUid} {
+        allow read: if esMiembroDe(bibId) || esAdmin();
+
+        // Primera membresia (propietaria fundadora): solo quien creo la
+        // biblioteca, sobre si misma, y solo si todavia no existe ninguna.
+        allow create: if signedIn()
+          && request.auth.uid == personaUid
+          && request.resource.data.rol == 'propietaria'
+          && get(/databases/$(database)/documents/bibliotecas/$(bibId)).data.creadoPor == request.auth.uid
+          && !exists(/databases/$(database)/documents/bibliotecas/$(bibId)/membresias/$(personaUid));
+
+        // Invitar o retirar a otra persona: solo una propietaria existente
+        // (InvitarMiembro / RetirarMembresia en multiusuario.allium).
+        allow create, update, delete: if esPropietariaDe(bibId);
+      }
+
+      // Transcripcion minima (titulo + texto crudo, sin grafo todavia).
+      // import() en auth.js la crea; el procesamiento con Gemini (Cloud
+      // Function, pendiente) la lee y escribe conceptos/relaciones aparte.
+      match /transcripciones/{transId} {
+        allow read: if esMiembroDe(bibId) || esAdmin();
+        allow create: if puedeEditar(bibId) && request.resource.data.creadaPor == request.auth.uid;
+        allow update, delete: if puedeEditar(bibId);
+      }
     }
   }
 }

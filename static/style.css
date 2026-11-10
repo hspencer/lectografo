@@ -1807,3 +1807,69 @@ hr.divider  { border: none; border-top: 1px solid var(--sn-hairline-soft); margi
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ══ Portón de acceso (auth.js) ══════════════════════════════════ */
+#auth-gate {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--sn-field);
+}
+#auth-gate-card {
+  display: flex; flex-direction: column; align-items: center; gap: var(--sn-s-3);
+  padding: var(--sn-s-5);
+  background: var(--sn-paper);
+  border: var(--sn-hair);
+  border-radius: var(--sn-radius-l);
+  box-shadow: var(--sn-lift-paper);
+  text-align: center;
+  max-width: 320px;
+}
+#auth-gate-nombre {
+  font-family: var(--sn-font-serif);
+  font-size: var(--sn-fs-xl);
+  color: var(--sn-ink);
+}
+#auth-user-nombre { margin-right: var(--sn-s-1); }
+
+/* ══ Consola de administración (auth.js) ═════════════════════════ */
+#admin-panel {
+  position: fixed;
+  top: calc(var(--sn-header-h) + var(--sn-s-2));
+  right: var(--sn-s-4);
+  z-index: var(--sn-z-panel);
+  background: var(--sn-paper);
+  border: var(--sn-hair);
+  border-radius: var(--sn-radius-l);
+  box-shadow: var(--sn-lift);
+  padding: var(--sn-s-4);
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+#admin-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--sn-s-3);
+}
+#admin-panel-header .campo-etiq { margin: 0; }
+#admin-panel-header button {
+  display: flex; align-items: center; justify-content: center;
+  width: 1.5rem; height: 1.5rem;
+  background: none; border: none; cursor: pointer;
+  border-radius: var(--sn-radius);
+  font-size: 1rem; line-height: 1;
+  color: var(--sn-ink-soft);
+}
+#admin-panel-header button:hover { background: var(--sn-sunk); color: var(--sn-ink); }
+.admin-persona-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--sn-s-2);
+  padding: var(--sn-s-2) 0;
+  border-bottom: var(--sn-hair);
+}
+.admin-persona-row:last-child { border-bottom: none; }
+.admin-persona-nombre { font-weight: 600; font-size: var(--sn-fs-sm); }
+.admin-persona-email { color: var(--sn-ink-soft); font-size: var(--sn-fs-xs); display: block; }
+.admin-persona-count {
+  font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
+  white-space: nowrap;
+}

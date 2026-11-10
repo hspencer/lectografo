@@ -49,6 +49,11 @@
     </nav>
 
     <div id="topbar-right">
+      <input id="import-file-input" type="file" accept=".md,.markdown,.txt" hidden>
+      <button id="btn-importar" class="btn btn-neutro small" hidden title="Importar texto (Markdown o TXT)" aria-label="Importar texto">Importar</button>
+      <button id="btn-admin" class="btn btn-neutro small" hidden title="Consola de administración" aria-label="Consola de administración">Admin</button>
+      <span id="auth-user-nombre" class="muted" style="font-size:var(--sn-fs-xs)"></span>
+      <button id="auth-btn-signout" class="btn btn-neutro small" title="Cerrar sesión" aria-label="Cerrar sesión">Salir</button>
       <button id="btn-settings" title="Configuración" aria-label="Configuración">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"
              fill="none" stroke="currentColor" stroke-width="2"
@@ -507,6 +512,31 @@
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Panel: Consola de administración (solo persona.esAdmin)          -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="admin-panel" hidden>
+    <div id="admin-panel-header">
+      <span class="campo-etiq">Personas registradas</span>
+      <button id="admin-panel-cerrar" title="Cerrar" aria-label="Cerrar consola de administración">×</button>
+    </div>
+    <div id="admin-panel-body">
+      <p class="muted" style="font-size:var(--sn-fs-xs)">Cargando…</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Portón de acceso (Firebase Auth, specs/multiusuario.allium)      -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div id="auth-gate">
+    <div id="auth-gate-card">
+      <span id="auth-gate-nombre">Lectógrafo</span>
+      <p class="muted">Ingresa con tu cuenta de Google para ver tu biblioteca.</p>
+      <button id="auth-btn-google" class="btn btn-aceptar">Continuar con Google</button>
+    </div>
+  </div>
+
+  <script type="module" src="/auth.js"></script>
   <script type="module" src="/app.js"></script>
 </body>
 </html>
