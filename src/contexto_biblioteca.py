@@ -9,11 +9,18 @@ raíz de siempre: así no se rompe el flujo local existente.
 """
 from __future__ import annotations
 
+import os
 from contextvars import ContextVar
 from pathlib import Path
 
 import firebase_admin
+from fastapi.responses import JSONResponse
 from firebase_admin import auth as fb_auth, firestore
+
+# K_SERVICE lo setea Cloud Run automaticamente; no existe en local (run.sh).
+# Con el servicio publico (allUsers invoker), esto es lo unico que impide
+# que cualquiera sin sesion lea/escriba la carpeta raiz (datos legacy).
+_EN_CLOUD_RUN = bool(os.environ.get("K_SERVICE"))
 
 try:
     if not firebase_admin._apps:
@@ -45,6 +52,7 @@ async def middleware_biblioteca(request, call_next):
         return await call_next(request)
     header = request.headers.get("authorization", "")
     bib = None
+    autenticado = False
     token_persona = persona_actual.set(None)
     if header.startswith("Bearer "):
         try:
@@ -52,8 +60,12 @@ async def middleware_biblioteca(request, call_next):
             persona_actual.reset(token_persona)
             token_persona = persona_actual.set(decoded["uid"])
             bib = _biblioteca_de(decoded["uid"])
+            autenticado = True
         except Exception:
             bib = None
+    if _EN_CLOUD_RUN and not autenticado:
+        persona_actual.reset(token_persona)
+        return JSONResponse({"detail": "No autenticado"}, status_code=401)
     token_bib = biblioteca_actual.set(bib)
     try:
         return await call_next(request)
