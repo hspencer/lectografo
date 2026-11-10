@@ -36,6 +36,9 @@ const btnAdmin = document.getElementById("btn-admin");
 const adminPanel = document.getElementById("admin-panel");
 const adminPanelBody = document.getElementById("admin-panel-body");
 const adminPanelCerrar = document.getElementById("admin-panel-cerrar");
+const avatarBtn = document.getElementById("auth-avatar");
+const avatarImg = document.getElementById("auth-avatar-img");
+const avatarGenerico = document.getElementById("auth-avatar-generic");
 
 btnGoogle?.addEventListener("click", () => {
   signInWithPopup(auth, new GoogleAuthProvider()).catch((err) => {
@@ -45,6 +48,13 @@ btnGoogle?.addEventListener("click", () => {
 });
 
 btnSignOut?.addEventListener("click", () => signOut(auth));
+
+// Avatar en la esquina: foto real de Google cuando hay sesión, ícono
+// genérico cuando no -- clic en el genérico ofrece el mismo sign-in que
+// el portón de acceso.
+avatarBtn?.addEventListener("click", () => {
+  if (!window.lectografoAuth?.uid) btnGoogle?.click();
+});
 
 // RegistrarPersona (multiusuario.allium): crea Persona y, si todavia no es
 // propietaria de ninguna Biblioteca, crea la suya con una Membresia propietaria.
@@ -173,6 +183,8 @@ onAuthStateChanged(auth, async (user) => {
     if (btnImportar) btnImportar.hidden = true;
     if (btnAdmin) btnAdmin.hidden = true;
     if (adminPanel) adminPanel.hidden = true;
+    if (avatarImg) avatarImg.hidden = true;
+    if (avatarGenerico) avatarGenerico.hidden = false;
     return;
   }
 
@@ -198,5 +210,13 @@ onAuthStateChanged(auth, async (user) => {
   if (userBadge) userBadge.textContent = user.displayName || user.email;
   if (btnImportar) btnImportar.hidden = false;
   if (btnAdmin) btnAdmin.hidden = !esAdmin;
+  if (user.photoURL && avatarImg) {
+    avatarImg.src = user.photoURL;
+    avatarImg.hidden = false;
+    if (avatarGenerico) avatarGenerico.hidden = true;
+  } else if (avatarGenerico) {
+    avatarGenerico.hidden = false;
+    if (avatarImg) avatarImg.hidden = true;
+  }
   window.dispatchEvent(new CustomEvent("lectografo:auth-listo", { detail: window.lectografoAuth }));
 });
