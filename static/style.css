@@ -1838,9 +1838,10 @@ hr.divider  { border: none; border-top: 1px solid var(--sn-hairline-soft); margi
   max-width: 320px;
 }
 #auth-gate-nombre {
-  font-family: var(--sn-font-serif);
-  font-size: var(--sn-fs-xl);
-  color: var(--sn-ink);
+  font-family: var(--sn-font-sans);
+  font-weight: 700; font-size: var(--sn-fs-xl);
+  letter-spacing: .10em; text-transform: uppercase;
+  color: var(--sn-nova);
 }
 #auth-user-nombre { margin-right: var(--sn-s-1); }
 
