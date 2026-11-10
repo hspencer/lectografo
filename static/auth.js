@@ -3,7 +3,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, onIdTokenChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore, doc, collection, getDoc, getDocs, setDoc, updateDoc, addDoc,
@@ -24,7 +24,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // Estado minimo que app.js puede leer una vez "lectografo:auth-listo" dispara.
-window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false };
+window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false, getIdToken: async () => null };
+
+// app.js espera esta promesa antes de llamar a la API, para no pegarle con
+// una sesion que Firebase todavia no termino de restaurar desde IndexedDB.
+let _resolverAuthListo;
+window.lectografoAuthReady = new Promise(res => { _resolverAuthListo = res; });
 
 const gate = document.getElementById("auth-gate");
 const btnGoogle = document.getElementById("auth-btn-google");
@@ -177,7 +182,7 @@ adminPanelCerrar?.addEventListener("click", () => { adminPanel.hidden = true; })
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false };
+    window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false, getIdToken: async () => null };
     if (gate) gate.hidden = false;
     if (userBadge) userBadge.textContent = "";
     if (btnImportar) btnImportar.hidden = true;
@@ -185,6 +190,7 @@ onAuthStateChanged(auth, async (user) => {
     if (adminPanel) adminPanel.hidden = true;
     if (avatarImg) avatarImg.hidden = true;
     if (avatarGenerico) avatarGenerico.hidden = false;
+    _resolverAuthListo();
     return;
   }
 
@@ -196,6 +202,7 @@ onAuthStateChanged(auth, async (user) => {
   } catch (err) {
     console.error("No se pudo preparar Persona/Biblioteca:", err);
     alert("Accediste, pero no se pudo crear tu biblioteca: " + err.message);
+    _resolverAuthListo();
     return;
   }
 
@@ -205,6 +212,7 @@ onAuthStateChanged(auth, async (user) => {
     email: user.email,
     bibliotecaId,
     esAdmin,
+    getIdToken: () => user.getIdToken(),
   };
   if (gate) gate.hidden = true;
   if (userBadge) userBadge.textContent = user.displayName || user.email;
@@ -218,5 +226,17 @@ onAuthStateChanged(auth, async (user) => {
     avatarGenerico.hidden = false;
     if (avatarImg) avatarImg.hidden = true;
   }
+  _resolverAuthListo();
   window.dispatchEvent(new CustomEvent("lectografo:auth-listo", { detail: window.lectografoAuth }));
+});
+
+// Cachea el ID token (y lo refresca solo, el SDK lo renueva cada hora) para
+// los endpoints /stream: EventSource no admite headers, así que ahí el
+// token va como query param (ver sseToken() en app.js).
+onIdTokenChanged(auth, (user) => {
+  if (user && window.lectografoAuth) {
+    user.getIdToken().then((t) => { window.lectografoAuth.idToken = t; });
+  } else if (window.lectografoAuth) {
+    window.lectografoAuth.idToken = null;
+  }
 });

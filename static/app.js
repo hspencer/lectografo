@@ -57,8 +57,18 @@ function ico(name, size=14) {
 // ════════════════════════════════════════════════════════════════════════
 // API helpers
 // ════════════════════════════════════════════════════════════════════════
+// EventSource no admite headers custom; el token va como query param
+// (el backend lo acepta como fallback -- ver contexto_biblioteca.py).
+function sseUrl(path) {
+  const t = window.lectografoAuth?.idToken;
+  if (!t) return path;
+  return `${path}${path.includes("?") ? "&" : "?"}token=${encodeURIComponent(t)}`;
+}
 async function apiFetch(path, opts={}) {
-  const r = await fetch(path, { headers:{"Content-Type":"application/json"}, ...opts });
+  const headers = { "Content-Type":"application/json", ...(opts.headers||{}) };
+  const token = await window.lectografoAuth?.getIdToken?.();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const r = await fetch(path, { ...opts, headers });
   if (!r.ok) throw new Error(`${r.status}: ${await r.text()}`);
   return r.json();
 }
@@ -363,7 +373,7 @@ function renderBiblioteca(exts) {
     }
     const stream = { pre, es: null };
     _extLogStreams[slug] = stream;
-    const es = new EventSource(`/api/extracciones/${encodeURIComponent(slug)}/stream`);
+    const es = new EventSource(sseUrl(`/api/extracciones/${encodeURIComponent(slug)}/stream`));
     stream.es = es;
     es.onmessage = (ev) => {
       const d = JSON.parse(ev.data);
@@ -1372,7 +1382,7 @@ function abrirStreamExistente(cfg) {
   panel.hidden = false;
   _mostrarUIprocesando(cfg, content, footer);
 
-  const es = new EventSource(`${cfg.api(state.slug)}/stream`);
+  const es = new EventSource(sseUrl(`${cfg.api(state.slug)}/stream`));
   _conectarStream(cfg, es, content, footer);
   _conectarBotonDetener(cfg, es, content);
 }
@@ -1400,7 +1410,7 @@ async function abrirPanelSesion(cfg) {
 
   try {
     await apiFetch(`${cfg.api(state.slug)}/iniciar`, { method: "POST", body: "{}" });
-    const es = new EventSource(`${cfg.api(state.slug)}/stream`);
+    const es = new EventSource(sseUrl(`${cfg.api(state.slug)}/stream`));
     _conectarStream(cfg, es, content, footer);
     _conectarBotonDetener(cfg, es, content);
   } catch(e) {
@@ -1731,7 +1741,7 @@ function abrirEditorRelacion(l,tr) {
 // ════════════════════════════════════════════════════════════════════════
 // Event listeners
 // ════════════════════════════════════════════════════════════════════════
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   document.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => activarTab(b.dataset.tab)));
 
@@ -1743,6 +1753,9 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (h.startsWith("gp:")) abrirGrafoPersonal(h.slice(3));
   });
 
+  // Firebase restaura la sesión de forma async (lee IndexedDB); sin esto
+  // init() pega a la API antes de que haya token y siempre recibe 401.
+  if (window.lectografoAuthReady) await window.lectografoAuthReady;
   init();
 });
 
@@ -2116,7 +2129,7 @@ function _reproIniciar() {
   });
 
   // Conectar SSE para log en tiempo real
-  const es = new EventSource(`/api/extracciones/${encodeURIComponent(slug)}/stream`);
+  const es = new EventSource(sseUrl(`/api/extracciones/${encodeURIComponent(slug)}/stream`));
   _reproEs = es;
 
   es.onmessage = ev => {

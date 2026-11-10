@@ -51,12 +51,15 @@ async def middleware_biblioteca(request, call_next):
     if not _FIREBASE_OK:
         return await call_next(request)
     header = request.headers.get("authorization", "")
+    # EventSource no permite headers custom; las 3 rutas /stream mandan el
+    # ID token como query param en vez de Authorization.
+    crudo = header[7:] if header.startswith("Bearer ") else request.query_params.get("token")
     bib = None
     autenticado = False
     token_persona = persona_actual.set(None)
-    if header.startswith("Bearer "):
+    if crudo:
         try:
-            decoded = fb_auth.verify_id_token(header[7:])
+            decoded = fb_auth.verify_id_token(crudo)
             persona_actual.reset(token_persona)
             token_persona = persona_actual.set(decoded["uid"])
             bib = _biblioteca_de(decoded["uid"])
