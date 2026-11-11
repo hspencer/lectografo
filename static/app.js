@@ -515,10 +515,19 @@ async function _construirMallaSVG(rawNodes, rawLinks, S, { maxNodes = 150, porGr
   return svg;
 }
 
+const _miniGrafoEnProgreso = new Set();  // slugs cuya construcción async ya está en vuelo
+
 async function _renderMiniGrafos(slugs) {
   for (const slug of slugs) {
     const container = document.querySelector(`.bib-mini-mapa[data-slug="${CSS.escape(slug)}"]`);
     if (!container || container.childElementCount > 0) continue;
+    // El polling llama a esto cada 1200ms; en un grafo denso la construcción
+    // (fetch + simulación d3) puede tardar más que eso. Sin esta guardia
+    // sincrónica, dos llamadas superpuestas pasan ambas el check de arriba
+    // -- cada una de novo-sheets, luego ambas appendChild sobre el mismo
+    // contenedor final cuando el polling se detiene: el grafo queda duplicado.
+    if (_miniGrafoEnProgreso.has(slug)) continue;
+    _miniGrafoEnProgreso.add(slug);
 
     try {
       if (!_miniGrafoCache[slug]) {
@@ -528,8 +537,11 @@ async function _renderMiniGrafos(slugs) {
       // Cuadrado: el contenedor tiene aspect-ratio:1, pero leemos el ancho real
       const S = container.clientWidth || 260;
       const svg = await _construirMallaSVG(rawNodes, rawLinks, S);
-      if (svg) container.appendChild(svg);
+      // replaceChildren, no appendChild: si algo más ya dejó contenido acá
+      // (restoreSvgs, otra pasada), no se apila -- un contenedor, un grafo.
+      if (svg) container.replaceChildren(svg);
     } catch(_) { /* ignorar errores por tarjeta */ }
+    finally { _miniGrafoEnProgreso.delete(slug); }
   }
 }
 
