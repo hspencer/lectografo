@@ -1899,3 +1899,26 @@ hr.divider  { border: none; border-top: 1px solid var(--sn-hairline-soft); margi
   font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
   white-space: nowrap;
 }
+
+/* ── Vista pública de solo lectura (#publico:ID) ──────────────────── */
+/* Se puede navegar y leer todo el grafo; nada que escriba, anote,
+   vincule o procese es visible. Ver abrirTextoPublico() en app.js. */
+.solo-lectura #btn-agregar-concepto,
+.solo-lectura #btn-procesar-seleccion,
+.solo-lectura #btn-simplificar-grafo,
+.solo-lectura #btn-eliminar-grafo,
+.solo-lectura .concepto-check,
+.solo-lectura #concepto-check-todos,
+.solo-lectura [data-edit-c],
+.solo-lectura [data-del-c],
+.solo-lectura [data-edit-r],
+.solo-lectura [data-del-r],
+.solo-lectura .bidir-toggle,
+.solo-lectura #btn-texto-editar,
+.solo-lectura #btn-texto-guardar,
+.solo-lectura #btn-texto-cancelar,
+.solo-lectura .panel-seccion-escritura,
+.solo-lectura #btn-nuevo-gp,
+.solo-lectura .btn-procesar {
+  display: none !important;
+}

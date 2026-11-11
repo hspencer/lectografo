@@ -93,6 +93,50 @@ def nombre_de_biblioteca(biblioteca_id: str) -> str:
     return (doc.to_dict() or {}).get("nombre", "") if doc.exists else ""
 
 
+def _doc_publicacion(biblioteca_origen: str, slug: str):
+    docs = (
+        firestore.client().collection("publicaciones")
+        .where("bibliotecaOrigen", "==", biblioteca_origen).where("slug", "==", slug)
+        .limit(1).get()
+    )
+    return docs[0] if docs else None
+
+
+def publicar_texto(biblioteca_origen: str, slug: str, publicado_por: str) -> str:
+    """Id público del texto (crea uno si no existía ya)."""
+    existente = _doc_publicacion(biblioteca_origen, slug)
+    if existente:
+        return existente.id
+    from datetime import datetime, timezone
+    ref = firestore.client().collection("publicaciones").document()
+    ref.set({
+        "bibliotecaOrigen": biblioteca_origen, "slug": slug,
+        "publicadoPor": publicado_por, "publicadoEn": datetime.now(timezone.utc),
+    })
+    return ref.id
+
+
+def despublicar_texto(biblioteca_origen: str, slug: str) -> bool:
+    doc = _doc_publicacion(biblioteca_origen, slug)
+    if not doc:
+        return False
+    doc.reference.delete()
+    return True
+
+
+def estado_publicacion(biblioteca_origen: str, slug: str) -> str | None:
+    doc = _doc_publicacion(biblioteca_origen, slug)
+    return doc.id if doc else None
+
+
+def resolver_publicacion(pub_id: str) -> tuple[str, str]:
+    doc = firestore.client().collection("publicaciones").document(pub_id).get()
+    if not doc.exists:
+        raise HTTPException(404, "Esta publicación no existe o fue retirada")
+    d = doc.to_dict()
+    return d["bibliotecaOrigen"], d["slug"]
+
+
 def _datos_persona(uid: str) -> tuple[str | None, bool]:
     """(bibliotecaId principal, esAdmin) -- una sola lectura de Firestore por uid."""
     if uid in _cache_persona:
@@ -105,8 +149,15 @@ def _datos_persona(uid: str) -> tuple[str | None, bool]:
     return resultado
 
 
+_PREFIJO_PUBLICO = "/api/publico/"
+
+
 async def middleware_biblioteca(request, call_next):
     if not _FIREBASE_OK:
+        return await call_next(request)
+    if request.url.path.startswith(_PREFIJO_PUBLICO):
+        # Lectura pública: el propio endpoint resuelve su biblioteca a partir
+        # del id de publicación (ver resolver_publicacion), sin exigir sesión.
         return await call_next(request)
     header = request.headers.get("authorization", "")
     # EventSource no permite headers custom; las 3 rutas /stream mandan el

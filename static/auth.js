@@ -31,6 +31,10 @@ window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: nu
 let _resolverAuthListo;
 window.lectografoAuthReady = new Promise(res => { _resolverAuthListo = res; });
 
+// Vista pública (#publico:ID): nadie necesita cuenta para leer un grafo
+// publicado -- el portón de acceso no debe aparecer nunca acá.
+const _modoPublico = location.hash.startsWith("#publico:");
+
 const gate = document.getElementById("auth-gate");
 const btnGoogle = document.getElementById("auth-btn-google");
 const userBadge = document.getElementById("auth-user-nombre");
@@ -184,7 +188,7 @@ adminPanelCerrar?.addEventListener("click", () => { adminPanel.hidden = true; })
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false, getIdToken: async () => null };
-    if (gate) gate.hidden = false;
+    if (gate) gate.hidden = _modoPublico || false;
     if (userBadge) userBadge.textContent = "";
     if (btnImportar) btnImportar.hidden = true;
     if (btnAdmin) btnAdmin.hidden = true;

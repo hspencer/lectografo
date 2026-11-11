@@ -14,6 +14,8 @@ const state = {
   grafoDestroy: null,  // fn destroy() del renderer 3D activo (null en modo 2D)
   modo3d:      true,   // vista activa del mapa: 2D (D3/SVG) o 3D (three.js) — 3D por defecto
   mapaCards:   null,   // instancia activa de createFloatingCards (tarjetas del Mapa)
+  soloLectura: false,  // vista pública (#publico:ID): sin sesión, sin escritura
+  pubId:       null,   // id de publicación activo cuando soloLectura
 };
 
 const tabsInit = new Set();
@@ -64,7 +66,20 @@ function sseUrl(path) {
   if (!t) return path;
   return `${path}${path.includes("?") ? "&" : "?"}token=${encodeURIComponent(t)}`;
 }
+// Vista pública de solo lectura (#publico:ID, ver abrirTextoPublico): no hay
+// sesión ni biblioteca propia, así que las 3 lecturas que la vista necesita
+// se redirigen a su equivalente público; cualquier escritura se corta acá
+// además de no tener botón que la dispare.
+function _rutaPublica(path) {
+  const m = path.match(/^\/api\/(validacion|grafo|transcripts)\/[^/?]+$/);
+  return m ? `/api/publico/${state.pubId}/${m[1]}` : path;
+}
+
 async function apiFetch(path, opts={}) {
+  if (state.soloLectura) {
+    if (opts.method && opts.method !== "GET") throw new Error("Vista de solo lectura");
+    path = _rutaPublica(path);
+  }
   const headers = { "Content-Type":"application/json", ...(opts.headers||{}) };
   const token = await window.lectografoAuth?.getIdToken?.();
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -99,9 +114,15 @@ async function initTab(nombre) {
 // Boot
 // ════════════════════════════════════════════════════════════════════════
 async function init() {
+  const h = location.hash.slice(1);
+  if (h.startsWith("publico:")) {
+    // Vista pública: ni biblioteca ni sesión -- no se llama /api/extracciones.
+    await abrirTextoPublico(h.slice(8));
+    initMapaArrows();
+    return;
+  }
   const exts = await apiFetch("/api/extracciones");
   initSettingsPanel();
-  const h = location.hash.slice(1);
   if (h.startsWith("gp:")) {
     await abrirGrafoPersonal(h.slice(3));
   } else if (h === "config") {
@@ -331,6 +352,7 @@ function renderBiblioteca(exts) {
       <div class="bib-card-footer">
         <button class="btn-inline bib-btn-ficha" data-slug="${esc(e.slug)}" title="Editar ficha bibliográfica">${ico("edit-2")} Ficha</button>
         ${e.compartido ? "" : `<button class="btn-inline bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" title="Compartir con otra persona">${ico("users")} Compartir</button>
+        <button class="btn-inline bib-btn-publicar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" data-publicado="0" title="Publicar como URL de solo lectura">${ico("link")} Publicar</button>
         <button class="btn-inline danger bib-btn-repro" data-slug="${esc(e.slug)}" title="Re-extraer con el LLM">${ico("refresh-cw")} Re-procesar</button>`}
       </div>
     </div>`;
@@ -359,6 +381,11 @@ function renderBiblioteca(exts) {
   // Compartir con otra persona
   grid.querySelectorAll(".bib-btn-compartir").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); compartirDocumento(btn.dataset.slug, btn.dataset.titulo); })
+  );
+
+  // Publicar / despublicar
+  grid.querySelectorAll(".bib-btn-publicar").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); publicarDocumento(btn.dataset.slug, btn.dataset.titulo, btn); })
   );
 
   // Toggle log panel
@@ -628,6 +655,32 @@ function _arrancarPolling() {
       _pollingBiblioteca = null;
     }
   }, 1200);
+}
+
+async function abrirTextoPublico(pubId) {
+  state.soloLectura = true;
+  state.pubId = pubId;
+  document.body.classList.add("solo-lectura");
+
+  document.getElementById("vista-biblioteca").hidden = true;
+  document.getElementById("vista-gp").hidden = true;
+  document.getElementById("vista-config").hidden = true;
+  document.getElementById("topbar-right").hidden = true;
+  document.getElementById("btn-biblioteca").hidden = true;
+  document.getElementById("tabs").hidden = false;
+  document.getElementById("topbar-chevron").hidden = true;
+  document.getElementById("mapa-buscar-wrap").hidden = false;
+
+  try {
+    await cargarValidacion(pubId);  // pubId hace de slug; apiFetch lo reescribe
+  } catch(e) {
+    document.getElementById("transcripcion-titulo").textContent = "";
+    document.querySelector("#tab-mapa").innerHTML =
+      `<p class="muted" style="padding:var(--sn-s-6)">Este grafo no está disponible o ya no es público.</p>`;
+    activarTab("mapa");
+    return;
+  }
+  activarTab("mapa");
 }
 
 async function abrirTexto(slug) {
@@ -978,7 +1031,7 @@ function buildRelacionesHTML(nodo) {
 }
 
 function buildNuevaRelacionHTML(nodo) {
-  return `<details class="panel-seccion">
+  return `<details class="panel-seccion panel-seccion-escritura">
     <summary class="panel-seccion-titulo panel-seccion-summary">${ico("link",13)} Vincular</summary>
     <div class="campo">
       <span class="campo-etiq">Concepto destino</span>
@@ -1019,9 +1072,10 @@ function buildAnnotationPanelHTML(nodo) {
       <span class="muted" style="font-size:10px">${new Date(a.creada_en).toLocaleDateString("es",{day:"numeric",month:"short",year:"numeric"})}</span>
     </div>`).join("");
   }
-  h+=`<textarea id="pb-anotacion" class="panel-nota-input" rows="2" placeholder="Añadir nota…" style="margin-top:8px"></textarea>
+  h+=`<div class="panel-seccion-escritura">
+    <textarea id="pb-anotacion" class="panel-nota-input" rows="2" placeholder="Añadir nota…" style="margin-top:8px"></textarea>
     <button id="pb-anotar" class="btn btn-neutro small" style="margin-top:6px;width:100%">Guardar nota</button>
-  </details>`;
+  </div></details>`;
   return h;
 }
 
@@ -2639,6 +2693,25 @@ function renderGrafosPersonales(grafos) {
   grid.querySelectorAll(".gp-btn-eliminar").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); gpEliminar(btn.dataset.slug, btn.dataset.titulo); })
   );
+}
+
+async function publicarDocumento(slug, titulo, btn) {
+  const yaPublicado = btn.dataset.publicado === "1";
+  if (yaPublicado) {
+    if (!confirm(`¿Dejar "${titulo}" privado de nuevo? El link dejará de funcionar.`)) return;
+    try {
+      await apiFetch(`/api/publicar/${encodeURIComponent(slug)}`, { method: "DELETE" });
+      btn.dataset.publicado = "0";
+      btn.innerHTML = `${ico("link")} Publicar`;
+    } catch(e) { alert("Error al despublicar: " + e.message); }
+    return;
+  }
+  try {
+    const r = await apiFetch("/api/publicar", { method: "POST", body: JSON.stringify({ slug }) });
+    btn.dataset.publicado = "1";
+    btn.innerHTML = `${ico("link")} Despublicar`;
+    prompt(`"${titulo}" ya es público -- cualquiera puede leerlo (sin editar) con este link:`, location.origin + r.url);
+  } catch(e) { alert("Error al publicar: " + e.message); }
 }
 
 async function compartirDocumento(slug, titulo) {

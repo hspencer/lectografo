@@ -21,6 +21,7 @@ from src.contexto_biblioteca import (
     _DirectorioPorBiblioteca, exigir_admin, exigir_duena, middleware_biblioteca,
     biblioteca_actual, persona_actual, otorgar_permiso,
     permisos_compartidos_conmigo, nombre_de_biblioteca,
+    publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion,
 )
 from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import (
@@ -427,6 +428,77 @@ def compartir_documento(payload: CompartirPayload):
 
     otorgar_permiso(bib_propia, payload.slug, beneficiaria.uid, payload.email.strip(), uid)
     return {"ok": True}
+
+
+# ── Publicación: URL de solo lectura, sin sesión ──────────────────────────────
+
+class PublicarPayload(BaseModel):
+    slug: str
+
+
+@app.post("/api/publicar")
+def publicar_documento(payload: PublicarPayload):
+    bib = biblioteca_actual.get()
+    if not bib:
+        raise HTTPException(401, "No autenticado")
+    if _ruta_transcript(payload.slug) is None:
+        raise HTTPException(404, f"No tienes un texto '{payload.slug}' para publicar")
+    pub_id = publicar_texto(bib, payload.slug, persona_actual.get() or "")
+    return {"ok": True, "id": pub_id, "url": f"/#publico:{pub_id}"}
+
+
+@app.delete("/api/publicar/{slug}")
+def despublicar_documento(slug: str):
+    bib = biblioteca_actual.get()
+    if not bib:
+        raise HTTPException(401, "No autenticado")
+    if not despublicar_texto(bib, slug):
+        raise HTTPException(404, "Este texto no está publicado")
+    return {"ok": True}
+
+
+@app.get("/api/publicar/{slug}")
+def estado_publicacion_endpoint(slug: str):
+    bib = biblioteca_actual.get()
+    if not bib:
+        raise HTTPException(401, "No autenticado")
+    pub_id = estado_publicacion(bib, slug)
+    return {"publicado": pub_id is not None, "url": f"/#publico:{pub_id}" if pub_id else None}
+
+
+def _leer_como_publico(pub_id: str, fn, *args):
+    """Resuelve el id público a (biblioteca, slug) y llama a `fn` con el
+    ContextVar puesto en esa biblioteca por la duración de esta sola lectura
+    -- reusa la lógica de los endpoints normales sin tocarla."""
+    bib, slug = resolver_publicacion(pub_id)
+    token = biblioteca_actual.set(bib)
+    try:
+        return fn(slug, *args)
+    finally:
+        biblioteca_actual.reset(token)
+
+
+@app.get("/api/publico/{pub_id}")
+def publico_info(pub_id: str):
+    def _info(slug: str):
+        estado, _ = _cargar_o_crear(slug)
+        return {"titulo": estado.titulo, "metadatos": estado.metadatos.model_dump(), "slug": slug}
+    return _leer_como_publico(pub_id, _info)
+
+
+@app.get("/api/publico/{pub_id}/grafo")
+def publico_grafo(pub_id: str):
+    return _leer_como_publico(pub_id, obtener_grafo)
+
+
+@app.get("/api/publico/{pub_id}/validacion")
+def publico_validacion(pub_id: str):
+    return _leer_como_publico(pub_id, obtener_validacion)
+
+
+@app.get("/api/publico/{pub_id}/transcripts")
+def publico_transcript(pub_id: str):
+    return _leer_como_publico(pub_id, obtener_transcript)
 
 
 def _tarea_extraer(slug: str, ruta: Path) -> None:
