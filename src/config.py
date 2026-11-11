@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     # cuenta de servicio de Cloud Run. Ver block:lectografo:firebase:* en Vera.
     vertexai_project: str = "lectografo"
     vertexai_location: str = "us-central1"
-    vertexai_model: str = "gemini-flash-latest"
+    vertexai_model: str = "gemini-2.5-flash"
 
     # Ollama local
     ollama_endpoint: str = "http://localhost:11434"

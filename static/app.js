@@ -1872,10 +1872,12 @@ function initSettingsPanel() {
     lmstudio:  [],   // se pueblan desde la API
     anthropic: ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-5-20251001"],
     openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
-    // gemini-2.x quedó deprecado para cuentas nuevas en nov-2026 ("no longer
-    // available to new users"); los alias -latest se mantienen vigentes solos.
-    gemini:    ["gemini-flash-latest", "gemini-pro-latest", "gemini-3.8-flash"],
-    vertexai:  ["gemini-flash-latest", "gemini-pro-latest", "gemini-3.8-flash"],
+    // Catálogos verificados a mano -- Vertex AI y AI Studio NO comparten
+    // modelos ni nombres (nov-2026). gemini-2.x quedó deprecado para cuentas
+    // nuevas en AI Studio ("no longer available to new users"); en Vertex,
+    // en cambio, 2.5 es lo único que responde hoy -- todo lo demás 404.
+    gemini:    ["gemini-flash-latest", "gemini-pro-latest", "gemini-flash-lite-latest", "gemini-3.8-flash", "gemini-4-argon", "gemini-4-carbon"],
+    vertexai:  ["gemini-2.5-flash", "gemini-2.5-pro"],
   };
 
   let _cfg = null;       // última config recibida del servidor
