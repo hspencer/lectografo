@@ -980,14 +980,10 @@ def obtener_grafo(slug: str):
     return serializar_para_d3(grafo)
 
 
-class SimplificarPayload(BaseModel):
-    objetivo: int = 12  # nº de conceptos a conservar
-
-
 @app.post("/api/grafo/{slug}/simplificar")
-def simplificar_grafo(slug: str, payload: SimplificarPayload = SimplificarPayload()):
-    """Sintetiza el grafo a sus conceptos y relaciones más importantes: le
-    pide al LLM cuáles conservar y oculta el resto (reversible con
+def simplificar_grafo(slug: str):
+    """Sintetiza el grafo a los conceptos seguros de conservar: el LLM decide
+    cuáles (no se le pide una cantidad) y oculta el resto (reversible con
     DELETE, que limpia conceptos_ocultos)."""
     exigir_duena()  # "editora" no paga la inferencia de la dueña
     from src.llm import get_llm
@@ -995,10 +991,10 @@ def simplificar_grafo(slug: str, payload: SimplificarPayload = SimplificarPayloa
 
     estado, ruta_val = _cargar_o_crear(slug)
     grafo = materializar_desde_validacion(estado)
-    if payload.objetivo >= len(grafo.nodos):
-        raise HTTPException(400, "El grafo ya tiene menos conceptos que el objetivo pedido")
+    if len(grafo.nodos) < 3:
+        raise HTTPException(400, "Este grafo ya es demasiado chico para simplificar")
 
-    conservar = simplificar(grafo, get_llm(), payload.objetivo)
+    conservar = simplificar(grafo, get_llm())
     ocultos = [n.id for n in grafo.nodos if n.id not in conservar]
     estado.conceptos_ocultos = list(dict.fromkeys(estado.conceptos_ocultos + ocultos))
     guardar(estado, ruta_val)

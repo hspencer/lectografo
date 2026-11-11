@@ -1682,13 +1682,9 @@ async function initConceptos() {
       } catch(e) { alert("Error al agregar concepto: " + e.message); }
     });
     document.getElementById("btn-simplificar-grafo").addEventListener("click", async () => {
-      const actual = state.grafo.nodes.length;
-      const objetivo = prompt(`¿A cuántos conceptos simplificar? (hoy: ${actual})`, Math.min(12, actual));
-      if (!objetivo || isNaN(+objetivo)) return;
+      if (!confirm("¿Simplificar el grafo? Se ocultarán los conceptos menos seguros -- reversible.")) return;
       try {
-        await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/simplificar`, {
-          method: "POST", body: JSON.stringify({ objetivo: +objetivo }),
-        });
+        await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/simplificar`, { method: "POST" });
         await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
       } catch(e) { alert("Error al simplificar: " + e.message); }
     });

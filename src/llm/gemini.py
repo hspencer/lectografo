@@ -12,7 +12,15 @@ class GeminiLLM(EvaluadorLLM):
 
     def __init__(self):
         from google import genai
-        self._client = genai.Client(api_key=settings.gemini_api_key)
+        from google.genai import types
+        # Fijo explicitamente v1beta: es donde viven los alias -latest que
+        # usamos (gemini-flash-latest, etc). Distintas versiones del SDK
+        # resuelven un default distinto (v1 en prod, v1beta en local durante
+        # el desarrollo de esto) y esos alias no existen en v1 -> 404.
+        self._client = genai.Client(
+            api_key=settings.gemini_api_key,
+            http_options=types.HttpOptions(api_version="v1beta"),
+        )
         self.model_name = settings.gemini_model
 
     # invocar() es idéntico para Gemini (API key) y Vertex AI (ADC, sin
