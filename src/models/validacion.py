@@ -117,9 +117,15 @@ class EstadoValidacion(BaseModel):
     conceptos_investigador: list[dict] = Field(default_factory=list)
 
     # Ids (de ext.conceptos o conceptos_investigador) ocultos por una
-    # simplificación: no generan Nodo ni sus relaciones, pero el dato crudo
-    # de la extracción se conserva por si se quiere deshacer más adelante.
+    # simplificación o un "eliminar" sobre un concepto propuesto por el LLM
+    # (no se puede borrar el dato crudo de la extracción, pero sí dejar de
+    # materializarlo): no generan Nodo ni sus relaciones. Reversible.
     conceptos_ocultos: list[str] = Field(default_factory=list)
+
+    # Igual que conceptos_ocultos, pero para una relación propuesta por el
+    # LLM que la investigadora decide "eliminar" -- las de relaciones_investigador
+    # se borran de verdad (nunca estuvieron en la extracción cruda).
+    relaciones_ocultas: list[str] = Field(default_factory=list)
 
     # Fusión de conceptos duplicados/sinónimos: id absorbido → id canónico.
     # materializar_desde_validacion omite el Nodo del absorbido, redirige sus

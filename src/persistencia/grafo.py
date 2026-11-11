@@ -118,8 +118,11 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     # ── Relaciones del LLM ────────────────────────────────────────────────────
     # origen_id/destino_id se redirigen a través de la fusión; una relación que
     # quede como auto-loop (ambos extremos fusionados al mismo canónico) se descarta.
+    relaciones_ocultas = set(estado.relaciones_ocultas)
     relaciones: list[Relacion] = []
     for r in ext.relaciones:
+        if r.id in relaciones_ocultas:
+            continue
         ov = estado.relaciones_editadas.get(r.id, {})
         origen_id, destino_id = resolver(r.origen_id), resolver(r.destino_id)
         if origen_id == destino_id or origen_id in ocultos or destino_id in ocultos:
@@ -141,6 +144,8 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
 
     # ── Relaciones del investigador ───────────────────────────────────────────
     for r in estado.relaciones_investigador:
+        if r["id"] in relaciones_ocultas:
+            continue
         origen_id, destino_id = resolver(r["origen_id"]), resolver(r["destino_id"])
         if origen_id == destino_id or origen_id in ocultos or destino_id in ocultos:
             continue

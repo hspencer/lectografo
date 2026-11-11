@@ -1677,7 +1677,7 @@ function renderConceptos() {
     const sins=(n.sinonimos_candidatos||[]).slice(0,4).map(s=>`<span class="tag">${esc(s)}</span>`).join("");
     const mas=(n.sinonimos_candidatos||[]).length>4?`<span class="muted" style="font-size:11px">+${n.sinonimos_candidatos.length-4}</span>`:"";
     const checked = conceptosState.seleccionados.has(n.id) ? "checked" : "";
-    tr.innerHTML=`<td><input type="checkbox" class="concepto-check" ${checked}></td><td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline" data-edit-c="${esc(n.id)}">${ico("edit-2")} Editar</button></td>`;
+    tr.innerHTML=`<td><input type="checkbox" class="concepto-check" ${checked}></td><td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline" data-edit-c="${esc(n.id)}">${ico("edit-2")} Editar</button> <button class="btn-inline danger" data-del-c="${esc(n.id)}">${ico("trash-2")} Eliminar</button></td>`;
     tbody.appendChild(tr);
     tr.querySelector(".concepto-check").addEventListener("click", e => {
       e.stopPropagation();
@@ -1685,8 +1685,17 @@ function renderConceptos() {
       else conceptosState.seleccionados.delete(n.id);
       renderConceptos();
     });
+    tr.querySelector("[data-del-c]").addEventListener("click", async e => {
+      e.stopPropagation();
+      if (!confirm(`¿Eliminar el concepto "${n.label}"?`)) return;
+      try {
+        await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/conceptos/${encodeURIComponent(n.id)}`, { method: "DELETE" });
+        conceptosState.seleccionados.delete(n.id);
+        await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
+      } catch(err) { alert("Error al eliminar: " + err.message); }
+    });
     tr.addEventListener("click", e => {
-      if (e.target.closest("[data-edit-c]") || e.target.closest(".concepto-check")) return;
+      if (e.target.closest("[data-edit-c]") || e.target.closest("[data-del-c]") || e.target.closest(".concepto-check")) return;
       conceptoExpandidoId = conceptoExpandidoId === n.id ? null : n.id;
       renderConceptos();
     });
@@ -1771,7 +1780,7 @@ function renderRelaciones() {
     const cw=Math.round(l.confianza*56);
     const tr=document.createElement("tr"); tr.dataset.id=l.id;
     tr.className = "relacion-fila" + (l.id===relacionExpandidaId ? " active" : "");
-    tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(l.id)}</td><td><span class="tag ${to}">${esc(lo)}</span></td><td class="r-tipo"><span class="tag">${esc(l.tipo||"—")}</span></td><td><span class="tag ${td}">${esc(ld)}</span></td><td style="text-align:center"><button class="bidir-toggle ${l.bidireccional?"on":""}" data-bidir="${l.id}" title="${l.bidireccional?"Bidireccional":"Unidireccional"}">${l.bidireccional?"↔":"→"}</button></td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${l.confianza.toFixed(2)}</span></div></td><td class="r-etiqueta">${esc(l.etiqueta||"")}${l.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td><button class="btn-inline" data-edit-r="${esc(l.id)}">${ico("edit-2")} Editar</button></td>`;
+    tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(l.id)}</td><td><span class="tag ${to}">${esc(lo)}</span></td><td class="r-tipo"><span class="tag">${esc(l.tipo||"—")}</span></td><td><span class="tag ${td}">${esc(ld)}</span></td><td style="text-align:center"><button class="bidir-toggle ${l.bidireccional?"on":""}" data-bidir="${l.id}" title="${l.bidireccional?"Bidireccional":"Unidireccional"}">${l.bidireccional?"↔":"→"}</button></td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${l.confianza.toFixed(2)}</span></div></td><td class="r-etiqueta">${esc(l.etiqueta||"")}${l.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td><button class="btn-inline" data-edit-r="${esc(l.id)}">${ico("edit-2")} Editar</button> <button class="btn-inline danger" data-del-r="${esc(l.id)}">${ico("trash-2")} Eliminar</button></td>`;
     tbody.appendChild(tr);
     tr.querySelector("[data-bidir]").addEventListener("click",e=>{
       e.stopPropagation();
@@ -1780,6 +1789,14 @@ function renderRelaciones() {
         .catch(e=>alert("Error: "+e.message));
     });
     tr.querySelector("[data-edit-r]").addEventListener("click",e=>{ e.stopPropagation(); abrirEditorRelacion(l,tr); });
+    tr.querySelector("[data-del-r]").addEventListener("click", async e => {
+      e.stopPropagation();
+      if (!confirm(`¿Eliminar la relación "${lo} → ${ld}"?`)) return;
+      try {
+        await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/relaciones/${encodeURIComponent(l.id)}`, { method: "DELETE" });
+        await cargarGrafo(); tabsInit.delete("mapa"); renderRelaciones();
+      } catch(err) { alert("Error al eliminar: " + err.message); }
+    });
     tr.addEventListener("click", e => {
       if (e.target.closest("[data-edit-r], [data-bidir]")) return;
       relacionExpandidaId = relacionExpandidaId === l.id ? null : l.id;
@@ -3081,6 +3098,7 @@ function gpAbrirCard(nodo, parentCardId = null, relLabel = null) {
           </div>
           <div style="display:flex;gap:3px;flex-shrink:0">
             <button class="btn-inline gp-rel-abrir" title="Abrir concepto relacionado" style="font-size:11px;padding:1px 5px">→</button>
+            <button class="btn-inline gp-rel-editar" title="Editar relación">${ico("edit-2")}</button>
             <button class="btn-inline danger gp-rel-del" title="Eliminar relación">${ico("x")}</button>
           </div>
         </div>`;
@@ -3189,6 +3207,7 @@ function gpAbrirCard(nodo, parentCardId = null, relLabel = null) {
       if (otroNodo) gpAbrirCard(otroNodo, cardId, row.dataset.relTipo);
     });
     row.querySelector(".gp-rel-del")?.addEventListener("click", () => gpEliminarRelacion(row.dataset.relId, cardId));
+    row.querySelector(".gp-rel-editar")?.addEventListener("click", () => gpEditarRelacion(row.dataset.relId, row.dataset.relTipo, cardId));
   });
 
   // Autocomplete vincular
@@ -3274,6 +3293,21 @@ async function gpCrearRelacion(origenId, destinoId, tipo, etiqueta, bidirecciona
     const updated = gpState.grafoVis.nodes.find(n => n.id === origenId);
     if (updated && cardId) _gpRefreshCard(cardId, updated);
   } catch(e) { alert("Error al crear relación: " + e.message); }
+}
+
+async function gpEditarRelacion(rid, tipoActual, cardId = null) {
+  const nuevoTipo = prompt("Tipo de relación:", tipoActual);
+  if (!nuevoTipo || !nuevoTipo.trim()) return;
+  try {
+    await apiFetch(`/api/grafos-personales/${encodeURIComponent(gpState.slug)}/relaciones/${encodeURIComponent(rid)}`,
+      { method: "PATCH", body: JSON.stringify({ tipo: nuevoTipo.trim() }) });
+    await recargarGP();
+    if (cardId) {
+      const data = _gpCards.get(cardId);
+      const updated = data && gpState.grafoVis.nodes.find(n => n.id === data.nodo.id);
+      if (updated) _gpRefreshCard(cardId, updated);
+    }
+  } catch(e) { alert("Error al editar relación: " + e.message); }
 }
 
 async function gpEliminarRelacion(rid, cardId = null) {

@@ -1538,6 +1538,30 @@ def editar_concepto(slug: str, cid: str, payload: EditConceptoPayload):
     return {"ok": True}
 
 
+@app.delete("/api/validacion/{slug}/conceptos/{cid}")
+def eliminar_concepto(slug: str, cid: str):
+    """Elimina un concepto. Si es propio (conceptos_investigador) se borra de
+    verdad y se limpian sus relaciones propias; si viene del LLM no se puede
+    borrar el dato crudo de la extracción, así que se oculta (igual que
+    simplificar -- reversible)."""
+    estado, ruta_val = _cargar_o_crear(slug)
+    es_propio = any(c["id"] == cid for c in estado.conceptos_investigador)
+    es_llm = any(c.id == cid for c in estado.extraccion.conceptos)
+    if not es_propio and not es_llm:
+        raise HTTPException(404, f"Concepto '{cid}' no encontrado")
+    if es_propio:
+        estado.conceptos_investigador = [c for c in estado.conceptos_investigador if c["id"] != cid]
+        estado.relaciones_investigador = [
+            r for r in estado.relaciones_investigador
+            if r["origen_id"] != cid and r["destino_id"] != cid
+        ]
+    else:
+        if cid not in estado.conceptos_ocultos:
+            estado.conceptos_ocultos.append(cid)
+    guardar(estado, ruta_val)
+    return {"ok": True}
+
+
 class EditRelacionPayload(BaseModel):
     tipo: Optional[str] = None
     etiqueta: Optional[str] = None
@@ -1547,16 +1571,46 @@ class EditRelacionPayload(BaseModel):
 @app.patch("/api/validacion/{slug}/relaciones/{rid}")
 def editar_relacion(slug: str, rid: str, payload: EditRelacionPayload):
     estado, ruta_val = _cargar_o_crear(slug)
-    if not any(r.id == rid for r in estado.extraccion.relaciones):
+    existe_rid = (
+        any(r.id == rid for r in estado.extraccion.relaciones)
+        or any(r["id"] == rid for r in estado.relaciones_investigador)
+    )
+    if not existe_rid:
         raise HTTPException(404, f"Relación '{rid}' no encontrada")
-    ov = estado.relaciones_editadas.get(rid, {})
-    if payload.tipo is not None:
-        ov["tipo"] = payload.tipo
-    if payload.etiqueta is not None:
-        ov["etiqueta"] = payload.etiqueta
-    if payload.bidireccional is not None:
-        ov["bidireccional"] = payload.bidireccional
-    estado.relaciones_editadas[rid] = ov
+    propia = next((r for r in estado.relaciones_investigador if r["id"] == rid), None)
+    if propia is not None:
+        if payload.tipo is not None:
+            propia["tipo"] = payload.tipo
+        if payload.etiqueta is not None:
+            propia["etiqueta"] = payload.etiqueta
+        if payload.bidireccional is not None:
+            propia["bidireccional"] = payload.bidireccional
+    else:
+        ov = estado.relaciones_editadas.get(rid, {})
+        if payload.tipo is not None:
+            ov["tipo"] = payload.tipo
+        if payload.etiqueta is not None:
+            ov["etiqueta"] = payload.etiqueta
+        if payload.bidireccional is not None:
+            ov["bidireccional"] = payload.bidireccional
+        estado.relaciones_editadas[rid] = ov
+    guardar(estado, ruta_val)
+    return {"ok": True}
+
+
+@app.delete("/api/validacion/{slug}/relaciones/{rid}")
+def eliminar_relacion(slug: str, rid: str):
+    """Elimina una relación. Si es propia se borra de verdad; si viene del
+    LLM se oculta (reversible, igual que un concepto oculto)."""
+    estado, ruta_val = _cargar_o_crear(slug)
+    es_propia = any(r["id"] == rid for r in estado.relaciones_investigador)
+    es_llm = any(r.id == rid for r in estado.extraccion.relaciones)
+    if not es_propia and not es_llm:
+        raise HTTPException(404, f"Relación '{rid}' no encontrada")
+    if es_propia:
+        estado.relaciones_investigador = [r for r in estado.relaciones_investigador if r["id"] != rid]
+    elif rid not in estado.relaciones_ocultas:
+        estado.relaciones_ocultas.append(rid)
     guardar(estado, ruta_val)
     return {"ok": True}
 
@@ -1878,6 +1932,37 @@ def agregar_relacion_gp(slug: str, payload: NuevaRelacionGPPayload):
     grafo.actualizado_en = datetime.utcnow()
     guardar_gp(grafo, GRAFOS)
     return {"ok": True, "id": rid}
+
+
+class EditarRelacionGPPayload(BaseModel):
+    tipo: Optional[str] = None
+    etiqueta: Optional[str] = None
+    bidireccional: Optional[bool] = None
+    cita: Optional[CitaPasaje] = None
+
+
+@app.patch("/api/grafos-personales/{slug}/relaciones/{rid}")
+def editar_relacion_gp(slug: str, rid: str, payload: EditarRelacionGPPayload):
+    """Edita una relación del grafo personal."""
+    ruta = ruta_grafo_personal(slug, GRAFOS)
+    if not ruta.exists():
+        raise HTTPException(404, f"Grafo personal '{slug}' no encontrado")
+    grafo = cargar_gp(slug, GRAFOS)
+    rel = next((r for r in grafo.relaciones if r.id == rid), None)
+    if rel is None:
+        raise HTTPException(404, f"Relación '{rid}' no encontrada")
+    if payload.tipo is not None:
+        rel.tipo = payload.tipo
+    if payload.etiqueta is not None:
+        rel.etiqueta = payload.etiqueta
+    if payload.bidireccional is not None:
+        rel.bidireccional = payload.bidireccional
+    if payload.cita is not None:
+        rel.cita = payload.cita
+    from datetime import datetime
+    grafo.actualizado_en = datetime.utcnow()
+    guardar_gp(grafo, GRAFOS)
+    return {"ok": True}
 
 
 class ActualizarGrafoPersonalPayload(BaseModel):
