@@ -1872,8 +1872,10 @@ function initSettingsPanel() {
     lmstudio:  [],   // se pueblan desde la API
     anthropic: ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-5-20251001"],
     openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
-    gemini:    ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
-    vertexai:  ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash"],
+    // gemini-2.x quedó deprecado para cuentas nuevas en nov-2026 ("no longer
+    // available to new users"); los alias -latest se mantienen vigentes solos.
+    gemini:    ["gemini-flash-latest", "gemini-pro-latest", "gemini-3.8-flash"],
+    vertexai:  ["gemini-flash-latest", "gemini-pro-latest", "gemini-3.8-flash"],
   };
 
   let _cfg = null;       // última config recibida del servidor

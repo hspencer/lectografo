@@ -2052,8 +2052,12 @@ async def actualizar_settings(payload: SettingsPayload):
         if not key:
             raise HTTPException(400, "GEMINI_API_KEY no está configurada en .env")
         object.__setattr__(settings, "gemini_api_key", key)
-        _GEMINI_DEFAULT = "gemini-2.0-flash"
-        _GEMINI_DEPRECATED = {"gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro"}
+        _GEMINI_DEFAULT = "gemini-flash-latest"
+        # gemini-2.x quedó deprecado para cuentas nuevas en nov-2026
+        _GEMINI_DEPRECATED = {
+            "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro",
+            "gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash",
+        }
         env_model = _leer_key_env("GEMINI_MODEL") or ""
         requested = (payload.model or "").strip()
         if requested:

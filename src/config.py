@@ -15,13 +15,13 @@ class Settings(BaseSettings):
     # Modelos remotos (defaults razonables)
     anthropic_model: str = "claude-opus-4-6"
     openai_model: str = "gpt-4o"
-    gemini_model: str = "gemini-2.0-flash"
+    gemini_model: str = "gemini-flash-latest"
 
     # Vertex AI: factura al proyecto GCP (sin API key personal), vía la
     # cuenta de servicio de Cloud Run. Ver block:lectografo:firebase:* en Vera.
     vertexai_project: str = "lectografo"
     vertexai_location: str = "us-central1"
-    vertexai_model: str = "gemini-2.5-flash"
+    vertexai_model: str = "gemini-flash-latest"
 
     # Ollama local
     ollama_endpoint: str = "http://localhost:11434"
