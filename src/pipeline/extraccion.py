@@ -22,6 +22,25 @@ def cargar_prompt(nombre: str = "extraccion_v1.md") -> str:
     return ruta.read_text(encoding="utf-8")
 
 
+def _aplicar_conceptos_objetivo(prompt_sistema: str, conceptos_objetivo: list[str] | None) -> str:
+    """Restringe la extracción a una lista de conceptos ya definidos por la
+    investigadora: el LLM busca relaciones entre ellos en vez de proponer
+    conceptos libremente. Usado cuando se arma el grafo a mano primero."""
+    if not conceptos_objetivo:
+        return prompt_sistema
+    lista = "\n".join(f"- {c}" for c in conceptos_objetivo)
+    return (
+        f"{prompt_sistema}\n\n---\n\n"
+        "RESTRICCIÓN IMPORTANTE: la investigadora ya definió estos conceptos; "
+        "no propongas conceptos nuevos fuera de esta lista. Tu única tarea es "
+        "identificar, dentro del texto, las relaciones que existen entre ellos "
+        "(y solo entre ellos):\n"
+        f"{lista}\n\n"
+        "Si un concepto de la lista no aparece en el texto, omítelo del "
+        "resultado en vez de inventar evidencia."
+    )
+
+
 def extraer(
     transcripcion: TranscripcionCruda,
     llm: EvaluadorLLM,
@@ -30,8 +49,10 @@ def extraer(
     on_texto=None,
     should_cancel=None,
     max_chars: int | None = None,
+    conceptos_objetivo: list[str] | None = None,
 ) -> ResultadoExtraccion:
     prompt_sistema = cargar_prompt(prompt_nombre)
+    prompt_sistema = _aplicar_conceptos_objetivo(prompt_sistema, conceptos_objetivo)
 
     # Truncar el texto si supera el límite para no desbordar el contexto del LLM.
     # Para textos largos, la extracción incremental por fragmentos es la ruta

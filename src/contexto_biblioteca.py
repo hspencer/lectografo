@@ -10,6 +10,7 @@ raíz de siempre: así no se rompe el flujo local existente.
 from __future__ import annotations
 
 import os
+import re
 from contextvars import ContextVar
 from pathlib import Path
 
@@ -37,6 +38,55 @@ persona_actual: ContextVar[str | None] = ContextVar("persona_actual", default=No
 es_admin_actual: ContextVar[bool] = ContextVar("es_admin_actual", default=False)
 
 _cache_persona: dict[str, tuple[str | None, bool]] = {}
+
+# Rutas por-slug cuyo dueño puede no ser quien pide: si hay un permiso
+# compartido para (uid, slug), el request completo pasa a resolver GRAFOS/
+# TRANSCRIPTS contra la biblioteca de origen del permiso, no la propia.
+_RE_SLUG_EN_PATH = re.compile(
+    r"^/api/(?:extracciones|validacion|grafo|metadatos|transcripts)/([^/]+)"
+)
+_cache_permiso: dict[tuple[str, str], str | None] = {}
+
+
+def _biblioteca_compartida(uid: str, slug: str) -> str | None:
+    """bibliotecaOrigen si existe un permisos/{...} que comparte `slug` con
+    `uid`; None si el slug no fue compartido con esta persona."""
+    clave = (uid, slug)
+    if clave in _cache_permiso:
+        return _cache_permiso[clave]
+    docs = (
+        firestore.client().collection("permisos")
+        .where("beneficiariaUid", "==", uid).where("slug", "==", slug)
+        .limit(1).get()
+    )
+    resultado = docs[0].to_dict().get("bibliotecaOrigen") if docs else None
+    _cache_permiso[clave] = resultado
+    return resultado
+
+
+def otorgar_permiso(biblioteca_origen: str, slug: str, beneficiaria_uid: str,
+                     beneficiaria_email: str, otorgado_por: str) -> None:
+    from datetime import datetime, timezone
+    firestore.client().collection("permisos").add({
+        "bibliotecaOrigen": biblioteca_origen,
+        "slug": slug,
+        "beneficiariaUid": beneficiaria_uid,
+        "beneficiariaEmail": beneficiaria_email,
+        "otorgadoPor": otorgado_por,
+        "otorgadoEn": datetime.now(timezone.utc),
+        "rol": "editora",
+    })
+    _cache_permiso.pop((beneficiaria_uid, slug), None)
+
+
+def permisos_compartidos_conmigo(uid: str) -> list[dict]:
+    docs = firestore.client().collection("permisos").where("beneficiariaUid", "==", uid).get()
+    return [d.to_dict() for d in docs]
+
+
+def nombre_de_biblioteca(biblioteca_id: str) -> str:
+    doc = firestore.client().collection("bibliotecas").document(biblioteca_id).get()
+    return (doc.to_dict() or {}).get("nombre", "") if doc.exists else ""
 
 
 def _datos_persona(uid: str) -> tuple[str | None, bool]:
@@ -69,6 +119,11 @@ async def middleware_biblioteca(request, call_next):
             token_persona = persona_actual.set(decoded["uid"])
             bib, admin = _datos_persona(decoded["uid"])
             autenticado = True
+            m = _RE_SLUG_EN_PATH.match(request.url.path)
+            if m:
+                compartida = _biblioteca_compartida(decoded["uid"], m.group(1))
+                if compartida:
+                    bib = compartida
         except Exception:
             bib = None
     if _EN_CLOUD_RUN and not autenticado:

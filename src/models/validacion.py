@@ -113,6 +113,14 @@ class EstadoValidacion(BaseModel):
     # Relaciones añadidas manualmente por el investigador (no provienen del LLM)
     relaciones_investigador: list[dict] = Field(default_factory=list)
 
+    # Conceptos añadidos manualmente por el investigador (no provienen del LLM)
+    conceptos_investigador: list[dict] = Field(default_factory=list)
+
+    # Ids (de ext.conceptos o conceptos_investigador) ocultos por una
+    # simplificación: no generan Nodo ni sus relaciones, pero el dato crudo
+    # de la extracción se conserva por si se quiere deshacer más adelante.
+    conceptos_ocultos: list[str] = Field(default_factory=list)
+
     # Fusión de conceptos duplicados/sinónimos: id absorbido → id canónico.
     # materializar_desde_validacion omite el Nodo del absorbido, redirige sus
     # relaciones al canónico y traslada su label a sinonimos_consolidados.

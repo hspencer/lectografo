@@ -17,7 +17,11 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.config import settings
-from src.contexto_biblioteca import _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca
+from src.contexto_biblioteca import (
+    _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
+    biblioteca_actual, persona_actual, otorgar_permiso,
+    permisos_compartidos_conmigo, nombre_de_biblioteca,
+)
 from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import (
     AnotacionInvestigador,
@@ -351,7 +355,69 @@ def listar_extracciones():
                 "pendientes":      None, "diferidas": 0, "completado": False,
             })
 
+    # ── Textos compartidos conmigo (de otras bibliotecas) ──────────────────────
+    uid = persona_actual.get()
+    if uid:
+        for permiso in permisos_compartidos_conmigo(uid):
+            slug, bib_origen = permiso.get("slug"), permiso.get("bibliotecaOrigen")
+            if not slug or not bib_origen or slug in slugs_procesados:
+                continue
+            ruta_ext = settings.grafos_dir / bib_origen / f"{slug}_extraccion.json"
+            if not ruta_ext.exists():
+                continue
+            ruta_val = settings.grafos_dir / bib_origen / f"{slug}_validacion.json"
+            titulo, metadatos = slug.replace("_", " ").title(), None
+            if ruta_val.exists():
+                try:
+                    val = cargar(ruta_val)
+                    titulo, metadatos = val.titulo, val.metadatos.model_dump()
+                except Exception:
+                    pass
+            resultado.append({
+                "slug": slug, "titulo": titulo, "procesado": True, "procesando": False,
+                "fase_extraccion": "", "elapsed": 0, "tokens": 0, "tokens_total": 0,
+                "porcentaje": 0, "estado": "listo", "error": None,
+                "metadatos": metadatos,
+                "compartido": True,
+                "compartido_por": nombre_de_biblioteca(bib_origen),
+            })
+            slugs_procesados.add(slug)
+
     return resultado
+
+
+class CompartirPayload(BaseModel):
+    slug: str
+    email: str
+
+
+@app.post("/api/compartir")
+def compartir_documento(payload: CompartirPayload):
+    """Comparte un documento (y su grafo) con otra persona por email. Esa
+    persona tiene que haberse registrado alguna vez en Lectógrafo -- se busca
+    su cuenta de Firebase, no se manda invitación por correo."""
+    from src.contexto_biblioteca import fb_auth as _fb_auth
+
+    bib_propia = biblioteca_actual.get()
+    uid = persona_actual.get()
+    if not bib_propia or not uid:
+        raise HTTPException(401, "No autenticado")
+    if _ruta_transcript(payload.slug) is None:
+        raise HTTPException(404, f"No tienes un texto '{payload.slug}' para compartir")
+
+    try:
+        beneficiaria = _fb_auth.get_user_by_email(payload.email.strip())
+    except Exception:
+        raise HTTPException(
+            404,
+            f"'{payload.email}' no tiene cuenta en Lectógrafo todavía -- "
+            "pídele que entre una vez con Google antes de compartir.",
+        )
+    if beneficiaria.uid == uid:
+        raise HTTPException(400, "No puedes compartir un documento contigo misma")
+
+    otorgar_permiso(bib_propia, payload.slug, beneficiaria.uid, payload.email.strip(), uid)
+    return {"ok": True}
 
 
 def _tarea_extraer(slug: str, ruta: Path) -> None:
@@ -448,6 +514,7 @@ def _tarea_extraer(slug: str, ruta: Path) -> None:
             transcripcion, llm,
             on_token=_on_token, on_texto=_on_texto, should_cancel=_should_cancel,
             max_chars=settings.max_chars_prompt,
+            conceptos_objetivo=tarea_inicial.get("_conceptos_objetivo"),
         )
 
         if not resultado.conceptos:
@@ -501,6 +568,8 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
 
         prompt_path = Path(__file__).parent.parent / "prompts" / "extraccion_fragmento_v1.md"
         prompt_fragmento = prompt_path.read_text("utf-8")
+        from src.pipeline.extraccion import _aplicar_conceptos_objetivo
+        prompt_fragmento = _aplicar_conceptos_objetivo(prompt_fragmento, tarea_inicial.get("_conceptos_objetivo"))
 
         llm = get_llm()
 
@@ -636,6 +705,8 @@ async def importar_transcript(payload: ImportarTranscriptPayload):
 class ProcesarPayload(BaseModel):
     force: bool = False  # True = re-extraer aunque ya exista extracción
     modo: str  = "auto"  # "auto" | "rapido" | "incremental"
+    conceptos_objetivo: Optional[list[str]] = None  # labels; si viene, el LLM
+    # busca solo relaciones entre estos conceptos en vez de proponer libremente
 
 
 @app.post("/api/extracciones/{slug}/procesar")
@@ -686,6 +757,7 @@ async def procesar_extraccion(slug: str, payload: ProcesarPayload = ProcesarPayl
         "conceptos_parciales":  [],
         "relaciones_parciales": [],
         "_metadatos_previos": mp_previos,
+        "_conceptos_objetivo": payload.conceptos_objetivo or None,
     }
     tarea_fn = _tarea_extraer_incremental if modo == "incremental" else _tarea_extraer
     loop = asyncio.get_event_loop()
@@ -824,6 +896,44 @@ def obtener_grafo(slug: str):
     estado, _ = _cargar_o_crear(slug)
     grafo = materializar_desde_validacion(estado)
     return serializar_para_d3(grafo)
+
+
+class SimplificarPayload(BaseModel):
+    objetivo: int = 12  # nº de conceptos a conservar
+
+
+@app.post("/api/grafo/{slug}/simplificar")
+def simplificar_grafo(slug: str, payload: SimplificarPayload = SimplificarPayload()):
+    """Sintetiza el grafo a sus conceptos y relaciones más importantes: le
+    pide al LLM cuáles conservar y oculta el resto (reversible con
+    DELETE, que limpia conceptos_ocultos)."""
+    from src.llm import get_llm
+    from src.pipeline.simplificacion import simplificar
+
+    estado, ruta_val = _cargar_o_crear(slug)
+    grafo = materializar_desde_validacion(estado)
+    if payload.objetivo >= len(grafo.nodos):
+        raise HTTPException(400, "El grafo ya tiene menos conceptos que el objetivo pedido")
+
+    conservar = simplificar(grafo, get_llm(), payload.objetivo)
+    ocultos = [n.id for n in grafo.nodos if n.id not in conservar]
+    estado.conceptos_ocultos = list(dict.fromkeys(estado.conceptos_ocultos + ocultos))
+    guardar(estado, ruta_val)
+
+    grafo_simplificado = materializar_desde_validacion(estado)
+    return serializar_para_d3(grafo_simplificado)
+
+
+@app.delete("/api/grafo/{slug}/simplificar")
+def deshacer_simplificacion(slug: str):
+    """Deshace cualquier simplificación previa: vuelve a mostrar todos los
+    conceptos ocultos (no borra nada, solo los desoculta)."""
+    estado, ruta_val = _cargar_o_crear(slug)
+    if not estado.conceptos_ocultos:
+        raise HTTPException(404, "Este grafo no tiene conceptos ocultos")
+    estado.conceptos_ocultos = []
+    guardar(estado, ruta_val)
+    return {"ok": True}
 
 
 @app.get("/api/grafo/{slug}/info")
@@ -1333,6 +1443,44 @@ class NuevaRelacionPayload(BaseModel):
     bidireccional: bool = False
 
 
+class NuevoConceptoPayload(BaseModel):
+    label: str
+    descripcion: str = ""
+    tipo: str = "primitivo"
+
+
+@app.post("/api/validacion/{slug}/conceptos")
+def crear_concepto_investigador(slug: str, payload: NuevoConceptoPayload):
+    """Añade un concepto creado manualmente por la investigadora. Si el texto
+    todavía no se procesó con el LLM, crea una sesión de validación vacía:
+    así se puede construir un grafo a mano antes (o en vez) de extraer."""
+    import uuid
+    ruta_val = ruta_validacion(slug, GRAFOS)
+    if ruta_val.exists():
+        estado = cargar(ruta_val)
+    else:
+        ruta_ext = GRAFOS / f"{slug}_extraccion.json"
+        if ruta_ext.exists():
+            estado, _ = _cargar_o_crear(slug)
+        else:
+            if _ruta_transcript(slug) is None:
+                raise HTTPException(404, f"No existe transcript para '{slug}'")
+            estado = EstadoValidacion(
+                titulo=slug.replace("_", " ").replace("-", " ").title(),
+                slug=slug,
+                extraccion=ResultadoExtraccion(),
+                decisiones=[],
+                completado=True,
+            )
+    cid = f"c_inv_{str(uuid.uuid4())[:8]}"
+    estado.conceptos_investigador.append({
+        "id": cid, "label": payload.label,
+        "descripcion": payload.descripcion, "tipo": payload.tipo,
+    })
+    guardar(estado, ruta_val)
+    return {"ok": True, "id": cid}
+
+
 @app.post("/api/validacion/{slug}/relaciones")
 def crear_relacion_investigador(slug: str, payload: NuevaRelacionPayload):
     """Añade una relación creada manualmente por el investigador."""
@@ -1365,7 +1513,11 @@ class EditConceptoPayload(BaseModel):
 @app.patch("/api/validacion/{slug}/conceptos/{cid}")
 def editar_concepto(slug: str, cid: str, payload: EditConceptoPayload):
     estado, ruta_val = _cargar_o_crear(slug)
-    if not any(c.id == cid for c in estado.extraccion.conceptos):
+    existe_cid = (
+        any(c.id == cid for c in estado.extraccion.conceptos)
+        or any(c["id"] == cid for c in estado.conceptos_investigador)
+    )
+    if not existe_cid:
         raise HTTPException(404, f"Concepto '{cid}' no encontrado")
     ov = estado.conceptos_editados.get(cid, {})
     if payload.label is not None:

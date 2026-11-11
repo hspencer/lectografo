@@ -1029,6 +1029,10 @@ tbody tr:hover td { background: var(--sn-sunk); }
 .bib-sin-ficha {
   font-size: var(--sn-fs-xs); opacity: .5; font-style: italic;
 }
+.bib-card-compartido {
+  display: flex; align-items: center; gap: 4px;
+  font-size: var(--sn-fs-xs); color: var(--sn-ok); margin-bottom: var(--sn-s-1);
+}
 
 /* ── Modal: Ficha bibliográfica ──────────────────────────────────── */
 #ficha-modal {

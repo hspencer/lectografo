@@ -63,6 +63,7 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     slug = estado.slug
     ext = estado.extraccion
     fusiones = estado.conceptos_fusionados
+    ocultos = set(estado.conceptos_ocultos)
 
     def resolver(cid: str) -> str:
         return _resolver_fusion(cid, fusiones)
@@ -70,9 +71,12 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     # ── Nodos ─────────────────────────────────────────────────────────────────
     # Los conceptos absorbidos por una fusión no generan Nodo: su label pasa a
     # engrosar sinonimos_consolidados del nodo canónico que los absorbe.
+    # Un concepto oculto (simplificación) no genera Nodo ni absorbe labels.
     labels_absorbidos: dict[str, list[str]] = {}
     nodos: list[Nodo] = []
     for c in ext.conceptos:
+        if c.id in ocultos:
+            continue
         ov = estado.conceptos_editados.get(c.id, {})
         label_efectivo = ov.get("label", c.label)
         if resolver(c.id) != c.id:
@@ -91,6 +95,21 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
             cita_directa=c.cita_directa,
         ))
 
+    # Conceptos añadidos manualmente por la investigadora (no vienen del LLM)
+    for c in estado.conceptos_investigador:
+        if c["id"] in ocultos:
+            continue
+        ov = estado.conceptos_editados.get(c["id"], {})
+        nodos.append(Nodo(
+            id=c["id"],
+            label=ov.get("label", c["label"]),
+            tipos=[ov.get("tipo", c.get("tipo", "primitivo"))],
+            descripcion_corta=c.get("descripcion", ""),
+            conceptos_origen_ids=[c["id"]],
+            confianza=1.0,
+            menciones=1,
+        ))
+
     for n in nodos:
         for label in labels_absorbidos.get(n.id, []):
             if label and label != n.label and label not in n.sinonimos_consolidados:
@@ -103,7 +122,7 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     for r in ext.relaciones:
         ov = estado.relaciones_editadas.get(r.id, {})
         origen_id, destino_id = resolver(r.origen_id), resolver(r.destino_id)
-        if origen_id == destino_id:
+        if origen_id == destino_id or origen_id in ocultos or destino_id in ocultos:
             continue
         relaciones.append(Relacion(
             id=r.id,
@@ -123,7 +142,7 @@ def materializar_desde_validacion(estado: EstadoValidacion) -> Grafo:
     # ── Relaciones del investigador ───────────────────────────────────────────
     for r in estado.relaciones_investigador:
         origen_id, destino_id = resolver(r["origen_id"]), resolver(r["destino_id"])
-        if origen_id == destino_id:
+        if origen_id == destino_id or origen_id in ocultos or destino_id in ocultos:
             continue
         relaciones.append(Relacion(
             id=r["id"],

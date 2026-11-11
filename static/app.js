@@ -17,7 +17,7 @@ const state = {
 };
 
 const tabsInit = new Set();
-const conceptosState  = { sort:{ col:"menciones", dir:"desc" }, filtroTipo:"todos", busqueda:"" };
+const conceptosState  = { sort:{ col:"menciones", dir:"desc" }, filtroTipo:"todos", busqueda:"", seleccionados: new Set() };
 const relacionesState = { sort:{ col:"confianza",  dir:"desc" }, filtroTipo:"todos", busqueda:"" };
 let relacionExpandidaId = null;
 let conceptosListeners = false;
@@ -323,13 +323,15 @@ function renderBiblioteca(exts) {
       <div class="bib-mini-mapa bib-card-click" data-slug="${esc(e.slug)}"></div>
       <div class="bib-card-click bib-card-body">
         <div class="bib-card-titulo">${esc(e.titulo)}</div>
+        ${e.compartido ? `<div class="bib-card-compartido muted">${ico("users",11)} Compartido por ${esc(e.compartido_por||"otra persona")}</div>` : ""}
         ${citaCard
           ? `<div class="bib-card-cita muted">${esc(citaCard)}</div>`
           : `<div class="bib-card-cita muted bib-sin-ficha">Sin ficha bibliográfica</div>`}
       </div>
       <div class="bib-card-footer">
         <button class="btn-inline bib-btn-ficha" data-slug="${esc(e.slug)}" title="Editar ficha bibliográfica">${ico("edit-2")} Ficha</button>
-        <button class="btn-inline danger bib-btn-repro" data-slug="${esc(e.slug)}" title="Re-extraer con el LLM">${ico("refresh-cw")} Re-procesar</button>
+        ${e.compartido ? "" : `<button class="btn-inline bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" title="Compartir con otra persona">${ico("users")} Compartir</button>
+        <button class="btn-inline danger bib-btn-repro" data-slug="${esc(e.slug)}" title="Re-extraer con el LLM">${ico("refresh-cw")} Re-procesar</button>`}
       </div>
     </div>`;
   }).join("");
@@ -352,6 +354,11 @@ function renderBiblioteca(exts) {
   // Re-procesar
   grid.querySelectorAll(".bib-btn-repro").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); reprocesarDesdeLibreria(btn.dataset.slug); })
+  );
+
+  // Compartir con otra persona
+  grid.querySelectorAll(".bib-btn-compartir").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); compartirDocumento(btn.dataset.slug, btn.dataset.titulo); })
   );
 
   // Toggle log panel
@@ -1594,6 +1601,49 @@ async function initConceptos() {
       else { conceptosState.sort.col=c; conceptosState.sort.dir="asc"; }
       renderConceptos();
     }));
+    document.getElementById("concepto-check-todos").addEventListener("change", e => {
+      conceptosState.seleccionados = e.target.checked ? new Set(state.grafo.nodes.map(n=>n.id)) : new Set();
+      renderConceptos();
+    });
+    document.getElementById("btn-agregar-concepto").addEventListener("click", async () => {
+      const label = prompt("Nombre del concepto:");
+      if (!label || !label.trim()) return;
+      try {
+        await apiFetch(`/api/validacion/${encodeURIComponent(state.slug)}/conceptos`, {
+          method: "POST", body: JSON.stringify({ label: label.trim() }),
+        });
+        await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
+      } catch(e) { alert("Error al agregar concepto: " + e.message); }
+    });
+    document.getElementById("btn-simplificar-grafo").addEventListener("click", async () => {
+      const actual = state.grafo.nodes.length;
+      const objetivo = prompt(`¿A cuántos conceptos simplificar? (hoy: ${actual})`, Math.min(12, actual));
+      if (!objetivo || isNaN(+objetivo)) return;
+      try {
+        await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/simplificar`, {
+          method: "POST", body: JSON.stringify({ objetivo: +objetivo }),
+        });
+        await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
+      } catch(e) { alert("Error al simplificar: " + e.message); }
+    });
+    document.getElementById("btn-eliminar-grafo").addEventListener("click", async () => {
+      if (!confirm("¿Eliminar el grafo completo de este texto? El texto fuente se conserva y podés volver a procesarlo o armar el grafo a mano.")) return;
+      try {
+        await apiFetch(`/api/extracciones/${encodeURIComponent(state.slug)}`, { method: "DELETE" });
+        volverBiblioteca();
+      } catch(e) { alert("Error al eliminar el grafo: " + e.message); }
+    });
+    document.getElementById("btn-procesar-seleccion").addEventListener("click", async () => {
+      const labels = state.grafo.nodes.filter(n => conceptosState.seleccionados.has(n.id)).map(n => n.label);
+      if (!labels.length) return;
+      if (!confirm(`Procesar el texto buscando solo relaciones para estos ${labels.length} conceptos:\n\n${labels.join(", ")}\n\n¿Continuar?`)) return;
+      try {
+        await apiFetch(`/api/extracciones/${encodeURIComponent(state.slug)}/procesar`, {
+          method: "POST", body: JSON.stringify({ force: true, conceptos_objetivo: labels }),
+        });
+        volverBiblioteca();
+      } catch(e) { alert("Error al procesar: " + e.message); }
+    });
   }
 }
 
@@ -1604,16 +1654,27 @@ function renderConceptos() {
   rows=[...rows].sort((a,b)=>{ let av=a[col]??"",bv=b[col]??""; if(typeof av==="string")av=av.toLowerCase(); if(typeof bv==="string")bv=bv.toLowerCase(); return dir==="asc"?(av>bv?1:av<bv?-1:0):(av<bv?1:av>bv?-1:0); });
   document.querySelectorAll("#tabla-conceptos th.sortable").forEach(th=>{ th.classList.remove("sort-asc","sort-desc"); if(th.dataset.col===conceptosState.sort.col) th.classList.add(conceptosState.sort.dir==="asc"?"sort-asc":"sort-desc"); });
   const tbody=document.getElementById("conceptos-tbody"); tbody.innerHTML="";
+  const btnProcesarSel = document.getElementById("btn-procesar-seleccion");
+  if (btnProcesarSel) btnProcesarSel.hidden = conceptosState.seleccionados.size === 0;
+  const todosEl = document.getElementById("concepto-check-todos");
+  if (todosEl) todosEl.checked = rows.length > 0 && rows.every(n => conceptosState.seleccionados.has(n.id));
   rows.forEach(n=>{
     const tr=document.createElement("tr"); tr.dataset.id=n.id;
     tr.className = "concepto-fila" + (n.id===conceptoExpandidoId ? " active" : "");
     const cw=Math.round(n.confianza*56);
     const sins=(n.sinonimos_candidatos||[]).slice(0,4).map(s=>`<span class="tag">${esc(s)}</span>`).join("");
     const mas=(n.sinonimos_candidatos||[]).length>4?`<span class="muted" style="font-size:11px">+${n.sinonimos_candidatos.length-4}</span>`:"";
-    tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline" data-edit-c="${esc(n.id)}">${ico("edit-2")} Editar</button></td>`;
+    const checked = conceptosState.seleccionados.has(n.id) ? "checked" : "";
+    tr.innerHTML=`<td><input type="checkbox" class="concepto-check" ${checked}></td><td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline" data-edit-c="${esc(n.id)}">${ico("edit-2")} Editar</button></td>`;
     tbody.appendChild(tr);
+    tr.querySelector(".concepto-check").addEventListener("click", e => {
+      e.stopPropagation();
+      if (e.target.checked) conceptosState.seleccionados.add(n.id);
+      else conceptosState.seleccionados.delete(n.id);
+      renderConceptos();
+    });
     tr.addEventListener("click", e => {
-      if (e.target.closest("[data-edit-c]")) return;
+      if (e.target.closest("[data-edit-c]") || e.target.closest(".concepto-check")) return;
       conceptoExpandidoId = conceptoExpandidoId === n.id ? null : n.id;
       renderConceptos();
     });
@@ -1622,7 +1683,7 @@ function renderConceptos() {
     if (n.id === conceptoExpandidoId) {
       const trDet = document.createElement("tr");
       trDet.className = "concepto-detalle-fila";
-      trDet.innerHTML = `<td colspan="6"><div class="concepto-detalle">Buscando pasajes…</div></td>`;
+      trDet.innerHTML = `<td colspan="7"><div class="concepto-detalle">Buscando pasajes…</div></td>`;
       tbody.appendChild(trDet);
       const detEl = trDet.querySelector(".concepto-detalle");
       _cargarTextoBusqueda().then(({ oraciones }) => {
@@ -2545,6 +2606,15 @@ function renderGrafosPersonales(grafos) {
   grid.querySelectorAll(".gp-btn-eliminar").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); gpEliminar(btn.dataset.slug, btn.dataset.titulo); })
   );
+}
+
+async function compartirDocumento(slug, titulo) {
+  const email = prompt(`Compartir «${titulo}» -- email de la persona:`);
+  if (!email || !email.trim()) return;
+  try {
+    await apiFetch("/api/compartir", { method: "POST", body: JSON.stringify({ slug, email: email.trim() }) });
+    alert(`Compartido con ${email.trim()}.`);
+  } catch (e) { alert("Error al compartir: " + e.message); }
 }
 
 async function gpRenombrar(slug, tituloActual, descActual) {
