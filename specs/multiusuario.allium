@@ -4,30 +4,59 @@
 -- Scope: modelo explicito multiusuario. Quien trabaja (Persona), donde vive
 -- su trabajo (Biblioteca), quien mas tiene acceso (Membresia, PermisoCompartido),
 -- que se publica de forma inmutable (VersionPublicada) y con que cuenta se
--- paga la inferencia (ConexionInferencia).
+-- paga la inferencia (ConexionInferencia, ProveedorActivo).
 --
 -- Principios (notas del dueno del proyecto):
 --   - Cada usuario, su biblioteca.
 --   - Vision objetivo: cada persona autoriza su propia cuenta de inferencia y
 --     paga su propio uso; el operador no financia la inferencia de terceros.
---   - DECISION v1 (explicita, no soberana, de arranque): el operador ofrece
---     una ConexionInferencia compartida (Vertex AI, su propio proyecto GCP)
---     que paga el mismo mientras el producto no tiene suficientes personas
+--   - DECISION v1 (explicita, no soberana, de arranque): el operador paga la
+--     inferencia de todas mientras el producto no tenga suficientes personas
 --     con conexion propia. oauth_pkce y clave_directa quedan especificados
 --     como la via objetivo, no se implementan en v1.
---   - Compartir es un permiso explicito, revocable, que no transfiere autoria.
+--   - Compartir es un permiso explicito que no transfiere autoria.
+--
+-- ════ ESTADO REAL (nov-2026, rama firebase) ═══════════════════════════════
+-- Lo que este spec describe y lo que el sistema hace HOY no coincide en todo.
+-- Cada regla o contrato no implementado lo dice en su propio bloque. Resumen:
+--
+--   IMPLEMENTADO
+--     - Identidad: Firebase Auth (login con Google). La Persona, su Biblioteca
+--       y la Membresia propietaria fundadora las crea el NAVEGADOR al primer
+--       login, directo en Firestore (RegistrarPersona).
+--     - Resolucion de biblioteca por request (ver ResolucionDeBibliotecaPorRequest
+--       en ControlDeAcceso): el backend verifica el ID token y usa
+--       personas/{uid}.bibliotecaIds[0] como biblioteca en curso.
+--     - Almacenamiento: un bucket GCS montado como volumen en Cloud Run; cada
+--       biblioteca es una subcarpeta. Sobrevive a redeploys (antes no: un
+--       texto importado se perdio en un redeploy).
+--     - Compartir UN texto con otra persona por email, rol fijo editora
+--       (CompartirTexto). Sin revocacion.
+--     - Gate de administradora sobre la configuracion del modelo LLM
+--       (SeleccionarProveedorDeInstancia): un unico ProveedorActivo para
+--       TODA la instancia, no por persona.
+--
+--   NO IMPLEMENTADO (solo especificado)
+--     - ConexionInferencia en todas sus formas, incluida operador_compartida.
+--     - Tope de gasto (tope_gasto_conexion_compartida_usd, GastoCompartidoAcotado,
+--       RegistrarCostoDeInferencia): HOY NO EXISTE NINGUN CONTROL DE GASTO.
+--       DIVERGENCIA ACTIVA, ver InferenciaPagadaPorQuienLaSolicita.
+--     - InvitarMiembro, RetirarMembresia (el backend ignora Membresia).
+--     - RevocarPermiso, ExportarBiblioteca, PublicarVersionDeGrafo.
+--     - Compartir grafos personales; PermisoCompartido con rol lectora.
+-- ════════════════════════════════════════════════════════════════════════
 --
 -- Includes:
 --   - Persona, Biblioteca, Membresia (rol: propietaria | editora | lectora)
---   - PermisoCompartido: acceso explicito de una persona a un elemento
---     (texto o grafo personal) de una biblioteca ajena
---   - VersionPublicada: instantanea inmutable de un grafo derivado
---   - ConexionInferencia: OAuth PKCE con OpenRouter (via primaria) o clave
---     directa de anthropic | openai | gemini (salida avanzada)
+--   - PermisoCompartido: acceso de una persona a UN texto (y su grafo
+--     derivado) de una biblioteca ajena, identificado por slug
+--   - VersionPublicada: instantanea inmutable de un grafo derivado (objetivo)
+--   - ConexionInferencia: via objetivo (no implementada)
+--   - Seleccion del ProveedorActivo de la instancia, solo administradora
 --   - Aislamiento entre bibliotecas y exportacion completa (contratos)
 --
 -- Excludes:
---   - Mecanismo de identidad / autenticacion (ver open questions)
+--   - Detalle del proveedor de identidad (Firebase Auth; ver contratos)
 --   - Corte de alojamiento y despliegue (decision de infraestructura)
 --   - Benchmark de proveedores (plan de pruebas, no comportamiento)
 --
@@ -51,7 +80,17 @@ config {
     -- Tope de gasto acumulado para la conexion compartida del operador
     -- (DECISION v1: USD 20). Pasado este monto, ninguna nueva invocacion al
     -- LLM puede usarla; la persona necesita su propia conexion.
+    --
+    -- DIVERGENCIA ACTIVA: este valor NO SE APLICA EN NINGUNA PARTE. No hay
+    -- contabilidad de costo ni guardado antes de invocar al LLM, para ningun
+    -- proveedor. Ver InferenciaPagadaPorQuienLaSolicita.
     tope_gasto_conexion_compartida_usd: Decimal = 20.00
+
+    -- true en el despliegue alojado (Cloud Run); false en la instalacion
+    -- local de una sola persona. Con false no se exige identidad ni rol de
+    -- administradora y todo se lee y escribe en la carpeta raiz, sin
+    -- bibliotecas (comportamiento single-user de siempre).
+    despliegue_alojado: Boolean = true
 }
 
 ------------------------------------------------------------
@@ -68,6 +107,8 @@ value ReferenciaCredencial {
 -- Contracts
 ------------------------------------------------------------
 
+-- NO IMPLEMENTADO: no existe ConexionInferencia. Las unicas claves del
+-- sistema son las de la instancia (variables de entorno del despliegue).
 contract CustodiaDeCredenciales {
     custodiar: (conexion: ConexionInferencia, secreto: String) -> ReferenciaCredencial
     invocar_con: (credencial: ReferenciaCredencial, prompt: String) -> String
@@ -107,6 +148,17 @@ contract AlmacenamientoPorBiblioteca {
         -- de esa biblioteca. Ningun listado, busqueda o carga devuelve
         -- elementos de otra biblioteca, salvo los alcanzados por un
         -- PermisoCompartido vigente.
+        --
+        -- Estado real: se cumple por construccion de rutas (cada biblioteca
+        -- es una subcarpeta y toda lectura/escritura del request resuelve
+        -- contra la biblioteca en curso), PERO la biblioteca en curso sale de
+        -- un dato que la propia persona puede escribir -- ver
+        -- HuecoBibliotecaAutodeclarada en ControlDeAcceso. Ademas el estado
+        -- en memoria del proceso (progreso de extracciones, sesiones de
+        -- reconexion y consolidacion) esta indexado SOLO por slug, sin
+        -- biblioteca: dos bibliotecas con el mismo slug comparten ese estado
+        -- (una ve el progreso de la otra; una extraccion en curso en una
+        -- bloquea la de la otra).
 
     @invariant ExportacionCompleta
         -- exportar entrega todo lo que la biblioteca contiene: transcripciones
@@ -114,11 +166,27 @@ contract AlmacenamientoPorBiblioteca {
         -- con sus resoluciones y anotaciones, grafos personales, versiones
         -- publicadas, membresias y permisos otorgados. No incluye credenciales
         -- de inferencia ni el contenido de elementos de otras bibliotecas.
+        -- NO IMPLEMENTADO: no existe operacion de exportacion.
 
     @invariant VersionesPublicadasInmutables
         -- Una VersionPublicada, una vez creada, no cambia ni se reescribe:
         -- conserva el grafo tal como estaba al publicarse, aunque el Grafo de
         -- trabajo siga editandose. Publicar de nuevo crea otra version.
+        -- NO IMPLEMENTADO: no existe VersionPublicada en el sistema alojado.
+
+    @invariant PersistenciaSobreviveRedeploys
+        -- Lo escrito en una biblioteca sobrevive a un redeploy y al reciclaje
+        -- de la instancia que lo escribio. (Implementado: los datos viven en
+        -- un bucket montado como volumen, no en el disco del contenedor.)
+
+    @guidance
+        -- Disposicion real: <raiz>/<bibliotecaId>/ para grafos y para
+        -- transcripciones, en un bucket GCS montado via GCS FUSE (Cloud Run
+        -- gen2). Las Personas, Bibliotecas y Membresias viven en Firestore;
+        -- los textos y grafos NO (Firestore solo indexa quien es quien).
+        -- Cada escritura reescribe el archivo completo del estado de
+        -- validacion: dos editoras escribiendo a la vez sobre el mismo texto
+        -- compartido se pisan (gana la ultima escritura), sin aviso.
 }
 
 contract ControlDeAcceso {
@@ -127,45 +195,111 @@ contract ControlDeAcceso {
     @invariant LecturaRequiereMembresiaOPermiso
         -- Una persona ve un elemento solo si es miembro de su biblioteca o
         -- tiene un PermisoCompartido vigente sobre ese elemento.
+        --
+        -- Estado real: el backend NO consulta Membresia. "Ser miembro" se
+        -- reduce a que la biblioteca sea personas/{uid}.bibliotecaIds[0]
+        -- (ver ResolucionDeBibliotecaPorRequest). Una Membresia en una
+        -- segunda biblioteca no da acceso a sus datos.
 
     @invariant EscrituraRequiereRolEditor
         -- Crear, editar, extraer, validar o eliminar dentro de una biblioteca
         -- exige Membresia con rol propietaria o editora. Una persona ajena a
-        -- la biblioteca solo escribe sobre el UNICO elemento (transcripcion
-        -- con su grafo derivado, o grafo personal) que un PermisoCompartido
-        -- con rol=editora le otorgo explicitamente: anota, resuelve puntos de
-        -- decision, corrige o enmienda ese elemento, nunca el resto de la
-        -- biblioteca ajena. Con rol=lectora, un PermisoCompartido solo
-        -- permite leer. Una Membresia lectora dentro de su propia biblioteca
-        -- tambien solo lee.
+        -- la biblioteca solo escribe sobre el UNICO texto (con su grafo
+        -- derivado) que un PermisoCompartido le otorgo explicitamente.
         --
-        -- Pendiente de propagar (hoy solo esta expresado aqui): las reglas de
-        -- escritura de validacion.allium, grafo.allium y edicion-texto.allium
-        -- verifican hoy unicamente transcripcion.biblioteca.puede_editar(x);
-        -- les falta reconocer tambien un PermisoCompartido(rol=editora) sobre
-        -- esa misma transcripcion.
+        -- Estado real: no hay distincion de rol dentro de la biblioteca
+        -- propia (quien la resuelve como suya puede todo). Para un texto
+        -- compartido, la beneficiaria puede hacer sobre ese texto TODO lo
+        -- que la propietaria puede: anotar, editar conceptos y relaciones,
+        -- simplificar, reprocesar con el LLM, editar el texto fuente, y
+        -- tambien RESETEAR el grafo completo (ResetearGrafo) y ELIMINAR el
+        -- texto de la biblioteca de origen (EliminarTextoCompleto). No hay
+        -- ninguna escritura reservada a la propietaria.
+        --
+        -- Pendiente de propagar: las reglas de escritura de validacion.allium,
+        -- grafo.allium y edicion-texto.allium no mencionan el permiso.
+
+    @invariant ResolucionDeBibliotecaPorRequest
+        -- Como se decide, en cada request, sobre que biblioteca se trabaja:
+        --   1. Con config.despliegue_alojado, un request sin ID token valido
+        --      se rechaza (no autenticado). El token viaja en la cabecera de
+        --      autorizacion, o como parametro de consulta en los flujos de
+        --      progreso en vivo (el navegador no permite cabeceras alli).
+        --   2. Con token valido: biblioteca en curso = el primer elemento de
+        --      personas/{uid}.bibliotecaIds. Tambien se lee esAdmin del mismo
+        --      documento (una sola lectura).
+        --   3. Si la ruta del request nombra un slug de texto (extracciones,
+        --      validacion, grafo, metadatos, transcripciones) y existe un
+        --      PermisoCompartido para (persona, slug), la biblioteca en curso
+        --      pasa a ser la biblioteca_origen del permiso, para TODO el
+        --      request. Un solo mecanismo cubre lectura y toda la edicion.
+        --   4. Sin despliegue_alojado (local): sin token se trabaja en la
+        --      carpeta raiz, sin biblioteca.
+        -- Los grafos personales NO entran en el paso 3: siempre resuelven a
+        -- la biblioteca propia.
+
+    @invariant HuecoBibliotecaAutodeclarada
+        -- DIVERGENCIA ACTIVA (seguridad). Las reglas de Firestore permiten a
+        -- cada persona escribir su propio documento personas/{uid} COMPLETO,
+        -- incluidos bibliotecaIds y esAdmin. Como el backend confia en ambos
+        -- campos, una persona autenticada puede hoy, escribiendo su propio
+        -- documento desde el cliente:
+        --   - declararse administradora (y cambiar el modelo de la instancia);
+        --   - poner como bibliotecaIds[0] el id de una biblioteca ajena y leer
+        --     y escribir todos sus textos y grafos.
+        -- Lo que este contrato exige (acceso solo por Membresia o permiso)
+        -- NO se cumple mientras eso siga asi.
 
     @invariant InferenciaPagadaPorQuienLaSolicita
         -- Toda invocacion a un LLM (extraccion rapida, incremental,
-        -- sugerencias de grafo personal) usa una ConexionInferencia activa
-        -- de la persona que la solicita, o -- solo si la persona no tiene
-        -- ninguna propia -- la conexion activa con metodo=operador_compartida
-        -- (DECISION v1, bootstrap no soberano: el operador paga por quien no
-        -- configuro la suya), y solo si esa conexion compartida todavia tiene
-        -- margen bajo config.tope_gasto_conexion_compartida_usd (ver
-        -- GastoCompartidoAcotado). Nunca la conexion propia de otra persona.
+        -- simplificacion, reconexion, consolidacion, sugerencias de grafo
+        -- personal) usa una ConexionInferencia activa de la persona que la
+        -- solicita, o -- solo si la persona no tiene ninguna propia -- la
+        -- conexion activa con metodo=operador_compartida, y solo si esa
+        -- conexion compartida todavia tiene margen bajo
+        -- config.tope_gasto_conexion_compartida_usd (ver GastoCompartidoAcotado).
+        -- Nunca la conexion propia de otra persona.
         --
-        -- Pendiente de propagar (hoy solo esta expresado aqui): la regla que
-        -- inicia cada llamada (IniciarExtraccion en extraccion.allium,
-        -- IniciarSesionIncremental/ProcesarLoteDeFrases en
-        -- extraccion-incremental.allium) todavia no verifica margen contra
-        -- el tope antes de llamar al proveedor, ni queda registrado con que
-        -- ConexionInferencia se hizo cada llamada.
+        -- DIVERGENCIA ACTIVA -- NADA DE ESTO ESTA IMPLEMENTADO:
+        --   - No existe ninguna ConexionInferencia. Toda invocacion usa el
+        --     UNICO ProveedorActivo de la instancia (SeleccionarProveedorDeInstancia),
+        --     sea quien sea la persona que la pide; quien paga es siempre el
+        --     operador, por la via que ese proveedor implique:
+        --       vertexai -> la cuenta de servicio del despliegue, factura al
+        --                   proyecto GCP del operador;
+        --       gemini   -> la clave personal de Google AI Studio del operador,
+        --                   con sus propios creditos prepago, SIN relacion con
+        --                   la facturacion del proyecto GCP.
+        --   - No hay tope de gasto, ni contabilidad de costo, ni guardado antes
+        --     de llamar al proveedor, para NINGUN proveedor. Una persona
+        --     autenticada cualquiera puede lanzar extracciones, simplificaciones
+        --     y reprocesos sin limite, a costo del operador.
+        --   - No queda registrado quien solicito cada llamada ni con que
+        --     proveedor se hizo.
+        --   - GastoCompartidoAcotado se satisface solo de forma vacia (no hay
+        --     ninguna ConexionInferencia sobre la cual medir): NO es evidencia
+        --     de que el gasto este acotado.
+
+    @invariant ConfiguracionDeModeloSoloAdministradora
+        -- Ver y cambiar el ProveedorActivo y su modelo exige Persona.es_admin
+        -- (solo con config.despliegue_alojado; en local no se exige nada).
+        -- Implementado. Antes cualquier persona autenticada podia cambiar el
+        -- modelo de toda la instancia. Sujeto a HuecoBibliotecaAutodeclarada.
 
     @invariant ContextoLLMAcotadoALaBiblioteca
         -- Lo que se envia al LLM (p. ej. el corpus para sugerencias de grafo
         -- personal) se limita a la biblioteca en curso y a los elementos que
         -- la persona tiene compartidos con permiso.
+
+    @guidance
+        -- La resolucion de persona y de permiso se cachea en memoria del
+        -- proceso, sin expiracion: retirar esAdmin o cambiar bibliotecaIds
+        -- recien surte efecto al reciclarse la instancia; un permiso nuevo
+        -- invalida la cache solo en la instancia que lo otorgo. Una persona
+        -- cuya primera consulta llega ANTES de que el navegador termine de
+        -- crear su biblioteca queda cacheada sin biblioteca -- y sin
+        -- biblioteca el request cae en la carpeta raiz (datos previos al
+        -- modelo multiusuario) hasta que la instancia se recicle.
 }
 
 ------------------------------------------------------------
@@ -180,19 +314,22 @@ enum RolMembresia {
 
 -- Rol de un PermisoCompartido (sin `propietaria`: un permiso es siempre sobre
 -- UN elemento ajeno, nunca da propiedad de la biblioteca que lo otorga).
+-- Estado real: todo permiso se crea con editora; lectora no se usa y la
+-- interfaz no ofrece elegir rol.
 enum RolPermiso {
     editora
     lectora
 }
 
 enum MetodoConexion {
-    oauth_pkce              -- via objetivo (no implementada en v1): la persona
+    oauth_pkce              -- via objetivo (no implementada): la persona
                             -- autoriza su propia cuenta OpenRouter
-    clave_directa           -- via objetivo (no implementada en v1), BYOK:
+    clave_directa           -- via objetivo (no implementada), BYOK:
                             -- anthropic | openai | gemini
-    operador_compartida     -- UNICA via de v1: el operador paga una conexion
-                            -- Vertex AI que cualquier persona sin conexion
-                            -- propia puede usar (ver InferenciaPagadaPorQuienLaSolicita)
+    operador_compartida     -- via v1 especificada (NO implementada como
+                            -- conexion): el operador paga. En la practica hoy
+                            -- el operador paga TODO via el ProveedorActivo de
+                            -- la instancia, sin conexion ni tope.
 }
 
 ------------------------------------------------------------
@@ -200,17 +337,22 @@ enum MetodoConexion {
 ------------------------------------------------------------
 
 entity Persona {
-    nombre: String
+    nombre: String               -- nombre visible de la cuenta, o su email si no tiene
     email: String?
     registrada_en: Timestamp
+    es_admin: Boolean            -- asignado fuera de la app (no hay regla que lo otorgue);
+                                 -- ver HuecoBibliotecaAutodeclarada
+    -- Biblioteca en curso por defecto: primer elemento de la lista de
+    -- bibliotecas que la persona guarda en su propio documento.
+    biblioteca_principal: Biblioteca?
 
     membresias: Membresia with persona = this
     conexiones: ConexionInferencia with persona = this
-
+    permisos_recibidos: PermisoCompartido with beneficiaria = this
 }
 
 entity Biblioteca {
-    nombre: String
+    nombre: String               -- al crearse, el nombre de la persona fundadora
     creada_en: Timestamp
 
     membresias: Membresia with biblioteca = this
@@ -225,7 +367,9 @@ entity Biblioteca {
 }
 
 -- Compartir una biblioteca completa = otorgar una Membresia (editora o lectora).
--- Compartir un elemento suelto = otorgar un PermisoCompartido.
+-- Compartir un texto suelto = otorgar un PermisoCompartido.
+-- Estado real: solo existe la Membresia propietaria fundadora; el backend no
+-- consulta Membresia para autorizar (ver ControlDeAcceso).
 entity Membresia {
     persona: Persona
     biblioteca: Biblioteca
@@ -234,26 +378,33 @@ entity Membresia {
     otorgada_en: Timestamp
 }
 
--- Acceso explicito a UN elemento de una biblioteca ajena, para enriquecerlo
--- en conjunto: anotar, corregir y enmendar el grafo compartido, no solo
--- leerlo. El elemento no se copia ni se mueve: sigue en biblioteca_origen,
--- con su autoria y su historial de procedencia intactos.
+-- Acceso de una persona a UN texto (con su grafo derivado) de una biblioteca
+-- ajena, para enriquecerlo en conjunto. El texto no se copia ni se mueve:
+-- sigue en biblioteca_origen.
+--
+-- Modelo real (v1, deliberadamente simple):
+--   - Vive en una coleccion de permisos de nivel raiz, no anidada bajo la
+--     biblioteca de origen (permisos_otorgados es una navegacion, no un
+--     lugar de almacenamiento).
+--   - Identifica el texto SOLO por su slug, que se deriva del nombre del
+--     archivo y NO es unico entre bibliotecas (ver RiesgoSlugNoUnico).
+--   - rol siempre editora. No hay revocacion.
+--   - No hay unicidad: compartir dos veces lo mismo crea dos permisos
+--     equivalentes (inocuo: la resolucion usa el primero que encuentra).
 entity PermisoCompartido {
     biblioteca_origen: Biblioteca
+    slug: String                 -- = transcripcion/Transcripcion.id en biblioteca_origen
     beneficiaria: Persona
+    beneficiaria_email: String   -- tal como lo escribio quien comparte
     otorgado_por: Persona
     otorgado_en: Timestamp
-    rol: RolPermiso          -- lectora: solo ve. editora: ademas anota, valida
-                             -- decisiones y corrige el grafo derivado o personal.
-
-    -- Exactamente uno de los dos (ver PermisoApuntaAUnSoloElemento):
-    transcripcion: transcripcion/Transcripcion?     -- el texto y su grafo derivado
-    grafo_personal: personal/GrafoPersonal?
+    rol: RolPermiso
 }
 
 -- Instantanea inmutable de un Grafo. El Grafo de trabajo sigue siempre en
 -- edicion (decision resuelta en grafo.allium); lo publicado no cambia.
 -- Ninguna regla modifica una VersionPublicada despues de crearla.
+-- NO IMPLEMENTADO en el sistema alojado.
 entity VersionPublicada {
     grafo: grafo/Grafo
     biblioteca: Biblioteca
@@ -262,6 +413,7 @@ entity VersionPublicada {
     publicada_en: Timestamp
 }
 
+-- NO IMPLEMENTADO. Ninguna instancia de ConexionInferencia existe hoy.
 entity ConexionInferencia {
     persona: Persona
     metodo: MetodoConexion
@@ -306,8 +458,14 @@ rule RegistrarPersona {
     when: PersonaSeRegistra(nombre, email?)
     requires: nombre != ""
     ensures:
-        let persona = Persona.created(nombre: nombre, email: email, registrada_en: now)
         let biblioteca = Biblioteca.created(nombre: nombre, creada_en: now)
+        let persona = Persona.created(
+            nombre: nombre,
+            email: email,
+            registrada_en: now,
+            es_admin: false,
+            biblioteca_principal: biblioteca
+        )
         Membresia.created(
             persona: persona,
             biblioteca: biblioteca,
@@ -318,8 +476,11 @@ rule RegistrarPersona {
 
     @guidance
         -- "Cada usuario, su biblioteca": toda persona nace con una biblioteca
-        -- propia de la que es propietaria. Si puede tener mas de una, es open
-        -- question.
+        -- propia de la que es propietaria. Implementado en el navegador al
+        -- primer login con Firebase Auth (Google): crea el documento de la
+        -- Persona, la Biblioteca y la Membresia directo en Firestore. Si la
+        -- persona ya existe sin bibliotecas, se le crea una. nombre es el
+        -- nombre visible de la cuenta Google, o el email si no tiene.
 }
 
 rule InvitarMiembro {
@@ -335,6 +496,11 @@ rule InvitarMiembro {
         otorgada_por: investigador,
         otorgada_en: now
     )
+
+    @guidance
+        -- NO IMPLEMENTADO: no hay interfaz para invitar. Las reglas de
+        -- Firestore lo permitirian, pero aunque la Membresia existiera el
+        -- backend la ignoraria (ver LecturaRequiereMembresiaOPermiso).
 }
 
 rule RetirarMembresia {
@@ -345,44 +511,80 @@ rule RetirarMembresia {
     requires: membresia.rol != propietaria
         or membresia.biblioteca.membresias.any(m => m != membresia and m.rol = propietaria)
     ensures: not exists membresia
+
+    @guidance
+        -- NO IMPLEMENTADO (igual que InvitarMiembro).
 }
 
--- ════ Compartir elementos ═══════════════════════════════
+-- ════ Compartir textos ══════════════════════════════════
 
-rule CompartirElemento {
-    when: InvestigadorComparteElemento(investigador, beneficiaria, rol, transcripcion?, grafo_personal?)
-    let origen = transcripcion?.biblioteca ?? grafo_personal?.biblioteca
-    requires: (transcripcion = null) != (grafo_personal = null)
-    requires: origen.es_propietaria(investigador)
-    requires: not origen.es_miembro(beneficiaria)
-    requires: not exists PermisoCompartido{
-        transcripcion: transcripcion,
-        grafo_personal: grafo_personal,
-        beneficiaria: beneficiaria
-    }
+rule CompartirTexto {
+    when: InvestigadorComparteTexto(investigador, slug, email)
+    let origen = investigador.biblioteca_principal
+    -- caja negra: busca una cuenta YA registrada con ese email en el
+    -- proveedor de identidad; null si nunca entro a Lectografo.
+    let beneficiaria = persona_por_email(email)
+    requires: origen != null
+    -- El texto tiene que existir en la biblioteca PROPIA de quien comparte
+    -- (basta el texto fuente; no hace falta que este procesado).
+    requires: exists transcripcion/Transcripcion{id: slug, biblioteca: origen}
+    -- Si no hay cuenta con ese email, falla con un error explicito que pide
+    -- que la persona entre una vez antes. No se manda invitacion por correo.
+    requires: beneficiaria != null
+    requires: beneficiaria != investigador
     ensures: PermisoCompartido.created(
         biblioteca_origen: origen,
+        slug: slug,
         beneficiaria: beneficiaria,
+        beneficiaria_email: email,
         otorgado_por: investigador,
         otorgado_en: now,
-        rol: rol,
-        transcripcion: transcripcion,
-        grafo_personal: grafo_personal
+        rol: editora
     )
 
     @guidance
-        -- rol=editora es el caso que motiva compartir: varias personas
-        -- enriquecen el mismo grafo derivado (anotan, corrigen, enmiendan),
-        -- no solo lo leen cada una por su lado.
+        -- Rol fijo editora: compartir es para que varias personas enriquezcan
+        -- el mismo grafo derivado, no solo lo lean. Quien comparte no tiene
+        -- que ser propietaria en el sentido de Membresia: basta que el texto
+        -- este en su biblioteca en curso. Una beneficiaria no puede volver a
+        -- compartir un texto ajeno (no esta en su biblioteca propia).
+}
+
+rule TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria {
+    when: BeneficiariaListaSuBiblioteca(persona)
+    for p in persona.permisos_recibidos:
+        -- Solo si el texto de origen ya tiene extraccion; uno sin procesar, o
+        -- armado solo a mano (sin extraccion), no aparece.
+        requires: tiene_extraccion(p.biblioteca_origen, p.slug)
+        -- Si la beneficiaria tiene un texto PROPIO ya procesado con el mismo
+        -- slug, se lista el propio y el compartido no aparece; si el propio
+        -- esta sin procesar, aparecen los dos (ver RiesgoSlugNoUnico).
+        requires: not tiene_extraccion(persona.biblioteca_principal, p.slug)
+        ensures: TextoCompartidoListado(
+            persona: persona,
+            permiso: p,
+            compartido_por: p.biblioteca_origen.nombre
+        )
+
+    @guidance
+        -- Se lista marcado como compartido, con el nombre de la biblioteca de
+        -- origen. Al abrirlo, ResolucionDeBibliotecaPorRequest dirige todo el
+        -- trabajo sobre ese slug a la biblioteca de origen.
 }
 
 rule RevocarPermiso {
     when: InvestigadorRevocaPermiso(investigador, permiso)
     requires: permiso.biblioteca_origen.es_propietaria(investigador)
     ensures: not exists permiso
+
+    @guidance
+        -- NO IMPLEMENTADO: no hay forma de revocar un permiso desde la app.
+        -- Tampoco se borran permisos al resetear el grafo o eliminar el
+        -- texto: el permiso sobrevive y vuelve a dar acceso si en la
+        -- biblioteca de origen reaparece un texto con ese slug.
 }
 
--- ════ Exportacion y publicacion ═════════════════════════
+-- ════ Exportacion y publicacion (NO IMPLEMENTADO) ═══════
 
 rule ExportarBiblioteca {
     when: InvestigadorExportaBiblioteca(investigador, biblioteca)
@@ -390,8 +592,8 @@ rule ExportarBiblioteca {
     ensures: BibliotecaExportada(biblioteca: biblioteca, solicitada_por: investigador)
 
     @guidance
-        -- El contenido del paquete lo fija AlmacenamientoPorBiblioteca.exportar
-        -- (ExportacionCompleta).
+        -- NO IMPLEMENTADO. El contenido del paquete lo fija
+        -- AlmacenamientoPorBiblioteca.exportar (ExportacionCompleta).
 }
 
 rule PublicarVersionDeGrafo {
@@ -414,9 +616,59 @@ rule PublicarVersionDeGrafo {
         if primera_publicacion:
             transcripcion.estado = publicada
             transcripcion.fecha_publicacion = now
+
+    @guidance
+        -- NO IMPLEMENTADO en el sistema alojado. La publicacion que existe
+        -- es el sitio estatico generado localmente, sin versiones ni personas.
 }
 
--- ════ Conexiones de inferencia ══════════════════════════
+-- ════ Proveedor de inferencia de la instancia (IMPLEMENTADO) ═
+
+rule SeleccionarProveedorDeInstancia {
+    when: AdministradoraSeleccionaProveedor(persona, activo, proveedor, modelo)
+    requires: not config.despliegue_alojado or persona.es_admin
+    requires: proveedor in {vertexai, gemini, anthropic, openai, ollama, lmstudio}
+    -- Los proveedores con clave la exigen configurada en la instancia;
+    -- vertexai no usa clave (credencial de la cuenta de servicio).
+    requires: proveedor not in {gemini, anthropic, openai} or activo.api_key_presente
+    ensures:
+        activo.proveedor = proveedor
+        activo.modelo = modelo
+
+    @guidance
+        -- Hay UN SOLO ProveedorActivo para toda la instancia: lo que elige la
+        -- administradora lo usan todas las personas en todas las llamadas.
+        -- Es la unica "politica de inferencia" que existe hoy (ver
+        -- InferenciaPagadaPorQuienLaSolicita).
+        --
+        -- Proveedores efectivos en el despliegue alojado: vertexai y gemini.
+        -- Son cuentas y catalogos DISTINTOS, verificados a mano (nov-2026):
+        --   vertexai: factura al proyecto GCP del operador, sin clave.
+        --             Modelos que responden hoy: gemini-2.5-flash,
+        --             gemini-2.5-pro. Todo lo demas (alias -latest, 3.x, 4.x)
+        --             da "no encontrado" en este proyecto, aparentemente
+        --             porque el proyecto es nuevo y Google no termino de
+        --             aprovisionarle los modelos generativos (el mismo codigo
+        --             funciona en otro proyecto con la misma facturacion).
+        --   gemini:   clave personal de Google AI Studio del operador,
+        --             creditos prepago propios, ajena a la facturacion GCP.
+        --             Modelos: gemini-flash-latest (por defecto),
+        --             gemini-pro-latest, gemini-flash-lite-latest,
+        --             gemini-3.8-flash, gemini-4-argon, gemini-4-carbon.
+        --             gemini-2.x quedo deprecado para cuentas nuevas.
+        -- Los catalogos son listas sugeridas en la interfaz, que tambien
+        -- admite un nombre libre; la seleccion NO valida el modelo contra
+        -- ningun catalogo -- un modelo inexistente recien falla al invocar.
+        --
+        -- Limitacion conocida: la seleccion vive en la memoria del proceso y
+        -- en un archivo de entorno DENTRO del contenedor. No sobrevive a un
+        -- redeploy ni al reciclaje de la instancia (vuelve al valor del
+        -- despliegue) y, si hay mas de una instancia, solo cambia la que
+        -- atendio el pedido.
+}
+
+-- ════ Conexiones de inferencia (NO IMPLEMENTADO) ════════
+-- Ninguna regla de esta seccion tiene codigo. Se conservan como via objetivo.
 
 rule ConfigurarConexionCompartida {
     when: OperadorConfiguraConexionCompartida(operador)
@@ -430,12 +682,10 @@ rule ConfigurarConexionCompartida {
     )
 
     @guidance
-        -- UNICA via de v1. Se configura una vez, fuera de esta especificacion
-        -- (proyecto GCP y credencial del operador son decision de
-        -- infraestructura, ver Excludes). Minimizar su costo se apoya en la
-        -- extraccion incremental (extraccion-incremental.allium): procesar
-        -- frase a frase, no el texto completo de una vez. No tiene surface:
-        -- ninguna persona distinta del operador la crea ni la ve.
+        -- NO IMPLEMENTADO. Lo que existe en su lugar es
+        -- SeleccionarProveedorDeInstancia, sin conexion, sin contabilidad y
+        -- sin tope. Minimizar costo se apoya hoy solo en la extraccion
+        -- incremental (procesar por partes), no en ningun limite.
 }
 
 rule ConectarOpenRouter {
@@ -449,9 +699,9 @@ rule ConectarOpenRouter {
     )
 
     @guidance
-        -- Via objetivo, NO implementada en v1 (ver principios). La persona
-        -- autoriza en OpenRouter con su propia cuenta; el resultado vuelve
-        -- como ProveedorConfirmaCredencial o ProveedorRechazaCredencial.
+        -- Via objetivo, NO implementada. La persona autoriza en OpenRouter
+        -- con su propia cuenta; el resultado vuelve como
+        -- ProveedorConfirmaCredencial o ProveedorRechazaCredencial.
 }
 
 rule RegistrarClaveDirecta {
@@ -467,8 +717,8 @@ rule RegistrarClaveDirecta {
     )
 
     @guidance
-        -- La clave se entrega a CustodiaDeCredenciales para su verificacion y
-        -- no queda en ningun campo de ninguna entidad.
+        -- Via objetivo, NO implementada. La clave se entrega a
+        -- CustodiaDeCredenciales y no queda en ningun campo de ninguna entidad.
 }
 
 rule ConfirmarCredencial {
@@ -517,10 +767,10 @@ rule RegistrarCostoDeInferencia {
     ensures: conexion.costo_acumulado_usd = conexion.costo_acumulado_usd + costo_usd
 
     @guidance
+        -- NO IMPLEMENTADO: ningun proveedor reporta costo y nada lo acumula.
         -- Registra el gasto YA ocurrido; nunca lo rechaza (el proveedor ya
         -- cobro). Lo que debe impedirse es la SIGUIENTE llamada una vez
-        -- agotado el tope -- ver GastoCompartidoAcotado y la nota "pendiente
-        -- de propagar" junto a InferenciaPagadaPorQuienLaSolicita.
+        -- agotado el tope -- ver GastoCompartidoAcotado.
 }
 
 ------------------------------------------------------------
@@ -538,33 +788,31 @@ invariant TodaBibliotecaTienePropietaria {
         b.membresias.any(m => m.rol = propietaria)
 }
 
-invariant PermisoApuntaAUnSoloElemento {
+-- v1: todo permiso es de edicion.
+invariant PermisoSiempreEditora {
     for p in PermisoCompartido:
-        (p.transcripcion = null) != (p.grafo_personal = null)
+        p.rol = editora
 }
 
--- Compartir no mueve ni copia: el elemento sigue en la biblioteca que lo otorga.
-invariant PermisoConservaBibliotecaDeOrigen {
+invariant PermisoNoEsAutoOtorgado {
     for p in PermisoCompartido:
-        (p.transcripcion != null implies p.transcripcion.biblioteca = p.biblioteca_origen)
-        and (p.grafo_personal != null implies p.grafo_personal.biblioteca = p.biblioteca_origen)
+        p.beneficiaria != p.otorgado_por
 }
 
 -- Aislamiento: un grafo personal solo referencia conceptos de su propia
--- biblioteca, o de otra si un miembro de la suya tiene permiso vigente.
+-- biblioteca, o de un texto ajeno si un miembro de la suya tiene permiso
+-- sobre ese slug. Compartir grafos personales no existe: un concepto de un
+-- grafo personal ajeno nunca es referenciable.
 invariant ReferenciasNoCruzanBibliotecasSinPermiso {
     for ref in personal/ReferenciaConcepto:
         let aqui = ref.grafo.biblioteca
         (ref.nodo_derivado != null
             and ref.nodo_derivado.grafo.transcripcion.biblioteca != aqui
             implies ref.nodo_derivado.grafo.transcripcion.biblioteca.permisos_otorgados.any(
-                p => p.transcripcion = ref.nodo_derivado.grafo.transcripcion
+                p => p.slug = ref.nodo_derivado.grafo.transcripcion.id
                     and aqui.es_miembro(p.beneficiaria)))
         and (ref.concepto_investigador != null
-            and ref.concepto_investigador.grafo_origen.biblioteca != aqui
-            implies ref.concepto_investigador.grafo_origen.biblioteca.permisos_otorgados.any(
-                p => p.grafo_personal = ref.concepto_investigador.grafo_origen
-                    and aqui.es_miembro(p.beneficiaria)))
+            implies ref.concepto_investigador.grafo_origen.biblioteca = aqui)
 }
 
 invariant VersionPublicadaEnLaBibliotecaDeSuGrafo {
@@ -578,10 +826,12 @@ invariant NumeroDeVersionUnicoPorGrafo {
             a != b and a.grafo = b.grafo implies a.numero != b.numero
 }
 
+-- INVARIANTE OBJETIVO, NO IMPLEMENTADA (DIVERGENCIA ACTIVA).
 -- DECISION v1: tope de USD 20 (config.tope_gasto_conexion_compartida_usd).
--- Esta invariante describe el estado resultante; el guardado real que IMPIDE
--- la proxima llamada al pasar el tope debe vivir en el punto donde se inicia
--- cada invocacion al LLM (ver nota junto a InferenciaPagadaPorQuienLaSolicita).
+-- Hoy se cumple SOLO DE FORMA VACIA: no existe ninguna ConexionInferencia,
+-- y el gasto real (via ProveedorActivo) no se mide ni se limita. El guardado
+-- que IMPIDA la proxima llamada al pasar el tope debe vivir donde se inicia
+-- cada invocacion al LLM, y hoy no existe.
 invariant GastoCompartidoAcotado {
     for c in ConexionInferencia:
         c.metodo = operador_compartida implies c.costo_acumulado_usd <= config.tope_gasto_conexion_compartida_usd
@@ -596,10 +846,17 @@ actor MiembroBiblioteca {
     identified_by: Persona where within.es_miembro(this)
 }
 
+actor Administradora {
+    identified_by: Persona where es_admin = true
+}
+
 ------------------------------------------------------------
 -- Surfaces
 ------------------------------------------------------------
 
+-- NO IMPLEMENTADA salvo por la lista de personas que ve la administradora.
+-- Compartir un texto se ofrece desde el panel de biblioteca (surfaces.allium,
+-- PanelBiblioteca), no desde aqui.
 surface GestionBiblioteca {
     facing miembro: MiembroBiblioteca
     context biblioteca: Biblioteca
@@ -611,9 +868,8 @@ surface GestionBiblioteca {
             m.rol
         for p in biblioteca.permisos_otorgados:
             p.beneficiaria.nombre
-            p.rol
-            p.transcripcion?.titulo
-            p.grafo_personal?.titulo
+            p.beneficiaria_email
+            p.slug
             p.otorgado_por.nombre
             p.otorgado_en
         for v in biblioteca.versiones_publicadas:
@@ -628,8 +884,6 @@ surface GestionBiblioteca {
         for m in biblioteca.membresias:
             InvestigadorRetiraMembresia(miembro, m)
                 when biblioteca.es_propietaria(miembro) and m.rol != propietaria
-        InvestigadorComparteElemento(miembro, beneficiaria, rol, transcripcion?, grafo_personal?)
-            when biblioteca.es_propietaria(miembro) and rol in {editora, lectora}
         for p in biblioteca.permisos_otorgados:
             InvestigadorRevocaPermiso(miembro, p)
                 when biblioteca.es_propietaria(miembro)
@@ -645,17 +899,18 @@ surface GestionBiblioteca {
 
     @guarantee CompartirEsExplicito
         -- Nada se comparte por defecto. El acceso de otra persona existe solo
-        -- como Membresia o PermisoCompartido creados por una accion explicita
-        -- de la propietaria, y deja de existir al retirarlo o revocarlo.
+        -- como Membresia o PermisoCompartido creados por una accion explicita.
+        -- Hoy no hay forma de retirarlo (RevocarPermiso no implementado).
 
     @guarantee CompartirConservaAutoria
-        -- Compartir no copia ni transfiere: el elemento sigue en su biblioteca
+        -- Compartir no copia ni transfiere: el texto sigue en su biblioteca
         -- de origen, con su autoria y procedencia intactas.
 
     @guarantee VersionPublicadaSinEdicion
         -- Ninguna accion modifica ni reescribe una VersionPublicada.
 }
 
+-- NO IMPLEMENTADA: no existe ConexionInferencia.
 surface ConexionesDeInferencia {
     facing investigador: surfaces/Investigador
 
@@ -684,12 +939,12 @@ surface ConexionesDeInferencia {
         -- entregarse; solo la huella de una conexion activa.
 
     @guarantee OAuthEsLaViaPrimaria
-        -- Via objetivo, no implementada en v1: OAuth PKCE con OpenRouter se
+        -- Via objetivo, no implementada: OAuth PKCE con OpenRouter se
         -- ofrece como via recomendada y la clave directa como salida
-        -- avanzada. En v1 esta surface puede estar vacia o no existir: toda
-        -- persona sin ConexionInferencia propia usa la del operador.
+        -- avanzada.
 }
 
+-- NO IMPLEMENTADA (depende de ConexionInferencia).
 surface VerificacionDeCredencial {
     facing servicio: surfaces/LLM
     context conexion: ConexionInferencia where estado = pendiente or estado = activa
@@ -711,6 +966,19 @@ surface VerificacionDeCredencial {
 }
 
 ------------------------------------------------------------
+-- Deferred Specifications
+------------------------------------------------------------
+
+deferred persona_por_email    -- see: src/app.py: compartir_documento
+    -- (email: String) -> Persona?
+    -- Busca en el proveedor de identidad una cuenta ya registrada con ese
+    -- email. null si nunca entro a Lectografo.
+
+deferred tiene_extraccion    -- see: src/app.py: listar_extracciones
+    -- (biblioteca: Biblioteca, slug: String) -> Boolean
+    -- true si el texto con ese slug ya tiene extraccion en esa biblioteca.
+
+------------------------------------------------------------
 -- Open Questions
 ------------------------------------------------------------
 
@@ -718,42 +986,46 @@ surface VerificacionDeCredencial {
 -- de una propietaria con igual autoridad (InvitarMiembro admite rol
 -- propietaria; RetirarMembresia permite retirar a una propietaria mientras
 -- quede al menos otra). Queda abierto si una persona puede tener mas de una
--- biblioteca propia (RegistrarPersona crea exactamente una al registrarse).
+-- biblioteca propia (RegistrarPersona crea exactamente una al registrarse;
+-- el backend solo usa la primera).
 
-open question "Invitacion: hoy la Membresia nace en cuanto una propietaria invita. ¿La invitada debe aceptar antes de ser miembro? ¿Puede una persona (incluida una propietaria) salir por si misma, sin que otra la retire? Para una propietaria, salir por si misma esta sujeto a la misma restriccion que RetirarMembresia: no puede dejar la biblioteca sin ninguna propietaria."
+-- DECISION RESUELTA (identidad): Firebase Auth con login de Google. El
+-- registro lo hace el navegador al primer login (RegistrarPersona).
 
--- DECISION RESUELTA: un PermisoCompartido puede dar edicion (rol=editora),
--- no solo lectura -- la idea de compartir es que varias personas enriquezcan
--- el mismo grafo compartido (anotar, corregir, enmendar), no solo lo lean
--- cada una por su lado (ver RolPermiso, CompartirElemento).
+-- DECISION RESUELTA (v1 de compartir): permiso por (persona, slug) en una
+-- coleccion de nivel raiz, rol fijo editora, sin invitacion por correo (la
+-- beneficiaria tiene que haber entrado antes), sin revocacion.
 
-open question "¿Puede otorgar un PermisoCompartido solo la propietaria de la biblioteca, o tambien una editora (p. ej. sobre un elemento que ella misma puede editar)? Hoy CompartirElemento exige origen.es_propietaria(investigador)."
+open question "DIVERGENCIA ACTIVA -- seguridad (HuecoBibliotecaAutodeclarada): el documento personas/{uid} es escribible completo por su duena, y el backend confia en su bibliotecaIds y esAdmin. ¿Se cierran esos dos campos en las reglas de Firestore (solo lectura para el cliente, escritos por el backend o a mano), o el backend pasa a verificar Membresia en vez de confiar en bibliotecaIds?"
 
-open question "Destinataria de un PermisoCompartido: ¿se otorga a una persona o a una biblioteca destino? Si es a una persona y ella referencia el elemento desde un grafo personal de una biblioteca con otros miembros, esos miembros tambien lo verian (ReferenciasNoCruzanBibliotecasSinPermiso hoy lo admite)."
+open question "DIVERGENCIA ACTIVA -- gasto sin tope: hoy toda la inferencia la paga el operador (proyecto GCP via vertexai, o creditos de AI Studio via gemini) sin ningun limite ni registro. ¿Se implementa el tope de config.tope_gasto_conexion_compartida_usd sobre el ProveedorActivo de la instancia (y entonces, ¿como se mide el costo de cada llamada?), se pone un limite operativo fuera de la app (presupuesto/alerta del proyecto GCP, creditos prepago de AI Studio como techo natural), o se acepta explicitamente el riesgo mientras las personas sean pocas y conocidas?"
 
-open question "Al revocar un PermisoCompartido o retirar una Membresia, ¿que pasa con las ReferenciaConcepto que la beneficiaria ya tejio en sus grafos personales hacia ese elemento: se eliminan en cascada, quedan huerfanas (label congelado) o se bloquea la revocacion? Hoy RevocarPermiso no dice nada y puede dejar referencias que violan ReferenciasNoCruzanBibliotecasSinPermiso."
+open question "RiesgoSlugNoUnico (riesgo ACEPTADO, no resuelto): el slug sale del nombre de archivo y no es unico entre bibliotecas. Si una beneficiaria tiene un texto propio con el mismo slug que uno compartido con ella, su biblioteca lista el propio (o ambos, si el propio no esta procesado), pero todo request sobre ese slug se dirige a la biblioteca de origen del permiso: pierde acceso a su propio texto y trabaja sin saberlo sobre el ajeno. Aceptado para el caso de uso real (compartir el texto propio con pocas personas). ¿Se pasa a identificar el texto por (biblioteca, slug) en el permiso y en la ruta?"
 
-open question "Visibilidad de una VersionPublicada: ¿es publica para cualquiera (como el sitio estatico actual) o solo para miembros y beneficiarias de permisos? ¿Se puede retirar una version publicada, o es inmutable tambien en su existencia?"
+open question "Una beneficiaria editora hoy puede resetear el grafo completo y eliminar el texto fuente de la biblioteca de origen, y reprocesar con el LLM a costo del operador. ¿Esas acciones destructivas deben quedar reservadas a la biblioteca propietaria?"
 
-open question "Identidad: ¿como se autentica una Persona (proveedor de identidad propio, login con OpenRouter, otro)? Ninguna surface provee PersonaSeRegistra. Candidato a spec de libreria (autenticacion OAuth/OIDC) en vez de modelarlo aqui."
+open question "Revocar: no hay RevocarPermiso. ¿Lo hace solo quien otorgo, cualquiera de la biblioteca de origen, o tambien la beneficiaria puede renunciar? Al revocar, ¿que pasa con las ReferenciaConcepto que la beneficiaria ya tejio en sus grafos personales hacia ese texto (cascada, huerfanas con label congelado, o se bloquea la revocacion)? ¿Se borran los permisos al eliminar el texto?"
+
+open question "Edicion concurrente de un texto compartido: cada escritura reescribe el estado completo (gana la ultima). ¿Se acepta mientras compartir sea raro, o se necesita deteccion de conflicto?"
+
+open question "La seleccion de ProveedorActivo no sobrevive a un redeploy y es por instancia. ¿Se persiste fuera del contenedor (Firestore, variables del despliegue) para que sea realmente global y estable?"
+
+open question "Catalogo de Vertex: hoy solo gemini-2.5-flash y gemini-2.5-pro responden en el proyecto. ¿Se revisa cuando termine el aprovisionamiento, y se valida el modelo elegido contra el catalogo al seleccionarlo en vez de fallar al invocar?"
+
+open question "Invitacion de miembros: ¿la invitada debe aceptar antes de ser miembro? ¿Puede una persona salir por si misma? Para una propietaria, salir esta sujeto a la misma restriccion que RetirarMembresia. Previo a todo: el backend tendria que reconocer Membresia (hoy la ignora)."
+
+open question "Destinataria de un PermisoCompartido: ¿una persona o una biblioteca destino? Si es una persona y ella referencia el texto desde un grafo personal de una biblioteca con otros miembros, esos miembros tambien lo verian (ReferenciasNoCruzanBibliotecasSinPermiso hoy lo admite)."
+
+open question "Visibilidad de una VersionPublicada: ¿publica para cualquiera (como el sitio estatico actual) o solo para miembros y beneficiarias? ¿Se puede retirar una version publicada?"
 
 open question "Spike Puter.js: alternativa NO decidida a OpenRouter OAuth PKCE. Medir cuanto control se cede sobre identidad, datos, modelos, privacidad, exportacion y continuidad antes de decidir si entra como MetodoConexion, reemplaza a oauth_pkce o se descarta."
 
-open question "Spike OpenRouter OAuth PKCE: si la persona abandona la autorizacion, ¿la ConexionInferencia pendiente expira por plazo (pasa a rechazada) o queda pendiente indefinidamente? ¿Se muestra a la persona el costo de cada extraccion reportado por el proveedor y se admiten limites de gasto?"
+open question "Spike OpenRouter OAuth PKCE: si la persona abandona la autorizacion, ¿la ConexionInferencia pendiente expira por plazo o queda pendiente indefinidamente? ¿Se muestra el costo de cada extraccion y se admiten limites de gasto?"
 
--- DECISION RESUELTA: tope de USD 20 (config.tope_gasto_conexion_compartida_usd,
--- GastoCompartidoAcotado). Tal como esta modelado, es un tope GLOBAL sobre la
--- unica ConexionInferencia compartida (no un tope por persona ni por
--- biblioteca) -- si eso no es lo que se quiso decir, hay que ajustar el
--- invariante. Procesar por partes (extraccion incremental) sigue siendo el
--- control de costo dentro de ese tope, no un sustituto de el.
+open question "Transicion fuera del pago por el operador: ¿en que momento (numero de personas, costo acumulado, u otro criterio) se activan oauth_pkce y clave_directa? ¿Conviven con el ProveedorActivo de la instancia o este se retira?"
 
-open question "Al agotarse el tope de la conexion compartida, revocarse o fallar a mitad de una extraccion: ¿la persona ve un error y la sesion de extraccion incremental queda abortable/reanudable (como ya contempla extraccion-incremental.allium), o se le ofrece conectar su propia cuenta (oauth_pkce/clave_directa) en el momento para continuar? ¿Alguien (el operador) recibe alguna notificacion al acercarse al tope?"
+open question "Recuperacion ante fallo del proveedor a mitad de una extraccion: ¿la extraccion falla y el texto vuelve a normalizada (como la cancelacion), o la sesion queda reanudable con otro proveedor?"
 
-open question "Transicion fuera de la conexion compartida: ¿en que momento (numero de personas, costo acumulado, u otro criterio) se activan oauth_pkce y clave_directa para que cada persona pague la suya? ¿Conviven ambas vias desde el dia uno (compartida por defecto, propia opcional) o la compartida se retira por completo al activar las otras?"
-
-open question "Recuperacion ante fallo del proveedor: si una conexion pasa a invalidada a mitad de una extraccion, ¿la EjecucionExtraccion falla y la transcripcion vuelve a normalizada (como la cancelacion), o la sesion queda reanudable con otra conexion?"
-
-open question "Proveedores locales (ollama, lmstudio) en el modelo multiusuario alojado: ¿siguen existiendo (solo en instalaciones locales), o desaparecen? ProveedorActivo es hoy una configuracion global unica y EjecucionExtraccion no registra quien la solicito ni con que ConexionInferencia: ¿pasan a ser por persona?"
+open question "Proveedores locales (ollama, lmstudio) en el despliegue alojado: el backend los sigue aceptando como ProveedorActivo, pero alli no hay endpoint local que responda. ¿Se ocultan/rechazan en el despliegue alojado?"
 
 open question "Autoria en grafos: Grafo.creador es un String obtenido de nombre_investigador() (sesion local). ¿Pasa a ser la Persona que lanzo la extraccion?"

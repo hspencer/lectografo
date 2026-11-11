@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field
 
 from src.config import settings
 from src.contexto_biblioteca import (
-    _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
+    _DirectorioPorBiblioteca, exigir_admin, exigir_duena, middleware_biblioteca,
     biblioteca_actual, persona_actual, otorgar_permiso,
     permisos_compartidos_conmigo, nombre_de_biblioteca,
 )
@@ -138,13 +138,22 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
                 titulo=estado_previo.titulo,
                 slug=slug,
                 extraccion=ext_fusionada,
-                decisiones=[],
+                decisiones=estado_previo.decisiones,
                 anotaciones=estado_previo.anotaciones,
                 completado=True,
                 metadatos=meta,
                 conceptos_editados=estado_previo.conceptos_editados,
                 relaciones_editadas=estado_previo.relaciones_editadas,
                 relaciones_investigador=estado_previo.relaciones_investigador,
+                # Sin esto, re-extraer borraba silenciosamente todo lo que no
+                # viene del LLM: conceptos a mano, simplificaciones, el texto
+                # editado y su historial.
+                conceptos_investigador=estado_previo.conceptos_investigador,
+                conceptos_ocultos=estado_previo.conceptos_ocultos,
+                conceptos_fusionados=estado_previo.conceptos_fusionados,
+                texto_editado=estado_previo.texto_editado,
+                revisiones_texto=estado_previo.revisiones_texto,
+                texto_desincronizado_desde=estado_previo.texto_desincronizado_desde,
             )
             salida.write_text(
                 json.dumps(ext_fusionada.model_dump(), ensure_ascii=False, indent=2),
@@ -714,6 +723,7 @@ async def procesar_extraccion(slug: str, payload: ProcesarPayload = ProcesarPayl
     """Dispara la extracción LLM de un transcript en segundo plano.
     Si force=True, elimina la extracción y validación previas antes de re-extraer.
     """
+    exigir_duena()  # "editora" no paga la inferencia de la dueña
     tarea = _TAREAS.get(slug, {})
     if isinstance(tarea, dict) and tarea.get("estado") == "procesando":
         return {"ok": False, "error": "Ya hay una extracción en curso para este texto"}
@@ -907,6 +917,7 @@ def simplificar_grafo(slug: str, payload: SimplificarPayload = SimplificarPayloa
     """Sintetiza el grafo a sus conceptos y relaciones más importantes: le
     pide al LLM cuáles conservar y oculta el resto (reversible con
     DELETE, que limpia conceptos_ocultos)."""
+    exigir_duena()  # "editora" no paga la inferencia de la dueña
     from src.llm import get_llm
     from src.pipeline.simplificacion import simplificar
 
@@ -1486,7 +1497,7 @@ def crear_relacion_investigador(slug: str, payload: NuevaRelacionPayload):
     """Añade una relación creada manualmente por el investigador."""
     import uuid
     estado, ruta_val = _cargar_o_crear(slug)
-    ids_validos = {c.id for c in estado.extraccion.conceptos}
+    ids_validos = {c.id for c in estado.extraccion.conceptos} | {c["id"] for c in estado.conceptos_investigador}
     if payload.origen_id not in ids_validos:
         raise HTTPException(404, f"Concepto origen '{payload.origen_id}' no encontrado")
     if payload.destino_id not in ids_validos:
@@ -2138,6 +2149,7 @@ async def cancelar_extraccion(slug: str):
 def resetear_extraccion(slug: str):
     """Des-procesa un texto: borra el grafo completo (extracción + validación +
     sesiones) pero conserva el archivo de transcript en disco."""
+    exigir_duena()
     _TAREAS.pop(slug, None)
     sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",
                "_consolidacion.json", "_metadatos.json"]
@@ -2156,6 +2168,7 @@ def resetear_extraccion(slug: str):
 def eliminar_texto_completo(slug: str):
     """Elimina completamente un texto: grafo + transcript.
     Irreversible: borra el archivo fuente de disco."""
+    exigir_duena()
     # Primero resetear el grafo
     _TAREAS.pop(slug, None)
     sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",

@@ -41,11 +41,33 @@ service cloud.firestore {
         get(/databases/$(database)/documents/personas/$(request.auth.uid)).data.esAdmin == true;
     }
 
-    // Persona: cada quien escribe solo su propio documento. Lectura propia,
-    // o de cualquiera si quien pide es admin (consola de administracion).
+    // Persona: cada quien escribe solo su propio documento -- pero "su propio
+    // documento" no puede significar "cualquier campo del documento". Sin
+    // esto, cualquier persona autenticada podia escribirse esAdmin=true a si
+    // misma, o poner el bibliotecaId de otra persona en bibliotecaIds y leer
+    // y escribir su biblioteca entera (el middleware confia ciegamente en
+    // ambos campos). Lectura propia, o de cualquiera si quien pide es admin.
     match /personas/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || esAdmin());
-      allow write: if signedIn() && request.auth.uid == uid;
+
+      // Alta: esAdmin nunca se auto-asigna (ausente == false), y la unica
+      // biblioteca declarada tiene que ser una que esta misma persona acaba
+      // de crear (creadoPor == uid) -- no una ajena.
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.get('esAdmin', false) == false
+        && request.resource.data.bibliotecaIds.size() == 1
+        && get(/databases/$(database)/documents/bibliotecas/$(request.resource.data.bibliotecaIds[0])).data.creadoPor == uid;
+
+      // Edicion: esAdmin no puede cambiar por este camino (se asigna fuera
+      // de la app). bibliotecaIds sigue siendo de un solo elemento; si
+      // cambia, el nuevo tiene que ser una biblioteca propia.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.esAdmin == resource.data.get('esAdmin', false)
+        && request.resource.data.bibliotecaIds.size() == 1
+        && (
+          request.resource.data.bibliotecaIds == resource.data.get('bibliotecaIds', [])
+          || get(/databases/$(database)/documents/bibliotecas/$(request.resource.data.bibliotecaIds[0])).data.creadoPor == uid
+        );
     }
 
     // Biblioteca: "cada usuario, su biblioteca" (RegistrarPersona). Crear

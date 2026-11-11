@@ -36,6 +36,10 @@ except Exception:
 biblioteca_actual: ContextVar[str | None] = ContextVar("biblioteca_actual", default=None)
 persona_actual: ContextVar[str | None] = ContextVar("persona_actual", default=None)
 es_admin_actual: ContextVar[bool] = ContextVar("es_admin_actual", default=False)
+# True cuando biblioteca_actual quedó resuelta por un permiso compartido, no
+# por ser la biblioteca propia -- exigir_duena() lo usa para negar las
+# operaciones destructivas o pagadas que "editora" no debería poder hacer.
+es_compartido_actual: ContextVar[bool] = ContextVar("es_compartido_actual", default=False)
 
 _cache_persona: dict[str, tuple[str | None, bool]] = {}
 
@@ -119,11 +123,13 @@ async def middleware_biblioteca(request, call_next):
             token_persona = persona_actual.set(decoded["uid"])
             bib, admin = _datos_persona(decoded["uid"])
             autenticado = True
+            compartido = False
             m = _RE_SLUG_EN_PATH.match(request.url.path)
             if m:
                 compartida = _biblioteca_compartida(decoded["uid"], m.group(1))
                 if compartida:
                     bib = compartida
+                    compartido = True
         except Exception:
             bib = None
     if _EN_CLOUD_RUN and not autenticado:
@@ -131,12 +137,14 @@ async def middleware_biblioteca(request, call_next):
         return JSONResponse({"detail": "No autenticado"}, status_code=401)
     token_bib = biblioteca_actual.set(bib)
     token_admin = es_admin_actual.set(admin)
+    token_compartido = es_compartido_actual.set(compartido if autenticado else False)
     try:
         return await call_next(request)
     finally:
         biblioteca_actual.reset(token_bib)
         persona_actual.reset(token_persona)
         es_admin_actual.reset(token_admin)
+        es_compartido_actual.reset(token_compartido)
 
 
 def exigir_admin() -> None:
@@ -144,6 +152,14 @@ def exigir_admin() -> None:
     En local (run.sh, sin K_SERVICE) no hay nadie a quien exigirle nada."""
     if _EN_CLOUD_RUN and not es_admin_actual.get():
         raise HTTPException(403, "Solo la administradora puede ver o cambiar la configuración del modelo.")
+
+
+def exigir_duena() -> None:
+    """Compartir da rol 'editora' -- enriquecer el grafo, anotar, corregir.
+    No alcanza para borrar el texto fuente, reiniciar el grafo o disparar un
+    reproceso pagado: eso solo lo puede hacer la dueña de la biblioteca."""
+    if es_compartido_actual.get():
+        raise HTTPException(403, "Solo quien es dueña de este texto puede hacer esto.")
 
 
 class _DirectorioPorBiblioteca:

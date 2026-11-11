@@ -10,6 +10,8 @@
 --   - Modelado de nodos y relaciones con anotacion semantica
 --   - Persistencia en JSON con versionado
 --   - Operaciones de fusion y particion derivadas de decisiones validadas
+--   - Simplificacion reversible (ocultar conceptos sin borrarlos)
+--   - Reset completo del grafo de un texto, conservando el texto fuente
 --
 -- Excludes:
 --   - Visualizacion (vive en surfaces.allium)
@@ -99,15 +101,21 @@ entity Grafo {
     relaciones: Relacion with grafo = this
     bucles: Bucle with grafo = this
 
+    -- Ids de conceptos (propuestos o manuales) que la simplificacion oculto.
+    -- Siguen en los datos; solo no generan Nodo (ver OcultoNoGeneraNodo).
+    conceptos_ocultos: Set<String>
+
     -- Proyecciones utiles
-    nodos_primitivos: nodos where tipos contains primitivo
-    nodos_derivados: nodos where tipos contains derivado
+    nodos_primitivos: nodos where primitivo in tipos
+    nodos_derivados: nodos where derivado in tipos
     relaciones_bidireccionales: relaciones where bidireccional = true
 
     -- Derivados
     total_nodos: nodos.count
     total_relaciones: relaciones.count
-    densidad: if total_nodos < 2 then 0 else total_relaciones / (total_nodos * (total_nodos - 1))    -- aprox dirigida; 0 si hay menos de 2 nodos
+    -- aprox dirigida: relaciones / (n * (n - 1)); 0 si hay menos de 2 nodos
+    densidad: densidad_dirigida(total_nodos, total_relaciones)
+    simplificado: conceptos_ocultos.count > 0
 
 }
 
@@ -126,7 +134,8 @@ rule CrearGrafo {
         titulo: transcripcion.titulo,
         version: "1.0",
         creador: nombre_investigador(),       -- caja negra
-        creado_en: now
+        creado_en: now,
+        conceptos_ocultos: {}
     )
 
     @guidance
@@ -149,10 +158,9 @@ rule MaterializarNodoDesdeConceptoAceptado {
     let label_canonico = decision.label_resolucion
                       ?? decision.label_canonico_propuesto
                       ?? conceptos.first.label
-    -- Para promocion_de_tipo: el investigador ha elegido el tipo definitivo via nota_resolucion.
-    let tipo_definitivo = if decision.tipo = promocion_de_tipo
-                          then tipo_desde_nota(decision.nota_resolucion)  -- black box
-                          else conceptos.first.tipo
+    -- Para promocion_de_tipo: el investigador ha elegido el tipo definitivo
+    -- via nota_resolucion; en los demas casos, el tipo del primer concepto.
+    let tipo_definitivo = tipo_definitivo_de(decision)   -- black box
 
     ensures:
         let g = Grafo{transcripcion: decision.transcripcion}
@@ -258,8 +266,143 @@ rule MaterializarBucleAceptado {
 }
 
 ------------------------------------------------------------
+-- Materializacion real (estado de la aplicacion web)
+------------------------------------------------------------
+
+-- Las reglas de arriba describen el grafo nacido de decisiones resueltas.
+-- En la aplicacion web no hay puntos de decision (validacion.allium): el
+-- Grafo se materializa de nuevo en cada lectura a partir de lo propuesto por
+-- el LLM, los conceptos y relaciones manuales, las ediciones de la
+-- investigadora, las fusiones de sinonimos y los conceptos ocultos. Nada de
+-- eso se borra al materializar; omitir es siempre reversible.
+
+rule MaterializarNodoDesdeConceptoManual {
+    when: concepto: validacion/ConceptoManual.created
+    let g = Grafo{transcripcion: concepto.transcripcion}
+    requires: not (concepto.id in g.conceptos_ocultos)
+    ensures: Nodo.created(
+        id: concepto.id,
+        grafo: g,
+        label: concepto.label,
+        tipos: { tipo_de_texto(concepto.tipo) },   -- black box
+        descripcion_corta: concepto.descripcion,
+        sinonimos_consolidados: [],
+        notas_usuario: [],
+        conceptos_origen: [],
+        creado_en: now
+    )
+
+    @guidance
+        -- Recibe las mismas ediciones de label que un nodo de concepto
+        -- propuesto. Se materializa con confianza 1 y una mencion. A
+        -- diferencia de los conceptos propuestos, un concepto manual no
+        -- participa de las fusiones de sinonimos.
+}
+
+-- ════ Simplificacion (ocultar / deshacer) ═══════════════
+
+rule SimplificarGrafo {
+    when: InvestigadorSimplificaGrafo(grafo, objetivo)
+    -- objetivo: cuantos conceptos conservar (la interfaz propone 12 o menos).
+    requires: objetivo < grafo.total_nodos
+    -- El LLM activo recibe la lista de nodos ya materializados (label,
+    -- menciones y numero de relaciones de cada uno) y elige los que sostienen
+    -- el argumento central. No inventa nada: solo poda.
+    let conservar = nucleo_segun_llm(grafo, objetivo)   -- black box
+    ensures:
+        for n in grafo.nodos:
+            if not (n.id in conservar):
+                grafo.conceptos_ocultos.add(n.id)
+
+    @guidance
+        -- Acumulativa: simplificar un grafo ya simplificado oculta mas, nunca
+        -- desoculta. Las relaciones con algun extremo oculto tampoco se
+        -- materializan. No se borra ningun dato.
+        -- Si la respuesta del LLM no trae ningun id valido, se conservan los
+        -- primeros `objetivo` nodos en orden de materializacion -- no los mas
+        -- importantes. Usa el ProveedorActivo de la instancia, sin tope de
+        -- gasto (multiusuario.allium).
+        -- Limitacion conocida: los bucles NO se filtran; un Bucle puede seguir
+        -- nombrando nodos ocultos (contradice BuclePerteneceAUnSoloGrafo
+        -- mientras dure la simplificacion).
+        -- Cualquier re-extraccion hoy vacia conceptos_ocultos (deshace la
+        -- simplificacion sin aviso; ver edicion-texto.allium).
+}
+
+rule DeshacerSimplificacion {
+    when: InvestigadorDeshaceSimplificacion(grafo)
+    requires: grafo.simplificado
+    ensures: grafo.conceptos_ocultos = {}
+
+    @guidance
+        -- Todo o nada: vuelve a mostrar TODOS los conceptos ocultos; no hay
+        -- desocultado individual. Hoy solo existe como operacion del sistema:
+        -- la interfaz no ofrece ningun control para deshacer.
+}
+
+-- ════ Reset completo ════════════════════════════════════
+
+rule ResetearGrafo {
+    when: InvestigadorReseteaGrafo(texto)
+    -- Falla si el texto no tiene nada que borrar (ni extraccion, ni
+    -- validacion, ni sesiones, ni ficha bibliografica).
+    requires: tiene_datos_derivados(texto)   -- black box
+    ensures:
+        for g in Grafo where transcripcion = texto:
+            not exists g
+        for c in extraccion/ConceptoPropuesto where transcripcion = texto:
+            not exists c
+        for r in extraccion/RelacionPropuesta where transcripcion = texto:
+            not exists r
+        for b in extraccion/BucleDetectado where transcripcion = texto:
+            not exists b
+        for m in extraccion/FlagMetalenguaje where transcripcion = texto:
+            not exists m
+        for d in validacion/PuntoDecision where transcripcion = texto:
+            not exists d
+        for a in validacion/AnotacionInvestigador where transcripcion = texto:
+            not exists a
+        for k in validacion/ConceptoManual where transcripcion = texto:
+            not exists k
+        texto.revisiones = []
+        texto.texto_desincronizado_desde = null
+        if texto.estado in {extraida, validada}:
+            texto.estado = normalizada
+        GrafoReseteado(transcripcion: texto)
+
+    @guidance
+        -- "Des-procesar" un texto: el texto fuente original se conserva y se
+        -- puede volver a procesar o reconstruir el grafo a mano
+        -- (validacion.allium, AgregarConceptoManual). Es la unica operacion
+        -- legitima de borrado del grafo de un texto, y es IRREVERSIBLE.
+        -- Borra tambien, porque viven en la misma sesion de validacion:
+        -- ediciones de conceptos y relaciones, relaciones manuales, fusiones
+        -- de sinonimos, conceptos ocultos, la ficha bibliografica y la
+        -- edicion del texto fuente con todo su historial de revisiones (el
+        -- texto vigente vuelve a ser el archivo original). Tambien descarta
+        -- las sesiones de reconexion y consolidacion.
+        -- No toca los PermisoCompartido sobre ese texto (multiusuario.allium).
+        -- Si hay una extraccion en curso, su registro de progreso se olvida
+        -- pero la extraccion no se cancela: al terminar, vuelve a escribir su
+        -- resultado.
+        -- La interfaz pide confirmacion. Disponible tambien para una
+        -- beneficiaria de un texto compartido.
+}
+
+------------------------------------------------------------
 -- Invariantes
 ------------------------------------------------------------
+
+invariant OcultoNoGeneraNodo {
+    for n in Nodo:
+        not (n.id in n.grafo.conceptos_ocultos)
+}
+
+invariant RelacionNoTocaOcultos {
+    for r in Relacion:
+        not (r.origen.id in r.grafo.conceptos_ocultos)
+            and not (r.destino.id in r.grafo.conceptos_ocultos)
+}
 
 invariant NodoPerteneceASuGrafo {
     for n in Nodo:
@@ -285,18 +428,38 @@ open question "Permitir que un mismo nodo pertenezca a multiples grafos como ref
 
 open question "El calculo de densidad asume grafo dirigido sin auto-loops. Como cuenta densidad en presencia de bucles?"
 
--- Funciones auxiliares de lookup usadas en las reglas de materializacion.
--- Se declaran como deferred porque su logica depende del modelo de datos concreto.
-deferred nodo_de_concepto(concepto: extraccion/ConceptoPropuesto, grafo: Grafo) -> Nodo
-    -- Devuelve el Nodo del grafo que fue creado a partir del concepto dado.
-deferred nodos_de_conceptos(conceptos: List<extraccion/ConceptoPropuesto>, grafo: Grafo) -> List<Nodo>
-    -- Version plural de nodo_de_concepto.
-deferred contexto_de(concepto: extraccion/ConceptoPropuesto) -> String?
-    -- Extrae la referencia de contexto legible (ej. "min 3:45") del concepto.
-deferred tipo_desde_nota(nota: String?) -> extraccion/TipoConcepto
-    -- Interpreta la nota de resolucion del investigador como un TipoConcepto concreto.
-deferred nombre_investigador() -> String
-    -- Devuelve el nombre del investigador activo (sesion local).
+open question "Simplificacion: ¿se ofrece deshacer en la interfaz (hoy solo existe en el sistema), y se permite desocultar conceptos de a uno? ¿Deben filtrarse tambien los bucles que nombran nodos ocultos?"
 
-deferred PersistenciaGrafo.guardar      -- ver src/persistencia/grafo.py cuando exista
-deferred PersistenciaGrafo.cargar
+open question "ResetearGrafo borra tambien anotaciones, la ficha bibliografica y el historial de revisiones del texto fuente, contra lo que prometen InvestigadorAnota y EditorTexto (HistorialNoEsDestructivo). ¿Es lo querido para un reset, o esos registros deberian sobrevivirlo?"
+
+-- Funciones auxiliares de lookup usadas en las reglas de materializacion.
+-- Las firmas van en comentario, con la misma convencion que surfaces.allium.
+
+deferred nodo_de_concepto    -- see: src/persistencia/grafo.py: materializar_desde_validacion
+    -- (concepto: extraccion/ConceptoPropuesto, grafo: Grafo) -> Nodo
+    -- Devuelve el Nodo del grafo que fue creado a partir del concepto dado.
+deferred nodos_de_conceptos    -- see: src/persistencia/grafo.py: materializar_desde_validacion
+    -- (conceptos: List<extraccion/ConceptoPropuesto>, grafo: Grafo) -> List<Nodo>
+deferred contexto_de    -- see: src/persistencia/grafo.py: materializar_desde_validacion
+    -- (concepto: extraccion/ConceptoPropuesto) -> String?
+    -- Referencia de contexto legible (ej. "min 3:45") del concepto.
+deferred tipo_definitivo_de    -- see: src/persistencia/grafo.py: materializar_desde_validacion
+    -- (decision: validacion/PuntoDecision) -> extraccion/TipoConcepto
+    -- promocion_de_tipo: interpreta nota_resolucion; si no, el tipo del primer concepto.
+deferred tipo_de_texto    -- see: src/persistencia/grafo.py: materializar_desde_validacion
+    -- (tipo: String) -> extraccion/TipoConcepto
+deferred densidad_dirigida    -- see: src/pipeline/grafo.py
+    -- (nodos: Integer, relaciones: Integer) -> Decimal
+deferred nucleo_segun_llm    -- see: src/pipeline/simplificacion.py: simplificar
+    -- (grafo: Grafo, objetivo: Integer) -> Set<String>
+    -- Ids de los nodos a conservar, elegidos por el LLM activo.
+deferred tiene_datos_derivados    -- see: src/app.py: resetear_extraccion
+    -- (texto: transcripcion/Transcripcion) -> Boolean
+deferred nombre_investigador    -- see: src/persistencia/grafo.py
+    -- () -> String
+    -- Nombre del investigador activo (sesion local).
+
+deferred PersistenciaGrafo.guardar    -- see: src/persistencia/grafo.py: guardar
+deferred PersistenciaGrafo.cargar    -- see: src/persistencia/grafo.py: cargar
+    -- Estado real: el Grafo no se persiste como tal; se materializa en cada
+    -- lectura desde la sesion de validacion (ver Materializacion real).

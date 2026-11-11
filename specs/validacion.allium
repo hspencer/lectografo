@@ -11,6 +11,8 @@
 --   - Operaciones de fusion de sinonimos, marcado de bidireccionalidad,
 --     promocion de concepto ambiguo a primitivo o derivado
 --   - Anotaciones libres del investigador
+--   - Conceptos agregados a mano por la investigadora (ConceptoManual),
+--     antes o despues de cualquier extraccion
 --
 -- Excludes:
 --   - Persistencia del grafo final (vive en grafo.allium)
@@ -91,6 +93,60 @@ entity AnotacionInvestigador {
     objeto_anotado: String                       -- referencia textual al item
     nota: String
     creada_en: Timestamp
+}
+
+------------------------------------------------------------
+-- Conceptos manuales
+------------------------------------------------------------
+
+-- Concepto que la investigadora agrega a mano al grafo derivado de un texto.
+-- No viene del LLM: no tiene menciones, cita ni confianza propias (se
+-- materializa con confianza 1 y una mencion, ver grafo.allium). Admite las
+-- mismas ediciones de label que un concepto propuesto.
+entity ConceptoManual {
+    id: String                                   -- "c_inv_" + sufijo aleatorio
+    transcripcion: transcripcion/Transcripcion
+    label: String
+    descripcion: String                          -- vacia por defecto
+    tipo: String                                 -- texto libre, "primitivo" por defecto;
+                                                 -- no se valida contra extraccion/TipoConcepto
+}
+
+rule AgregarConceptoManual {
+    when: InvestigadorAgregaConcepto(transcripcion, label, descripcion?, tipo?)
+
+    requires: length(label) > 0
+    -- Sin requisito de estado: funciona tambien sobre un texto nunca
+    -- procesado. En ese caso nace una sesion de validacion vacia (sin
+    -- conceptos ni relaciones propuestos) que aloja el concepto: asi se
+    -- puede construir el grafo a mano ANTES (o en vez) de pedirle nada al
+    -- LLM.
+
+    ensures: ConceptoManual.created(
+        id: generar_id(),
+        transcripcion: transcripcion,
+        label: label,
+        descripcion: descripcion ?? "",
+        tipo: tipo ?? "primitivo"
+    )
+
+    @guidance
+        -- La transcripcion no cambia de estado: un texto con solo conceptos
+        -- manuales sigue figurando en la biblioteca como NO procesado (y por
+        -- eso tampoco aparece para una beneficiaria con quien se compartio,
+        -- ver multiusuario.allium). La interfaz solo pide el label; el
+        -- requisito de label no vacio lo aplica la interfaz, no el sistema.
+        --
+        -- Limitaciones conocidas (estado real):
+        --   - Una relacion manual (InvestigadorCreaRelacion) solo puede unir
+        --     conceptos propuestos por el LLM: un ConceptoManual no puede ser
+        --     origen ni destino. Un grafo hecho enteramente a mano tiene hoy
+        --     solo nodos sueltos; las aristas tienen que venir de una
+        --     extraccion dirigida (extraccion.allium, IniciarExtraccionDirigida).
+        --   - Esa extraccion, y cualquier re-extraccion, hoy DESCARTA los
+        --     conceptos manuales al fusionar (ver edicion-texto.allium,
+        --     ReExtraerPreservandoContexto).
+        --   - ResetearGrafo (grafo.allium) los elimina junto con todo lo demas.
 }
 
 ------------------------------------------------------------
@@ -190,6 +246,13 @@ rule GenerarDecisionesDesdeExtraccion {
                 estado: pendiente,
                 creada_en: now
             )
+
+    @guidance
+        -- Estado real: esta generacion solo ocurre en la herramienta de linea
+        -- de comandos. En la aplicacion web toda extraccion nace con CERO
+        -- puntos de decision y marcada como completa: el grafo se materializa
+        -- directamente de lo propuesto (mas las ediciones de la
+        -- investigadora), sin pasar por PanelValidacion.
 }
 
 ------------------------------------------------------------
@@ -259,6 +322,8 @@ rule InvestigadorAnota {
     @guidance
         -- Las anotaciones nunca se borran, ni siquiera al publicar. Son
         -- parte del registro hermeneutico del grafo.
+        -- Excepcion real: ResetearGrafo (grafo.allium) borra la sesion de
+        -- validacion completa, anotaciones incluidas.
 }
 
 ------------------------------------------------------------
@@ -290,6 +355,8 @@ invariant DecisionPendienteNoTieneResolucion {
 ------------------------------------------------------------
 -- Preguntas abiertas
 ------------------------------------------------------------
+
+open question "ConceptoManual como extremo de relacion: ¿se habilita crear relaciones manuales entre conceptos manuales (hoy solo entre conceptos del LLM), para que un grafo armado a mano no dependa de una extraccion dirigida para tener aristas?"
 
 open question "Las decisiones diferidas bloquean la transicion a validada. Es correcto, o se deberia permitir publicar un grafo con decisiones explicitamente diferidas?"
 

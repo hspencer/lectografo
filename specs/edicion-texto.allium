@@ -89,6 +89,11 @@ rule EditarTextoTranscripcion {
         -- Los fragmentos se invalidan porque son derivados del texto_crudo.
         -- La extracción previa (nodos, relaciones, decisiones de validacion)
         -- permanece intacta hasta que el investigador ejecute una nueva extracción.
+        --
+        -- Estado real: la edicion vive en la sesion de validacion del texto,
+        -- asi que hoy solo se puede editar un texto que ya tiene una (fue
+        -- procesado o tiene conceptos manuales); sobre un texto nunca
+        -- procesado falla, contra TextoSiempreEditable de surfaces.allium.
 }
 
 ------------------------------------------------------------
@@ -150,6 +155,21 @@ rule ReExtraerPreservandoContexto {
         -- Los nodos del grafo_previo que ya no encuentren soporte en el
         -- nuevo texto quedan marcados como candidatos a revisión, pero
         -- no se eliminan automáticamente.
+        --
+        -- DIVERGENCIA ACTIVA (perdida de datos en la app web). La re-extraccion
+        -- -- incluida la extraccion dirigida (extraccion.allium) -- fusiona
+        -- aditivamente los conceptos y relaciones nuevos con los previos y
+        -- conserva titulo, ficha, anotaciones, ediciones de conceptos y de
+        -- relaciones y relaciones manuales. Pero hoy DESCARTA, sin aviso:
+        --   - los conceptos manuales (validacion.allium, ConceptoManual);
+        --   - los conceptos ocultos por simplificacion (la deshace);
+        --   - las fusiones de sinonimos de la consolidacion;
+        --   - los puntos de decision;
+        --   - el texto editado y todo su historial de revisiones (el texto
+        --     vigente vuelve a ser el archivo original).
+        -- Ademas la extraccion lee siempre el archivo ORIGINAL, no el texto
+        -- editado: re-extraer tras editar no procesa la edicion.
+        -- No hay ningun "candidato a revision": no se marca nada.
 }
 
 ------------------------------------------------------------
@@ -158,8 +178,7 @@ rule ReExtraerPreservandoContexto {
 
 invariant HistorialOrdenadoCronologicamente {
     for t in transcripcion/Transcripcion:
-        for i in 1..(t.revisiones.count - 1):
-            t.revisiones[i-1].fecha <= t.revisiones[i].fecha
+        ordenado_por_fecha(t.revisiones)   -- black box: cada fecha <= la siguiente
 }
 
 invariant DesincronizacionImplicaEstadoAvanzado {
@@ -178,6 +197,8 @@ invariant FragmentosInvalidosImplicaListaVacia {
 ------------------------------------------------------------
 
 open question "¿El investigador puede etiquetar una revisión con un tipo ('corrección menor', 'reescritura sustancial')? ¿O la nota_autor es suficiente para ese propósito?"
+
+open question "Re-extraccion destructiva: ¿se corrige la fusion para que conserve conceptos manuales, ocultos, fusiones, texto editado y revisiones, y para que extraiga del texto vigente (editado) y no del original?"
 
 open question "¿El sistema permite restaurar una revisión anterior como texto_crudo activo (deshacer una edición), o el historial es solo de lectura?"
 

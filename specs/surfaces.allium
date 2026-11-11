@@ -39,7 +39,7 @@ actor Investigador {
 }
 
 actor LLM {
-    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, ollama, lmstudio, openrouter}
+    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, vertexai, ollama, lmstudio, openrouter}
 }
 
 ------------------------------------------------------------
@@ -62,15 +62,20 @@ contract Codec {
 contract EvaluadorLLM {
     invocar: (prompt: String, transcripcion: transcripcion/Transcripcion, on_token: (Integer -> Void)?) -> String
     -- on_token: callback opcional invocado en cada token generado; permite progreso en tiempo real y cancelación.
-    parsear_respuesta: (texto: String) -> (List<extraccion/ConceptoPropuesto>, List<extraccion/RelacionPropuesta>, List<extraccion/BucleDetectado>, List<extraccion/FlagMetalenguaje>)
+    parsear_respuesta: (texto: String) -> Any
+    -- Devuelve conceptos, relaciones, bucles y flags de metalenguaje
+    -- (extraccion/ConceptoPropuesto, RelacionPropuesta, BucleDetectado,
+    -- FlagMetalenguaje).
 
     @invariant ParseoEsTotal
         -- parsear_respuesta nunca lanza excepcion: para input invalido
         -- retorna listas vacias y la falla se reporta por otro canal.
 
     @guidance
-        -- Cada proveedor (anthropic, openai, gemini, ollama, lmstudio)
-        -- implementa este contrato detras de la misma interfaz. lmstudio
+        -- Cada proveedor (anthropic, openai, gemini, vertexai, ollama,
+        -- lmstudio) implementa este contrato detras de la misma interfaz.
+        -- vertexai comparte con gemini el cliente y el protocolo, pero no la
+        -- cuenta ni el catalogo de modelos. lmstudio
         -- habla la API compatible con OpenAI que LM Studio expone en local;
         -- comparte con openai el protocolo, no la configuracion.
 }
@@ -319,6 +324,21 @@ surface TablaConceptos {
             -- Clic en la fila. Alterna: expande ese concepto (y pliega el que
             -- estuviera expandido) o lo pliega si ya lo estaba.
         InvestigadorEditaConcepto(grafo, nodo, label)
+        InvestigadorAgregaConcepto(grafo.transcripcion, label, descripcion?, tipo?)
+            -- "Anadir concepto": la interfaz solo pide el label.
+            -- validacion.allium, AgregarConceptoManual.
+        InvestigadorSimplificaGrafo(grafo, objetivo)
+            when grafo.total_nodos > 1
+            -- Pide a cuantos conceptos simplificar (propone 12 o el total si
+            -- es menor). grafo.allium, SimplificarGrafo. No hay control para
+            -- deshacer (DeshacerSimplificacion existe solo en el sistema).
+        InvestigadorSolicitaExtraccionDirigida(grafo.transcripcion, activo, prompt, conceptos_objetivo)
+            when conceptos_objetivo.count > 0
+            -- "Procesar con seleccionados": conceptos_objetivo = labels de las
+            -- filas seleccionadas. Pide confirmacion y vuelve a la biblioteca.
+            -- extraccion.allium, IniciarExtraccionDirigida.
+        InvestigadorReseteaGrafo(grafo.transcripcion)
+            -- "Eliminar grafo", con confirmacion. grafo.allium, ResetearGrafo.
 
     related:
         TablaRelaciones(grafo)
@@ -514,8 +534,10 @@ rule CancelarExtraccion {
 -- Surface: configuracion del proveedor LLM
 ------------------------------------------------------------
 
+-- Solo la administradora la ve (multiusuario.allium,
+-- ConfiguracionDeModeloSoloAdministradora); en local, cualquiera.
 surface ConfiguracionProveedor {
-    facing investigador: Investigador
+    facing administradora: multiusuario/Administradora
     context activo: extraccion/ProveedorActivo
 
     let modelos_locales = ModelosLocalesDisponibles(activo)
@@ -527,11 +549,18 @@ surface ConfiguracionProveedor {
         modelos_locales when activo.es_local = true
 
     provides:
-        InvestigadorSeleccionaProveedor(proveedor, modelo)
-            when proveedor in {anthropic, openai, gemini}
-            -- modelo: de una lista sugerida por proveedor, o un nombre libre.
-            -- Se rechaza si la api_key de ese proveedor no esta configurada.
-        InvestigadorSeleccionaProveedorLocal(proveedor, modelo)
+        AdministradoraSeleccionaProveedor(administradora, activo, proveedor, modelo)
+            when proveedor in {anthropic, openai, gemini, vertexai}
+            -- modelo: de una lista sugerida por proveedor, o un nombre libre
+            -- ("Otro..."). Se rechaza si la api_key de ese proveedor no esta
+            -- configurada (vertexai no la necesita). Listas sugeridas, que
+            -- NO comparten nombres entre gemini y vertexai:
+            --   gemini:   gemini-flash-latest, gemini-pro-latest,
+            --             gemini-flash-lite-latest, gemini-3.8-flash,
+            --             gemini-4-argon, gemini-4-carbon
+            --   vertexai: gemini-2.5-flash, gemini-2.5-pro
+            -- multiusuario.allium, SeleccionarProveedorDeInstancia.
+        AdministradoraSeleccionaProveedor(administradora, activo, proveedor, modelo)
             when proveedor in {ollama, lmstudio}
             -- modelo: elegido de la lista que devuelve en ese momento el
             -- endpoint local del proveedor. Si el endpoint no responde, no
@@ -543,6 +572,10 @@ surface ConfiguracionProveedor {
         -- La api_key de proveedores remotos no aparece en ninguna surface
         -- ni en la serializacion del grafo. Esta surface solo indica si
         -- esta presente o no; se configura fuera de la aplicacion.
+
+    @guarantee EleccionEsDeLaInstancia
+        -- Lo elegido aqui rige para TODAS las personas y todas las llamadas
+        -- al LLM. No hay eleccion por persona ni tope de gasto.
 }
 
 ------------------------------------------------------------
@@ -575,14 +608,23 @@ surface EditorTexto {
             when transcripcion.fragmentos_invalidos = true
         InvestigadorConsultaRevision(revision)
             -- Muestra el texto_anterior completo de una revisión concreta.
+        -- "Zona de peligro", ambas con confirmacion:
+        InvestigadorReseteaGrafo(transcripcion)
+            -- "Des-procesar". grafo.allium, ResetearGrafo.
+        InvestigadorEliminaTexto(transcripcion)
+            -- Borra texto y grafo. transcripcion.allium, EliminarTextoCompleto.
 
     @guarantee TextoSiempreEditable
         -- InvestigadorEditaTexto está disponible independientemente del
         -- estado de la transcripcion. No existe bloqueo por estado.
+        -- Estado real: falla sobre un texto sin sesion de validacion (nunca
+        -- procesado ni con conceptos manuales); ver edicion-texto.allium.
 
     @guarantee HistorialNoEsDestructivo
         -- Ninguna acción en esta surface elimina revisiones existentes.
         -- El historial sólo crece; nunca se trunca.
+        -- Excepciones reales: "Des-procesar" (ResetearGrafo) y cualquier
+        -- re-extraccion hoy borran el historial (edicion-texto.allium).
 
     @guarantee DesincronizacionVisible
         -- Si texto_desincronizado_desde != null, la surface lo señala
@@ -610,6 +652,12 @@ surface PanelBiblioteca {
             t.titulo
             t.estado
             t.metadatos
+        -- Textos de otras bibliotecas compartidos conmigo, marcados como
+        -- compartidos y con el nombre de la biblioteca de origen
+        -- (multiusuario.allium, TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria).
+        for p in investigador.permisos_recibidos:
+            p.slug
+            p.biblioteca_origen.nombre
         -- Extracciones en curso: progreso en tokens
         for e in extraccion/EjecucionExtraccion where estado = en_curso:
             e.transcripcion.titulo
@@ -625,6 +673,10 @@ surface PanelBiblioteca {
             when ejecucion.estado = en_curso
         InvestigadorEditaMetadatos(transcripcion, metadatos)
             -- Editar ficha bibliográfica; funciona antes y después de extraer
+        InvestigadorComparteTexto(investigador, slug, email)
+            -- Boton "Compartir" en cada texto PROPIO (no en los compartidos
+            -- conmigo). Pide solo el email; sin eleccion de rol.
+            -- multiusuario.allium, CompartirTexto.
 
     @guarantee ProgresoEnTiempoReal
         -- El conteo de tokens se actualiza en cada token generado,

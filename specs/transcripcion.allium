@@ -64,7 +64,11 @@ external entity TranscripcionAutomatica {
 ------------------------------------------------------------
 
 entity Transcripcion {
-    id: String                                   -- slug derivado del titulo
+    id: String                                   -- slug: en la app web se deriva del NOMBRE DE
+                                                 -- ARCHIVO (minusculas, espacios a _, hasta 50
+                                                 -- caracteres). Unico solo dentro de su biblioteca;
+                                                 -- NO entre bibliotecas (ver multiusuario.allium,
+                                                 -- RiesgoSlugNoUnico).
     biblioteca: multiusuario/Biblioteca          -- unica; Grafo y PuntoDecision la heredan
     titulo: String
     fuente_origen: FuenteOrigen
@@ -89,9 +93,12 @@ entity Transcripcion {
         normalizada -> extraida
         extraida -> validada
         validada -> publicada
+        extraida -> normalizada       -- ResetearGrafo (grafo.allium)
+        validada -> normalizada       -- ResetearGrafo (grafo.allium)
         terminal: publicada
         -- Nota: el estado nunca retrocede aunque el texto sea editado.
         -- Ver edicion-texto.allium para el modelo de edición y re-extracción.
+        -- La unica vuelta atras es el reset explicito del grafo completo.
     }
 
     -- Historial de ediciones (ver edicion-texto.allium)
@@ -194,12 +201,28 @@ rule NormalizarTranscripcion {
         transcripcion.estado = normalizada
         transcripcion.fecha_normalizacion = now
         TranscripcionNormalizada(transcripcion: transcripcion)
+
+    @guidance
+        -- particionar_y_limpiar es una funcion caja negra. A nivel de comportamiento
+        -- garantiza: (1) elimina muletillas configuradas, (2) preserva citas directas,
+        -- (3) conserva timestamps si el origen los tenia.
 }
 
-@guidance
-    -- particionar_y_limpiar es una funcion caja negra. A nivel de comportamiento
-    -- garantiza: (1) elimina muletillas configuradas, (2) preserva citas directas,
-    -- (3) conserva timestamps si el origen los tenia.
+------------------------------------------------------------
+-- Eliminacion
+------------------------------------------------------------
+
+rule EliminarTextoCompleto {
+    when: InvestigadorEliminaTexto(transcripcion)
+    ensures: not exists transcripcion
+
+    @guidance
+        -- Irreversible: borra el grafo completo (como ResetearGrafo en
+        -- grafo.allium) y ademas el archivo del texto fuente. Se ofrece en la
+        -- "zona de peligro" del editor de texto, con confirmacion, y la puede
+        -- invocar tambien una beneficiaria de un texto compartido
+        -- (multiusuario.allium). No borra los PermisoCompartido sobre el texto.
+}
 
 ------------------------------------------------------------
 -- Invariantes locales

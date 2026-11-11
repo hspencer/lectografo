@@ -33,10 +33,16 @@ enum ProveedorLLM {
     gemini
     ollama          -- modelos locales via Ollama (sin API key)
     lmstudio        -- modelos locales via LM Studio, API compatible con OpenAI (sin API key)
-    openrouter      -- remoto via OAuth PKCE con la cuenta de cada persona (ver multiusuario.allium)
-    vertexai        -- remoto via el proyecto GCP del operador del sistema, no de
-                    -- la persona (ver multiusuario.allium, conexion compartida v1)
+    openrouter      -- remoto via OAuth PKCE con la cuenta de cada persona (ver
+                    -- multiusuario.allium). NO implementado: no hay cliente openrouter.
+    vertexai        -- remoto, sin clave: credencial de la cuenta de servicio del
+                    -- despliegue, factura al proyecto GCP del operador.
 }
+-- gemini y vertexai hablan con la misma familia de modelos pero son cuentas
+-- y catalogos DISTINTOS: gemini usa la clave personal de Google AI Studio del
+-- operador (creditos prepago propios, ajenos a la facturacion GCP); vertexai
+-- factura al proyecto GCP. Los nombres de modelo validos en uno no lo son en
+-- el otro (ver multiusuario.allium, SeleccionarProveedorDeInstancia).
 
 enum TipoConcepto {
     primitivo
@@ -75,12 +81,17 @@ external entity Prompt {
 -- Proveedor LLM
 ------------------------------------------------------------
 
+-- Uno solo para toda la instancia: todas las personas y todas las llamadas
+-- al LLM (extraccion, simplificacion, reconexion, consolidacion) lo usan.
+-- Solo la administradora lo cambia (multiusuario.allium,
+-- SeleccionarProveedorDeInstancia). No hay proveedor por persona.
 entity ProveedorActivo {
     proveedor: ProveedorLLM
     modelo: String                               -- nombre del modelo; para ollama ej. "llama3.2", "mistral"
                                                  -- obligatorio para los proveedores locales
     es_local: Boolean                            -- true para ollama y lmstudio; no requieren api_key
-    api_key_presente: Boolean                    -- irrelevante si es_local = true
+    api_key_presente: Boolean                    -- irrelevante si es_local = true; vertexai
+                                                 -- cuenta siempre como presente (no usa clave)
     endpoint: String?                            -- requerido si es_local = true; ej. "http://localhost:11434" (ollama),
                                                  -- "http://localhost:1234/v1" (lmstudio)
 }
@@ -159,6 +170,10 @@ entity EjecucionExtraccion {
     prompt: Prompt
     iniciada_en: Timestamp
     finalizada_en: Timestamp?
+    -- Labels de conceptos ya definidos por la investigadora a los que se
+    -- restringe la extraccion (ver IniciarExtraccionDirigida). Vacia en la
+    -- extraccion libre.
+    conceptos_objetivo: List<String>
     estado: en_curso | completada | fallida
     razon_falla: String? when estado = fallida
 
@@ -194,8 +209,52 @@ rule IniciarExtraccion {
         proveedor: proveedor_activo,
         prompt: prompt,
         iniciada_en: now,
+        conceptos_objetivo: [],
         estado: en_curso
     )
+}
+
+-- Extraccion dirigida: la investigadora ya armo (a mano o eligiendo de un
+-- grafo existente) el vocabulario, y le pide al LLM SOLO las conexiones.
+rule IniciarExtraccionDirigida {
+    when: InvestigadorSolicitaExtraccionDirigida(transcripcion, proveedor_activo, prompt, conceptos_objetivo)
+
+    requires: conceptos_objetivo.count > 0
+    requires: proveedor_activo.api_key_presente = true or proveedor_activo.es_local = true
+    requires: proveedor_activo.es_local = false or proveedor_activo.endpoint != null
+
+    ensures: EjecucionExtraccion.created(
+        transcripcion: transcripcion,
+        proveedor: proveedor_activo,
+        prompt: prompt,
+        iniciada_en: now,
+        conceptos_objetivo: conceptos_objetivo,
+        estado: en_curso
+    )
+
+    @guidance
+        -- Sin requisito de estado de la transcripcion: se ofrece sobre un
+        -- texto ya extraido (seleccionando conceptos del grafo) y siempre
+        -- se lanza como re-extraccion que se fusiona con lo previo.
+        -- Vale para los dos modos (rapido e incremental): en ambos el prompt
+        -- del sistema recibe la lista y la instruccion de no proponer
+        -- conceptos fuera de ella, buscar relaciones SOLO entre ellos y
+        -- omitir los que no aparezcan en el texto.
+        --
+        -- Limitaciones conocidas (estado real):
+        --   - La restriccion vive SOLO en el prompt. La respuesta no se
+        --     filtra: si el LLM igual propone conceptos nuevos, entran al
+        --     grafo por la fusion aditiva como cualquier otro.
+        --   - Los conceptos devueltos se reconcilian por label solo contra
+        --     los conceptos que propuso el LLM antes, NO contra los
+        --     conceptos manuales (validacion.allium, ConceptoManual).
+        --   - La fusion con lo previo hoy DESCARTA los conceptos manuales, los
+        --     conceptos ocultos por simplificacion y las fusiones de
+        --     sinonimos (ver edicion-texto.allium, ReExtraerPreservandoContexto).
+        --     Resultado neto del flujo "armo el vocabulario a mano y pido las
+        --     conexiones": los conceptos manuales desaparecen y reaparecen
+        --     como conceptos del LLM con el mismo label (si el LLM los
+        --     devolvio), sin su descripcion ni su tipo.
 }
 
 rule ExtraccionCompleta {
@@ -270,6 +329,8 @@ rule ExtraccionFallida {
     @guidance
         -- Una ejecucion fallida no cambia el estado de la transcripcion. El
         -- investigador puede reintentar con el mismo o distinto proveedor.
+        -- Una extraccion que devuelve cero conceptos tambien cuenta como
+        -- fallida (razon: extraccion vacia).
 }
 
 ------------------------------------------------------------
@@ -303,5 +364,9 @@ open question "El nivel de confianza debe ser auto-reportado por el LLM en su sa
 -- ollama): para los proveedores locales (ollama, lmstudio) el investigador
 -- elige el modelo de la lista que reporta el endpoint local en el momento de
 -- configurar. Ver surfaces.allium, ConfiguracionProveedor.
+
+open question "Extraccion dirigida: ¿se filtra la respuesta del LLM para descartar conceptos fuera de conceptos_objetivo (hoy solo se le pide en el prompt), y se reconcilian los conceptos devueltos contra los conceptos manuales por label en vez de duplicarlos?"
+
+open question "Ninguna invocacion al LLM verifica margen de gasto antes de llamar al proveedor (multiusuario.allium, InferenciaPagadaPorQuienLaSolicita y GastoCompartidoAcotado). ¿Donde vive ese guardado cuando se implemente: en IniciarExtraccion e IniciarExtraccionDirigida, o en un punto unico comun a toda invocacion?"
 
 deferred ExtractorLLM.invocar    -- ver src/llm/extractor.py cuando exista
