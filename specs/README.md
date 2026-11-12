@@ -131,7 +131,12 @@ Antes de publicar esta función hay que configurar `SMTP_HOST`, `SMTP_PORT`
 La contraseña debe proceder de Secret Manager. `APP_URL` es el origen público
 de la aplicación; nunca se toma del formulario del cliente. Sin configuración,
 el servicio informa que el correo no está disponible y no crea invitaciones.
-El servicio de correo aún no se ha elegido; no se han enviado mensajes reales.
+Remitente elegido: `herbert.spencer@gmail.com`, por Gmail SMTP con TLS
+(`smtp.gmail.com:465`). Secret Manager está habilitado y el secreto
+`lectografo-smtp-password` está creado; la identidad de Cloud Run tiene acceso
+solo a este secreto. Falta que la persona titular genere una contraseña de
+aplicación de Google y la guarde como nueva versión del secreto. Después se
+configurará Cloud Run y se publicará la función. No se han enviado mensajes reales.
 
 ## Notas al pie
 

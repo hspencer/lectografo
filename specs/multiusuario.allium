@@ -57,7 +57,8 @@
 --   IMPLEMENTADO, PENDIENTE DE ACTIVAR EL ENVIO
 --     - Invitaciones por correo a multiples personas sin cuenta previa;
 --       aceptacion con el correo verificado y enlace al texto original.
---       Ver invitaciones.allium. Falta el remitente SMTP de produccion.
+--       Ver invitaciones.allium. Gmail elegido; falta guardar la credencial
+--       y activar el envio en produccion.
 -- ════════════════════════════════════════════════════════════════════════
 --
 -- Includes:

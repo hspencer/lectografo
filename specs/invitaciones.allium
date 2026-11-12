@@ -1,6 +1,6 @@
 -- allium: 3
 -- Invitaciones a un texto por correo. Implementado; activacion en produccion
--- pendiente de configurar el remitente y el servicio de envio.
+-- pendiente de guardar la credencial y activar Gmail SMTP en produccion.
 
 use "./multiusuario.allium" as multiusuario
 use "./surfaces.allium" as surfaces
@@ -131,4 +131,5 @@ deferred titulo_del_texto    -- see: src/app.py: invitar_a_documento
 deferred servicio_acepta_envio    -- see: src/invitaciones.py: enviar_invitaciones
     -- (invitacion: Invitacion) -> Boolean
 
-open question "Que remitente y servicio de correo se usaran en produccion? Sin esa configuracion no se pueden enviar invitaciones reales."
+-- Remitente elegido: herbert.spencer@gmail.com, Gmail SMTP con TLS.
+-- Activacion pendiente de que la persona titular cree y guarde su credencial.
