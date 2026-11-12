@@ -43,7 +43,7 @@ _cache_persona: dict[str, tuple[str | None, bool]] = {}
 # compartido para (uid, slug), el request completo pasa a resolver GRAFOS/
 # TRANSCRIPTS contra la biblioteca de origen del permiso, no la propia.
 _RE_SLUG_EN_PATH = re.compile(
-    r"^/api/(?:extracciones|validacion|grafo|metadatos|transcripts)/([^/]+)"
+    r"^/api/(?:extracciones|validacion|grafo|metadatos|transcripts|publicar|compartir)/([^/]+)"
 )
 _cache_permiso: dict[tuple[str, str], str | None] = {}
 

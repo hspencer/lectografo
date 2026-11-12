@@ -389,6 +389,21 @@ def listar_extracciones():
     return resultado
 
 
+def _resolver_biblioteca_de_slug(uid: str, slug: str) -> str:
+    """Biblioteca donde vive `slug`: la propia si el texto está ahí: si no,
+    la de origen de quien lo compartió conmigo -- recompartir y publicar lo
+    que me compartieron es válido, la colaboración es plana. 404 si no hay
+    acceso de ninguna forma."""
+    if biblioteca_actual.get() and _ruta_transcript(slug) is not None:
+        return biblioteca_actual.get()
+    from src.contexto_biblioteca import _biblioteca_compartida
+    bib_compartida = _biblioteca_compartida(uid, slug)
+    if not bib_compartida:
+        raise HTTPException(404, f"No tienes un texto '{slug}' para compartir")
+    biblioteca_actual.set(bib_compartida)
+    return bib_compartida
+
+
 class CompartirPayload(BaseModel):
     slug: str
     email: str
@@ -401,12 +416,10 @@ def compartir_documento(payload: CompartirPayload):
     su cuenta de Firebase, no se manda invitación por correo."""
     from src.contexto_biblioteca import fb_auth as _fb_auth
 
-    bib_propia = biblioteca_actual.get()
     uid = persona_actual.get()
-    if not bib_propia or not uid:
+    if not biblioteca_actual.get() or not uid:
         raise HTTPException(401, "No autenticado")
-    if _ruta_transcript(payload.slug) is None:
-        raise HTTPException(404, f"No tienes un texto '{payload.slug}' para compartir")
+    bib = _resolver_biblioteca_de_slug(uid, payload.slug)
 
     try:
         beneficiaria = _fb_auth.get_user_by_email(payload.email.strip())
@@ -419,7 +432,7 @@ def compartir_documento(payload: CompartirPayload):
     if beneficiaria.uid == uid:
         raise HTTPException(400, "No puedes compartir un documento contigo misma")
 
-    otorgar_permiso(bib_propia, payload.slug, beneficiaria.uid, payload.email.strip(), uid)
+    otorgar_permiso(bib, payload.slug, beneficiaria.uid, payload.email.strip(), uid)
     return {"ok": True}
 
 
@@ -441,12 +454,11 @@ class PublicarPayload(BaseModel):
 
 @app.post("/api/publicar")
 def publicar_documento(payload: PublicarPayload):
-    bib = biblioteca_actual.get()
-    if not bib:
+    uid = persona_actual.get()
+    if not biblioteca_actual.get() or not uid:
         raise HTTPException(401, "No autenticado")
-    if _ruta_transcript(payload.slug) is None:
-        raise HTTPException(404, f"No tienes un texto '{payload.slug}' para publicar")
-    pub_id = publicar_texto(bib, payload.slug, persona_actual.get() or "")
+    bib = _resolver_biblioteca_de_slug(uid, payload.slug)
+    pub_id = publicar_texto(bib, payload.slug, uid)
     return {"ok": True, "id": pub_id, "url": f"/#publico:{pub_id}"}
 
 
