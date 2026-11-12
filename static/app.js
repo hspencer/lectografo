@@ -878,6 +878,79 @@ function renderLeyenda(relColorScale, relTypes) {
   ).join("");
 }
 
+const TIPOS_REL = ["fundamenta","amplifica","especifica","contraposicion","constituye","genera","presupone","evoca","pertenece"];
+
+/**
+ * Autocomplete genérico para inputs (buscador del mapa, formulario de
+ * "Vincular"). getPool() → [{ label, meta, onSelect(inputEl) }]
+ * Options: minChars (default 1), showAllOnFocus (default false)
+ */
+function _gpWireAutocomplete(inputEl, dropdownEl, getPool, { minChars = 1, showAllOnFocus = false } = {}) {
+  let activeIdx = -1;
+  let items = [];
+
+  function render(query) {
+    const q = query.toLowerCase().trim();
+    items = (q.length < minChars && !showAllOnFocus)
+      ? []
+      : getPool().filter(p => q.length < 1 || p.label.toLowerCase().includes(q)).slice(0, 12);
+    dropdownEl.innerHTML = items.map((p, i) => `
+      <li class="gp-ac-item${i === activeIdx ? " active" : ""}" role="option" data-idx="${i}"${i === activeIdx ? ' aria-selected="true"' : ""}>
+        <span class="gp-ac-item-label">${esc(p.label)}</span>
+        ${p.meta ? `<span class="gp-ac-item-meta">${esc(p.meta)}</span>` : ""}
+      </li>
+    `).join("");
+    dropdownEl.hidden = items.length === 0;
+    dropdownEl.querySelectorAll(".gp-ac-item").forEach(li => {
+      li.addEventListener("mousedown", e => {
+        e.preventDefault();
+        select(parseInt(li.dataset.idx, 10));
+      });
+    });
+  }
+
+  function select(idx) {
+    if (idx < 0 || idx >= items.length) return;
+    items[idx].onSelect(inputEl);
+    close();
+  }
+
+  function close() {
+    activeIdx = -1;
+    items = [];
+    dropdownEl.hidden = true;
+    dropdownEl.innerHTML = "";
+  }
+
+  inputEl.addEventListener("input", () => { activeIdx = -1; render(inputEl.value); });
+  inputEl.addEventListener("focus", () => {
+    if (showAllOnFocus) render("");
+    else if (inputEl.value.length >= minChars) render(inputEl.value);
+  });
+  inputEl.addEventListener("focusout", () => {
+    setTimeout(() => {
+      if (document.activeElement !== inputEl && !dropdownEl.contains(document.activeElement)) close();
+    }, 80);
+  });
+  inputEl.addEventListener("keydown", e => {
+    if (dropdownEl.hidden) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, items.length - 1);
+      render(inputEl.value);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, 0);
+      render(inputEl.value);
+    } else if (e.key === "Enter" && activeIdx >= 0) {
+      e.preventDefault(); e.stopPropagation();
+      select(activeIdx);
+    } else if (e.key === "Escape") {
+      close();
+    }
+  });
+}
+
 // ── Buscador de conceptos en el mapa ─────────────────────────────────────
 
 function initMapaBuscar() {
