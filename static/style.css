@@ -1137,6 +1137,19 @@ tbody tr:hover td { background: var(--sn-sunk); }
   border-top: var(--sn-hair); flex-shrink: 0;
 }
 
+/* ── Invitaciones ───────────────────────────────────────────────── */
+#compartir-modal {
+  width: min(520px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem);
+  margin: auto; padding: var(--sn-s-6); overflow-y: auto;
+  background: var(--sn-paper); color: var(--sn-ink); border: var(--sn-hair);
+  border-radius: var(--sn-radius-lg); box-shadow: var(--sn-shadow-float);
+}
+#compartir-modal::backdrop { background: rgba(34,31,26,.45); backdrop-filter: blur(2px); }
+#compartir-form { display: flex; flex-direction: column; gap: var(--sn-s-3); }
+#compartir-form p { margin: 0; font-size: var(--sn-fs-sm); line-height: 1.5; }
+#compartir-emails { width: 100%; padding: var(--sn-s-3); font: inherit; resize: vertical; }
+.compartir-modal-acciones { display: flex; gap: var(--sn-s-3); flex-wrap: wrap; }
+
 /* ── Modal: Re-procesar ──────────────────────────────────────────── */
 #repro-modal {
   position: fixed; inset: 0; z-index: 200;

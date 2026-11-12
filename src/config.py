@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Optional
-from pydantic import model_validator
+from pydantic import SecretStr, model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -42,6 +42,14 @@ class Settings(BaseSettings):
     # Transcripciones más largas se truncan con aviso. Para textos largos
     # usar extracción incremental (pendiente de implementar).
     max_chars_prompt: int = 40000
+
+    # Invitaciones: secretos del remitente fuera del repositorio.
+    smtp_host: Optional[str] = None
+    smtp_port: int = 587
+    smtp_user: Optional[str] = None
+    smtp_password: Optional[SecretStr] = None
+    smtp_from: Optional[str] = None
+    app_url: str = "https://lectografo.web.app"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

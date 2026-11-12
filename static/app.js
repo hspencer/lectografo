@@ -96,7 +96,12 @@ async function apiFetch(path, opts={}, raw=false) {
   const token = await window.lectografoAuth?.getIdToken?.();
   if (token) headers.Authorization = `Bearer ${token}`;
   const r = await fetch(path, { ...opts, headers });
-  if (!r.ok) throw new Error(`${r.status}: ${await r.text()}`);
+  if (!r.ok) {
+    const texto = await r.text();
+    let detalle = texto;
+    try { const datos = JSON.parse(texto); if (typeof datos.detail === "string") detalle = datos.detail; } catch (_) {}
+    throw new Error(`${r.status}: ${detalle}`);
+  }
   return raw ? r : r.json();
 }
 async function cargarGrafo() {
@@ -127,6 +132,7 @@ async function initTab(nombre) {
 // ════════════════════════════════════════════════════════════════════════
 async function init() {
   const h = location.hash.slice(1);
+  if (h.startsWith("invitacion:")) return abrirInvitacion(h.slice(11));
   if (h.startsWith("publico:")) {
     // Vista pública: ni biblioteca ni sesión -- no se llama /api/extracciones.
     await abrirTextoPublico(h.slice(8));
@@ -146,6 +152,41 @@ async function init() {
   initFichaModal();
   initMapaArrows();
 }
+
+async function abrirInvitacion(token) {
+  const info = await apiFetch(`/api/publico/invitaciones/${encodeURIComponent(token)}`);
+  window.lectografoInvitacion = info;
+  const mensaje = document.getElementById("auth-gate-mensaje");
+  const gate = document.getElementById("auth-gate");
+  gate.hidden = false;
+  mensaje.textContent = `${info.invitado_por} te invita a «${info.titulo}». Inicia sesión con Google usando ${info.email}.`;
+  const cuenta = window.lectografoAuth;
+  if (!cuenta?.uid) return;
+  if (cuenta.email?.toLowerCase() !== info.email.toLowerCase()) {
+    mensaje.textContent += ` Tienes abierta la cuenta ${cuenta.email}. Elige la cuenta invitada para continuar.`;
+    return;
+  }
+  const destino = await apiFetch(`/api/invitaciones/${encodeURIComponent(token)}/aceptar`, { method: "POST" });
+  window.lectografoInvitacion = null;
+  gate.hidden = true;
+  history.replaceState(null, "", `${location.pathname}#${destino.slug}`);
+  await init();
+}
+
+let _sesionIniciada = null;
+async function iniciarConSesion() {
+  const uid = window.lectografoAuth?.uid || "sin-sesion";
+  const especial = /^#(?:publico|invitacion):/.test(location.hash);
+  if (!window.lectografoAuth?.uid && !especial) { _sesionIniciada = null; return; }
+  if (_sesionIniciada === uid) return;
+  _sesionIniciada = uid;
+  try { await init(); }
+  catch (err) {
+    document.getElementById("auth-gate").hidden = false;
+    document.getElementById("auth-gate-mensaje").textContent = err.message;
+  }
+}
+window.addEventListener("lectografo:auth-listo", iniciarConSesion);
 
 // Navegación del mapa con flechas del teclado
 function initMapaArrows() {
@@ -1786,7 +1827,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Firebase restaura la sesión de forma async (lee IndexedDB); sin esto
   // init() pega a la API antes de que haya token y siempre recibe 401.
   if (window.lectografoAuthReady) await window.lectografoAuthReady;
-  init();
+  iniciarConSesion();
 });
 
 // ════════════════════════════════════════════════════════════════════════
@@ -2302,12 +2343,48 @@ async function publicarDocumento(slug, titulo, btn) {
 }
 
 async function compartirDocumento(slug, titulo) {
-  const email = prompt(`Compartir «${titulo}» -- email de la persona:`);
-  if (!email || !email.trim()) return;
-  try {
-    await apiFetch("/api/compartir", { method: "POST", body: JSON.stringify({ slug, email: email.trim() }) });
-    alert(`Compartido con ${email.trim()}.`);
-  } catch (e) { alert("Error al compartir: " + e.message); }
+  const modal = document.getElementById("compartir-modal");
+  const entrada = document.getElementById("compartir-emails");
+  const resultado = document.getElementById("compartir-resultado");
+  const enviar = document.getElementById("compartir-enviar");
+  const cerrar = document.getElementById("compartir-cerrar");
+  let enviando = false;
+  document.getElementById("compartir-titulo").textContent = `Invitar a «${titulo}»`;
+  entrada.value = "";
+  resultado.textContent = "";
+  enviar.disabled = false;
+  cerrar.disabled = false;
+  modal.oncancel = e => { if (enviando) e.preventDefault(); };
+  cerrar.onclick = () => modal.close();
+  document.getElementById("compartir-form").onsubmit = async e => {
+    e.preventDefault();
+    if (enviando) return;
+    const emails = [...new Set(entrada.value.split(/[\s,;]+/).map(email => email.trim()).filter(Boolean))];
+    if (!emails.length) { resultado.textContent = "Escribe al menos un correo."; return; }
+    if (emails.length > 20) { resultado.textContent = "Puedes invitar hasta 20 personas por envío."; return; }
+    enviando = true;
+    enviar.disabled = cerrar.disabled = true;
+    entrada.disabled = true;
+    resultado.textContent = "Enviando invitaciones…";
+    try {
+      const { resultados } = await apiFetch("/api/invitaciones", { method: "POST", body: JSON.stringify({ slug, emails }) });
+      resultado.replaceChildren(...resultados.map(item => {
+        const fila = document.createElement("p");
+        fila.textContent = `${item.email}: ${item.estado === "enviada" ? "invitación enviada" : item.mensaje}`;
+        return fila;
+      }));
+      entrada.value = resultados.filter(item => item.estado !== "enviada").map(item => item.email).join("\n");
+      enviar.disabled = !entrada.value;
+    } catch (err) {
+      resultado.textContent = err.message;
+      enviar.disabled = false;
+    } finally {
+      enviando = false;
+      entrada.disabled = cerrar.disabled = false;
+    }
+  };
+  modal.showModal();
+  entrada.focus();
 }
 
 function _initReproModal() {

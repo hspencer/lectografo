@@ -14,12 +14,12 @@ from concurrent.futures import ThreadPoolExecutor
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from src.config import settings
 from src.contexto_biblioteca import (
     _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
-    biblioteca_actual, persona_actual, persona_nombre_actual, otorgar_permiso,
+    biblioteca_actual, persona_actual, persona_nombre_actual, correo_verificado_actual, otorgar_permiso,
     permisos_compartidos_conmigo, nombre_de_biblioteca, emails_con_acceso,
     publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion,
 )
@@ -390,6 +390,47 @@ def _resolver_biblioteca_de_slug(uid: str, slug: str) -> str:
 class CompartirPayload(BaseModel):
     slug: str
     email: str
+
+
+class InvitacionesPayload(BaseModel):
+    slug: str
+    emails: list[str] = Field(min_length=1, max_length=20)
+
+    @field_validator("emails")
+    @classmethod
+    def validar_emails(cls, emails):
+        from src.invitaciones import normalizar_email
+        return list(dict.fromkeys(normalizar_email(email) for email in emails))
+
+
+@app.post("/api/invitaciones")
+def invitar_a_documento(payload: InvitacionesPayload):
+    from src.invitaciones import enviar_invitaciones
+    uid = persona_actual.get()
+    if not uid or not biblioteca_actual.get():
+        raise HTTPException(401, "No autenticado")
+    bib = _resolver_biblioteca_de_slug(uid, payload.slug)
+    estado, _ = _cargar_o_crear(payload.slug)
+    resultados = enviar_invitaciones(bib, payload.slug, estado.titulo, payload.emails,
+                                     uid, persona_nombre_actual.get() or "Una persona")
+    return {"resultados": resultados}
+
+
+@app.get("/api/publico/invitaciones/{token}")
+def consultar_invitacion(token: str):
+    from src.invitaciones import cargar_invitacion
+    _, datos = cargar_invitacion(token)
+    return {"email": datos["destinatariaEmail"], "titulo": datos["titulo"],
+            "invitado_por": datos["invitadoNombre"]}
+
+
+@app.post("/api/invitaciones/{token}/aceptar")
+def aceptar_invitacion_endpoint(token: str):
+    from src.invitaciones import aceptar_invitacion
+    uid = persona_actual.get()
+    if not uid:
+        raise HTTPException(401, "No autenticado")
+    return aceptar_invitacion(token, uid, correo_verificado_actual.get())
 
 
 @app.post("/api/compartir")

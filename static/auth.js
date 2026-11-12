@@ -51,7 +51,10 @@ const avatarImg = document.getElementById("auth-avatar-img");
 const avatarGenerico = document.getElementById("auth-avatar-generic");
 
 btnGoogle?.addEventListener("click", () => {
-  signInWithPopup(auth, new GoogleAuthProvider()).catch((err) => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account", ...(window.lectografoInvitacion?.email
+    ? { login_hint: window.lectografoInvitacion.email } : {}) });
+  signInWithPopup(auth, provider).catch((err) => {
     console.error("Error de acceso con Google:", err);
     alert("No se pudo iniciar sesión: " + err.message);
   });
@@ -189,6 +192,9 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false, getIdToken: async () => null };
     if (gate) gate.hidden = _modoPublico || false;
+    if (!location.hash.startsWith("#invitacion:")) {
+      document.getElementById("auth-gate-mensaje").textContent = "Ingresa con tu cuenta de Google para ver tu biblioteca.";
+    }
     if (userBadge) userBadge.textContent = "";
     if (btnImportar) btnImportar.hidden = true;
     if (btnAdmin) btnAdmin.hidden = true;
@@ -197,6 +203,7 @@ onAuthStateChanged(auth, async (user) => {
     if (avatarImg) avatarImg.hidden = true;
     if (avatarGenerico) avatarGenerico.hidden = false;
     _resolverAuthListo();
+    window.dispatchEvent(new CustomEvent("lectografo:auth-listo", { detail: window.lectografoAuth }));
     return;
   }
 

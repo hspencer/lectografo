@@ -83,6 +83,7 @@ Las preguntas abiertas (`open question`) son decisiones explicitamente diferidas
 ```sh
 .venv/bin/python -m unittest discover -s tests -v
 node tests/test_frontend.cjs
+node tests/test_invitaciones.cjs
 node --check static/app.js
 allium check specs
 allium analyse specs
@@ -115,6 +116,22 @@ Persisten estas divergencias, documentadas en los módulos correspondientes:
   eliminar el texto no retira los permisos ni la publicación.
 
 Estas limitaciones no se han convertido en funciones nuevas durante esta revisión.
+
+## Invitaciones por correo — preparadas, sin activar el envío
+
+El diálogo permite hasta 20 correos por envío, sin exigir una cuenta previa.
+Cada persona recibe un mensaje individual con un enlace de 14 días. El servidor
+solo concede acceso al autenticar una cuenta con el correo invitado verificado;
+el enlace conserva el destino durante el login y abre el texto original.
+Los fallos de envío se informan por destinatario. Reabrir una invitación aceptada
+con la misma cuenta no duplica el permiso.
+
+Antes de publicar esta función hay que configurar `SMTP_HOST`, `SMTP_PORT`
+(465 o 587), `SMTP_USER`, `SMTP_PASSWORD` y `SMTP_FROM` en Cloud Run.
+La contraseña debe proceder de Secret Manager. `APP_URL` es el origen público
+de la aplicación; nunca se toma del formulario del cliente. Sin configuración,
+el servicio informa que el correo no está disponible y no crea invitaciones.
+El servicio de correo aún no se ha elegido; no se han enviado mensajes reales.
 
 ## Notas al pie
 

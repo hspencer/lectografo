@@ -434,12 +434,28 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Invitaciones por correo                                       -->
+  <dialog id="compartir-modal" aria-labelledby="compartir-titulo">
+    <form id="compartir-form">
+      <h3 id="compartir-titulo">Invitar a colaborar</h3>
+      <p>Recibirán un enlace al texto y su grafo. No necesitan haber ingresado antes; deben entrar con Google usando el correo invitado.</p>
+      <label for="compartir-emails">Correos de las personas</label>
+      <textarea id="compartir-emails" rows="5" placeholder="Una dirección por línea, o separadas por coma" required></textarea>
+      <p class="muted">Podrán editar el grafo común, añadir sus glosas y volver a compartirlo. Pueden aceptar la invitación durante 14 días.</p>
+      <div id="compartir-resultado" role="status"></div>
+      <div class="compartir-modal-acciones">
+        <button id="compartir-enviar" type="submit" class="btn btn-aceptar">Enviar invitaciones</button>
+        <button id="compartir-cerrar" type="button" class="btn btn-neutro">Cerrar</button>
+      </div>
+    </form>
+  </dialog>
+
   <!-- Portón de acceso (Firebase Auth, specs/multiusuario.allium)      -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="auth-gate">
     <div id="auth-gate-card">
       <span id="auth-gate-nombre">Lectógrafo</span>
-      <p class="muted">Ingresa con tu cuenta de Google para ver tu biblioteca.</p>
+      <p id="auth-gate-mensaje" class="muted">Ingresa con tu cuenta de Google para ver tu biblioteca.</p>
       <button id="auth-btn-google" class="btn btn-aceptar">Continuar con Google</button>
     </div>
   </div>

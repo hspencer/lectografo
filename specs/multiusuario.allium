@@ -53,6 +53,11 @@
 --       DIVERGENCIA ACTIVA, ver InferenciaPagadaPorQuienLaSolicita.
 --     - InvitarMiembro, RetirarMembresia (el backend ignora Membresia).
 --     - RevocarPermiso, ExportarBiblioteca, PublicarVersionDeGrafo.
+--
+--   IMPLEMENTADO, PENDIENTE DE ACTIVAR EL ENVIO
+--     - Invitaciones por correo a multiples personas sin cuenta previa;
+--       aceptacion con el correo verificado y enlace al texto original.
+--       Ver invitaciones.allium. Falta el remitente SMTP de produccion.
 -- ════════════════════════════════════════════════════════════════════════
 --
 -- Includes:
@@ -567,6 +572,8 @@ rule RetirarMembresia {
 -- ════ Compartir textos ══════════════════════════════════
 
 rule CompartirTexto {
+    -- Endpoint de compatibilidad para cuentas existentes. El nuevo dialogo
+    -- de la biblioteca usa invitaciones.allium, InvitarPersonas.
     when: InvestigadorComparteTexto(investigador, slug, email)
     -- La biblioteca donde vive el texto: la propia si esta ahi; si no, la de
     -- origen de un permiso que la persona tenga sobre ese slug.

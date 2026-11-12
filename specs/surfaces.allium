@@ -692,9 +692,9 @@ surface PanelBiblioteca {
         InvestigadorSimplificaGrafo(grafo)
             -- Con confirmacion, sin numero. Con menos de tres nodos se
             -- rechaza con error (grafo.allium, SimplificarGrafo).
-        InvestigadorComparteTexto(investigador, slug, email)
-            -- Pide solo el email; sin eleccion de rol.
-            -- multiusuario.allium, CompartirTexto.
+        InvestigadorInvitaPersonas(investigador, slug, emails)
+            -- Dialogo con varios correos, sin cuenta previa ni eleccion de
+            -- rol. Ver invitaciones.allium. Requiere activar el remitente.
         InvestigadorPublicaTexto(investigador, slug)
             -- Muestra la URL publica para copiar. multiusuario.allium, PublicarTexto.
         InvestigadorDespublicaTexto(investigador, publicacion)

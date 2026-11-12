@@ -36,6 +36,7 @@ except Exception:
 biblioteca_actual: ContextVar[str | None] = ContextVar("biblioteca_actual", default=None)
 persona_actual: ContextVar[str | None] = ContextVar("persona_actual", default=None)
 persona_nombre_actual: ContextVar[str | None] = ContextVar("persona_nombre_actual", default=None)
+correo_verificado_actual: ContextVar[str | None] = ContextVar("correo_verificado_actual", default=None)
 es_admin_actual: ContextVar[bool] = ContextVar("es_admin_actual", default=False)
 
 _cache_persona: dict[str, tuple[str | None, bool]] = {}
@@ -62,16 +63,21 @@ def _biblioteca_compartida(uid: str, slug: str) -> str | None:
 
 
 def otorgar_permiso(biblioteca_origen: str, slug: str, beneficiaria_uid: str,
-                     beneficiaria_email: str, otorgado_por: str) -> None:
+                     beneficiaria_email: str, otorgado_por: str, permiso_id: str | None = None) -> None:
     from datetime import datetime, timezone
-    firestore.client().collection("permisos").add({
+    datos = {
         "bibliotecaOrigen": biblioteca_origen,
         "slug": slug,
         "beneficiariaUid": beneficiaria_uid,
         "beneficiariaEmail": beneficiaria_email,
         "otorgadoPor": otorgado_por,
         "otorgadoEn": datetime.now(timezone.utc),
-    })
+    }
+    permisos = firestore.client().collection("permisos")
+    if permiso_id:
+        permisos.document(permiso_id).set(datos)
+    else:
+        permisos.add(datos)
 
 
 def permisos_compartidos_conmigo(uid: str) -> list[dict]:
@@ -178,12 +184,15 @@ async def middleware_biblioteca(request, call_next):
     autenticado = False
     token_persona = persona_actual.set(None)
     token_nombre = persona_nombre_actual.set(None)
+    token_correo = correo_verificado_actual.set(None)
     if crudo:
         try:
             decoded = fb_auth.verify_id_token(crudo)
             persona_actual.reset(token_persona)
             token_persona = persona_actual.set(decoded["uid"])
             persona_nombre_actual.set(decoded.get("name") or decoded.get("email") or decoded["uid"])
+            if decoded.get("email_verified") is True:
+                correo_verificado_actual.set(decoded.get("email"))
             bib, admin = _datos_persona(decoded["uid"])
             m = _RE_SLUG_EN_PATH.match(request.url.path)
             if m:
@@ -198,10 +207,12 @@ async def middleware_biblioteca(request, call_next):
     if _EN_CLOUD_RUN and not autenticado:
         persona_actual.reset(token_persona)
         persona_nombre_actual.reset(token_nombre)
+        correo_verificado_actual.reset(token_correo)
         return JSONResponse({"detail": "No autenticado"}, status_code=401)
     if _EN_CLOUD_RUN and not bib:
         persona_actual.reset(token_persona)
         persona_nombre_actual.reset(token_nombre)
+        correo_verificado_actual.reset(token_correo)
         return JSONResponse({"detail": "Tu biblioteca todavía no está disponible"}, status_code=403)
     token_bib = biblioteca_actual.set(bib)
     token_admin = es_admin_actual.set(admin)
@@ -211,6 +222,7 @@ async def middleware_biblioteca(request, call_next):
         biblioteca_actual.reset(token_bib)
         persona_actual.reset(token_persona)
         persona_nombre_actual.reset(token_nombre)
+        correo_verificado_actual.reset(token_correo)
         es_admin_actual.reset(token_admin)
 
 

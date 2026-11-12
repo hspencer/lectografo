@@ -60,6 +60,7 @@ use "./recorrido.allium" as recorrido
 use "./surfaces.allium" as surfaces
 use "./edicion-texto.allium" as edicion
 use "./multiusuario.allium" as multiusuario
+use "./invitaciones.allium" as invitaciones
 
 ------------------------------------------------------------
 -- Configuracion del modulo

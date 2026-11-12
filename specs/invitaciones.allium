@@ -1,0 +1,134 @@
+-- allium: 3
+-- Invitaciones a un texto por correo. Implementado; activacion en produccion
+-- pendiente de configurar el remitente y el servicio de envio.
+
+use "./multiusuario.allium" as multiusuario
+use "./surfaces.allium" as surfaces
+
+external entity ServicioCorreo {
+    configurado: Boolean
+}
+
+given {
+    correo: ServicioCorreo
+}
+
+contract EnvioPrivado {
+    enviar: (destinataria: String, titulo: String, enlace: String) -> Boolean
+
+    @invariant DestinatariasSeparadas
+        -- Cada persona recibe un mensaje individual; nunca ve la lista de
+        -- otros correos invitados. El enlace es opaco e impredecible.
+
+    @invariant EnvioNoImplicaEntrega
+        -- true significa que el servicio acepto el correo para su envio,
+        -- no que el mensaje llego a la bandeja de entrada.
+}
+
+entity Invitacion {
+    biblioteca_origen: multiusuario/Biblioteca
+    slug: String
+    destinataria_email: String
+    titulo: String
+    invitada_por: multiusuario/Persona
+    creada_en: Timestamp
+    vence_en: Timestamp
+    estado: preparada | enviada | error_envio | aceptada
+    aceptada_por: multiusuario/Persona? when estado = aceptada
+
+    transitions estado {
+        preparada -> enviada
+        preparada -> error_envio
+        preparada -> aceptada
+        enviada -> aceptada
+        terminal: error_envio, aceptada
+    }
+}
+
+config {
+    max_destinatarias: Integer = 20
+    vigencia: Duration = 14.days
+}
+
+rule InvitarPersonas {
+    when: InvestigadorInvitaPersonas(persona, slug, emails)
+    requires: correo.configurado
+    requires: emails.count > 0 and emails.count <= config.max_destinatarias
+    let origen = multiusuario/biblioteca_de_slug(persona, slug)
+    requires: origen != null
+    for email in emails:
+        ensures: Invitacion.created(
+            biblioteca_origen: origen,
+            slug: slug,
+            destinataria_email: normalizar_email(email),
+            titulo: titulo_del_texto(origen, slug),
+            invitada_por: persona,
+            creada_en: now,
+            vence_en: now + config.vigencia,
+            estado: preparada
+        )
+
+    @guidance
+        -- No se requiere una cuenta previa. Se validan todos los correos y
+        -- se deduplican antes de iniciar el envio. Cada destinataria obtiene
+        -- su resultado; un rechazo no oculta los envios que si se aceptaron.
+        -- El mensaje indica quien invita, el texto, el enlace, la vigencia y
+        -- que debe entrar con Google usando exactamente el correo invitado.
+}
+
+rule AceptarInvitacion {
+    when: PersonaAceptaInvitacion(persona, invitacion, correo_verificado)
+    requires: invitacion.estado in {preparada, enviada, aceptada}
+    requires: invitacion.estado = aceptada or now < invitacion.vence_en
+    requires: correo_verificado != null
+    requires: normalizar_email(correo_verificado) = invitacion.destinataria_email
+    requires: invitacion.aceptada_por = null or invitacion.aceptada_por = persona
+    ensures:
+        invitacion.estado = aceptada
+        invitacion.aceptada_por = persona
+        AccesoConcedidoUnaVez(persona, invitacion)
+        AbrirTextoInvitado(persona, invitacion.biblioteca_origen, invitacion.slug)
+
+    @guidance
+        -- La identidad procede del token verificado por el servidor, nunca
+        -- de un correo declarado en el formulario. Una cuenta distinta o
+        -- con correo sin verificar no obtiene permiso. Reabrir el mismo
+        -- enlace con la cuenta que lo acepto no duplica el permiso.
+        -- La invitacion apunta al original; sus derechos son los mismos que
+        -- los de cualquier colaboradora, incluido volver a invitar.
+}
+
+rule RegistrarEnvio {
+    when: invitacion: Invitacion.created
+    requires: correo.configurado
+    let aceptada = servicio_acepta_envio(invitacion)
+    ensures:
+        if aceptada:
+            invitacion.estado = enviada
+        else:
+            invitacion.estado = error_envio
+}
+
+surface InvitarAlTexto {
+    facing investigador: surfaces/Investigador
+    provides:
+        InvestigadorInvitaPersonas(investigador, slug, emails)
+        PersonaAceptaInvitacion(investigador, invitacion, correo_verificado)
+
+    contracts:
+        demands EnvioPrivado
+
+    @guarantee DestinoTrasElPrimerLogin
+        -- El enlace conserva su destino durante el login. Si hay otra cuenta
+        -- abierta, se pide elegir la invitada; nunca se abre el grafo ajeno.
+        -- No se requiere recargar manualmente al completar el primer login.
+}
+
+deferred normalizar_email    -- see: src/invitaciones.py: normalizar_email
+    -- (email: String) -> String
+deferred titulo_del_texto    -- see: src/app.py: invitar_a_documento
+    -- (biblioteca, slug) -> String
+deferred servicio_acepta_envio    -- see: src/invitaciones.py: enviar_invitaciones
+    -- (invitacion: Invitacion) -> Boolean
+
+open question "Que remitente y servicio de correo se usaran en produccion? Sin esa configuracion no se pueden enviar invitaciones reales."
