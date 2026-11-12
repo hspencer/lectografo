@@ -791,7 +791,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 }
 
 .btn-inline {
-  padding: 1px var(--sn-s-2); font-size: var(--sn-fs-xs);
+  padding: var(--sn-s-1) var(--sn-s-2); font-size: var(--sn-fs-xs);
   border: var(--sn-hair); border-radius: var(--sn-radius-s);
   background: none; cursor: pointer; color: var(--sn-ink-soft);
   font-family: var(--sn-font-text); transition: all var(--sn-dur-1);
@@ -825,11 +825,13 @@ tbody tr:hover td { background: var(--sn-sunk); }
 .bib-subtitulo { font-size: var(--sn-fs-sm); color: var(--sn-ink-soft); }
 
 #biblioteca-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  align-items: start;          /* cada tarjeta toma su altura natural */
-  gap: var(--sn-s-3);
+  columns: 200px;               /* masonry: fluye por columna, no por fila */
+  column-gap: var(--sn-s-3);
   max-width: var(--sn-shell);
+}
+#biblioteca-grid > * {
+  break-inside: avoid;          /* una tarjeta no se corta entre columnas */
+  margin-bottom: var(--sn-s-3);
 }
 
 .bib-card-sin-procesar { opacity: .82; }
@@ -1046,9 +1048,13 @@ tbody tr:hover td { background: var(--sn-sunk); }
    esquina superior derecha del minimapa, no en una franja aparte ──── */
 .menu-acciones { position: absolute; top: var(--sn-s-2); right: var(--sn-s-2); z-index: 10; }
 .menu-acciones .bib-btn-menu {
-  background: color-mix(in srgb, var(--sn-paper) 85%, transparent);
-  box-shadow: var(--sn-lift-paper);
-  backdrop-filter: blur(2px);
+  border: none; background: none; box-shadow: none;
+  color: var(--sn-ink-soft);
+  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--sn-ink) 35%, transparent));
+}
+.menu-acciones .bib-btn-menu:hover {
+  background: color-mix(in srgb, var(--sn-paper) 70%, transparent);
+  border-color: transparent;
 }
 .menu-acciones-drop {
   position: absolute; top: 100%; right: 0;
