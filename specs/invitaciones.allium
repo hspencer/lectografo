@@ -1,6 +1,6 @@
 -- allium: 3
--- Invitaciones a un texto por correo. Implementado; activacion en produccion
--- pendiente de guardar la credencial y activar Gmail SMTP en produccion.
+-- Invitaciones a un texto por correo. Implementado y conectado a Gmail SMTP
+-- mediante una credencial de Secret Manager.
 
 use "./multiusuario.allium" as multiusuario
 use "./surfaces.allium" as surfaces
@@ -23,6 +23,11 @@ contract EnvioPrivado {
     @invariant EnvioNoImplicaEntrega
         -- true significa que el servicio acepto el correo para su envio,
         -- no que el mensaje llego a la bandeja de entrada.
+
+    @invariant IdentidadVisualCompartida
+        -- El mensaje HTML conserva la identidad visual de la app: papel
+        -- calido, tinta oscura, acento rojo y enlace destacado. Incluye una
+        -- alternativa de texto plano y escapa los nombres y titulos.
 }
 
 entity Invitacion {
@@ -132,4 +137,4 @@ deferred servicio_acepta_envio    -- see: src/invitaciones.py: enviar_invitacion
     -- (invitacion: Invitacion) -> Boolean
 
 -- Remitente elegido: herbert.spencer@gmail.com, Gmail SMTP con TLS.
--- Activacion pendiente de que la persona titular cree y guarde su credencial.
+-- Credencial guardada por la persona titular, version 1; autenticacion probada.

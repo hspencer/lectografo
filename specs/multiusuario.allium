@@ -54,11 +54,11 @@
 --     - InvitarMiembro, RetirarMembresia (el backend ignora Membresia).
 --     - RevocarPermiso, ExportarBiblioteca, PublicarVersionDeGrafo.
 --
---   IMPLEMENTADO, PENDIENTE DE ACTIVAR EL ENVIO
+--   IMPLEMENTADO, CON GMAIL SMTP
 --     - Invitaciones por correo a multiples personas sin cuenta previa;
 --       aceptacion con el correo verificado y enlace al texto original.
---       Ver invitaciones.allium. Gmail elegido; falta guardar la credencial
---       y activar el envio en produccion.
+--       Ver invitaciones.allium. Credencial en Secret Manager, version 1;
+--       autenticacion SMTP verificada desde Cloud Run.
 -- ════════════════════════════════════════════════════════════════════════
 --
 -- Includes:

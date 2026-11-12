@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from email.headerregistry import Address
 from email.message import EmailMessage
 from email.errors import HeaderParseError, MessageDefect
+from html import escape
 import secrets
 import smtplib
 import ssl
@@ -15,6 +16,36 @@ from src.config import settings
 from src.contexto_biblioteca import otorgar_permiso
 
 VIGENCIA = timedelta(days=14)
+
+
+def crear_mensaje(destinataria: str, asunto: str, titulo: str, cuerpo: str, enlace: str) -> EmailMessage:
+    mensaje = EmailMessage()
+    mensaje["From"] = Address(display_name="Lectógrafo", addr_spec=settings.smtp_from)
+    mensaje["To"] = destinataria
+    mensaje["Subject"] = " ".join(asunto.splitlines())
+    mensaje.set_content(f"{titulo}\n\n{cuerpo}\n\nAbrir Lectógrafo:\n{enlace}\n")
+    parrafos = "".join(
+        '<p style="margin:0 0 18px;color:#6b6357;font-size:16px;line-height:1.65">'
+        + escape(parrafo).replace("\n", "<br>") + "</p>"
+        for parrafo in cuerpo.split("\n\n") if parrafo
+    )
+    # Paleta clara de Stella Nova; estilos inline para los clientes de correo.
+    mensaje.add_alternative(f'''<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;background:#f4f2ed;font-family:'IBM Plex Sans',Arial,Helvetica,sans-serif;color:#221f1a">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f2ed"><tr><td align="center" style="padding:32px 16px">
+<table role="presentation" width="560" cellspacing="0" cellpadding="0" style="width:100%;max-width:560px;background:#fcfbf7;border:1px solid #ddd6c7;border-top:3px solid #ae2d13;border-radius:10px">
+<tr><td style="padding:24px 28px;border-bottom:1px solid #ddd6c7;color:#ae2d13;font-size:13px;font-weight:700;letter-spacing:2px">LECTÓGRAFO</td></tr>
+<tr><td style="padding:28px">
+<h1 style="margin:0 0 24px;font-size:26px;line-height:1.25;font-weight:700;color:#221f1a">{escape(titulo)}</h1>
+{parrafos}
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:26px 0 8px"><tr><td style="background:#ae2d13;border-radius:5px">
+<a href="{escape(enlace, quote=True)}" style="display:inline-block;padding:13px 20px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none">Entrar a Lectógrafo &rarr;</a>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:20px 28px;border-top:1px solid #ddd6c7;color:#6b6357;font-size:12px;line-height:1.5">Lectura y cartografía conceptual</td></tr>
+</table></td></tr></table></body></html>''', subtype="html")
+    return mensaje
 
 
 def normalizar_email(email: str) -> str:
@@ -63,13 +94,9 @@ def enviar_invitaciones(biblioteca: str, slug: str, titulo: str, emails: list[st
                 }
                 ref.set(invitacion)
                 link = f"{settings.app_url.rstrip('/')}/#invitacion:{ref.id}"
-                mensaje = EmailMessage()
-                mensaje["From"] = Address(display_name="Lectógrafo", addr_spec=settings.smtp_from)
-                mensaje["To"] = email
-                mensaje["Subject"] = "Invitación a «" + " ".join(titulo.splitlines()) + "» en Lectógrafo"
-                mensaje.set_content(
+                cuerpo = (
                     f"{nombre} te invita a colaborar en «{titulo}» en Lectógrafo.\n\n"
-                    f"Abre este enlace e inicia sesión con Google usando exactamente el correo {email}:\n{link}\n\n"
+                    f"Inicia sesión con Google usando exactamente el correo {email}.\n\n"
                     "No necesitas haber ingresado antes. Al autenticarte, se abrirá directamente el texto y su mapa conceptual.\n\n"
                     "Podrás enriquecer el mismo grafo con conceptos y relaciones, añadir glosas con tu autoría "
                     "y compartirlo con otras personas.\n\n"
@@ -77,6 +104,7 @@ def enviar_invitaciones(biblioteca: str, slug: str, titulo: str, emails: list[st
                     "Puedes aceptar esta invitación durante los próximos 14 días. "
                     "Si no esperabas esta invitación, puedes ignorarla.\n"
                 )
+                mensaje = crear_mensaje(email, f"Invitación a «{titulo}» en Lectógrafo", titulo, cuerpo, link)
                 try:
                     cliente.send_message(mensaje)
                 except (smtplib.SMTPException, OSError):

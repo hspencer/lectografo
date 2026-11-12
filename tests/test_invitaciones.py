@@ -73,9 +73,14 @@ class InvitacionesTest(unittest.TestCase):
             mensaje = llamada.args[0]
             self.assertNotIn("Cc", mensaje)
             self.assertNotIn("Bcc", mensaje)
-            self.assertIn(str(mensaje["To"]), mensaje.get_content())
-            self.assertIn("Timeo", mensaje.get_content())
-            self.assertIn("/#invitacion:", mensaje.get_content())
+            texto = mensaje.get_body(preferencelist=("plain",)).get_content()
+            html = mensaje.get_body(preferencelist=("html",)).get_content()
+            self.assertIn(str(mensaje["To"]), texto)
+            self.assertIn("Timeo", texto)
+            self.assertIn("/#invitacion:", texto)
+            self.assertIn("LECTÓGRAFO", html)
+            self.assertIn("#ae2d13", html)
+            self.assertIn("/#invitacion:", html)
         self.assertFalse(self.datos["permisos"], "El correo por sí solo no da acceso")
         token = next(k for k, v in self.datos["invitaciones"].items() if v["destinatariaEmail"] == "nueva@example.org")
         info = self.client.get(f"/api/publico/invitaciones/{token}")
@@ -116,6 +121,15 @@ class InvitacionesTest(unittest.TestCase):
         self.assertEqual(r.status_code, 404)
         self.smtp.send_message.assert_not_called()
         self.assertFalse(self.datos["invitaciones"])
+
+    def test_html_escapa_el_texto_y_conserva_version_plana(self):
+        mensaje = invitaciones.crear_mensaje("nueva@example.org", "Invitación", '<script>Timeo</script>',
+                                             'Hola <img src=x onerror="alert(1)">', "https://lectografo.web.app/#invitacion:token")
+        html = mensaje.get_body(preferencelist=("html",)).get_content()
+        self.assertIn("&lt;script&gt;Timeo&lt;/script&gt;", html)
+        self.assertNotIn("<script>", html)
+        self.assertNotIn("<img", html)
+        self.assertIsNotNone(mensaje.get_body(preferencelist=("plain",)))
 
     def test_smtp_real_exige_configuracion_y_tls(self):
         with patch.object(invitaciones.settings, "smtp_host", None):

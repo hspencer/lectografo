@@ -117,7 +117,7 @@ Persisten estas divergencias, documentadas en los módulos correspondientes:
 
 Estas limitaciones no se han convertido en funciones nuevas durante esta revisión.
 
-## Invitaciones por correo — preparadas, sin activar el envío
+## Invitaciones por correo
 
 El diálogo permite hasta 20 correos por envío, sin exigir una cuenta previa.
 Cada persona recibe un mensaje individual con un enlace de 14 días. El servidor
@@ -126,7 +126,7 @@ el enlace conserva el destino durante el login y abre el texto original.
 Los fallos de envío se informan por destinatario. Reabrir una invitación aceptada
 con la misma cuenta no duplica el permiso.
 
-Antes de publicar esta función hay que configurar `SMTP_HOST`, `SMTP_PORT`
+El envío se configura mediante `SMTP_HOST`, `SMTP_PORT`
 (465 o 587), `SMTP_USER`, `SMTP_PASSWORD` y `SMTP_FROM` en Cloud Run.
 La contraseña debe proceder de Secret Manager. `APP_URL` es el origen público
 de la aplicación; nunca se toma del formulario del cliente. Sin configuración,
@@ -134,9 +134,11 @@ el servicio informa que el correo no está disponible y no crea invitaciones.
 Remitente elegido: `herbert.spencer@gmail.com`, por Gmail SMTP con TLS
 (`smtp.gmail.com:465`). Secret Manager está habilitado y el secreto
 `lectografo-smtp-password` está creado; la identidad de Cloud Run tiene acceso
-solo a este secreto. Falta que la persona titular genere una contraseña de
-aplicación de Google y la guarde como nueva versión del secreto. Después se
-configurará Cloud Run y se publicará la función. No se han enviado mensajes reales.
+solo a este secreto. La persona titular guardó la versión 1 de la contraseña
+de aplicación y se verificó la autenticación SMTP desde Cloud Run sin leer ni
+mostrar el secreto. Los correos comparten el diseño de la app, con HTML y una
+alternativa de texto plano. La aceptación por Gmail no demuestra recepción en
+la bandeja de entrada.
 
 ## Notas al pie
 
