@@ -2256,6 +2256,15 @@ async function abrirFichaModal(slug) {
   const titulo = m.titulo || slug.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
   document.getElementById("ficha-modal-titulo").textContent = `Ficha — ${titulo}`;
 
+  // Compartido con: la colaboración es plana, esto es solo informativo
+  const compartidosEl = document.getElementById("fm-compartidos");
+  compartidosEl.hidden = true;
+  apiFetch(`/api/compartir/${encodeURIComponent(slug)}`).then(({ emails }) => {
+    if (!emails?.length) return;
+    compartidosEl.innerHTML = `${ico("users",11)} Compartido con: ${emails.map(esc).join(", ")}`;
+    compartidosEl.hidden = false;
+  }).catch(() => {});
+
   document.getElementById("ficha-modal").hidden = false;
 }
 

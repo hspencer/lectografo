@@ -18,9 +18,9 @@ from pydantic import BaseModel, Field
 
 from src.config import settings
 from src.contexto_biblioteca import (
-    _DirectorioPorBiblioteca, exigir_admin, exigir_duena, middleware_biblioteca,
+    _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
     biblioteca_actual, persona_actual, otorgar_permiso,
-    permisos_compartidos_conmigo, nombre_de_biblioteca,
+    permisos_compartidos_conmigo, nombre_de_biblioteca, emails_con_acceso,
     publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion,
 )
 from src.models.extraccion import ResultadoExtraccion
@@ -423,6 +423,16 @@ def compartir_documento(payload: CompartirPayload):
     return {"ok": True}
 
 
+@app.get("/api/compartir/{slug}")
+def listar_compartidos(slug: str):
+    """Con quién está compartido este texto -- la colaboración es plana, así
+    que esto es solo informativo (la Ficha lo muestra como "Compartido con")."""
+    bib = biblioteca_actual.get()
+    if not bib:
+        raise HTTPException(401, "No autenticado")
+    return {"emails": emails_con_acceso(bib, slug)}
+
+
 # ── Publicación: URL de solo lectura, sin sesión ──────────────────────────────
 
 class PublicarPayload(BaseModel):
@@ -788,7 +798,6 @@ async def procesar_extraccion(slug: str, payload: ProcesarPayload = ProcesarPayl
     """Dispara la extracción LLM de un transcript en segundo plano.
     Si force=True, elimina la extracción y validación previas antes de re-extraer.
     """
-    exigir_duena()  # "editora" no paga la inferencia de la dueña
     tarea = _TAREAS.get(slug, {})
     if isinstance(tarea, dict) and tarea.get("estado") == "procesando":
         return {"ok": False, "error": "Ya hay una extracción en curso para este texto"}
@@ -978,7 +987,6 @@ def simplificar_grafo(slug: str):
     """Sintetiza el grafo a los conceptos seguros de conservar: el LLM decide
     cuáles (no se le pide una cantidad) y oculta el resto (reversible con
     DELETE, que limpia conceptos_ocultos)."""
-    exigir_duena()  # "editora" no paga la inferencia de la dueña
     from src.llm import get_llm
     from src.pipeline.simplificacion import simplificar
 
@@ -1946,7 +1954,6 @@ async def cancelar_extraccion(slug: str):
 def resetear_extraccion(slug: str):
     """Des-procesa un texto: borra el grafo completo (extracción + validación +
     sesiones) pero conserva el archivo de transcript en disco."""
-    exigir_duena()
     _TAREAS.pop(slug, None)
     sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",
                "_consolidacion.json", "_metadatos.json"]
@@ -1965,7 +1972,6 @@ def resetear_extraccion(slug: str):
 def eliminar_texto_completo(slug: str):
     """Elimina completamente un texto: grafo + transcript.
     Irreversible: borra el archivo fuente de disco."""
-    exigir_duena()
     # Primero resetear el grafo
     _TAREAS.pop(slug, None)
     sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",
