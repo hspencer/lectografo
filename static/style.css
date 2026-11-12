@@ -399,6 +399,13 @@ html, body {
   margin: 2px 2px 2px 0;
 }
 
+/* Origen/destino en la tabla de Relaciones: fijos, no editables -- sin
+   fondo ni borde para distinguirlos de Tipo/Etiqueta, que sí se editan. */
+.rel-concepto-fijo {
+  background: transparent; border: none; padding: 0;
+  font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
+}
+
 .sinonimos-lista { display: flex; flex-wrap: wrap; gap: var(--sn-s-1); margin-top: var(--sn-s-2); }
 
 .label-propuesto {
@@ -792,6 +799,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 }
 .btn-inline:hover { background: var(--sn-nova-wash); color: var(--sn-nova); border-color: var(--sn-nova); }
 .btn-inline.danger:hover { background: var(--sn-danger-wash); color: var(--sn-danger); border-color: var(--sn-danger); }
+.btn-inline.btn-icon { padding: 3px; }
 
 .cell-editando { min-width: 120px; }
 
@@ -1033,6 +1041,27 @@ tbody tr:hover td { background: var(--sn-sunk); }
   display: flex; align-items: center; gap: 4px;
   font-size: var(--sn-fs-xs); color: var(--sn-ok); margin-bottom: var(--sn-s-1);
 }
+
+/* ── Menú de acciones (⋮) de la tarjeta de biblioteca ────────────── */
+.menu-acciones { position: relative; margin-left: auto; }
+.menu-acciones-drop {
+  position: absolute; bottom: 100%; right: 0;
+  z-index: 50;
+  display: flex; flex-direction: column;
+  background: var(--sn-paper); border: var(--sn-hair);
+  border-radius: var(--sn-radius); box-shadow: var(--sn-lift);
+  padding: var(--sn-s-1); margin-bottom: 4px;
+  min-width: 160px;
+}
+.menu-acciones-item {
+  display: flex; align-items: center; gap: var(--sn-s-2);
+  padding: var(--sn-s-2) var(--sn-s-2); font-size: var(--sn-fs-xs);
+  border: none; border-radius: var(--sn-radius-s); background: none;
+  color: var(--sn-ink-soft); cursor: pointer; text-align: left;
+  font-family: var(--sn-font-text); white-space: nowrap;
+}
+.menu-acciones-item:hover { background: var(--sn-nova-wash); color: var(--sn-nova); }
+.menu-acciones-item.danger:hover { background: var(--sn-danger-wash); color: var(--sn-danger); }
 
 /* ── Modal: Ficha bibliográfica ──────────────────────────────────── */
 #ficha-modal {

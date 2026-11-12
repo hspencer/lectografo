@@ -45,6 +45,7 @@ function ico(name, size=14) {
     "link":           `<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>`,
     "notebook-pen":   `<path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>`,
     "maximize-2":     `<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>`,
+    "more-vertical":  `<circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>`,
     "refresh-cw":     `<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>`,
     "skip-forward":   `<polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/>`,
     "terminal":       `<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>`,
@@ -55,6 +56,14 @@ function ico(name, size=14) {
   };
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name]||""}</svg>`;
 }
+
+// Menú de acciones (⋮) de las tarjetas de biblioteca: un solo listener
+// global cierra cualquier menú abierto al hacer clic afuera o Escape.
+function cerrarMenusAcciones() {
+  document.querySelectorAll(".menu-acciones-drop").forEach(d => d.hidden = true);
+}
+document.addEventListener("click", cerrarMenusAcciones);
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarMenusAcciones(); });
 
 // ════════════════════════════════════════════════════════════════════════
 // API helpers
@@ -342,10 +351,15 @@ function renderBiblioteca(exts) {
           : `<div class="bib-card-cita muted bib-sin-ficha">Sin ficha bibliográfica</div>`}
       </div>
       <div class="bib-card-footer">
-        <button class="btn-inline bib-btn-ficha" data-slug="${esc(e.slug)}" title="Editar ficha bibliográfica">${ico("edit-2")} Ficha</button>
-        ${e.compartido ? "" : `<button class="btn-inline bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" title="Compartir con otra persona">${ico("users")} Compartir</button>
-        <button class="btn-inline bib-btn-publicar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" data-publicado="0" title="Publicar como URL de solo lectura">${ico("link")} Publicar</button>
-        <button class="btn-inline danger bib-btn-repro" data-slug="${esc(e.slug)}" title="Re-extraer con el LLM">${ico("refresh-cw")} Re-procesar</button>`}
+        <div class="menu-acciones">
+          <button class="btn-inline bib-btn-menu" data-slug="${esc(e.slug)}" title="Acciones">${ico("more-vertical")}</button>
+          <div class="menu-acciones-drop" hidden>
+            <button class="menu-acciones-item bib-btn-ficha" data-slug="${esc(e.slug)}">${ico("edit-2")} Ficha</button>
+            ${e.compartido ? "" : `<button class="menu-acciones-item bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}">${ico("users")} Compartir</button>
+            <button class="menu-acciones-item bib-btn-publicar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" data-publicado="0">${ico("link")} Publicar</button>
+            <button class="menu-acciones-item danger bib-btn-repro" data-slug="${esc(e.slug)}">${ico("refresh-cw")} Re-procesar</button>`}
+          </div>
+        </div>
       </div>
     </div>`;
   }).join("");
@@ -379,6 +393,20 @@ function renderBiblioteca(exts) {
   grid.querySelectorAll(".bib-btn-publicar").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); publicarDocumento(btn.dataset.slug, btn.dataset.titulo, btn); })
   );
+
+  // Menú de acciones (⋮): abrir/cerrar, y cerrar al elegir una acción
+  grid.querySelectorAll(".bib-btn-menu").forEach(btn => {
+    const drop = btn.nextElementSibling;
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const abrir = drop.hidden;
+      cerrarMenusAcciones();
+      drop.hidden = !abrir;
+    });
+    drop.querySelectorAll(".menu-acciones-item").forEach(item =>
+      item.addEventListener("click", () => { drop.hidden = true; })
+    );
+  });
 
   // Toggle log panel
   grid.querySelectorAll(".bib-btn-log").forEach(btn =>
@@ -1715,7 +1743,7 @@ function renderConceptos() {
     const sins=(n.sinonimos_candidatos||[]).slice(0,4).map(s=>`<span class="tag">${esc(s)}</span>`).join("");
     const mas=(n.sinonimos_candidatos||[]).length>4?`<span class="muted" style="font-size:11px">+${n.sinonimos_candidatos.length-4}</span>`:"";
     const checked = conceptosState.seleccionados.has(n.id) ? "checked" : "";
-    tr.innerHTML=`<td><input type="checkbox" class="concepto-check" ${checked}></td><td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline" data-edit-c="${esc(n.id)}">${ico("edit-2")} Editar</button> <button class="btn-inline danger" data-del-c="${esc(n.id)}">${ico("trash-2")} Eliminar</button></td>`;
+    tr.innerHTML=`<td><input type="checkbox" class="concepto-check" ${checked}></td><td class="mono muted" style="font-size:11px">${esc(n.id)}</td><td class="c-label">${esc(n.label)}${n.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td style="text-align:right">${n.menciones}</td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${n.confianza.toFixed(2)}</span></div></td><td>${sins}${mas}</td><td><button class="btn-inline btn-icon" data-edit-c="${esc(n.id)}" title="Editar">${ico("edit-2")}</button> <button class="btn-inline danger" data-del-c="${esc(n.id)}">${ico("trash-2")} Eliminar</button></td>`;
     tbody.appendChild(tr);
     tr.querySelector(".concepto-check").addEventListener("click", e => {
       e.stopPropagation();
@@ -1814,11 +1842,10 @@ function renderRelaciones() {
   const tbody=document.getElementById("relaciones-tbody"); tbody.innerHTML="";
   rows.forEach(l=>{
     const lo=nById[l.source]?.label||l.source, ld=nById[l.target]?.label||l.target;
-    const to=nById[l.source]?.tipo, td=nById[l.target]?.tipo;
     const cw=Math.round(l.confianza*56);
     const tr=document.createElement("tr"); tr.dataset.id=l.id;
     tr.className = "relacion-fila" + (l.id===relacionExpandidaId ? " active" : "");
-    tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(l.id)}</td><td><span class="tag ${to}">${esc(lo)}</span></td><td class="r-tipo"><span class="tag">${esc(l.tipo||"—")}</span></td><td><span class="tag ${td}">${esc(ld)}</span></td><td style="text-align:center"><button class="bidir-toggle ${l.bidireccional?"on":""}" data-bidir="${l.id}" title="${l.bidireccional?"Bidireccional":"Unidireccional"}">${l.bidireccional?"↔":"→"}</button></td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${l.confianza.toFixed(2)}</span></div></td><td class="r-etiqueta">${esc(l.etiqueta||"")}${l.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td><button class="btn-inline" data-edit-r="${esc(l.id)}">${ico("edit-2")} Editar</button> <button class="btn-inline danger" data-del-r="${esc(l.id)}">${ico("trash-2")} Eliminar</button></td>`;
+    tr.innerHTML=`<td class="mono muted" style="font-size:11px">${esc(l.id)}</td><td style="text-align:center"><button class="bidir-toggle ${l.bidireccional?"on":""}" data-bidir="${l.id}" title="${l.bidireccional?"Bidireccional":"Unidireccional"}">${l.bidireccional?"↔":"→"}</button></td><td><span class="rel-concepto-fijo">${esc(lo)}</span></td><td class="r-tipo"><span class="tag">${esc(l.tipo||"—")}</span></td><td class="r-etiqueta">${esc(l.etiqueta||"")}${l.editado?` <span class="edited-mark">${ico("edit-2",11)}</span>`:""}</td><td><span class="rel-concepto-fijo">${esc(ld)}</span></td><td><div class="conf-bar-wrap"><span class="conf-bar" style="width:${cw}px"></span><span class="conf-val">${l.confianza.toFixed(2)}</span></div></td><td><button class="btn-inline" data-edit-r="${esc(l.id)}">${ico("edit-2")} Editar</button> <button class="btn-inline danger" data-del-r="${esc(l.id)}">${ico("trash-2")} Eliminar</button></td>`;
     tbody.appendChild(tr);
     tr.querySelector("[data-bidir]").addEventListener("click",e=>{
       e.stopPropagation();
