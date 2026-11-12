@@ -69,6 +69,8 @@ class AnotacionInvestigador(BaseModel):
     id: str
     objeto_anotado: str
     nota: str
+    autor_uid: Optional[str] = None
+    autor_nombre: Optional[str] = None
     creada_en: datetime = Field(default_factory=datetime.utcnow)
 
 

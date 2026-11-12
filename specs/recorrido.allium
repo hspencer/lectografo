@@ -431,9 +431,8 @@ value RecorridosAbiertos {
 -- No esta necesariamente mal. Es lo que corresponde a un instrumento de
 -- lectura: uno no guarda por donde paso los ojos. Pero es una decision, y
 -- conviene tenerla escrita, porque el resto del sistema va en direccion
--- contraria: los grafos persisten, las anotaciones persisten, los grafos
--- personales persisten. El recorrido es lo unico que el sistema deja
--- evaporarse.
+-- contraria: los grafos persisten, las anotaciones persisten. El recorrido
+-- es lo unico que el sistema deja evaporarse.
 --
 -- NOTA SOBRE LAS ADVERTENCIAS DEL CHECKER. `allium check` reporta
 -- OrigenDeRelacion, AristaOfrecida, Recorrido y RecorridosAbiertos como
@@ -659,7 +658,7 @@ deferred RecorridosAbiertos.activos    -- see: static/app.js: state.mapaCards
 
 open question "El objeto se llama trail pero es un walk: no restringe repeticion de aristas ni de nodos. Se adopta el nombre y se impone la restriccion (una arista no puede cruzarse dos veces en el mismo recorrido), o se conserva la libertad de repetir y se renombra a Paseo? La repeticion es hoy la unica forma de recorrer un Bucle como bucle."
 
-open question "El Recorrido es el unico objeto del sistema que no persiste, mientras grafos, anotaciones y grafos personales si lo hacen. Debe poder fijarse un Recorrido como lectura autoral, con titulo, autor y anotaciones por paso, convirtiendolo de value en entity? Y si se fija: queda ligado a la version del grafo que lo hizo posible, o se degrada cuando el grafo cambia bajo el?"
+open question "El Recorrido es el unico objeto del sistema que no persiste, mientras grafos y anotaciones si lo hacen. Debe poder fijarse un Recorrido como lectura autoral, con titulo, autor y anotaciones por paso, convirtiendolo de value en entity? Y si se fija: queda ligado a la version del grafo que lo hizo posible, o se degrada cuando el grafo cambia bajo el?"
 
 open question "frase_revelada degrada de frase_completa a etiqueta a tipo sin senal visual alguna. El investigador que camina no distingue una arista citada del texto de una inventada para reparar la topologia. Debe el recorrido marcar el origen de cada arista que cruza (textual / topologica / autoral), o esa distincion pertenece solo a la fase de validacion?"
 

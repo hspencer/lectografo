@@ -11,6 +11,7 @@
 --   - Persistencia en JSON con versionado
 --   - Operaciones de fusion y particion derivadas de decisiones validadas
 --   - Simplificacion reversible (ocultar conceptos sin borrarlos)
+--   - Eliminar conceptos y relaciones (ocultar lo propuesto, borrar lo manual)
 --   - Reset completo del grafo de un texto, conservando el texto fuente
 --
 -- Excludes:
@@ -20,6 +21,12 @@
 use "./transcripcion.allium" as transcripcion
 use "./extraccion.allium" as extraccion
 use "./validacion.allium" as validacion
+
+config {
+    -- Por debajo de este numero de nodos el grafo ya es demasiado chico para
+    -- simplificar y SimplificarGrafo se rechaza.
+    min_nodos_para_simplificar: Integer = 3
+}
 
 ------------------------------------------------------------
 -- Nodo
@@ -101,9 +108,13 @@ entity Grafo {
     relaciones: Relacion with grafo = this
     bucles: Bucle with grafo = this
 
-    -- Ids de conceptos (propuestos o manuales) que la simplificacion oculto.
+    -- Ids de conceptos (propuestos o manuales) que la simplificacion oculto,
+    -- o conceptos propuestos que la investigadora elimino (EliminarConcepto).
     -- Siguen en los datos; solo no generan Nodo (ver OcultoNoGeneraNodo).
     conceptos_ocultos: Set<String>
+    -- Ids de relaciones propuestas por el LLM que la investigadora elimino
+    -- (EliminarRelacion). Siguen en los datos; solo no generan Relacion.
+    relaciones_ocultas: Set<String>
 
     -- Proyecciones utiles
     nodos_primitivos: nodos where primitivo in tipos
@@ -135,7 +146,8 @@ rule CrearGrafo {
         version: "1.0",
         creador: nombre_investigador(),       -- caja negra
         creado_en: now,
-        conceptos_ocultos: {}
+        conceptos_ocultos: {},
+        relaciones_ocultas: {}
     )
 
     @guidance
@@ -302,13 +314,14 @@ rule MaterializarNodoDesdeConceptoManual {
 -- ════ Simplificacion (ocultar / deshacer) ═══════════════
 
 rule SimplificarGrafo {
-    when: InvestigadorSimplificaGrafo(grafo, objetivo)
-    -- objetivo: cuantos conceptos conservar (la interfaz propone 12 o menos).
-    requires: objetivo < grafo.total_nodos
+    when: InvestigadorSimplificaGrafo(grafo)
+    requires: grafo.total_nodos >= config.min_nodos_para_simplificar
     -- El LLM activo recibe la lista de nodos ya materializados (label,
-    -- menciones y numero de relaciones de cada uno) y elige los que sostienen
-    -- el argumento central. No inventa nada: solo poda.
-    let conservar = nucleo_segun_llm(grafo, objetivo)   -- black box
+    -- confianza, menciones y numero de relaciones de cada uno) y elige los
+    -- SEGUROS de conservar: centrales y bien respaldados por el texto. No se
+    -- le pide una cantidad: decide el solo cuantos hacen falta para que el
+    -- nucleo se sostenga. No inventa nada: solo poda.
+    let conservar = nucleo_segun_llm(grafo)   -- black box
     ensures:
         for n in grafo.nodos:
             if not (n.id in conservar):
@@ -318,15 +331,14 @@ rule SimplificarGrafo {
         -- Acumulativa: simplificar un grafo ya simplificado oculta mas, nunca
         -- desoculta. Las relaciones con algun extremo oculto tampoco se
         -- materializan. No se borra ningun dato.
-        -- Si la respuesta del LLM no trae ningun id valido, se conservan los
-        -- primeros `objetivo` nodos en orden de materializacion -- no los mas
-        -- importantes. Usa el ProveedorActivo de la instancia, sin tope de
-        -- gasto (multiusuario.allium).
+        -- Si la respuesta del LLM no trae ningun id valido, no se oculta
+        -- nada (el grafo queda igual, nunca vacio). Usa el ProveedorActivo
+        -- de la instancia, sin tope de gasto (multiusuario.allium).
+        -- La interfaz pide solo confirmacion, sin numero.
         -- Limitacion conocida: los bucles NO se filtran; un Bucle puede seguir
         -- nombrando nodos ocultos (contradice BuclePerteneceAUnSoloGrafo
         -- mientras dure la simplificacion).
-        -- Cualquier re-extraccion hoy vacia conceptos_ocultos (deshace la
-        -- simplificacion sin aviso; ver edicion-texto.allium).
+        -- La re-extraccion conserva conceptos_ocultos (edicion-texto.allium).
 }
 
 rule DeshacerSimplificacion {
@@ -335,9 +347,48 @@ rule DeshacerSimplificacion {
     ensures: grafo.conceptos_ocultos = {}
 
     @guidance
-        -- Todo o nada: vuelve a mostrar TODOS los conceptos ocultos; no hay
-        -- desocultado individual. Hoy solo existe como operacion del sistema:
-        -- la interfaz no ofrece ningun control para deshacer.
+        -- Todo o nada: vuelve a mostrar TODOS los conceptos ocultos -- incluso
+        -- los conceptos propuestos que la investigadora habia eliminado a
+        -- mano (comparten el mismo conjunto). No toca relaciones_ocultas. No
+        -- hay desocultado individual. Hoy solo existe como operacion del
+        -- sistema: la interfaz no ofrece ningun control para deshacer.
+}
+
+-- ════ Eliminar conceptos y relaciones ═══════════════════
+
+rule EliminarConcepto {
+    when: InvestigadorEliminaConcepto(grafo, nodo)
+    requires: nodo.grafo = grafo
+    ensures:
+        if es_concepto_manual(nodo):
+            -- Un concepto manual se borra de verdad, junto con las
+            -- relaciones manuales que lo tocan (no quedan aristas colgando).
+            ConceptoManualBorrado(grafo: grafo, concepto_id: nodo.id)
+        else:
+            -- Un concepto propuesto por el LLM no puede borrarse del dato
+            -- crudo de la extraccion: se oculta, reversible.
+            grafo.conceptos_ocultos.add(nodo.id)
+
+    @guidance
+        -- Desde TablaConceptos, con confirmacion (surfaces.allium).
+}
+
+rule EliminarRelacion {
+    when: InvestigadorEliminaRelacion(grafo, relacion)
+    requires: relacion.grafo = grafo
+    ensures:
+        if es_relacion_manual(relacion):
+            not exists relacion
+        else:
+            -- Relacion propuesta por el LLM: se oculta, reversible (aunque
+            -- hoy no hay ninguna operacion que la desoculte).
+            grafo.relaciones_ocultas.add(relacion.id)
+
+    @guidance
+        -- Desde TablaRelaciones, con confirmacion (surfaces.allium).
+        --
+        -- La re-extraccion conserva tanto conceptos_ocultos como
+        -- relaciones_ocultas (edicion-texto.allium, ReExtraerPreservandoContexto).
 }
 
 -- ════ Reset completo ════════════════════════════════════
@@ -381,12 +432,14 @@ rule ResetearGrafo {
         -- edicion del texto fuente con todo su historial de revisiones (el
         -- texto vigente vuelve a ser el archivo original). Tambien descarta
         -- las sesiones de reconexion y consolidacion.
-        -- No toca los PermisoCompartido sobre ese texto (multiusuario.allium).
+        -- Borra tambien conceptos_ocultos y relaciones_ocultas.
+        -- No toca los PermisoCompartido ni la Publicacion de ese texto
+        -- (multiusuario.allium).
         -- Si hay una extraccion en curso, su registro de progreso se olvida
         -- pero la extraccion no se cancela: al terminar, vuelve a escribir su
         -- resultado.
-        -- La interfaz pide confirmacion. Disponible tambien para una
-        -- beneficiaria de un texto compartido.
+        -- La interfaz pide confirmacion. Disponible para cualquier persona
+        -- con acceso al texto, tambien una beneficiaria (colaboracion plana).
 }
 
 ------------------------------------------------------------
@@ -402,6 +455,11 @@ invariant RelacionNoTocaOcultos {
     for r in Relacion:
         not (r.origen.id in r.grafo.conceptos_ocultos)
             and not (r.destino.id in r.grafo.conceptos_ocultos)
+}
+
+invariant RelacionOcultaNoGeneraRelacion {
+    for r in Relacion:
+        not (r.id in r.grafo.relaciones_ocultas)
 }
 
 invariant NodoPerteneceASuGrafo {
@@ -428,7 +486,7 @@ open question "Permitir que un mismo nodo pertenezca a multiples grafos como ref
 
 open question "El calculo de densidad asume grafo dirigido sin auto-loops. Como cuenta densidad en presencia de bucles?"
 
-open question "Simplificacion: ¿se ofrece deshacer en la interfaz (hoy solo existe en el sistema), y se permite desocultar conceptos de a uno? ¿Deben filtrarse tambien los bucles que nombran nodos ocultos?"
+open question "Simplificacion y eliminacion: ¿se ofrece deshacer en la interfaz (hoy solo existe en el sistema y solo para conceptos), y se permite desocultar conceptos y relaciones de a uno? ¿Debe deshacer la simplificacion separarse de los conceptos eliminados a mano, que hoy comparten el mismo conjunto y vuelven juntos? ¿Deben filtrarse tambien los bucles que nombran nodos ocultos?"
 
 open question "ResetearGrafo borra tambien anotaciones, la ficha bibliografica y el historial de revisiones del texto fuente, contra lo que prometen InvestigadorAnota y EditorTexto (HistorialNoEsDestructivo). ¿Es lo querido para un reset, o esos registros deberian sobrevivirlo?"
 
@@ -451,8 +509,15 @@ deferred tipo_de_texto    -- see: src/persistencia/grafo.py: materializar_desde_
 deferred densidad_dirigida    -- see: src/pipeline/grafo.py
     -- (nodos: Integer, relaciones: Integer) -> Decimal
 deferred nucleo_segun_llm    -- see: src/pipeline/simplificacion.py: simplificar
-    -- (grafo: Grafo, objetivo: Integer) -> Set<String>
-    -- Ids de los nodos a conservar, elegidos por el LLM activo.
+    -- (grafo: Grafo) -> Set<String>
+    -- Ids de los nodos seguros de conservar, elegidos por el LLM activo sin
+    -- cantidad fija; todos los ids si la respuesta no trae ninguno valido.
+deferred es_concepto_manual    -- see: src/app.py: eliminar_concepto
+    -- (nodo: Nodo) -> Boolean
+    -- true si el nodo se materializo desde un validacion/ConceptoManual.
+deferred es_relacion_manual    -- see: src/app.py: eliminar_relacion
+    -- (relacion: Relacion) -> Boolean
+    -- true si la relacion la creo la investigadora (no la propuso el LLM).
 deferred tiene_datos_derivados    -- see: src/app.py: resetear_extraccion
     -- (texto: transcripcion/Transcripcion) -> Boolean
 deferred nombre_investigador    -- see: src/persistencia/grafo.py

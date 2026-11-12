@@ -38,8 +38,9 @@ actor Investigador {
     identified_by: multiusuario/Persona where nombre != ""
 }
 
+-- Por ahora solo Google (multiusuario.allium, SeleccionarProveedorDeInstancia).
 actor LLM {
-    identified_by: ServicioLLM where proveedor in {anthropic, openai, gemini, vertexai, ollama, lmstudio, openrouter}
+    identified_by: ServicioLLM where proveedor in {gemini, vertexai}
 }
 
 ------------------------------------------------------------
@@ -73,7 +74,8 @@ contract EvaluadorLLM {
 
     @guidance
         -- Cada proveedor (anthropic, openai, gemini, vertexai, ollama,
-        -- lmstudio) implementa este contrato detras de la misma interfaz.
+        -- lmstudio) implementa este contrato detras de la misma interfaz,
+        -- aunque por ahora solo gemini y vertexai se aceptan.
         -- vertexai comparte con gemini el cliente y el protocolo, pero no la
         -- cuenta ni el catalogo de modelos. lmstudio
         -- habla la API compatible con OpenAI que LM Studio expone en local;
@@ -97,7 +99,6 @@ config {
     -- Modo con que se abre el mapa de un grafo derivado (editor y sitio
     -- publicado). El investigador lo alterna con un unico control; la
     -- eleccion dura mientras la pagina siga abierta y no se guarda.
-    -- (El mapa de un grafo personal tiene su propio modo y abre en 2D.)
     modo_mapa_inicial: ModoMapa = tridimensional
 }
 
@@ -137,7 +138,7 @@ surface PanelValidacion {
             when decision in pendientes
         InvestigadorReanudaDecision(decision)
             when decision in diferidas
-        InvestigadorAgregaNota(transcripcion, objeto, nota)
+        InvestigadorAgregaNota(investigador, transcripcion, objeto, nota)
 
     @guarantee NingunaDecisionSeCierraAutomaticamente
         -- El sistema nunca resuelve una decision sin accion explicita
@@ -171,9 +172,12 @@ surface PanelValidacion {
 -- es el soporte espacial del recorrido; las tarjetas, su registro
 -- discursivo. Ver recorrido.allium, "La doble inscripcion".
 --
--- La misma surface se publica en el sitio estático en modo de solo
--- lectura: allí cada tarjeta muestra Concepto y Relaciones, sin Anotaciones
--- ni Vincular, y no se ofrece ninguna acción que escriba sobre el grafo.
+-- La misma surface se publica en modo de solo lectura por dos vias: el sitio
+-- estático (cada tarjeta muestra Concepto y Relaciones, sin Anotaciones ni
+-- Vincular) y la URL publica en vivo de una Publicacion (multiusuario.allium,
+-- PublicacionEsLecturaAnonima), donde se ven el mapa, las tablas y el texto
+-- pero se ocultan todas las acciones que escriben, anotan, vinculan o
+-- procesan. En ninguna de las dos se ofrece accion que escriba.
 
 surface VisualizacionGrafo {
     facing investigador: Investigador
@@ -192,7 +196,8 @@ surface VisualizacionGrafo {
             -- Secciones, todas plegadas al abrir, en este orden:
             --   Concepto     descripcion, cita directa, menciones, confianza, sinonimos
             --   Relaciones   las conexiones del nodo (ver recorrido/OrdenDeLaOferta)
-            --   Anotaciones  validacion/AnotacionInvestigador sobre el concepto
+            --   Anotaciones  glosas compartidas, con autora y fecha; las antiguas
+            --                sin identidad dicen "Autoria no registrada"
             --   Vincular     formulario para crear una relacion autoral
             p.nodo.descripcion_corta
             p.nodo.sinonimos_consolidados
@@ -240,7 +245,7 @@ surface VisualizacionGrafo {
             -- Las tarjetas abiertas sobreviven al cambio de modo.
         InvestigadorAjustaVista(grafo)
             -- Reencuadra el mapa para que quepa el grafo completo.
-        InvestigadorAgregaNota(grafo.transcripcion, objeto, nota)
+        InvestigadorAgregaNota(investigador, grafo.transcripcion, objeto, nota)
             -- Desde la seccion Anotaciones de una tarjeta; objeto = el nodo.
         InvestigadorCreaRelacion(grafo, origen, destino, tipo, etiqueta, bidireccional)
             -- Desde la seccion Vincular de una tarjeta; origen = el nodo de la
@@ -291,7 +296,8 @@ surface VisualizacionGrafo {
         -- de la lista ni sin etiqueta. El tipo tambien se escribe en un
         -- campo con autocompletar — sugiere extraccion/TipoRelacion mas los
         -- tipos ya presentes en el grafo, pero acepta cualquier texto libre
-        -- (ontologia abierta, igual que TablaRelaciones y el grafo personal).
+        -- (ontologia abierta, igual que TablaRelaciones). El destino puede
+        -- ser cualquier concepto, propuesto o manual.
 
     @guidance
         -- El investigador puede arrastrar nodos y hacer zoom; la legibilidad
@@ -324,14 +330,18 @@ surface TablaConceptos {
             -- Clic en la fila. Alterna: expande ese concepto (y pliega el que
             -- estuviera expandido) o lo pliega si ya lo estaba.
         InvestigadorEditaConcepto(grafo, nodo, label)
+            -- Edicion en linea del label, desde un boton de solo icono.
+        InvestigadorEliminaConcepto(grafo, nodo)
+            -- Con confirmacion. grafo.allium, EliminarConcepto.
         InvestigadorAgregaConcepto(grafo.transcripcion, label, descripcion?, tipo?)
             -- "Anadir concepto": la interfaz solo pide el label.
             -- validacion.allium, AgregarConceptoManual.
-        InvestigadorSimplificaGrafo(grafo, objetivo)
-            when grafo.total_nodos > 1
-            -- Pide a cuantos conceptos simplificar (propone 12 o el total si
-            -- es menor). grafo.allium, SimplificarGrafo. No hay control para
-            -- deshacer (DeshacerSimplificacion existe solo en el sistema).
+        InvestigadorSimplificaGrafo(grafo)
+            -- Solo pide confirmacion, sin numero. El boton se ofrece siempre;
+            -- con menos de config.min_nodos_para_simplificar nodos el sistema
+            -- lo rechaza con un error. grafo.allium, SimplificarGrafo. No hay
+            -- control para deshacer (DeshacerSimplificacion existe solo en el
+            -- sistema).
         InvestigadorSolicitaExtraccionDirigida(grafo.transcripcion, activo, prompt, conceptos_objetivo)
             when conceptos_objetivo.count > 0
             -- "Procesar con seleccionados": conceptos_objetivo = labels de las
@@ -387,6 +397,8 @@ surface TablaRelaciones {
         InvestigadorAlternaBidireccionalidad(grafo, relacion)
         InvestigadorEditaRelacion(grafo, relacion, tipo?, etiqueta?)
             -- El tipo se edita como texto libre (ontologia abierta).
+        InvestigadorEliminaRelacion(grafo, relacion)
+            -- Con confirmacion. grafo.allium, EliminarRelacion.
 
     related:
         TablaConceptos(grafo)
@@ -540,19 +552,20 @@ surface ConfiguracionProveedor {
     facing administradora: multiusuario/Administradora
     context activo: extraccion/ProveedorActivo
 
-    let modelos_locales = ModelosLocalesDisponibles(activo)
-
     exposes:
         activo.proveedor
         activo.modelo
-        activo.api_key_presente when activo.es_local = false
-        modelos_locales when activo.es_local = true
+        activo.api_key_presente
 
     provides:
         AdministradoraSeleccionaProveedor(administradora, activo, proveedor, modelo)
-            when proveedor in {anthropic, openai, gemini, vertexai}
+            when proveedor in {gemini, vertexai}
+            -- Solo dos opciones: "Vertex AI" (cuenta del proyecto, por
+            -- defecto) y "Gemini" (API key). anthropic, openai, ollama y
+            -- lmstudio no se ofrecen y el sistema los rechaza (decision
+            -- "por ahora", multiusuario.allium).
             -- modelo: de una lista sugerida por proveedor, o un nombre libre
-            -- ("Otro..."). Se rechaza si la api_key de ese proveedor no esta
+            -- ("Otro..."). gemini se rechaza si su api_key no esta
             -- configurada (vertexai no la necesita). Listas sugeridas, que
             -- NO comparten nombres entre gemini y vertexai:
             --   gemini:   gemini-flash-latest, gemini-pro-latest,
@@ -560,13 +573,6 @@ surface ConfiguracionProveedor {
             --             gemini-4-argon, gemini-4-carbon
             --   vertexai: gemini-2.5-flash, gemini-2.5-pro
             -- multiusuario.allium, SeleccionarProveedorDeInstancia.
-        AdministradoraSeleccionaProveedor(administradora, activo, proveedor, modelo)
-            when proveedor in {ollama, lmstudio}
-            -- modelo: elegido de la lista que devuelve en ese momento el
-            -- endpoint local del proveedor. Si el endpoint no responde, no
-            -- hay modelos que elegir y la surface lo dice.
-            -- El endpoint local no se elige aqui: es configuracion del
-            -- sistema (por defecto Ollama en :11434, LM Studio en :1234/v1).
 
     @guarantee ApiKeyNuncaSeExpone
         -- La api_key de proveedores remotos no aparece en ninguna surface
@@ -623,8 +629,8 @@ surface EditorTexto {
     @guarantee HistorialNoEsDestructivo
         -- Ninguna acción en esta surface elimina revisiones existentes.
         -- El historial sólo crece; nunca se trunca.
-        -- Excepciones reales: "Des-procesar" (ResetearGrafo) y cualquier
-        -- re-extraccion hoy borran el historial (edicion-texto.allium).
+        -- Excepcion real: "Des-procesar" (ResetearGrafo) borra el historial.
+        -- La re-extraccion ya lo conserva (edicion-texto.allium).
 
     @guarantee DesincronizacionVisible
         -- Si texto_desincronizado_desde != null, la surface lo señala
@@ -652,6 +658,10 @@ surface PanelBiblioteca {
             t.titulo
             t.estado
             t.metadatos
+            -- En la ficha: "Compartido con: <emails>", solo si hay alguno
+            -- (multiusuario.allium, ListarConQuienEstaCompartido).
+            for p in multiusuario/PermisoCompartido where slug = t.id:
+                p.beneficiaria_email
         -- Textos de otras bibliotecas compartidos conmigo, marcados como
         -- compartidos y con el nombre de la biblioteca de origen
         -- (multiusuario.allium, TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria).
@@ -672,11 +682,23 @@ surface PanelBiblioteca {
         CancelarExtraccion(ejecucion)
             when ejecucion.estado = en_curso
         InvestigadorEditaMetadatos(transcripcion, metadatos)
-            -- Editar ficha bibliográfica; funciona antes y después de extraer
+            -- Editar ficha bibliográfica; funciona antes y después de extraer.
+            -- Disponible tambien en los textos compartidos conmigo.
+        -- Las acciones de un texto ya procesado viven en un menu de acciones
+        -- en la esquina de su tarjeta. Tanto en textos propios como
+        -- compartidos ofrece Ficha, Compartir, Publicar/Despublicar y
+        -- Re-procesar (multiusuario.allium, colaboracion plana).
         InvestigadorComparteTexto(investigador, slug, email)
-            -- Boton "Compartir" en cada texto PROPIO (no en los compartidos
-            -- conmigo). Pide solo el email; sin eleccion de rol.
+            -- Pide solo el email; sin eleccion de rol.
             -- multiusuario.allium, CompartirTexto.
+        InvestigadorPublicaTexto(investigador, slug)
+            -- Muestra la URL publica para copiar. multiusuario.allium, PublicarTexto.
+        InvestigadorDespublicaTexto(investigador, publicacion)
+            -- multiusuario.allium, DespublicarTexto.
+            -- Estado real: la tarjeta no consulta si el texto ya esta
+            -- publicado; siempre dice "Publicar" al cargar la biblioteca, y
+            -- "Despublicar" solo aparece justo despues de publicar, en la
+            -- misma vista. Volver a publicar devuelve la misma URL.
 
     @guarantee ProgresoEnTiempoReal
         -- El conteo de tokens se actualiza en cada token generado,
@@ -740,12 +762,6 @@ deferred PasajesDeConcepto    -- see: static/app.js: _pasajesDeConcepto
     -- Una oracion termina en . ! o ?; los espacios se normalizan antes de
     -- dividir. Es busqueda literal: no reconoce flexiones ni parafrasis.
 
-deferred ModelosLocalesDisponibles    -- see: src/app.py: obtener_settings
-    -- (activo: extraccion/ProveedorActivo) -> List<String>
-    -- Los modelos que el endpoint local del proveedor activo reporta en el
-    -- momento de consultar (ollama: modelos instalados; lmstudio: modelos
-    -- que lista su API compatible con OpenAI). Lista vacia si no responde.
-
 ------------------------------------------------------------
 -- Preguntas abiertas
 ------------------------------------------------------------
@@ -758,11 +774,10 @@ open question "VisualizacionGrafoEnConstruccion: ¿la frase actualmente en proce
 
 open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstruccion cierra y muestra el grafo parcial hasta ese punto, o vuelve a PanelBiblioteca?"
 
--- DECISIÓN RESUELTA: El investigador selecciona el modelo local (Ollama o
--- LM Studio) de una lista consultada en tiempo real al endpoint del proveedor
--- (Ollama: /api/tags; LM Studio: /models de su API compatible con OpenAI).
--- El panel de configuración muestra los modelos disponibles y guarda la
--- selección en .env.
+-- DECISIÓN SUSPENDIDA (restriccion a Google, nov-2026): la seleccion de
+-- modelo local (Ollama o LM Studio) de una lista consultada en tiempo real
+-- al endpoint del proveedor salio de ConfiguracionProveedor junto con esos
+-- proveedores. Se retoma si se vuelven a aceptar (multiusuario.allium).
 
 -- DECISIÓN RESUELTA: El mapa abre en 3D por defecto (config.modo_mapa_inicial)
 -- con un único control para alternar a 2D, en una barra discreta de controles.
@@ -778,7 +793,6 @@ open question "¿Cuándo sesion.estado = abortada, la VisualizacionGrafoEnConstr
 -- espacial, no una vista secundaria aparte.
 
 -- DECISIÓN RESUELTA: La sección Vincular de la tarjeta acepta tipo de
--- relación LIBRE (ontología abierta), igual que TablaRelaciones y el grafo
--- personal — ya no está restringida al vocabulario orientativo cerrado. El
+-- relación LIBRE (ontología abierta), igual que TablaRelaciones — ya no está restringida al vocabulario orientativo cerrado. El
 -- campo se autocompleta con ese vocabulario mas los tipos ya presentes en
 -- el grafo, pero admite cualquier texto. Ver VincularEligeDestinoDeLaLista.

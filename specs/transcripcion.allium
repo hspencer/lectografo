@@ -13,6 +13,7 @@
 --   - Descarga real de YouTube (black box: YtDlp.descargar)
 --   - Transcripcion de audio a texto (black box: TranscripcionAutomatica.transcribir)
 
+use "./lectografo.allium" as lectografo
 use "./edicion-texto.allium" as edicion
 use "./multiusuario.allium" as multiusuario
 
@@ -192,7 +193,7 @@ rule NormalizarTranscripcion {
     when: InvestigadorSolicitaNormalizacion(transcripcion)
 
     requires: transcripcion.estado = raw
-    requires: length(transcripcion.texto_crudo) <= config.max_chars_por_prompt * 10
+    requires: length(transcripcion.texto_crudo) <= lectografo/config.max_chars_por_prompt * 10
 
     let fragmentos_limpios = particionar_y_limpiar(transcripcion.texto_crudo, transcripcion.tiene_timestamps)
 
@@ -220,8 +221,9 @@ rule EliminarTextoCompleto {
         -- Irreversible: borra el grafo completo (como ResetearGrafo en
         -- grafo.allium) y ademas el archivo del texto fuente. Se ofrece en la
         -- "zona de peligro" del editor de texto, con confirmacion, y la puede
-        -- invocar tambien una beneficiaria de un texto compartido
-        -- (multiusuario.allium). No borra los PermisoCompartido sobre el texto.
+        -- invocar cualquier persona con acceso, tambien una beneficiaria de
+        -- un texto compartido (colaboracion plana, multiusuario.allium). No
+        -- borra los PermisoCompartido ni la Publicacion del texto.
 }
 
 ------------------------------------------------------------

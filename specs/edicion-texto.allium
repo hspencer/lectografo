@@ -156,20 +156,24 @@ rule ReExtraerPreservandoContexto {
         -- nuevo texto quedan marcados como candidatos a revisión, pero
         -- no se eliminan automáticamente.
         --
-        -- DIVERGENCIA ACTIVA (perdida de datos en la app web). La re-extraccion
-        -- -- incluida la extraccion dirigida (extraccion.allium) -- fusiona
-        -- aditivamente los conceptos y relaciones nuevos con los previos y
-        -- conserva titulo, ficha, anotaciones, ediciones de conceptos y de
-        -- relaciones y relaciones manuales. Pero hoy DESCARTA, sin aviso:
-        --   - los conceptos manuales (validacion.allium, ConceptoManual);
-        --   - los conceptos ocultos por simplificacion (la deshace);
-        --   - las fusiones de sinonimos de la consolidacion;
-        --   - los puntos de decision;
-        --   - el texto editado y todo su historial de revisiones (el texto
-        --     vigente vuelve a ser el archivo original).
-        -- Ademas la extraccion lee siempre el archivo ORIGINAL, no el texto
-        -- editado: re-extraer tras editar no procesa la edicion.
-        -- No hay ningun "candidato a revision": no se marca nada.
+        -- Estado real (app web). La re-extraccion -- incluida la extraccion
+        -- dirigida (extraccion.allium) -- fusiona aditivamente los conceptos
+        -- y relaciones nuevos con los previos (un concepto nuevo cuyo label
+        -- coincide con uno propuesto antes se une a el; las relaciones
+        -- nuevas se suman si no repiten origen, destino y tipo) y conserva:
+        -- titulo, ficha, anotaciones, puntos de decision, ediciones de
+        -- conceptos y de relaciones, conceptos y relaciones manuales,
+        -- conceptos y relaciones ocultos, fusiones de sinonimos, el texto editado con todo
+        -- su historial de revisiones y texto_desincronizado_desde.
+        --
+        -- Divergencias que quedan:
+        --   - La extraccion lee siempre el archivo ORIGINAL, no el texto
+        --     editado: re-extraer tras editar no procesa la edicion.
+        --   - texto_desincronizado_desde NO se limpia (contra el ensures de
+        --     esta regla), y no se exige re-normalizar antes.
+        --   - No genera PuntoDecision nuevos ni marca "candidatos a revision".
+        -- Si la fusion falla, se informa el error y se conserva el estado
+        -- previo; nunca se sustituye por una extraccion nueva.
 }
 
 ------------------------------------------------------------
@@ -198,7 +202,7 @@ invariant FragmentosInvalidosImplicaListaVacia {
 
 open question "¿El investigador puede etiquetar una revisión con un tipo ('corrección menor', 'reescritura sustancial')? ¿O la nota_autor es suficiente para ese propósito?"
 
-open question "Re-extraccion destructiva: ¿se corrige la fusion para que conserve conceptos manuales, ocultos, fusiones, texto editado y revisiones, y para que extraiga del texto vigente (editado) y no del original?"
+open question "Re-extraccion: ya conserva conceptos manuales, ocultos, fusiones, texto editado y revisiones. ¿Debe extraer del texto vigente (editado) y no del original, y debe limpiar texto_desincronizado_desde al terminar?"
 
 open question "¿El sistema permite restaurar una revisión anterior como texto_crudo activo (deshacer una edición), o el historial es solo de lectura?"
 

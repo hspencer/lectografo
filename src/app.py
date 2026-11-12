@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 from src.config import settings
 from src.contexto_biblioteca import (
     _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
-    biblioteca_actual, persona_actual, otorgar_permiso,
+    biblioteca_actual, persona_actual, persona_nombre_actual, otorgar_permiso,
     permisos_compartidos_conmigo, nombre_de_biblioteca, emails_con_acceso,
     publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion,
 )
@@ -128,27 +128,10 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
                 metalenguaje=ext_previa.metalenguaje,
             )
             meta = MetadatosTexto(**mp_previos) if mp_previos else estado_previo.metadatos
-            estado_fusionado = EstadoValidacion(
-                titulo=estado_previo.titulo,
-                slug=slug,
-                extraccion=ext_fusionada,
-                decisiones=estado_previo.decisiones,
-                anotaciones=estado_previo.anotaciones,
-                completado=True,
-                metadatos=meta,
-                conceptos_editados=estado_previo.conceptos_editados,
-                relaciones_editadas=estado_previo.relaciones_editadas,
-                relaciones_investigador=estado_previo.relaciones_investigador,
-                # Sin esto, re-extraer borraba silenciosamente todo lo que no
-                # viene del LLM: conceptos a mano, simplificaciones, el texto
-                # editado y su historial.
-                conceptos_investigador=estado_previo.conceptos_investigador,
-                conceptos_ocultos=estado_previo.conceptos_ocultos,
-                conceptos_fusionados=estado_previo.conceptos_fusionados,
-                texto_editado=estado_previo.texto_editado,
-                revisiones_texto=estado_previo.revisiones_texto,
-                texto_desincronizado_desde=estado_previo.texto_desincronizado_desde,
-            )
+            # Conservar todo el trabajo humano, también los campos futuros.
+            estado_fusionado = estado_previo.model_copy(update={
+                "extraccion": ext_fusionada, "metadatos": meta, "completado": True,
+            })
             salida.write_text(
                 json.dumps(ext_fusionada.model_dump(), ensure_ascii=False, indent=2),
                 encoding="utf-8",
@@ -160,7 +143,7 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
             )
             return
         except Exception as exc:
-            print(f"[lectografo] Merge aditivo falló ({exc}), guardando como extracción nueva.", flush=True)
+            raise RuntimeError("No se pudo fusionar la extracción; se conserva el estado previo") from exc
 
     # Sin validación previa: guardar extracción nueva
     salida.write_text(
@@ -1791,7 +1774,7 @@ def actualizar_metadatos(slug: str, payload: MetadatosPayload):
 
 class AnotarPayload(BaseModel):
     objeto_anotado: str
-    nota: str
+    nota: str = Field(min_length=1)
 
 
 @app.post("/api/validacion/{slug}/anotar")
@@ -1802,6 +1785,8 @@ def agregar_anotacion(slug: str, payload: AnotarPayload):
         id=str(uuid.uuid4())[:8],
         objeto_anotado=payload.objeto_anotado,
         nota=payload.nota,
+        autor_uid=persona_actual.get(),
+        autor_nombre=persona_nombre_actual.get(),
     ))
     guardar(estado, ruta_val)
     return {"ok": True}

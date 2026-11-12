@@ -17,6 +17,7 @@
 -- Excludes:
 --   - Persistencia del grafo final (vive en grafo.allium)
 
+use "./lectografo.allium" as lectografo
 use "./transcripcion.allium" as transcripcion
 use "./extraccion.allium" as extraccion
 
@@ -72,7 +73,7 @@ entity PuntoDecision {
     creada_en: Timestamp
 
     -- Una decision esta estancada si lleva mas que plazo_decision_estancada pendiente.
-    esta_estancada: estado = pendiente and creada_en + config.plazo_decision_estancada <= now
+    esta_estancada: estado = pendiente and creada_en + lectografo/config.plazo_decision_estancada <= now
 
     transitions estado {
         pendiente -> resuelta
@@ -92,6 +93,8 @@ entity AnotacionInvestigador {
     transcripcion: transcripcion/Transcripcion
     objeto_anotado: String                       -- referencia textual al item
     nota: String
+    autor_uid: String?          -- ausente en notas anteriores y uso local sin identidad
+    autor_nombre: String?       -- nombre al momento de escribir
     creada_en: Timestamp
 }
 
@@ -137,15 +140,17 @@ rule AgregarConceptoManual {
         -- ver multiusuario.allium). La interfaz solo pide el label; el
         -- requisito de label no vacio lo aplica la interfaz, no el sistema.
         --
-        -- Limitaciones conocidas (estado real):
-        --   - Una relacion manual (InvestigadorCreaRelacion) solo puede unir
-        --     conceptos propuestos por el LLM: un ConceptoManual no puede ser
-        --     origen ni destino. Un grafo hecho enteramente a mano tiene hoy
-        --     solo nodos sueltos; las aristas tienen que venir de una
-        --     extraccion dirigida (extraccion.allium, IniciarExtraccionDirigida).
-        --   - Esa extraccion, y cualquier re-extraccion, hoy DESCARTA los
-        --     conceptos manuales al fusionar (ver edicion-texto.allium,
-        --     ReExtraerPreservandoContexto).
+        -- Estado real:
+        --   - Una relacion manual (InvestigadorCreaRelacion) puede unir
+        --     cualquier par de conceptos, propuestos o manuales: un grafo
+        --     armado enteramente a mano puede tener aristas sin pasar por el
+        --     LLM.
+        --   - Un concepto manual se puede renombrar y eliminar (grafo.allium,
+        --     EliminarConcepto: se borra de verdad con sus relaciones manuales).
+        --   - La re-extraccion los conserva (edicion-texto.allium,
+        --     ReExtraerPreservandoContexto), pero no los reconcilia por label:
+        --     si el LLM devuelve un concepto con el mismo label, queda
+        --     duplicado como concepto propuesto aparte.
         --   - ResetearGrafo (grafo.allium) los elimina junto con todo lo demas.
 }
 
@@ -162,7 +167,7 @@ rule GenerarDecisionesDesdeExtraccion {
     ensures:
         -- Una decision por cada concepto con sinonimos candidatos suficientemente mencionados.
         for c in ejecucion.conceptos where c.sinonimos_candidatos.count > 0
-                                       and c.menciones >= config.menciones_minimas_para_sinonimia:
+                                       and c.menciones >= lectografo/config.menciones_minimas_para_sinonimia:
             PuntoDecision.created(
                 id: "d_sin_" + c.id,
                 transcripcion: transcripcion,
@@ -306,7 +311,7 @@ rule TranscripcionPasaAValidada {
 }
 
 rule InvestigadorAnota {
-    when: InvestigadorAgregaNota(transcripcion, objeto, nota)
+    when: InvestigadorAgregaNota(investigador, transcripcion, objeto, nota)
 
     requires: transcripcion.estado in {extraida, validada, publicada}
     requires: length(nota) > 0
@@ -316,12 +321,18 @@ rule InvestigadorAnota {
         transcripcion: transcripcion,
         objeto_anotado: objeto,
         nota: nota,
+        autor_uid: identidad_verificada(investigador),
+        autor_nombre: nombre_verificado(investigador),
         creada_en: now
     )
 
     @guidance
         -- Las anotaciones nunca se borran, ni siquiera al publicar. Son
-        -- parte del registro hermeneutico del grafo.
+        -- parte del registro hermeneutico del grafo. Todas las personas con
+        -- acceso pueden leerlas, diferenciadas por su autora. El servidor
+        -- toma la identidad de la sesion verificada, nunca del formulario.
+        -- Las notas antiguas sin autora no se atribuyen retroactivamente.
+        -- No hay operacion de editar o borrar notas individuales.
         -- Excepcion real: ResetearGrafo (grafo.allium) borra la sesion de
         -- validacion completa, anotaciones incluidas.
 }
@@ -353,10 +364,20 @@ invariant DecisionPendienteNoTieneResolucion {
 }
 
 ------------------------------------------------------------
+-- Deferred Specifications
+------------------------------------------------------------
+
+deferred identidad_verificada    -- see: src/contexto_biblioteca.py: persona_actual
+    -- (investigador) -> String?; identidad autenticada, null en uso local.
+deferred nombre_verificado    -- see: src/contexto_biblioteca.py: persona_nombre_actual
+    -- (investigador) -> String?; nombre o email del token verificado.
+
+------------------------------------------------------------
 -- Preguntas abiertas
 ------------------------------------------------------------
 
-open question "ConceptoManual como extremo de relacion: ¿se habilita crear relaciones manuales entre conceptos manuales (hoy solo entre conceptos del LLM), para que un grafo armado a mano no dependa de una extraccion dirigida para tener aristas?"
+-- DECISION RESUELTA: un ConceptoManual puede ser extremo de una relacion
+-- manual (antes solo los conceptos del LLM podian).
 
 open question "Las decisiones diferidas bloquean la transicion a validada. Es correcto, o se deberia permitir publicar un grafo con decisiones explicitamente diferidas?"
 

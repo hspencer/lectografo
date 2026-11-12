@@ -31,7 +31,12 @@ flowchart TD
 6. `recorrido.allium` para entender bajo que criterios nace cada arista y que es un recorrido sobre el grafo.
 7. `surfaces.allium` para los contratos con los actores (investigador y LLM).
 
-## Estados principales
+## Ciclo de vida objetivo
+
+El diagrama siguiente expresa el modelo objetivo. En la aplicación alojada los
+grafos permanecen en edición y la publicación actual es un enlace de lectura
+en vivo, sin exigir validación completa ni crear versiones inmutables. Véase
+`multiusuario.allium`: `Publicacion` está implementada; `VersionPublicada` no.
 
 ```mermaid
 stateDiagram-v2
@@ -48,6 +53,60 @@ stateDiagram-v2
 Hablale al asistente (Claude Code u otro) en lenguaje natural sobre lo que quieres construir o cambiar; el asistente actualiza los `.allium` por ti. Para verificar la sintaxis instala el CLI de Allium [^2] y deja que valide automaticamente.
 
 Las preguntas abiertas (`open question`) son decisiones explicitamente diferidas. No deben resolverse en codigo: hay que cerrarlas primero aqui.
+
+## Colaboración actual
+
+- Quien recibe un texto puede volver a compartirlo con otra cuenta registrada,
+  sin límite de eslabones. Todos los permisos apuntan al texto original.
+- Los conceptos y relaciones que agrega cualquier colaborador se incorporan
+  al mismo grafo. No se crean copias personales del grafo.
+- Cada glosa nueva conserva la identidad y el nombre de quien la escribió,
+  tomados de la sesión verificada. Todos los colaboradores pueden leerla.
+  Las notas anteriores sin identidad se muestran como «Autoría no registrada».
+  No hay edición ni borrado individual de glosas en la aplicación actual.
+- El menú de los textos recibidos ofrece las mismas acciones que el de los
+  propios. La ficha muestra las personas con quienes se ha compartido.
+- La reextracción conserva las glosas con su autoría, las relaciones ocultas
+  y el resto del trabajo humano. Un fallo de fusión se informa como error,
+  sin sustituir el estado anterior por una extracción nueva.
+
+## Verificación y límites conocidos — 12 de noviembre de 2026
+
+```sh
+.venv/bin/python -m unittest discover -s tests -v
+node tests/test_frontend.cjs
+node --check static/app.js
+allium check specs
+allium analyse specs
+```
+
+La revisión eliminó los 40 errores estructurales del corpus. `allium check`
+con CLI 3.6.0 aún termina con código 1 por advertencias: 28 funciones diferidas
+sin ubicación, 8 actores de superficie sin uso, 4 valores descriptivos sin
+referencias y 6 avisos sobre `lectografo/config`. Estas últimas referencias
+siguen la sintaxis de configuración importada de la referencia del lenguaje;
+el CLI instalado las interpreta como nombres de entidades. `allium analyse`
+no produce hallazgos de proceso adicionales. Esto no demuestra que los flujos
+declarados como objetivos estén implementados.
+
+Persisten estas divergencias, documentadas en los módulos correspondientes:
+
+- Las escrituras concurrentes reescriben el estado completo; gana la última.
+- El identificador del texto no es único entre bibliotecas. Una coincidencia
+  entre un texto propio y otro compartido puede resolver a bibliotecas
+  distintas según la operación. No se ha migrado a `(biblioteca, slug)`.
+- La reextracción procesa el archivo original, conserva el texto editado y
+  no limpia su marca de desincronización. La extracción dirigida todavía
+  puede duplicar un concepto añadido a mano.
+- La inferencia la paga el operador, sin contabilidad ni tope en la aplicación.
+  Conexiones personales, revocación de permisos y versiones publicadas
+  inmutables siguen como objetivos.
+- Las sesiones de extracción, reconexión y consolidación en memoria se
+  identifican solo por `slug`; no aíslan bibliotecas con identificadores iguales.
+- Resetear un grafo borra también su sesión de validación y sus glosas;
+  eliminar el texto no retira los permisos ni la publicación.
+
+Estas limitaciones no se han convertido en funciones nuevas durante esta revisión.
 
 ## Notas al pie
 

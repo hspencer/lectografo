@@ -348,9 +348,9 @@ function renderBiblioteca(exts) {
         <button class="btn-inline bib-btn-menu" data-slug="${esc(e.slug)}" title="Acciones">${ico("more-vertical")}</button>
         <div class="menu-acciones-drop" hidden>
           <button class="menu-acciones-item bib-btn-ficha" data-slug="${esc(e.slug)}">${ico("edit-2")} Ficha</button>
-          ${e.compartido ? "" : `<button class="menu-acciones-item bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}">${ico("users")} Compartir</button>
+          <button class="menu-acciones-item bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}">${ico("users")} Compartir</button>
           <button class="menu-acciones-item bib-btn-publicar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" data-publicado="0">${ico("link")} Publicar</button>
-          <button class="menu-acciones-item danger bib-btn-repro" data-slug="${esc(e.slug)}">${ico("refresh-cw")} Re-procesar</button>`}
+          <button class="menu-acciones-item danger bib-btn-repro" data-slug="${esc(e.slug)}">${ico("refresh-cw")} Re-procesar</button>
         </div>
       </div>
       <div class="bib-card-click bib-card-body">
@@ -1188,11 +1188,12 @@ function buildAnnotationPanelHTML(nodo) {
   if (anotaciones.length) {
     h+=anotaciones.map(a=>`<div class="panel-anotacion">
       <p class="cita">${esc(a.nota)}</p>
+      <span class="muted">${esc(a.autor_nombre || (a.autor_uid ? "Colaborador" : "Autoría no registrada"))}</span>
       <span class="muted" style="font-size:10px">${new Date(a.creada_en).toLocaleDateString("es",{day:"numeric",month:"short",year:"numeric"})}</span>
     </div>`).join("");
   }
   h+=`<div class="panel-seccion-escritura">
-    <textarea id="pb-anotacion" class="panel-nota-input" rows="2" placeholder="Añadir nota…" style="margin-top:8px"></textarea>
+    <textarea id="pb-anotacion" class="panel-nota-input" rows="2" placeholder="Añadir mi glosa…" style="margin-top:8px"></textarea>
     <button id="pb-anotar" class="btn btn-neutro small" style="margin-top:6px;width:100%">Guardar nota</button>
   </div></details>`;
   return h;

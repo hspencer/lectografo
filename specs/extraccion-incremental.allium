@@ -252,7 +252,7 @@ rule IniciarSesionIncremental {
     -- DividirEnParrafosYFrases: caja negra que toma fragmentos normalizados
     -- y devuelve párrafos con sus frases. Preserva timestamps si existen.
     let total = ContarFrases(parrafos)
-    let grafo_prev = grafo/Grafo{transcripcion: transcripcion} if exists else null
+    let grafo_prev = if exists grafo/Grafo{transcripcion: transcripcion}: grafo/Grafo{transcripcion: transcripcion} else: null
     ensures:
         SesionExtraccionIncremental.created(
             transcripcion: transcripcion,
@@ -355,6 +355,7 @@ rule VerificarConsolidacion {
                                 creada_en: now
                             )
 
+}
 
 -- ════ Extensión de grafo preexistente ═══════════════════
 
@@ -576,7 +577,7 @@ rule CambiarModoExtraccion {
                 HomologarAlTesauro(sesion, p.concepto_b, p.concepto_a)
                 p.estado = aceptada
                 p.resuelta_en = now
-
+}
 
 ------------------------------------------------------------
 -- Invariants
@@ -700,54 +701,67 @@ surface ResumenSesionCompletada {
 -- Deferred Specifications
 ------------------------------------------------------------
 
-deferred DividirEnParrafosYFrases(fragmentos: List<transcripcion/Fragmento>) -> List<Parrafo>
+deferred DividirEnParrafosYFrases
+    -- (fragmentos: List<transcripcion/Fragmento>) -> List<Parrafo>
     -- Toma los fragmentos normalizados y los descompone en párrafos con sus frases.
     -- Preserva timestamps. Detecta límites de párrafo por línea en blanco o
     -- marcador semántico. No requiere LLM: es procesamiento de texto puro.
 
-deferred ContarFrases(parrafos: List<Parrafo>) -> Integer
+deferred ContarFrases
+    -- (parrafos: List<Parrafo>) -> Integer
     -- Devuelve el total de frases sumando todas las frases de todos los párrafos.
 
-deferred EvaluarSimilitud(a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> GradoSimilitud
+deferred EvaluarSimilitud
+    -- (a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> GradoSimilitud
     -- Compara dos conceptos y devuelve su grado de similitud semántica.
     -- Considera: label, descripcion, sinonimos_candidatos, cita_directa.
     -- Usa los umbrales config.umbral_similitud_automatica y config.umbral_similitud_dudosa.
 
-deferred JustificarSimilitud(a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> String
+deferred JustificarSimilitud
+    -- (a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> String
     -- Genera la justificación en lenguaje natural de por qué dos conceptos son similares.
 
-deferred ElegirCanonicoLLM(a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> String
+deferred ElegirCanonicoLLM
+    -- (a: extraccion/ConceptoPropuesto, b: extraccion/ConceptoPropuesto) -> String
     -- Elige cuál de los dos labels (o una variante nueva) es el más apropiado
     -- como canónico del grupo. Devuelve el label recomendado.
 
-deferred ConceptosAcumulados(sesion: SesionExtraccionIncremental) -> List<extraccion/ConceptoPropuesto>
+deferred ConceptosAcumulados
+    -- (sesion: SesionExtraccionIncremental) -> List<extraccion/ConceptoPropuesto>
     -- Devuelve todos los conceptos detectados hasta ahora en la sesión,
     -- aplanando todos los ResultadoParcial.conceptos_detectados.
 
-deferred ConceptosDeFrase(conceptos: List<extraccion/ConceptoPropuesto>, frase: Frase) -> List<extraccion/ConceptoPropuesto>
+deferred ConceptosDeFrase
+    -- (conceptos: List<extraccion/ConceptoPropuesto>, frase: Frase) -> List<extraccion/ConceptoPropuesto>
     -- Filtra los conceptos que el LLM atribuye a esta frase específica.
 
-deferred RelacionesDeFrase(relaciones: List<extraccion/RelacionPropuesta>, frase: Frase) -> List<extraccion/RelacionPropuesta>
+deferred RelacionesDeFrase
+    -- (relaciones: List<extraccion/RelacionPropuesta>, frase: Frase) -> List<extraccion/RelacionPropuesta>
     -- Filtra las relaciones que el LLM atribuye a esta frase específica.
 
-deferred EvaluarSimilitudConNodo(concepto: extraccion/ConceptoPropuesto, nodo: grafo/Nodo) -> GradoSimilitud
+deferred EvaluarSimilitudConNodo
+    -- (concepto: extraccion/ConceptoPropuesto, nodo: grafo/Nodo) -> GradoSimilitud
     -- Compara un ConceptoPropuesto recién extraído contra un Nodo del grafo preexistente.
     -- Considera: concepto.label vs nodo.label y nodo.sinonimos_consolidados,
     -- concepto.descripcion vs nodo.descripcion_corta.
     -- Usa los mismos umbrales que EvaluarSimilitud.
 
-deferred ConceptoDesdeNodo(nodo: grafo/Nodo) -> extraccion/ConceptoPropuesto
+deferred ConceptoDesdeNodo
+    -- (nodo: grafo/Nodo) -> extraccion/ConceptoPropuesto
     -- Construye un ConceptoPropuesto proxy a partir de un Nodo existente,
     -- para usarlo en PropuestaConsolidacion cuando el investigador debe decidir.
 
-deferred JustificarSimilitudConNodo(concepto: extraccion/ConceptoPropuesto, nodo: grafo/Nodo) -> String
+deferred JustificarSimilitudConNodo
+    -- (concepto: extraccion/ConceptoPropuesto, nodo: grafo/Nodo) -> String
     -- Genera la justificación de por qué el concepto nuevo parece equivalente al nodo existente.
 
-deferred RelacionesNuevasParaGrafo(sesion: SesionExtraccionIncremental, g: grafo/Grafo) -> List<extraccion/RelacionPropuesta>
+deferred RelacionesNuevasParaGrafo
+    -- (sesion: SesionExtraccionIncremental, g: grafo/Grafo) -> List<extraccion/RelacionPropuesta>
     -- Devuelve las relaciones de la sesión que no tienen equivalente ya en el grafo g.
     -- Dos relaciones son equivalentes si comparten origen, destino y tipo (sin considerar matiz).
 
-deferred NodoParaConcepto(concepto: extraccion/ConceptoPropuesto, g: grafo/Grafo) -> grafo/Nodo
+deferred NodoParaConcepto
+    -- (concepto: extraccion/ConceptoPropuesto, g: grafo/Grafo) -> grafo/Nodo
     -- Devuelve el Nodo del grafo g que absorbe este concepto (vía conceptos_origen
     -- o vía equivalencia del tesauro de la sesión).
 

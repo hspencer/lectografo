@@ -21,18 +21,24 @@
 --   - Estructura final del grafo (vive en grafo.allium)
 --   - Validacion humana de las propuestas (vive en validacion.allium)
 
+use "./lectografo.allium" as lectografo
 use "./transcripcion.allium" as transcripcion
 
 ------------------------------------------------------------
 -- Tipos auxiliares
 ------------------------------------------------------------
 
+-- DECISION "por ahora" (nov-2026): solo gemini y vertexai se aceptan como
+-- ProveedorActivo (multiusuario.allium, SeleccionarProveedorDeInstancia).
+-- anthropic, openai, ollama y lmstudio siguen implementados pero fuera de
+-- uso hasta que se retomen; openrouter no esta implementado.
 enum ProveedorLLM {
-    anthropic
-    openai
+    anthropic       -- implementado, fuera de uso
+    openai          -- implementado, fuera de uso
     gemini
-    ollama          -- modelos locales via Ollama (sin API key)
-    lmstudio        -- modelos locales via LM Studio, API compatible con OpenAI (sin API key)
+    ollama          -- modelos locales via Ollama (sin API key). Implementado, fuera de uso
+    lmstudio        -- modelos locales via LM Studio, API compatible con OpenAI
+                    -- (sin API key). Implementado, fuera de uso
     openrouter      -- remoto via OAuth PKCE con la cuenta de cada persona (ver
                     -- multiusuario.allium). NO implementado: no hay cliente openrouter.
     vertexai        -- remoto, sin clave: credencial de la cuenta de servicio del
@@ -112,7 +118,7 @@ entity ConceptoPropuesto {
     timestamp_primera_aparicion: Duration?
     cita_directa: String
 
-    es_dudoso: confianza < config.confianza_minima
+    es_dudoso: confianza < lectografo/config.confianza_minima
 }
 
 -- RelacionPropuesta usa ontología abierta: el tipo de relación es un String
@@ -136,7 +142,7 @@ entity RelacionPropuesta {
     matiz: String?
     contexto: String?                            -- "min 5:20-6:00"
 
-    es_dudosa: confianza < config.confianza_minima
+    es_dudosa: confianza < lectografo/config.confianza_minima
 }
 
 entity FlagMetalenguaje {
@@ -202,7 +208,7 @@ rule IniciarExtraccion {
     requires: transcripcion.estado = normalizada
     requires: proveedor_activo.api_key_presente = true or proveedor_activo.es_local = true
     requires: proveedor_activo.es_local = false or proveedor_activo.endpoint != null
-    requires: length(transcripcion.texto_crudo) <= config.max_chars_por_prompt
+    requires: length(transcripcion.texto_crudo) <= lectografo/config.max_chars_por_prompt
 
     ensures: EjecucionExtraccion.created(
         transcripcion: transcripcion,
@@ -248,13 +254,12 @@ rule IniciarExtraccionDirigida {
         --   - Los conceptos devueltos se reconcilian por label solo contra
         --     los conceptos que propuso el LLM antes, NO contra los
         --     conceptos manuales (validacion.allium, ConceptoManual).
-        --   - La fusion con lo previo hoy DESCARTA los conceptos manuales, los
-        --     conceptos ocultos por simplificacion y las fusiones de
-        --     sinonimos (ver edicion-texto.allium, ReExtraerPreservandoContexto).
         --     Resultado neto del flujo "armo el vocabulario a mano y pido las
-        --     conexiones": los conceptos manuales desaparecen y reaparecen
-        --     como conceptos del LLM con el mismo label (si el LLM los
-        --     devolvio), sin su descripcion ni su tipo.
+        --     conexiones": los conceptos manuales se conservan, pero cada uno
+        --     que el LLM devuelva aparece DUPLICADO como concepto propuesto
+        --     con el mismo label, y las relaciones nuevas se cuelgan del
+        --     duplicado, no del manual. (Ya no se pierden conceptos manuales,
+        --     ocultos ni fusiones: ver edicion-texto.allium.)
 }
 
 rule ExtraccionCompleta {
@@ -362,8 +367,9 @@ open question "El nivel de confianza debe ser auto-reportado por el LLM en su sa
 
 -- DECISIÓN RESUELTA (antes pregunta abierta sobre discovery de modelos en
 -- ollama): para los proveedores locales (ollama, lmstudio) el investigador
--- elige el modelo de la lista que reporta el endpoint local en el momento de
--- configurar. Ver surfaces.allium, ConfiguracionProveedor.
+-- elegia el modelo de la lista que reporta el endpoint local. SUSPENDIDA
+-- mientras rija la restriccion a Google: hoy no se consulta ningun endpoint
+-- local y la lista de modelos disponibles va siempre vacia.
 
 open question "Extraccion dirigida: ¿se filtra la respuesta del LLM para descartar conceptos fuera de conceptos_objetivo (hoy solo se le pide en el prompt), y se reconcilian los conceptos devueltos contra los conceptos manuales por label en vez de duplicarlos?"
 

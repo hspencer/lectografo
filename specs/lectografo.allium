@@ -11,24 +11,31 @@
 -- Scope: extraccion y refinamiento de grafos conceptuales desde transcripciones
 -- de analisis filosoficos. El sistema toma texto, propone un grafo via LLM,
 -- guia al investigador para validar puntos de decision, y persiste el resultado.
--- Es multiusuario: cada persona trabaja en su biblioteca, comparte de forma
--- explicita y paga su propia inferencia.
+-- Es multiusuario: cada persona trabaja en su biblioteca y comparte de forma
+-- explicita, en colaboracion plana (sin roles). Objetivo: que cada persona
+-- pague su propia inferencia; hoy la paga el operador (multiusuario.allium).
 --
 -- Includes:
 --   - Ingesta de transcripciones (txt, md, VTT, salida de yt-dlp)
 --   - Extraccion incremental frase a frase con tesauro y consolidacion
 --   - Flujo de validacion humana de puntos de decision
---   - Persistencia y publicacion de grafos versionados
---   - Grafos personales: mapas libres del investigador con referencias vivas
+--   - Persistencia del grafo; publicacion como URL de solo lectura en vivo
+--     (versiones publicadas inmutables: objetivo, no implementado)
 --   - Visualizacion interactiva (contrato de superficie)
---   - Soporte de proveedores LLM remotos (anthropic, openai, gemini, openrouter) y locales (ollama, lmstudio)
---   - Multiusuario: personas, bibliotecas aisladas, membresias, compartir revocable,
---     versiones publicadas inmutables y conexiones de inferencia por persona
+--   - Proveedores LLM: por ahora SOLO Google (vertexai, gemini). anthropic,
+--     openai, ollama y lmstudio siguen en el codigo pero no se aceptan;
+--     openrouter es via objetivo (multiusuario.allium)
+--   - Multiusuario: personas, bibliotecas aisladas, compartir un texto sin
+--     roles, publicacion en vivo y (objetivo) conexiones de inferencia por persona
+--
+-- Retirado: los grafos personales (mapas libres sin texto fuente) se
+-- eliminaron del producto; los conceptos y relaciones propios se agregan
+-- directo en el grafo de cada texto (validacion.allium, ConceptoManual).
 --
 -- Excludes:
 --   - Mecanismo de descarga de YouTube (se asume yt-dlp como black box)
 --   - Transcripcion de audio (se asume Whisper o similar como black box)
---   - Mecanismo concreto de identidad/autenticacion (open question en multiusuario.allium)
+--   - Detalle del proveedor de identidad (Firebase Auth; ver multiusuario.allium)
 --   - Sincronizacion entre instancias o dispositivos
 --   - Corte de alojamiento y despliegue (decision de infraestructura, no de comportamiento)
 --   - Benchmark de proveedores (plan de pruebas, no comportamiento)
@@ -40,8 +47,7 @@
 --   validacion.allium             -> resolucion humana de ambiguedades
 --   grafo.allium                  -> estructura persistente y publicacion
 --   recorrido.allium              -> criterios de las aristas y naturaleza del recorrido
---   grafos-personales.allium      -> mapas libres del investigador
---   surfaces.allium               -> contratos de UI e integracion LLM
+--   surfaces.allium              -> contratos de UI e integracion LLM
 --   edicion-texto.allium          -> edicion del texto fuente y revision historica
 --   multiusuario.allium           -> personas, bibliotecas, compartir e inferencia por persona
 
@@ -51,7 +57,6 @@ use "./extraccion-incremental.allium" as incremental
 use "./validacion.allium" as validacion
 use "./grafo.allium" as grafo
 use "./recorrido.allium" as recorrido
-use "./grafos-personales.allium" as personal
 use "./surfaces.allium" as surfaces
 use "./edicion-texto.allium" as edicion
 use "./multiusuario.allium" as multiusuario
@@ -105,12 +110,6 @@ invariant LinajeNodoTrazable {
     -- Todo Nodo de un GrafoDerivado es trazable a su transcripcion fuente.
 }
 
-invariant ReferenciaPersonalViva {
-    for ref in personal/ReferenciaConcepto:
-        (ref.nodo_derivado = null) != (ref.concepto_investigador = null)
-    -- Una referencia siempre apunta exactamente a una fuente.
-}
-
 ------------------------------------------------------------
 -- Preguntas abiertas del modulo
 ------------------------------------------------------------
@@ -121,13 +120,9 @@ open question "Si dos grafos publicados sobre la misma transcripcion difieren, �
 
 open question "Un bucle de retroalimentacion detectado por el LLM y rechazado por el investigador: ¿queda registrado como decision negativa para que el LLM no lo vuelva a proponer, o se descarta sin huella?"
 
-open question "Re-extraccion: cuando un Nodo de un GrafoDerivado desaparece tras re-extraer el texto (el LLM ya no lo detecta), ¿las ReferenciaConcepto de grafos personales que apuntaban a ese Nodo se convierten en referencias huerfanas o se eliminan en cascada?"
-
 -- Guidance:
     -- El investigador es la autoridad final en cualquier interpretacion.
     -- El LLM solo propone; nunca cierra una decision por timeout o por
-    -- defecto. Una decision sin resolver bloquea la publicacion del grafo.
-    --
-    -- Los grafos personales son la capa de sintesis del investigador:
-    -- ahi los textos se cruzan, los conceptos se conectan y el pensamiento
-    -- propio del investigador toma forma junto al corpus.
+    -- defecto. Una decision sin resolver bloquea la publicacion del grafo
+    -- (VersionPublicada, objetivo; la publicacion en vivo que existe hoy no
+    -- mira decisiones -- ver multiusuario.allium, PublicarTexto).

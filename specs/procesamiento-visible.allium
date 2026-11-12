@@ -455,35 +455,42 @@ surface GrafoEnConstruccion {
 -- Deferred Specifications
 ------------------------------------------------------------
 
-deferred ConceptosYaEnGrafo(sesion: extInc/SesionExtraccionIncremental, conceptos: List<extraccion/ConceptoPropuesto>) -> List<extraccion/ConceptoPropuesto>
+deferred ConceptosYaEnGrafo
+    -- (sesion: extInc/SesionExtraccionIncremental, conceptos: List<extraccion/ConceptoPropuesto>) -> List<extraccion/ConceptoPropuesto>
     -- Filtra los conceptos del lote que ya tienen un nodo equivalente en el
     -- grafo en construccion (sea por grafo_preexistente o por lotes anteriores
     -- de esta misma sesion). Usa coincidencia de label y sinonimos del tesauro.
 
-deferred ConceptosNuevosEnLote(conceptos: List<extraccion/ConceptoPropuesto>, reencuentros: List<extraccion/ConceptoPropuesto>) -> List<extraccion/ConceptoPropuesto>
+deferred ConceptosNuevosEnLote
+    -- (conceptos: List<extraccion/ConceptoPropuesto>, reencuentros: List<extraccion/ConceptoPropuesto>) -> List<extraccion/ConceptoPropuesto>
     -- Devuelve los conceptos del lote que no estan en la lista de reencuentros.
     -- Complemento de ConceptosYaEnGrafo.
 
-deferred SiguienteIndiceLote(sesion: extInc/SesionExtraccionIncremental) -> Integer
+deferred SiguienteIndiceLote
+    -- (sesion: extInc/SesionExtraccionIncremental) -> Integer
     -- Devuelve el proximo indice secuencial para un LoteVisualizado dentro
     -- de la sesion. Empieza en 1 y se incrementa.
 
-deferred BuscarRechazoPrevia(label: String, t: transcripcion/Transcripcion) -> validacion/PuntoDecision?
+deferred BuscarRechazoPrevia
+    -- (label: String, t: transcripcion/Transcripcion) -> validacion/PuntoDecision?
     -- Busca un PuntoDecision resuelto como rechazada cuyo concepto implicado
     -- tiene un label que coincide con el label dado, dentro de la transcripcion.
     -- Devuelve el primero encontrado o null si no hay coincidencia.
 
-deferred ConceptosRenderizados(lote: LoteVisualizado) -> Boolean
+deferred ConceptosRenderizados
+    -- (lote: LoteVisualizado) -> Boolean
     -- Devuelve true cuando todos los nodos del lote han sido renderizados
     -- visualmente en el canvas. Usado internamente por el motor de visualizacion.
 
-deferred AplicarAccionSobreElemento(sesion: extInc/SesionExtraccionIncremental, lote: LoteVisualizado, accion: String) -> Void
+deferred AplicarAccionSobreElemento
+    -- (sesion: extInc/SesionExtraccionIncremental, lote: LoteVisualizado, accion: String) -> Void
     -- Delega la accion del investigador al subsistema correspondiente:
     -- aceptar/rechazar -> validacion.allium, anotar -> validacion.allium,
     -- editar label -> grafo.allium. La accion es un string discriminador
     -- que la implementacion interpreta.
 
-deferred NodosDesdeConceptos(conceptos: List<extraccion/ConceptoPropuesto>) -> List<grafo/Nodo>
+deferred NodosDesdeConceptos
+    -- (conceptos: List<extraccion/ConceptoPropuesto>) -> List<grafo/Nodo>
     -- Proyecta una lista de ConceptoPropuesto a los Nodos del grafo que
     -- los representan. Usado para renderizar el lote en la visualizacion.
 

@@ -35,6 +35,7 @@ except Exception:
 
 biblioteca_actual: ContextVar[str | None] = ContextVar("biblioteca_actual", default=None)
 persona_actual: ContextVar[str | None] = ContextVar("persona_actual", default=None)
+persona_nombre_actual: ContextVar[str | None] = ContextVar("persona_nombre_actual", default=None)
 es_admin_actual: ContextVar[bool] = ContextVar("es_admin_actual", default=False)
 
 _cache_persona: dict[str, tuple[str | None, bool]] = {}
@@ -45,22 +46,18 @@ _cache_persona: dict[str, tuple[str | None, bool]] = {}
 _RE_SLUG_EN_PATH = re.compile(
     r"^/api/(?:extracciones|validacion|grafo|metadatos|transcripts|publicar|compartir)/([^/]+)"
 )
-_cache_permiso: dict[tuple[str, str], str | None] = {}
 
 
 def _biblioteca_compartida(uid: str, slug: str) -> str | None:
     """bibliotecaOrigen si existe un permisos/{...} que comparte `slug` con
     `uid`; None si el slug no fue compartido con esta persona."""
-    clave = (uid, slug)
-    if clave in _cache_permiso:
-        return _cache_permiso[clave]
+    # Sin caché: un permiso nuevo debe verse también desde otras instancias.
     docs = (
         firestore.client().collection("permisos")
         .where("beneficiariaUid", "==", uid).where("slug", "==", slug)
         .limit(1).get()
     )
     resultado = docs[0].to_dict().get("bibliotecaOrigen") if docs else None
-    _cache_permiso[clave] = resultado
     return resultado
 
 
@@ -75,7 +72,6 @@ def otorgar_permiso(biblioteca_origen: str, slug: str, beneficiaria_uid: str,
         "otorgadoPor": otorgado_por,
         "otorgadoEn": datetime.now(timezone.utc),
     })
-    _cache_permiso.pop((beneficiaria_uid, slug), None)
 
 
 def permisos_compartidos_conmigo(uid: str) -> list[dict]:
@@ -152,7 +148,8 @@ def _datos_persona(uid: str) -> tuple[str | None, bool]:
     datos = doc.to_dict() or {} if doc.exists else {}
     ids = datos.get("bibliotecaIds") or []
     resultado = (ids[0] if ids else None, datos.get("esAdmin") is True)
-    _cache_persona[uid] = resultado
+    if ids:
+        _cache_persona[uid] = resultado
     return resultado
 
 
@@ -161,6 +158,8 @@ _PREFIJO_PUBLICO = "/api/publico/"
 
 async def middleware_biblioteca(request, call_next):
     if not _FIREBASE_OK:
+        if _EN_CLOUD_RUN:
+            return JSONResponse({"detail": "Autenticación no disponible"}, status_code=503)
         return await call_next(request)
     if request.url.path.startswith(_PREFIJO_PUBLICO):
         # Lectura pública: el propio endpoint resuelve su biblioteca a partir
@@ -174,13 +173,14 @@ async def middleware_biblioteca(request, call_next):
     admin = False
     autenticado = False
     token_persona = persona_actual.set(None)
+    token_nombre = persona_nombre_actual.set(None)
     if crudo:
         try:
             decoded = fb_auth.verify_id_token(crudo)
             persona_actual.reset(token_persona)
             token_persona = persona_actual.set(decoded["uid"])
+            persona_nombre_actual.set(decoded.get("name") or decoded.get("email") or decoded["uid"])
             bib, admin = _datos_persona(decoded["uid"])
-            autenticado = True
             m = _RE_SLUG_EN_PATH.match(request.url.path)
             if m:
                 # Compartir es plano: quien recibe el acceso queda en las
@@ -188,11 +188,17 @@ async def middleware_biblioteca(request, call_next):
                 compartida = _biblioteca_compartida(decoded["uid"], m.group(1))
                 if compartida:
                     bib = compartida
+            autenticado = True
         except Exception:
             bib = None
     if _EN_CLOUD_RUN and not autenticado:
         persona_actual.reset(token_persona)
+        persona_nombre_actual.reset(token_nombre)
         return JSONResponse({"detail": "No autenticado"}, status_code=401)
+    if _EN_CLOUD_RUN and not bib:
+        persona_actual.reset(token_persona)
+        persona_nombre_actual.reset(token_nombre)
+        return JSONResponse({"detail": "Tu biblioteca todavía no está disponible"}, status_code=403)
     token_bib = biblioteca_actual.set(bib)
     token_admin = es_admin_actual.set(admin)
     try:
@@ -200,6 +206,7 @@ async def middleware_biblioteca(request, call_next):
     finally:
         biblioteca_actual.reset(token_bib)
         persona_actual.reset(token_persona)
+        persona_nombre_actual.reset(token_nombre)
         es_admin_actual.reset(token_admin)
 
 

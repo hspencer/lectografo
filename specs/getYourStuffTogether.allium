@@ -26,6 +26,10 @@
 use "./grafo.allium" as grafo
 use "./extraccion.allium" as extraccion
 
+given {
+    proveedor_activo: extraccion/ProveedorActivo
+}
+
 ------------------------------------------------------------
 -- Tipos
 ------------------------------------------------------------
@@ -130,9 +134,10 @@ rule BotonReconexionVisible {
     when: InvestigadorVisualizaGrafo(g)
 
     ensures:
-        if nodos_desconectados(g).count > 0
-        then AccionGetYourStuffTogetherDisponible(grafo: g)
-        else AccionGetYourStuffTogetherOculta(grafo: g)
+        if nodos_desconectados(g).count > 0:
+            AccionGetYourStuffTogetherDisponible(grafo: g)
+        else:
+            AccionGetYourStuffTogetherOculta(grafo: g)
 }
 
 ------------------------------------------------------------
@@ -279,7 +284,7 @@ rule InvestigadorConfirmaReconexion {
     ensures:
         for item in sesion.propuestas:
             let aceptado = item in items_aceptados
-            item.estado = if aceptado then aceptada else rechazada
+            item.estado = if aceptado: aceptada else: rechazada
             if aceptado:
                 item.frase_editada = frase_final_de(item, items_aceptados)
         for item in sesion.aceptadas:
@@ -382,7 +387,8 @@ open question "El prompt de reconexion es el mismo que el de extraccion con cont
 -- Funciones deferred
 ------------------------------------------------------------
 
-deferred nodos_desconectados(g: grafo/Grafo) -> List<grafo/Nodo>
+deferred nodos_desconectados
+    -- (g: grafo/Grafo) -> List<grafo/Nodo>
     -- Devuelve todos los nodos que NO pertenecen a la componente conexa principal
     -- (la mayor) del grafo. Incluye tanto nodos aislados de grado 0 como clusters
     -- completos de varios nodos conectados entre si pero no con la masa principal.
@@ -390,18 +396,21 @@ deferred nodos_desconectados(g: grafo/Grafo) -> List<grafo/Nodo>
     -- ver src/pipeline/grafo.py::nodos_desconectados
     --     (usa grafo/Grafo.componentes_conexas, ver src/models/grafo.py)
 
-deferred desconectado_en(nodo: grafo/Nodo, g: grafo/Grafo) -> Boolean
+deferred desconectado_en
+    -- (nodo: grafo/Nodo, g: grafo/Grafo) -> Boolean
     -- True si el nodo esta fuera de la componente conexa principal del grafo,
     -- es decir, si nodo pertenece a nodos_desconectados(g).
 
-deferred mismo_componente(a: grafo/Nodo, b: grafo/Nodo, g: grafo/Grafo) -> Boolean
+deferred mismo_componente
+    -- (a: grafo/Nodo, b: grafo/Nodo, g: grafo/Grafo) -> Boolean
     -- True si los nodos a y b pertenecen a la misma componente conexa del grafo
     -- (tratado como no dirigido). Se apoya en grafo/Grafo.componentes_conexas.
     -- ver src/models/grafo.py::componentes_conexas / es_conexo
 
-deferred filtrar_conexiones_que_reducen_componentes(
-    g: grafo/Grafo, conexiones: List<ConexionPropuesta>
-) -> List<ConexionPropuesta>
+deferred filtrar_conexiones_que_reducen_componentes
+    -- (
+    --     g: grafo/Grafo, conexiones: List<ConexionPropuesta>
+    -- ) -> List<ConexionPropuesta>
     -- Descarta las conexiones cuyos dos extremos ya estan en la misma componente
     -- conexa: aceptarlas no reduciria el numero de grafos inconexos, solo agregaria
     -- una arista interna redundante. Aplica Union-Find sobre las componentes actuales
@@ -410,12 +419,15 @@ deferred filtrar_conexiones_que_reducen_componentes(
     -- asi que las siguientes se evaluan contra el estado ya actualizado).
     -- ver src/pipeline/reconexion.py::filtrar_conexiones_que_reducen_componentes
 
-deferred construir_contexto_grafo(g: grafo/Grafo) -> String
+deferred construir_contexto_grafo
+    -- (g: grafo/Grafo) -> String
     -- Serializa el grafo como texto comprimido apto para un prompt LLM:
     -- nodos (label + descripcion_corta), relaciones (etiqueta), bucles (descripcion).
 
-deferred prompt_reconexion() -> extraccion/Prompt
+deferred prompt_reconexion
+    -- () -> extraccion/Prompt
     -- Devuelve el prompt especifico de reconexion (archivo en prompts/).
 
-deferred frase_final_de(item: PropuestaEnRevision, aceptados: List) -> String
+deferred frase_final_de
+    -- (item: PropuestaEnRevision, aceptados: List) -> String
     -- Extrae la frase editada por el investigador para un item aceptado.
