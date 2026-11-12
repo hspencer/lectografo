@@ -80,15 +80,19 @@ def permisos_compartidos_conmigo(uid: str) -> list[dict]:
 
 
 def emails_con_acceso(biblioteca_origen: str, slug: str) -> list[str]:
-    """Emails de todas las personas con quien se compartió este texto --
-    la jerarquía de colaboración es plana, así que esto es lo único que
-    distingue a quien lo comparte de quien lo recibió."""
+    """Todas las personas con acceso, incluida la biblioteca de origen."""
+    db = firestore.client()
+    biblioteca = db.collection("bibliotecas").document(biblioteca_origen).get().to_dict() or {}
+    uid = biblioteca.get("creadoPor")
+    persona = (db.collection("personas").document(uid).get().to_dict() or {}) if uid else {}
+    origen = persona.get("email") or persona.get("nombre") or biblioteca.get("nombre")
     docs = (
-        firestore.client().collection("permisos")
+        db.collection("permisos")
         .where("bibliotecaOrigen", "==", biblioteca_origen).where("slug", "==", slug)
         .get()
     )
-    return [d.to_dict().get("beneficiariaEmail", "") for d in docs]
+    emails = [origen] + [d.to_dict().get("beneficiariaEmail", "") for d in docs]
+    return list(dict.fromkeys(email for email in emails if email))
 
 
 def nombre_de_biblioteca(biblioteca_id: str) -> str:

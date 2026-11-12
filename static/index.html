@@ -109,11 +109,6 @@
               <line x1="5" y1="19" x2="19" y2="19"/>
             </svg>
           </button>
-          <button id="btn-consolidar" class="grafo-ctrl-btn" hidden title="Fusionar conceptos duplicados">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M18 3v12a3 3 0 0 1-3 3H3"/>
-            </svg>
-          </button>
           <details id="leyenda-wrap">
             <summary class="grafo-ctrl-btn" title="Tipos de relación">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/><path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/><circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/></svg>
@@ -175,7 +170,6 @@
       <input id="buscar-concepto" class="buscar-input" placeholder="Filtrar conceptos…">
       <button id="btn-agregar-concepto" class="btn-inline">+ Añadir concepto</button>
       <button id="btn-procesar-seleccion" class="btn-inline" hidden>⚡ Procesar con seleccionados</button>
-      <button id="btn-simplificar-grafo" class="btn-inline">Simplificar grafo</button>
       <button id="btn-eliminar-grafo" class="btn-inline danger">Eliminar grafo</button>
     </div>
     <div class="tabla-scroll">
@@ -340,20 +334,20 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- Modal: Re-procesar                                            -->
+  <!-- Modal compartido de tareas con IA                            -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="repro-modal" hidden>
     <div id="repro-modal-bg"></div>
-    <div id="repro-modal-box">
+    <div id="repro-modal-box" role="dialog" aria-modal="true" aria-labelledby="repro-modal-titulo">
       <div id="repro-modal-header">
-        <h3 id="repro-modal-titulo">Re-procesar</h3>
-        <button id="repro-modal-cerrar" title="Cerrar" aria-label="Cerrar diálogo de re-procesado">×</button>
+        <h3 id="repro-modal-titulo">Tarea con IA</h3>
+        <button id="repro-modal-cerrar" title="Cerrar" aria-label="Cerrar diálogo de tarea con IA">×</button>
       </div>
       <div id="repro-modal-body">
         <!-- Estado: confirmar -->
         <div id="repro-estado-confirm">
           <p id="repro-confirm-titulo" class="repro-confirm-titulo"></p>
-          <p class="repro-confirm-aviso">El LLM volverá a analizar el texto. Los conceptos y relaciones ya existentes se conservarán; los nuevos que encuentre se añadirán al grafo.</p>
+          <p id="repro-confirm-aviso" class="repro-confirm-aviso"></p>
         </div>
         <!-- Estado: procesando -->
         <div id="repro-estado-proc" hidden>
@@ -362,11 +356,11 @@
           </div>
           <div class="repro-status-row">
             <span class="rec-log-dot"></span>
-            <span id="repro-fase">Iniciando…</span>
+            <span id="repro-fase" role="status">Iniciando…</span>
             <span id="repro-tokens" class="rec-token-count"></span>
             <button id="repro-btn-detener" class="btn btn-neutro small rec-detener-btn">Detener</button>
           </div>
-          <pre class="rec-log-pre rec-log-pre--active" id="repro-log"></pre>
+          <pre class="rec-log-pre rec-log-pre--active" id="repro-log" tabindex="0" aria-label="Registro de la tarea"></pre>
         </div>
         <!-- Estado: finalizado / error -->
         <div id="repro-estado-fin" hidden>

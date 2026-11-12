@@ -334,7 +334,10 @@ rule SimplificarGrafo {
         -- Si la respuesta del LLM no trae ningun id valido, no se oculta
         -- nada (el grafo queda igual, nunca vacio). Usa el ProveedorActivo
         -- de la instancia, sin tope de gasto (multiusuario.allium).
-        -- La interfaz pide solo confirmacion, sin numero.
+        -- Se inicia en el menu de la biblioteca, bajo "Operaciones en el
+        -- grafo". Pide confirmacion, sin numero, y abre el modal comun de IA
+        -- con salida en vivo y contador de tokens. El registro se conserva
+        -- visible al terminar; no se puede cerrar el modal mientras trabaja.
         -- Limitacion conocida: los bucles NO se filtran; un Bucle puede seguir
         -- nombrando nodos ocultos (contradice BuclePerteneceAUnSoloGrafo
         -- mientras dure la simplificacion).

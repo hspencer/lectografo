@@ -616,9 +616,9 @@ rule ListarConQuienEstaCompartido {
     @guidance
         -- Solo informativo (la colaboracion es plana): la ficha del texto lo
         -- muestra como "Compartido con: ...", y nada si la lista es vacia.
-        -- Lista los beneficiaria_email de todos los permisos sobre ese
-        -- texto, incluida la propia persona si es beneficiaria; no lista a
-        -- quien lo tenia originalmente.
+        -- Lista a quien creo la biblioteca original y los beneficiaria_email
+        -- de todos los permisos sobre ese texto, sin duplicados. La tarjeta
+        -- muestra solo un icono que abre este listado, nunca "Compartido por".
 }
 
 rule TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria {
@@ -638,8 +638,8 @@ rule TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria {
         )
 
     @guidance
-        -- Se lista marcado como compartido, con el nombre de la biblioteca de
-        -- origen. Al abrirlo, ResolucionDeBibliotecaPorRequest dirige todo el
+        -- Se lista con un icono de personas que abre la lista completa de
+        -- quienes tienen acceso. Al abrirlo, ResolucionDeBibliotecaPorRequest dirige todo el
         -- trabajo sobre ese slug a la biblioteca de origen.
 }
 

@@ -46,7 +46,7 @@ Responde SOLO con JSON: {{"conservar": ["id1", "id2", ...]}} con los ids de
 los conceptos seguros de conservar."""
 
 
-def simplificar(grafo: Grafo, llm: EvaluadorLLM) -> list[str]:
+def simplificar(grafo: Grafo, llm: EvaluadorLLM, on_token=None, on_texto=None, should_cancel=None) -> list[str]:
     """Devuelve los ids de nodos SEGUROS de conservar; el resto se oculta."""
     grado: dict[str, int] = {}
     for r in grafo.relaciones:
@@ -57,7 +57,8 @@ def simplificar(grafo: Grafo, llm: EvaluadorLLM) -> list[str]:
         f"{n.id}: {n.label} -- confianza {n.confianza:.2f}, {n.menciones} menciones, {grado.get(n.id, 0)} relaciones"
         for n in grafo.nodos
     )
-    cruda = llm.invocar(PROMPT.format(listado=listado), "Procede según las instrucciones.")
+    cruda = llm.invocar(PROMPT.format(listado=listado), "Procede según las instrucciones.",
+                        on_token=on_token, on_texto=on_texto, should_cancel=should_cancel)
 
     ids_validos = {n.id for n in grafo.nodos}
     conservar = [cid for cid in _extraer_conservar(cruda) if cid in ids_validos]

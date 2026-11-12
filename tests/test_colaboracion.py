@@ -50,7 +50,18 @@ class ColaboracionTest(unittest.TestCase):
         self.ruta.with_name("lectura_extraccion.json").write_text(self.ext.model_dump_json())
         self.permisos = []
         self.consulta = Consulta(self.permisos)
-        self.db = SimpleNamespace(collection=lambda nombre: self.consulta)
+        documentos = {
+            "bibliotecas": {"bib_a": {"creadoPor": "a", "nombre": "Persona a"}},
+            "personas": {"a": {"email": "a@example.org"}},
+        }
+
+        def collection(nombre):
+            if nombre == "permisos":
+                return self.consulta
+            return SimpleNamespace(document=lambda uid: SimpleNamespace(get=lambda:
+                SimpleNamespace(to_dict=lambda: documentos.get(nombre, {}).get(uid))))
+
+        self.db = SimpleNamespace(collection=collection)
         for objeto, nombre, valor in [
             (api, "GRAFOS", contexto._DirectorioPorBiblioteca(grafos)),
             (api, "TRANSCRIPTS", contexto._DirectorioPorBiblioteca(textos)),
@@ -88,7 +99,7 @@ class ColaboracionTest(unittest.TestCase):
             listado = self.request(uid, "GET", "/api/extracciones").json()
             self.assertTrue(any(t["slug"] == "lectura" and t["compartido"] for t in listado))
             r = self.request(uid, "GET", "/api/compartir/lectura")
-            self.assertEqual(len(r.json()["emails"]), 3)
+            self.assertEqual(set(r.json()["emails"]), {f"{persona}@example.org" for persona in "abcd"})
         c1 = self.request("b", "POST", "/api/validacion/lectura/conceptos", json={"label": "Uno"}).json()["id"]
         c2 = self.request("c", "POST", "/api/validacion/lectura/conceptos", json={"label": "Dos"}).json()["id"]
         r = self.request("d", "POST", "/api/validacion/lectura/relaciones", json={
@@ -160,6 +171,98 @@ class ColaboracionTest(unittest.TestCase):
         with patch.object(contexto, "_FIREBASE_OK", False):
             self.assertEqual(self.request("b", "GET", "/api/extracciones").status_code, 503)
         self.assertEqual(self.client.get("/api/extracciones").status_code, 401)
+
+    def test_personas_con_acceso_sin_duplicados(self):
+        self.compartir("a", "b")
+        self.compartir("a", "b")
+        self.assertEqual(self.request("b", "GET", "/api/compartir/lectura").json()["emails"],
+                         ["a@example.org", "b@example.org"])
+
+    def test_simplificacion_emite_registro_completo_y_conserva_glosas(self):
+        import json
+        self.compartir("a", "b")
+        estado = cargar(self.ruta)
+        estado.extraccion = ResultadoExtraccion(conceptos=[{
+            "id": f"c_{n}", "label": f"Concepto {n}", "descripcion": "", "confianza": 1,
+            "cita_directa": "",
+        } for n in range(3)])
+        guardar(estado, self.ruta)
+
+        class LLM:
+            def invocar(self, *args, **kwargs):
+                kwargs["on_texto"]("detalle" * 4000)
+                kwargs["on_token"](42)
+                return '{"conservar": ["c_0", "c_1"]}'
+
+        with patch("src.llm.get_llm", return_value=LLM()):
+            r = self.request("b", "POST", "/api/grafo/lectura/simplificar/stream")
+        self.assertEqual(r.status_code, 200)
+        eventos = [json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")]
+        self.assertTrue(eventos[-1]["done"])
+        self.assertEqual(len(eventos[-1]["resultado"]["nodes"]), 2)
+        self.assertIn("detalle" * 4000, "".join(e.get("chunk", "") for e in eventos))
+        self.assertIn({"tokens": 42}, eventos)
+        self.assertEqual(cargar(self.ruta).anotaciones, estado.anotaciones)
+
+    def test_simplificacion_fallida_no_modifica_el_grafo(self):
+        import json
+        antes = self.ruta.read_bytes()
+        with patch.object(api, "_simplificar_grafo", side_effect=RuntimeError("Proveedor no disponible")):
+            r = self.request("a", "POST", "/api/grafo/lectura/simplificar/stream")
+        eventos = [json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")]
+        self.assertEqual(eventos[-1], {"done": True, "error": "Proveedor no disponible"})
+        self.assertEqual(self.ruta.read_bytes(), antes)
+
+    def test_extraccion_no_recorta_ni_pierde_el_log_al_terminar(self):
+        import json
+        salida = "respuesta completa " * 2000
+        resultado = ResultadoExtraccion(conceptos=[{
+            "id": "c_0", "label": "Concepto", "descripcion": "", "confianza": 1, "cita_directa": "",
+        }])
+
+        def extraer(*args, **kwargs):
+            kwargs["on_texto"](salida)
+            kwargs["on_token"](60)
+            return resultado
+
+        self.enterContext(patch.dict(api._TAREAS))
+        api._TAREAS["lectura"] = {"estado": "procesando", "inicio": time.time()}
+        token = contexto.biblioteca_actual.set("bib_a")
+        try:
+            with patch("src.llm.get_llm", return_value=object()), patch("src.pipeline.extraccion.extraer", side_effect=extraer):
+                api._tarea_extraer("lectura", Path(self.tmp.name) / "textos/bib_a/lectura.txt")
+        finally:
+            contexto.biblioteca_actual.reset(token)
+        self.assertEqual(api._TAREAS["lectura"]["texto_llm"], salida)
+        r = self.request("a", "GET", "/api/extracciones/lectura/stream")
+        eventos = [json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")]
+        self.assertEqual("".join(e.get("chunk", "") for e in eventos), salida)
+        self.assertEqual(eventos[-1]["estado"], "listo")
+
+    def test_fusion_transmite_respuesta_y_registro_sin_recortar(self):
+        import json
+        from src.models.grafo import Nodo
+        salida = "respuesta de fusión " * 1500
+        self.enterContext(patch.dict(api._CONSOLIDACION_LOG))
+        self.enterContext(patch.dict(api._CONSOLIDACION_DONE))
+        self.enterContext(patch.dict(api._CONSOLIDACION_TOKENS))
+
+        def ejecutar(**kwargs):
+            kwargs["on_log"]("Candidatos detectados\n")
+            kwargs["on_texto"](salida)
+            kwargs["on_token"](90)
+            sesion = api.persistencia_consolidacion.cargar("lectura", kwargs["grafos_dir"])
+            sesion.estado = "en_revision"
+            api.persistencia_consolidacion.guardar(sesion, "lectura", kwargs["grafos_dir"])
+
+        with patch.object(api, "detectar_candidatos", return_value=[[Nodo(id="c_0", label="Uno")]]), \
+                patch("src.pipeline.consolidacion.ejecutar_consolidacion", side_effect=ejecutar):
+            r = self.request("a", "POST", "/api/grafo/lectura/consolidacion/iniciar")
+        self.assertEqual(r.status_code, 200, r.text)
+        r = self.request("a", "GET", "/api/grafo/lectura/consolidacion/stream")
+        eventos = [json.loads(line[6:]) for line in r.text.splitlines() if line.startswith("data: ")]
+        self.assertEqual("".join(e.get("chunk", "") for e in eventos), "Candidatos detectados\n" + salida)
+        self.assertTrue(eventos[-1]["done"])
 
 
 if __name__ == "__main__":

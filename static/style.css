@@ -1039,10 +1039,20 @@ tbody tr:hover td { background: var(--sn-sunk); }
 .bib-sin-ficha {
   font-size: var(--sn-fs-xs); opacity: .5; font-style: italic;
 }
-.bib-card-compartido {
-  display: flex; align-items: center; gap: 4px;
-  font-size: var(--sn-fs-xs); color: var(--sn-ok); margin-bottom: var(--sn-s-1);
+.bib-acceso { position: relative; align-self: flex-start; }
+.bib-btn-acceso { color: var(--sn-ink-soft); padding: 4px; }
+.bib-btn-acceso svg { width: 14px; height: 14px; }
+.bib-acceso-lista {
+  position: absolute; top: 100%; left: 0; z-index: 20;
+  width: max-content; max-width: min(280px, calc(100vw - 5rem));
+  padding: var(--sn-s-3); background: var(--sn-paper);
+  border: var(--sn-hair); border-radius: var(--sn-radius);
+  box-shadow: var(--sn-shadow-float); cursor: default;
+  font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
+  overflow-wrap: anywhere;
 }
+.bib-acceso-lista ul { padding: 0; margin: var(--sn-s-2) 0 0; list-style: none; }
+.bib-acceso-lista li + li { margin-top: var(--sn-s-1); }
 
 /* ── Menú de acciones (⋮) de la tarjeta de biblioteca: flota sobre la
    esquina superior derecha del minimapa, no en una franja aparte ──── */
@@ -1073,6 +1083,10 @@ tbody tr:hover td { background: var(--sn-sunk); }
   font-family: var(--sn-font-text); white-space: nowrap;
 }
 .menu-acciones-item:hover { background: var(--sn-nova-wash); color: var(--sn-nova); }
+.menu-acciones-separador { width: 100%; border: 0; border-top: var(--sn-hair); margin: var(--sn-s-1) 0; }
+.menu-acciones-rotulo { padding: var(--sn-s-2); font-size: var(--sn-fs-xs); color: var(--sn-ink-faint); white-space: nowrap; }
+.bib-card-sin-procesar .bib-card-titulo,
+.bib-card-procesando .bib-card-titulo { padding-right: var(--sn-s-5); }
 .menu-acciones-item.danger:hover { background: var(--sn-danger-wash); color: var(--sn-danger); }
 
 /* ── Modal: Ficha bibliográfica ──────────────────────────────────── */
@@ -1158,6 +1172,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
   border-radius: var(--sn-radius);
 }
 #repro-modal-cerrar:hover { background: var(--sn-sunk); color: var(--sn-ink); }
+#repro-modal-cerrar:disabled { opacity: .3; cursor: default; }
 
 #repro-modal-body {
   padding: var(--sn-s-5) var(--sn-s-6); flex: 1; overflow-y: auto;
@@ -1747,7 +1762,6 @@ hr.divider  { border: none; border-top: 1px solid var(--sn-hairline-soft); margi
    vincule o procese es visible. Ver abrirTextoPublico() en app.js. */
 .solo-lectura #btn-agregar-concepto,
 .solo-lectura #btn-procesar-seleccion,
-.solo-lectura #btn-simplificar-grafo,
 .solo-lectura #btn-eliminar-grafo,
 .solo-lectura .concepto-check,
 .solo-lectura #concepto-check-todos,

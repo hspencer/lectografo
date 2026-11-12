@@ -62,6 +62,8 @@ function ico(name, size=14) {
 // global cierra cualquier menú abierto al hacer clic afuera o Escape.
 function cerrarMenusAcciones() {
   document.querySelectorAll(".menu-acciones-drop").forEach(d => d.hidden = true);
+  document.querySelectorAll(".bib-acceso-lista").forEach(d => d.hidden = true);
+  document.querySelectorAll(".bib-btn-acceso").forEach(b => b.setAttribute("aria-expanded", "false"));
 }
 document.addEventListener("click", cerrarMenusAcciones);
 document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarMenusAcciones(); });
@@ -85,7 +87,7 @@ function _rutaPublica(path) {
   return m ? `/api/publico/${state.pubId}/${m[1]}` : path;
 }
 
-async function apiFetch(path, opts={}) {
+async function apiFetch(path, opts={}, raw=false) {
   if (state.soloLectura) {
     if (opts.method && opts.method !== "GET") throw new Error("Vista de solo lectura");
     path = _rutaPublica(path);
@@ -95,7 +97,7 @@ async function apiFetch(path, opts={}) {
   if (token) headers.Authorization = `Bearer ${token}`;
   const r = await fetch(path, { ...opts, headers });
   if (!r.ok) throw new Error(`${r.status}: ${await r.text()}`);
-  return r.json();
+  return raw ? r : r.json();
 }
 async function cargarGrafo() {
   state.grafo = await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}`);
@@ -150,6 +152,7 @@ function initMapaArrows() {
   const STEP = 60;
   document.addEventListener("keydown", ev => {
     if (state.tabActivo !== "mapa") return;
+    if (!document.getElementById("repro-modal").hidden) return;
     if (!state.grafoPan) return;
     // No interceptar si el foco está en un campo de texto
     if (["INPUT","TEXTAREA","SELECT"].includes(ev.target.tagName)) return;
@@ -205,6 +208,28 @@ async function mostrarBiblioteca(extData) {
   renderBiblioteca(exts);
 }
 
+function _menuBiblioteca(e) {
+  const slug = esc(e.slug), titulo = esc(e.titulo);
+  return `<div class="menu-acciones">
+    <button class="btn-inline bib-btn-menu" data-slug="${slug}" title="Acciones">${ico("more-vertical")}</button>
+    <div class="menu-acciones-drop" hidden>
+      <button class="menu-acciones-item bib-btn-ficha" data-slug="${slug}">${ico("edit-2")} Ficha</button>
+      ${e.procesado ? `
+        <button class="menu-acciones-item bib-btn-compartir" data-slug="${slug}" data-titulo="${titulo}">${ico("users")} Compartir</button>
+        <button class="menu-acciones-item bib-btn-publicar" data-slug="${slug}" data-titulo="${titulo}" data-publicado="0">${ico("link")} Publicar</button>` : ""}
+      <hr class="menu-acciones-separador">
+      <span class="menu-acciones-rotulo">Operaciones en el grafo</span>
+      ${e.procesando
+        ? `<button class="menu-acciones-item bib-btn-progreso" data-slug="${slug}">Ver progreso IA</button>`
+        : e.procesado ? `
+          <button class="menu-acciones-item bib-btn-repro" data-slug="${slug}">Reprocesar texto</button>
+          <button class="menu-acciones-item bib-btn-fusionar" data-slug="${slug}">Fusionar conceptos</button>
+          <button class="menu-acciones-item bib-btn-simplificar" data-slug="${slug}">Simplificar grafo</button>`
+        : `<button class="menu-acciones-item btn-procesar" data-slug="${slug}">Procesar texto</button>`}
+    </div>
+  </div>`;
+}
+
 function renderBiblioteca(exts) {
   const grid = document.getElementById("biblioteca-grid");
 
@@ -226,115 +251,26 @@ function renderBiblioteca(exts) {
   grid.innerHTML = exts.map(e => {
     if (!e.procesado) {
       if (e.procesando) {
-        const pct          = e.porcentaje || 0;
-        const elapsed      = e.elapsed || 0;
-        const tokens       = e.tokens || 0;
-        const tokTotal     = e.tokens_total || 0;
-        const totalLotes   = e.total_lotes || 0;
-        const lotesProc    = e.lotes_procesados || 0;
-        const modoInc      = e.modo_extraccion === "incremental";
-
-        // Línea de estado: qué está haciendo (basado en datos reales de Ollama)
-        const modeloEnRam = e.modelo_en_ram;  // true/false/null (null = desconocido aún)
-        let estadoStr;
-        if (e.fase_extraccion === "leyendo")
-          estadoStr = "Leyendo texto…";
-        else if (e.fase_extraccion === "guardando")
-          estadoStr = "Guardando…";
-        else if (e.fase_extraccion === "cargando_modelo")
-          estadoStr = "Cargando modelo en memoria…";
-        else if (modoInc && totalLotes > 0) {
-          const loteActual = Math.min(lotesProc + 1, totalLotes);
-          estadoStr = `Fragmento ${loteActual} de ${totalLotes}…`;
-        } else if (tokens === 0 && elapsed < 10)
-          estadoStr = "Iniciando…";
-        else if (tokens === 0 && modeloEnRam === false)
-          estadoStr = "Cargando modelo en memoria…";
-        else if (tokens === 0 && modeloEnRam === true)
-          estadoStr = "Procesando prompt…";
-        else if (tokens === 0)
-          estadoStr = "Esperando al modelo…";
-        else
-          estadoStr = "Generando…";
-
-        // Línea de métricas
-        let metricaStr;
-        if (modoInc && totalLotes > 0) {
-          metricaStr = `${lotesProc}/${totalLotes} lotes · ${_formatElapsed(elapsed)}`;
-        } else if (pct > 0) {
-          const restSec = Math.round(elapsed / (pct / 100) * (1 - pct / 100));
-          metricaStr = `${pct}% · ${tokens} / ~${tokTotal} tokens · ~${_formatElapsed(restSec)} restante`;
-        } else if (tokens > 0) {
-          metricaStr = `${tokens} tokens · ${_formatElapsed(elapsed)}`;
-        } else {
-          metricaStr = _formatElapsed(elapsed);
-        }
-
-        const logAbierto = _logAbiertos.has(e.slug) || !!e.texto_llm;   // auto-mostrar cuando hay output
-        const textoLog   = e.texto_llm || "";
-        const conceptos  = e.conceptos_parciales  || [];
-        const relaciones = e.relaciones_parciales || [];
-
-        // Mapa id→concepto para resolver relaciones parciales
-        const idAConcepto = {};
-        conceptos.forEach(c => { if (c.id) idAConcepto[c.id] = c; });
-
-        // Solo mostrar conceptos que ya tienen al menos una relación conocida
-        const idsConexos = new Set(relaciones.flatMap(r => [r.origen_id, r.destino_id]));
-        const conceptosConexos = relaciones.length > 0
-          ? conceptos.filter(c => idsConexos.has(c.id))
-          : conceptos;   // si aún no hay relaciones, mostrar todos (estado inicial)
-
-        const conceptosTags = conceptosConexos.map(c =>
-          `<span class="bib-ctag bib-ctag-${esc(c.tipo || "primitivo")}">${esc(c.label)}</span>`
-        ).join("");
-
-        const relacionesTags = relaciones.slice(0, 12).map(r => {
-          const origen  = (idAConcepto[r.origen_id]  || {}).label || r.origen_id;
-          const destino = (idAConcepto[r.destino_id] || {}).label || r.destino_id;
-          return `<span class="bib-rtag">${esc(origen)} <span class="bib-rtag-arrow">→</span> ${esc(destino)}</span>`;
-        }).join("");
-
         return `<div class="bib-card bib-card-procesando">
+          ${_menuBiblioteca(e)}
           <div class="bib-card-inner">
             <div class="bib-card-titulo">${esc(e.titulo)}</div>
-            <div class="bib-procesando-wrap">
-              ${pct > 0
-                ? `<div class="bib-progress-wrap"><div class="bib-progress-bar" style="width:${pct}%"></div></div>`
-                : `<div class="bib-progress-indeterminate"></div>`}
-              <div class="bib-procesando-info">
-                <span class="bib-fase-msg">${esc(estadoStr)}</span>
-                <span class="bib-elapsed muted">${esc(metricaStr)}</span>
-              </div>
-            </div>
-            ${conceptosConexos.length > 0 ? `
-              <div class="bib-extraccion-live">
-                <div class="bib-live-label muted">${conceptosConexos.length} concepto${conceptosConexos.length !== 1 ? "s" : ""} conectado${conceptosConexos.length !== 1 ? "s" : ""}</div>
-                <div class="bib-ctags">${conceptosTags}</div>
-                ${relacionesTags ? `<div class="bib-rtags">${relacionesTags}</div>` : ""}
-              </div>` : ""}
-            ${logAbierto ? `<pre class="bib-log-panel" data-slug="${esc(e.slug)}">${esc(textoLog)}</pre>` : ""}
-          </div>
-          <div class="bib-card-footer">
-            <button class="btn-inline bib-btn-log ${logAbierto ? "active" : ""}" data-slug="${esc(e.slug)}" title="${logAbierto ? "Ocultar log" : "Ver log raw"}">${ico("terminal")} Log</button>
-            <button class="btn-inline danger bib-btn-detener" data-slug="${esc(e.slug)}" title="Detener extracción">${ico("x")} Detener</button>
+            <div class="bib-progress-indeterminate"></div>
+            <span class="muted">Procesando con IA…</span>
           </div>
         </div>`;
       }
       const errorMsg = e.error ? `<span class="bib-error">${esc(e.error.replace("error:",""))}</span>` : "";
       const citaSP = e.metadatos ? buildCita(e.metadatos) : "";
       return `<div class="bib-card bib-card-sin-procesar">
+        ${_menuBiblioteca(e)}
         <div class="bib-card-inner">
           <div class="bib-card-titulo">${esc(e.titulo)}</div>
           ${citaSP ? `<div class="bib-card-cita muted">${esc(citaSP)}</div>` : ""}
           ${errorMsg}
           <div class="bib-card-meta">
             <span class="bib-fase bib-fase-sin_validar">Sin procesar</span>
-            <button class="btn-procesar" data-slug="${esc(e.slug)}">${ico("zap")} Procesar</button>
           </div>
-        </div>
-        <div class="bib-card-footer">
-          <button class="btn-inline bib-btn-ficha" data-slug="${esc(e.slug)}" title="Editar ficha bibliográfica">${ico("edit-2")} Ficha</button>
         </div>
       </div>`;
     }
@@ -344,18 +280,13 @@ function renderBiblioteca(exts) {
 
     return `<div class="bib-card" data-slug="${esc(e.slug)}">
       <div class="bib-mini-mapa bib-card-click" data-slug="${esc(e.slug)}"></div>
-      <div class="menu-acciones">
-        <button class="btn-inline bib-btn-menu" data-slug="${esc(e.slug)}" title="Acciones">${ico("more-vertical")}</button>
-        <div class="menu-acciones-drop" hidden>
-          <button class="menu-acciones-item bib-btn-ficha" data-slug="${esc(e.slug)}">${ico("edit-2")} Ficha</button>
-          <button class="menu-acciones-item bib-btn-compartir" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}">${ico("users")} Compartir</button>
-          <button class="menu-acciones-item bib-btn-publicar" data-slug="${esc(e.slug)}" data-titulo="${esc(e.titulo)}" data-publicado="0">${ico("link")} Publicar</button>
-          <button class="menu-acciones-item danger bib-btn-repro" data-slug="${esc(e.slug)}">${ico("refresh-cw")} Re-procesar</button>
-        </div>
-      </div>
+      ${_menuBiblioteca(e)}
       <div class="bib-card-click bib-card-body">
         <div class="bib-card-titulo">${esc(e.titulo)}</div>
-        ${e.compartido ? `<div class="bib-card-compartido muted">${ico("users",11)} Compartido por ${esc(e.compartido_por||"otra persona")}</div>` : ""}
+        <div class="bib-acceso">
+          <button class="btn-inline bib-btn-acceso" data-slug="${esc(e.slug)}" aria-label="Personas con acceso" aria-expanded="false">${ico("users",14)}</button>
+          <div class="bib-acceso-lista" hidden></div>
+        </div>
         ${citaCard
           ? `<div class="bib-card-cita muted">${esc(citaCard)}</div>`
           : `<div class="bib-card-cita muted bib-sin-ficha">Sin ficha bibliográfica</div>`}
@@ -383,6 +314,34 @@ function renderBiblioteca(exts) {
     btn.addEventListener("click", e => { e.stopPropagation(); reprocesarDesdeLibreria(btn.dataset.slug); })
   );
 
+  grid.querySelectorAll(".bib-btn-fusionar").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); abrirPanelSesion(SESION_CONSOLIDACION, btn.dataset.slug); })
+  );
+  grid.querySelectorAll(".bib-btn-simplificar").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); _simplificarConModal(btn.dataset.slug); })
+  );
+
+  // Listado de personas con acceso
+  grid.querySelectorAll(".bib-btn-acceso").forEach(btn => {
+    btn.addEventListener("click", async e => {
+      e.stopPropagation();
+      const lista = btn.nextElementSibling;
+      const abrir = lista.hidden;
+      cerrarMenusAcciones();
+      if (!abrir) return;
+      btn.setAttribute("aria-expanded", "true");
+      lista.hidden = false;
+      lista.textContent = "Cargando personas…";
+      try {
+        const { emails } = await apiFetch(`/api/compartir/${encodeURIComponent(btn.dataset.slug)}`);
+        lista.innerHTML = `<strong>Personas con acceso</strong><ul>${emails.map(email => `<li>${esc(email)}</li>`).join("")}</ul>`;
+      } catch (err) {
+        lista.textContent = `No se pudo cargar: ${err.message}`;
+      }
+    });
+    btn.nextElementSibling.addEventListener("click", e => e.stopPropagation());
+  });
+
   // Compartir con otra persona
   grid.querySelectorAll(".bib-btn-compartir").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); compartirDocumento(btn.dataset.slug, btn.dataset.titulo); })
@@ -408,54 +367,8 @@ function renderBiblioteca(exts) {
     );
   });
 
-  // Toggle log panel
-  grid.querySelectorAll(".bib-btn-log").forEach(btn =>
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
-      const slug = btn.dataset.slug;
-      if (_logAbiertos.has(slug)) _logAbiertos.delete(slug);
-      else _logAbiertos.add(slug);
-      // Re-render inmediato para mostrar/ocultar
-      apiFetch("/api/extracciones").then(renderBiblioteca);
-    })
-  );
-
-  // Conectar SSE a log panels activos — se gestiona por slug (no por elemento DOM)
-  grid.querySelectorAll(".bib-log-panel[data-slug]").forEach(pre => {
-    const slug = pre.dataset.slug;
-    if (_extLogStreams[slug]) {
-      // Ya hay SSE activo: actualizar referencia al nuevo elemento DOM
-      _extLogStreams[slug].pre = pre;
-      return;
-    }
-    const stream = { pre, es: null };
-    _extLogStreams[slug] = stream;
-    const es = new EventSource(sseUrl(`/api/extracciones/${encodeURIComponent(slug)}/stream`));
-    stream.es = es;
-    es.onmessage = (ev) => {
-      const d = JSON.parse(ev.data);
-      const target = _extLogStreams[slug]?.pre;
-      if (d.chunk && target) {
-        target.textContent = (target.textContent + d.chunk).slice(-8000);
-        target.scrollTop = target.scrollHeight;
-      }
-      if (d.done) {
-        es.close();
-        delete _extLogStreams[slug];
-      }
-    };
-    es.onerror = () => { es.close(); delete _extLogStreams[slug]; };
-  });
-
-  // Detener extracción en curso
-  grid.querySelectorAll(".bib-btn-detener").forEach(btn =>
-    btn.addEventListener("click", async e => {
-      e.stopPropagation();
-      btn.disabled = true; btn.textContent = "Deteniendo…";
-      try {
-        await apiFetch(`/api/extracciones/${encodeURIComponent(btn.dataset.slug)}/procesar`, { method: "DELETE" });
-      } catch(err) { alert("Error al detener: " + err.message); }
-    })
+  grid.querySelectorAll(".bib-btn-progreso").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); _procesarConModal(btn.dataset.slug, null); })
   );
 
   // Restaurar SVGs salvados — evita parpadeo durante polling
@@ -470,9 +383,7 @@ function renderBiblioteca(exts) {
 }
 
 let _pollingBiblioteca = null;
-const _logAbiertos = new Set();     // slugs cuyo log panel está visible
 const _miniGrafoCache = {};         // slug → { nodes, links } ya cargado
-const _extLogStreams = {};          // slug → { pre, es } SSE activo para extracción
 
 // ── Mini-mapa en tarjetas de biblioteca ────────────────────────────────
 const REL_PALETTE_MINI = [
@@ -682,16 +593,7 @@ async function _actualizarFaviconParaTexto(slug) {
 }
 
 async function procesarTexto(slug) {
-  try {
-    await apiFetch(`/api/extracciones/${encodeURIComponent(slug)}/procesar`, { method: "POST", body: "{}" });
-  } catch(err) {
-    alert("Error al iniciar extracción: " + err.message);
-    return;
-  }
-  // Refrescar inmediatamente para mostrar el spinner
-  const exts = await apiFetch("/api/extracciones");
-  renderBiblioteca(exts);
-  _arrancarPolling();
+  _procesarConModal(slug, {});
 }
 
 function _arrancarPolling() {
@@ -829,11 +731,8 @@ async function initMapa() {
 
   // ── Botones de mantenimiento del grafo ─────────────────────────────
   await actualizarBotonSesion(SESION_RECONEXION);
-  await actualizarBotonSesion(SESION_CONSOLIDACION);
   const btnRec = document.getElementById("btn-reconectar");
   if (btnRec) btnRec.onclick = () => abrirPanelSesion(SESION_RECONEXION);
-  const btnCons = document.getElementById("btn-consolidar");
-  if (btnCons) btnCons.onclick = () => abrirPanelSesion(SESION_CONSOLIDACION);
 }
 
 async function initMapaForce() {
@@ -1301,53 +1200,6 @@ async function anotarEnPanel(nodoId, nota, cardId) {
 // getYourStuffTogether — reconexión de nodos sueltos
 // ════════════════════════════════════════════════════════════════════════
 
-// ── Typewriter reveal para el log de procesamiento ───────────────────────
-// Acumula texto entrante y lo revela a una velocidad fija, dando el efecto
-// de "plano de texto que se llena lentamente" aunque los chunks lleguen rápido.
-const _recLog = {
-  queue:    "",       // texto pendiente de revelar
-  shown:    "",       // texto ya visible en pantalla
-  raf:      null,     // requestAnimationFrame handle
-  cps:      12,       // caracteres por frame (~720/seg a 60fps)
-  flushing: false,    // true cuando queremos vaciar inmediatamente
-
-  reset() {
-    this.queue = ""; this.shown = ""; this.flushing = false;
-    if (this.raf) { cancelAnimationFrame(this.raf); this.raf = null; }
-  },
-
-  append(text) {
-    this.queue += text;
-    if (!this.raf) this.raf = requestAnimationFrame(() => this._tick());
-  },
-
-  flush() {
-    // Vuelca todo lo pendiente de golpe (al terminar el stream) y quita el cursor
-    this.flushing = true;
-    const logPre = document.getElementById("rec-log");
-    if (logPre) logPre.classList.remove("rec-log-pre--active");
-  },
-
-  _tick() {
-    this.raf = null;
-    const logPre = document.getElementById("rec-log");
-    if (!logPre || (!this.queue && !this.flushing)) return;
-
-    const take = this.flushing ? this.queue.length : Math.min(this.cps, this.queue.length);
-    if (take > 0) {
-      this.shown  += this.queue.slice(0, take);
-      this.queue   = this.queue.slice(take);
-      logPre.textContent = this.shown;
-      logPre.scrollTop   = logPre.scrollHeight;
-    }
-    if (this.queue.length > 0) {
-      this.raf = requestAnimationFrame(() => this._tick());
-    } else {
-      this.flushing = false;
-    }
-  },
-};
-
 // ── Configuración por tipo de sesión (reconexión / consolidación) ─────────────
 // El motor de abajo (actualizarBotonSesion, abrirPanelSesion, renderPanelSesion,
 // streaming SSE) es genérico; sólo cambian estos hooks por tipo.
@@ -1393,15 +1245,12 @@ const SESION_CONSOLIDACION = {
   footerId: "panel-consolidacion-footer",
   tituloId: "panel-consolidacion-titulo",
   descId: "panel-consolidacion-desc",
-  btnId: "btn-consolidar",
   btnConfirmarId: "btn-confirmar-consolidacion",
   btnCancelarId: "btn-cancelar-consolidacion",
   btnCerrarId: "btn-cerrar-consolidacion",
   api: slug => `/api/grafo/${encodeURIComponent(slug)}/consolidacion`,
   tituloTexto: "Consolidación de sinónimos",
   campoEditable: "label_editado",
-  hidden: info => info.candidatos_grupos_count === 0,
-  tooltip: info => `${info.candidatos_grupos_count} grupo(s) de posibles sinónimos detectado(s) — clic para consolidar`,
   descSesion: sesion => {
     const n = (sesion.candidatos_ids || []).length;
     return n > 0 ? `${n} nodo${n !== 1 ? "s" : ""} candidato${n !== 1 ? "s" : ""} a fusión` : "";
@@ -1492,90 +1341,6 @@ async function actualizarBotonSesion(cfg) {
   } catch(e) { btn.hidden = true; }
 }
 
-// ── UI de procesamiento compartida ────────────────────────────────────────────
-function _mostrarUIprocesando(cfg, content, footer) {
-  if (footer) footer.hidden = true;
-  const panel  = document.getElementById(cfg.panelId);
-  const btnCer = document.getElementById(cfg.btnCerrarId);
-  if (btnCer && panel) btnCer.onclick = () => { panel.hidden = true; };
-  _recLog.reset();
-  content.innerHTML = `
-    <div class="rec-procesando-wrap">
-      <div class="rec-progress-bar"></div>
-      <div class="rec-status-row">
-        <span class="rec-log-dot"></span>
-        <span id="${cfg.prefix}-fase">Consultando al LLM…</span>
-        <span id="${cfg.prefix}-token-count" class="rec-token-count"></span>
-        <button id="${cfg.prefix}-btn-detener" class="btn btn-neutro small rec-detener-btn">Detener</button>
-      </div>
-    </div>
-    <pre class="rec-log-pre rec-log-pre--active" id="${cfg.prefix}-log"></pre>`;
-}
-
-function _conectarStream(cfg, es, content, footer) {
-  // Actualiza el contador de tokens y el log en tiempo real.
-  es.onmessage = (ev) => {
-    const d = JSON.parse(ev.data);
-    if (d.chunk) _recLog.append(d.chunk);
-    if (typeof d.tokens === "number" && d.tokens > 0) {
-      const el = document.getElementById(`${cfg.prefix}-token-count`);
-      if (el) el.textContent = `${d.tokens} tokens`;
-      // Actualizar fase si el log ya tiene la línea de respuesta LLM
-      const fase = document.getElementById(`${cfg.prefix}-fase`);
-      if (fase && _recLog.shown.includes("RESPUESTA DEL LLM")) {
-        fase.textContent = "Generando…";
-      }
-    }
-    if (d.done) {
-      es.close();
-      _recLog.flush();
-      const fase = document.getElementById(`${cfg.prefix}-fase`);
-      if (fase) fase.textContent = "Procesando respuesta…";
-      const tokenEl = document.getElementById(`${cfg.prefix}-token-count`);
-      if (tokenEl) tokenEl.textContent = "";
-      const btnDet = document.getElementById(`${cfg.prefix}-btn-detener`);
-      if (btnDet) btnDet.hidden = true;
-      setTimeout(() => {
-        apiFetch(`${cfg.api(state.slug)}/sesion`)
-          .then(s => renderPanelSesion(cfg, s))
-          .catch(err => {
-            content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error al cargar propuestas: ${esc(err.message)}</p>`;
-          });
-      }, 300);
-    }
-  };
-  es.onerror = () => {
-    es.close();
-    apiFetch(`${cfg.api(state.slug)}/sesion`)
-      .then(s => {
-        if (s.estado === "en_revision") renderPanelSesion(cfg, s);
-        else content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error: ${esc(s.razon_falla || "Error de conexión")}</p>`;
-      })
-      .catch(() => {
-        content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error de conexión con el servidor.</p>`;
-      });
-  };
-}
-
-function _conectarBotonDetener(cfg, es, content) {
-  // Wireing del botón "Detener" (presente en el HTML de procesamiento).
-  const btnDet = document.getElementById(`${cfg.prefix}-btn-detener`);
-  if (!btnDet) return;
-  btnDet.onclick = async () => {
-    btnDet.disabled = true;
-    btnDet.textContent = "Deteniendo…";
-    es.close();
-    try {
-      await apiFetch(`${cfg.api(state.slug)}/sesion`, { method: "DELETE" });
-    } catch(_) {}
-    _recLog.flush();
-    content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Detenido.</p>`;
-    const footer = document.getElementById(cfg.footerId);
-    if (footer) footer.hidden = true;
-    actualizarBotonSesion(cfg);
-  };
-}
-
 // Los paneles de sesión (reconexión/consolidación) comparten la misma
 // posición absoluta sobre el grafo — sólo uno puede estar abierto a la vez.
 const _PANELES_SESION = [SESION_RECONEXION, SESION_CONSOLIDACION];
@@ -1588,48 +1353,45 @@ function _cerrarOtrosPaneles(cfg) {
 }
 
 function abrirStreamExistente(cfg) {
-  const panel   = document.getElementById(cfg.panelId);
-  const content = document.getElementById(cfg.contentId);
-  const footer  = document.getElementById(cfg.footerId);
-  if (!panel || !content) return;
-  _cerrarOtrosPaneles(cfg);
-  panel.hidden = false;
-  _mostrarUIprocesando(cfg, content, footer);
-
-  const es = new EventSource(sseUrl(`${cfg.api(state.slug)}/stream`));
-  _conectarStream(cfg, es, content, footer);
-  _conectarBotonDetener(cfg, es, content);
+  _sesionConModal(cfg, false);
 }
 
-async function abrirPanelSesion(cfg) {
-  const panel   = document.getElementById(cfg.panelId);
-  const content = document.getElementById(cfg.contentId);
-  const footer  = document.getElementById(cfg.footerId);
-  if (!panel) return;
-
-  // Verificar si hay sesión activa
+async function abrirPanelSesion(cfg, slug = state.slug) {
+  if (_iaTarea) return;
   let sesion = null;
-  try {
-    sesion = await apiFetch(`${cfg.api(state.slug)}/sesion`);
-  } catch(e) {}
-
-  if (sesion && sesion.estado === "en_revision") { renderPanelSesion(cfg, sesion); return; }
-  if (sesion && sesion.estado === "procesando")  { abrirStreamExistente(cfg); return; }
-
-  // Iniciar nueva sesión
-  _cerrarOtrosPaneles(cfg);
-  panel.hidden = false;
-  limpiarCamino();
-  _mostrarUIprocesando(cfg, content, footer);
-
-  try {
-    await apiFetch(`${cfg.api(state.slug)}/iniciar`, { method: "POST", body: "{}" });
-    const es = new EventSource(sseUrl(`${cfg.api(state.slug)}/stream`));
-    _conectarStream(cfg, es, content, footer);
-    _conectarBotonDetener(cfg, es, content);
-  } catch(e) {
-    content.innerHTML = `<p class="muted" style="padding:var(--sn-s-4)">Error al iniciar: ${esc(e.message)}</p>`;
+  try { sesion = await apiFetch(`${cfg.api(slug)}/sesion`); }
+  catch (err) {
+    if (!err.message.startsWith("404:")) {
+      abrirTareaIA({ titulo: "Consultar tarea con IA", ejecutar: async () => { throw err; } });
+      return;
+    }
   }
+  if (sesion?.estado === "en_revision") {
+    if (state.slug !== slug) await abrirTexto(slug);
+    renderPanelSesion(cfg, sesion);
+    return;
+  }
+  _sesionConModal(cfg, sesion?.estado !== "procesando", slug);
+}
+
+function _sesionConModal(cfg, iniciar, slug = state.slug) {
+  const api = cfg.api(slug);
+  abrirTareaIA({
+    titulo: cfg === SESION_CONSOLIDACION ? "Fusionar conceptos" : "Reconectar conceptos",
+    detener: () => apiFetch(`${api}/sesion`, { method: "DELETE" }),
+    ejecutar: async ui => {
+      if (iniciar) await apiFetch(`${api}/iniciar`, { method: "POST", body: "{}" });
+      await _streamTareaIA(`${api}/stream`, ui);
+      const sesion = await apiFetch(`${api}/sesion`);
+      if (sesion.estado !== "en_revision") throw new Error(sesion.razon_falla || "Tarea cancelada");
+      _iaTarea.continuar = async () => {
+        if (state.slug !== slug) await abrirTexto(slug);
+        renderPanelSesion(cfg, sesion);
+      };
+      _iaTarea.textoContinuar = "Revisar propuestas";
+      return `${sesion.propuestas.length} propuesta(s) listas para revisar.`;
+    },
+  });
 }
 
 function renderPanelSesion(cfg, sesion) {
@@ -1801,13 +1563,6 @@ async function initConceptos() {
         await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
       } catch(e) { alert("Error al agregar concepto: " + e.message); }
     });
-    document.getElementById("btn-simplificar-grafo").addEventListener("click", async () => {
-      if (!confirm("¿Simplificar el grafo? Se ocultarán los conceptos menos seguros -- reversible.")) return;
-      try {
-        await apiFetch(`/api/grafo/${encodeURIComponent(state.slug)}/simplificar`, { method: "POST" });
-        await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
-      } catch(e) { alert("Error al simplificar: " + e.message); }
-    });
     document.getElementById("btn-eliminar-grafo").addEventListener("click", async () => {
       if (!confirm("¿Eliminar el grafo completo de este texto? El texto fuente se conserva y podés volver a procesarlo o armar el grafo a mano.")) return;
       try {
@@ -1818,13 +1573,8 @@ async function initConceptos() {
     document.getElementById("btn-procesar-seleccion").addEventListener("click", async () => {
       const labels = state.grafo.nodes.filter(n => conceptosState.seleccionados.has(n.id)).map(n => n.label);
       if (!labels.length) return;
-      if (!confirm(`Procesar el texto buscando solo relaciones para estos ${labels.length} conceptos:\n\n${labels.join(", ")}\n\n¿Continuar?`)) return;
-      try {
-        await apiFetch(`/api/extracciones/${encodeURIComponent(state.slug)}/procesar`, {
-          method: "POST", body: JSON.stringify({ force: true, conceptos_objetivo: labels }),
-        });
-        volverBiblioteca();
-      } catch(e) { alert("Error al procesar: " + e.message); }
+      _procesarConModal(state.slug, { force: true, conceptos_objetivo: labels },
+        `Buscar relaciones para estos ${labels.length} conceptos: ${labels.join(", ")}.`);
     });
   }
 }
@@ -2326,207 +2076,211 @@ function initFichaModal() {
   });
 }
 
-// ── Re-procesar desde la biblioteca ─────────────────────────────────
+// ── Un mismo diálogo para las tareas con IA ─────────────────────────
 
-let _reproSlug        = null;  // slug actual del diálogo reprocesar
-let _reproEs          = null;  // EventSource SSE activo
-let _reproPoll        = null;  // intervalo de polling de progreso
-let _reproTerminado   = false; // true cuando la extracción finalizó
+let _iaTarea = null;
 
-function _reproAbrirModal(slug) {
-  _reproSlug      = slug;
-  _reproEs        = null;
-  _reproPoll      = null;
-  _reproTerminado = false;
+function abrirTareaIA(tarea) {
+  if (_iaTarea || state.soloLectura) return;
+  _iaTarea = tarea;
+  tarea.focoAnterior = document.activeElement;
+  const el = id => document.getElementById(id);
+  const log = el("repro-log");
+  const barra = el("repro-progress-inner");
+  el("repro-modal-titulo").textContent = tarea.titulo;
+  el("repro-confirm-titulo").textContent = tarea.titulo;
+  el("repro-confirm-aviso").textContent = tarea.aviso || "";
+  el("repro-estado-confirm").hidden = !tarea.aviso;
+  el("repro-estado-proc").hidden = true;
+  el("repro-estado-fin").hidden = true;
+  el("repro-btn-ok").hidden = !tarea.aviso;
+  el("repro-btn-ok").textContent = "Comenzar";
+  el("repro-btn-cancelar").hidden = !tarea.aviso;
+  el("repro-btn-cerrar").hidden = true;
+  el("repro-modal-cerrar").disabled = false;
+  el("repro-modal").hidden = false;
+  log.textContent = "";
+  el("repro-btn-ok").onclick = iniciar;
+  el("repro-btn-ok").focus();
 
-  const titulo = slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-
-  // Resetear a estado confirmar
-  document.getElementById("repro-confirm-titulo").textContent = `¿Re-procesar «${titulo}»?`;
-  document.getElementById("repro-estado-confirm").hidden = false;
-  document.getElementById("repro-estado-proc").hidden    = true;
-  document.getElementById("repro-estado-fin").hidden     = true;
-
-  document.getElementById("repro-btn-ok").hidden      = false;
-  document.getElementById("repro-btn-cancelar").hidden = false;
-  document.getElementById("repro-btn-cerrar").hidden   = true;
-
-  document.getElementById("repro-modal").hidden = false;
-}
-
-function _reproLimpiar() {
-  if (_reproEs)   { _reproEs.close(); _reproEs = null; }
-  if (_reproPoll) { clearInterval(_reproPoll); _reproPoll = null; }
-}
-
-function _reproCerrar() {
-  _reproLimpiar();
-  document.getElementById("repro-modal").hidden = true;
-  if (_reproTerminado) {
-    // Refrescar la biblioteca tras un reprocesar exitoso
-    apiFetch("/api/extracciones").then(exts => {
-      renderBiblioteca(exts);
-      _arrancarPolling();
-    }).catch(() => {});
-  }
-  _reproSlug = null;
-}
-
-function _reproIniciar() {
-  const slug = _reproSlug;
-  if (!slug) return;
-
-  // Ocultar confirm, mostrar procesando
-  document.getElementById("repro-estado-confirm").hidden = true;
-  document.getElementById("repro-estado-proc").hidden    = false;
-  document.getElementById("repro-btn-ok").hidden         = true;
-  document.getElementById("repro-btn-cancelar").hidden   = true;
-  document.getElementById("repro-btn-cerrar").hidden     = true;
-
-  const logPre      = document.getElementById("repro-log");
-  const faseEl      = document.getElementById("repro-fase");
-  const tokensEl    = document.getElementById("repro-tokens");
-  const progressEl  = document.getElementById("repro-progress-inner");
-  const btnDetener  = document.getElementById("repro-btn-detener");
-
-  logPre.textContent = "";
-  logPre.classList.add("rec-log-pre--active");
-  faseEl.textContent  = "Iniciando…";
-  tokensEl.textContent = "";
-
-  // POST para arrancar el reproceso
-  apiFetch(`/api/extracciones/${encodeURIComponent(slug)}/procesar`,
-    { method: "POST", body: JSON.stringify({ force: true }) })
-  .catch(err => {
-    _reproMostrarFin(`Error al iniciar: ${err.message}`, false);
-    return;
-  });
-
-  // Conectar SSE para log en tiempo real
-  const es = new EventSource(sseUrl(`/api/extracciones/${encodeURIComponent(slug)}/stream`));
-  _reproEs = es;
-
-  es.onmessage = ev => {
-    const d = JSON.parse(ev.data);
-    if (d.chunk) {
-      logPre.textContent = (logPre.textContent + d.chunk).slice(-12000);
-      logPre.scrollTop   = logPre.scrollHeight;
-    }
-    if (typeof d.tokens === "number" && d.tokens > 0) {
-      tokensEl.textContent = `${d.tokens} tokens`;
-    }
-    if (d.done) {
-      _reproEs = null;
-      es.close();
-      _reproFinalizarProceso(d.estado);
-    }
-  };
-  es.onerror = () => {
-    if (_reproEs) { _reproEs = null; es.close(); }
-    // Leer estado real antes de cerrar
-    apiFetch("/api/extracciones").then(exts => {
-      const ext = exts.find(x => x.slug === slug);
-      _reproFinalizarProceso(ext?.estado);
-    }).catch(() => _reproFinalizarProceso(null));
-  };
-
-  // Polling para barra de progreso y fase
-  _reproPoll = setInterval(async () => {
-    try {
-      const exts = await apiFetch("/api/extracciones");
-      const ext  = exts.find(x => x.slug === slug);
-      if (!ext) return;
-
-      const pct     = ext.porcentaje || 0;
-      const tokens  = ext.tokens || 0;
-      const elapsed = ext.elapsed || 0;
-      const fase    = ext.fase_extraccion;
-
-      // Barra de progreso: indeterminada → determinada cuando hay pct
-      if (pct > 0) {
-        progressEl.className = "repro-progress-determinate";
-        progressEl.style.width = `${pct}%`;
-      } else {
-        progressEl.className = "repro-progress-indeterminate";
-        progressEl.style.width = "";
+  async function iniciar() {
+    if (tarea.activa) return;
+    tarea.activa = true;
+    el("repro-estado-confirm").hidden = true;
+    el("repro-estado-proc").hidden = false;
+    el("repro-btn-ok").hidden = true;
+    el("repro-btn-cancelar").hidden = true;
+    el("repro-modal-cerrar").disabled = true;
+    const detener = el("repro-btn-detener");
+    detener.hidden = !tarea.detener;
+    detener.disabled = false;
+    detener.textContent = "Detener";
+    el("repro-fase").textContent = "Iniciando…";
+    el("repro-tokens").textContent = "";
+    barra.className = "repro-progress-indeterminate";
+    barra.style.width = "";
+    log.classList.add("rec-log-pre--active");
+    log.focus();
+    const ui = {
+      reset() { log.textContent = ""; },
+      append(texto) {
+        const abajo = log.scrollHeight - log.scrollTop - log.clientHeight < 40;
+        log.textContent += texto;
+        if (abajo) log.scrollTop = log.scrollHeight;
+      },
+      progreso(d) {
+        if (d.chunk) ui.append(d.chunk);
+        if (typeof d.tokens === "number") el("repro-tokens").textContent = `${d.tokens} tokens`;
+        if (d.fase) el("repro-fase").textContent = d.fase;
+      },
+    };
+    detener.onclick = async () => {
+      detener.disabled = true;
+      detener.textContent = "Deteniendo…";
+      try {
+        await tarea.detener();
+        ui.append("\nCancelación solicitada. Esperando confirmación…\n");
+      } catch (err) {
+        ui.append(`\nNo se pudo detener: ${err.message}\n`);
+        detener.disabled = false;
       }
-
-      // Fase
-      let faseStr;
-      if (fase === "leyendo")            faseStr = "Leyendo texto…";
-      else if (fase === "guardando")     faseStr = "Guardando…";
-      else if (fase === "cargando_modelo") faseStr = "Cargando modelo en memoria…";
-      else if (tokens === 0 && elapsed < 10) faseStr = "Iniciando…";
-      else if (tokens > 0)               faseStr = "Generando…";
-      else                               faseStr = "Esperando al modelo…";
-      faseEl.textContent = faseStr;
-
-      if (tokens > 0) tokensEl.textContent = `${tokens} tokens`;
-
-      if (!ext.procesando && !_reproTerminado) _reproFinalizarProceso(ext.estado);
-    } catch(_) {}
-  }, 600);
-
-  // Botón Detener
-  btnDetener.disabled  = false;
-  btnDetener.textContent = "Detener";
-  btnDetener.onclick = async () => {
-    btnDetener.disabled    = true;
-    btnDetener.textContent = "Deteniendo…";
-    _reproLimpiar();
+    };
+    let exito = false;
     try {
-      await apiFetch(`/api/extracciones/${encodeURIComponent(slug)}/procesar`, { method: "DELETE" });
-    } catch(_) {}
-    logPre.classList.remove("rec-log-pre--active");
-    _reproMostrarFin("Re-procesamiento detenido.", false);
-  };
-}
-
-function _reproFinalizarProceso(estado) {
-  if (_reproTerminado) return;
-  _reproTerminado = true;
-  _reproLimpiar();
-
-  const logPre = document.getElementById("repro-log");
-  if (logPre) logPre.classList.remove("rec-log-pre--active");
-
-  const esError    = estado && (estado.startsWith("error:") || estado === "cancelado");
-  const esCancelado = estado === "cancelado";
-
-  const progressEl = document.getElementById("repro-progress-inner");
-  if (progressEl) {
-    progressEl.className = esError ? "repro-progress-determinate" : "repro-progress-determinate";
-    progressEl.style.width = esError ? "0%" : "100%";
-  }
-  const faseEl = document.getElementById("repro-fase");
-  if (faseEl) faseEl.textContent = esError ? "Error" : "Completado";
-
-  // Pequeño delay para que el usuario vea el estado final
-  setTimeout(() => {
-    document.getElementById("repro-estado-proc").hidden = true;
-    if (esCancelado) {
-      _reproMostrarFin("Procesamiento cancelado.", false);
-    } else if (esError) {
-      const detalle = estado.replace(/^error:/, "").trim();
-      _reproMostrarFin(`Error al procesar: ${detalle || "revisa la configuración del LLM"}`, false);
-    } else {
-      _reproMostrarFin("El texto ha sido re-procesado correctamente. Los nuevos conceptos y relaciones han sido añadidos al grafo.", true);
+      el("repro-fin-msg").textContent = await tarea.ejecutar(ui);
+      el("repro-fase").textContent = "Completado";
+      exito = true;
+    } catch (err) {
+      el("repro-fin-msg").textContent = err.message;
+      el("repro-fase").textContent = "Tarea interrumpida";
+    } finally {
+      tarea.activa = false;
+      log.classList.remove("rec-log-pre--active");
+      barra.className = "repro-progress-determinate";
+      barra.style.width = exito ? "100%" : "0%";
+      detener.hidden = true;
+      el("repro-estado-fin").hidden = false;
+      el("repro-modal-cerrar").disabled = false;
+      el("repro-btn-cerrar").hidden = false;
+      el("repro-btn-cerrar").textContent = tarea.textoContinuar || "Cerrar";
+      el("repro-btn-cerrar").focus();
     }
-  }, 600);
+  }
+  if (!tarea.aviso) iniciar();
 }
 
-function _reproMostrarFin(msg, exito) {
-  document.getElementById("repro-estado-confirm").hidden = true;
-  document.getElementById("repro-estado-proc").hidden    = true;
-  document.getElementById("repro-estado-fin").hidden     = false;
-  document.getElementById("repro-fin-msg").textContent   = msg;
-  document.getElementById("repro-btn-ok").hidden         = true;
-  document.getElementById("repro-btn-cancelar").hidden   = true;
-  document.getElementById("repro-btn-cerrar").hidden     = false;
+async function _reproCerrar() {
+  if (_iaTarea?.activa) return;
+  const tarea = _iaTarea;
+  _iaTarea = null;
+  document.getElementById("repro-modal").hidden = true;
+  tarea?.focoAnterior?.focus();
+  try { await tarea?.continuar?.(); } catch (err) { alert(`No se pudo abrir el resultado: ${err.message}`); }
+}
+
+async function _streamTareaIA(path, ui) {
+  const token = await window.lectografoAuth?.getIdToken?.();
+  const url = token ? `${path}?token=${encodeURIComponent(token)}` : path;
+  return new Promise((resolve, reject) => {
+    const es = new EventSource(url);
+    let reconectando = false, fallos = 0;
+    es.onopen = () => {
+      // Cada conexión del servidor vuelve a enviar el registro desde el inicio.
+      if (reconectando) ui.reset?.();
+      reconectando = false;
+      fallos = 0;
+      ui.progreso({ fase: "Generando…" });
+    };
+    es.onmessage = ev => {
+      try {
+        const d = JSON.parse(ev.data);
+        ui.progreso(d);
+        if (d.done) { es.close(); resolve(d); }
+      } catch (err) { es.close(); reject(err); }
+    };
+    es.onerror = () => {
+      if (es.readyState !== 2 && ++fallos < 3) {
+        reconectando = true;
+        ui.progreso({ fase: "Reconectando con la tarea…" });
+        return;
+      }
+      es.close();
+      reject(new Error("Se perdió la conexión. La tarea puede seguir en el servidor; comprueba su estado antes de repetirla."));
+    };
+  });
+}
+
+async function _streamSimplificacion(slug, ui) {
+  const r = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}/simplificar/stream`, { method: "POST" }, true);
+  const reader = r.body.getReader();
+  const decoder = new TextDecoder();
+  let pendiente = "", terminado = false;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      pendiente += decoder.decode(value, { stream: !done });
+      const eventos = pendiente.split("\n\n");
+      pendiente = eventos.pop();
+      for (const evento of eventos) {
+        if (!evento.startsWith("data: ")) continue;
+        const d = JSON.parse(evento.slice(6));
+        ui.progreso(d);
+        if (d.error) throw new Error(d.error);
+        if (d.done) terminado = true;
+      }
+      if (done) break;
+    }
+    if (!terminado) throw new Error("La conexión terminó sin confirmar el resultado de la simplificación.");
+  } finally {
+    await reader.cancel();
+    reader.releaseLock();
+  }
+}
+
+function _procesarConModal(slug, payload, aviso) {
+  const api = `/api/extracciones/${encodeURIComponent(slug)}`;
+  abrirTareaIA({
+    titulo: payload?.force ? "Reprocesar texto" : "Procesar texto",
+    aviso,
+    detener: () => apiFetch(`${api}/procesar`, { method: "DELETE" }),
+    ejecutar: async ui => {
+      if (payload) await apiFetch(`${api}/procesar`, { method: "POST", body: JSON.stringify(payload) });
+      const d = await _streamTareaIA(`${api}/stream`, ui);
+      if (d.estado !== "listo") throw new Error(d.estado || "El servidor no confirmó el resultado.");
+      delete _miniGrafoCache[slug];
+      if (state.slug === slug) {
+        await refrescarValidacion(); await cargarGrafo();
+        tabsInit.clear();
+        state.mapaCards?.closeAll();
+        await initTab(state.tabActivo);
+      } else {
+        renderBiblioteca(await apiFetch("/api/extracciones"));
+      }
+      return "Texto procesado. Los conceptos y relaciones están en el grafo común.";
+    },
+  });
+}
+
+function _simplificarConModal(slug) {
+  abrirTareaIA({
+    titulo: "Simplificar grafo",
+    aviso: "Se ocultarán los conceptos menos seguros. Los datos se conservan.",
+    ejecutar: async ui => {
+      await _streamSimplificacion(slug, ui);
+      delete _miniGrafoCache[slug];
+      if (state.slug === slug) {
+        await cargarGrafo(); tabsInit.delete("mapa"); renderConceptos();
+      } else {
+        renderBiblioteca(await apiFetch("/api/extracciones"));
+      }
+      return "Simplificación completada. El grafo común está actualizado.";
+    },
+  });
 }
 
 function reprocesarDesdeLibreria(slug) {
-  _reproAbrirModal(slug);
+  _procesarConModal(slug, { force: true },
+    "Se analizará el texto otra vez. Los conceptos, relaciones y glosas existentes se conservarán.");
 }
 
 async function publicarDocumento(slug, titulo, btn) {
@@ -2557,13 +2311,19 @@ async function compartirDocumento(slug, titulo) {
 }
 
 function _initReproModal() {
-  document.getElementById("repro-modal-cerrar").addEventListener("click", _reproCerrar);
-  document.getElementById("repro-modal-bg").addEventListener("click",    _reproCerrar);
-  document.getElementById("repro-btn-cancelar").addEventListener("click", _reproCerrar);
-  document.getElementById("repro-btn-cerrar").addEventListener("click",   _reproCerrar);
-  document.getElementById("repro-btn-ok").addEventListener("click",       _reproIniciar);
+  ["repro-modal-cerrar", "repro-modal-bg", "repro-btn-cancelar", "repro-btn-cerrar"].forEach(id =>
+    document.getElementById(id).addEventListener("click", _reproCerrar)
+  );
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && !document.getElementById("repro-modal").hidden) _reproCerrar();
+    const modal = document.getElementById("repro-modal");
+    if (modal.hidden) return;
+    if (e.key === "Escape") { e.preventDefault(); _reproCerrar(); }
+    if (e.key === "Tab") {
+      const botones = [...modal.querySelectorAll("button, [tabindex='0']")].filter(b => !b.disabled && b.getClientRects().length);
+      const primero = botones[0], ultimo = botones[botones.length - 1];
+      if (e.shiftKey && document.activeElement === primero) { e.preventDefault(); ultimo?.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero?.focus(); }
+    }
   });
 }
 document.addEventListener("DOMContentLoaded", _initReproModal);

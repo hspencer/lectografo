@@ -336,16 +336,11 @@ surface TablaConceptos {
         InvestigadorAgregaConcepto(grafo.transcripcion, label, descripcion?, tipo?)
             -- "Anadir concepto": la interfaz solo pide el label.
             -- validacion.allium, AgregarConceptoManual.
-        InvestigadorSimplificaGrafo(grafo)
-            -- Solo pide confirmacion, sin numero. El boton se ofrece siempre;
-            -- con menos de config.min_nodos_para_simplificar nodos el sistema
-            -- lo rechaza con un error. grafo.allium, SimplificarGrafo. No hay
-            -- control para deshacer (DeshacerSimplificacion existe solo en el
-            -- sistema).
         InvestigadorSolicitaExtraccionDirigida(grafo.transcripcion, activo, prompt, conceptos_objetivo)
             when conceptos_objetivo.count > 0
             -- "Procesar con seleccionados": conceptos_objetivo = labels de las
-            -- filas seleccionadas. Pide confirmacion y vuelve a la biblioteca.
+            -- filas seleccionadas. Pide confirmacion y abre el modal comun
+            -- de IA, con el registro completo de la tarea.
             -- extraccion.allium, IniciarExtraccionDirigida.
         InvestigadorReseteaGrafo(grafo.transcripcion)
             -- "Eliminar grafo", con confirmacion. grafo.allium, ResetearGrafo.
@@ -662,8 +657,10 @@ surface PanelBiblioteca {
             -- (multiusuario.allium, ListarConQuienEstaCompartido).
             for p in multiusuario/PermisoCompartido where slug = t.id:
                 p.beneficiaria_email
-        -- Textos de otras bibliotecas compartidos conmigo, marcados como
-        -- compartidos y con el nombre de la biblioteca de origen
+        -- Un icono abre el listado completo de personas con acceso,
+        -- incluida la de la biblioteca original, sin duplicados.
+        -- No aparece la leyenda "Compartido por" en la tarjeta.
+        -- Textos de otras bibliotecas compartidos conmigo
         -- (multiusuario.allium, TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria).
         for p in investigador.permisos_recibidos:
             p.slug
@@ -687,7 +684,14 @@ surface PanelBiblioteca {
         -- Las acciones de un texto ya procesado viven en un menu de acciones
         -- en la esquina de su tarjeta. Tanto en textos propios como
         -- compartidos ofrece Ficha, Compartir, Publicar/Despublicar y
-        -- Re-procesar (multiusuario.allium, colaboracion plana).
+        -- Re-procesar (multiusuario.allium, colaboracion plana). Las acciones
+        -- con IA quedan tras un separador y el rotulo "Operaciones en el
+        -- grafo": Procesar (sin extraccion), o Reprocesar, Fusionar conceptos
+        -- y Simplificar grafo. La fusion ya no tiene un boton en el mapa y
+        -- simplificar ya no tiene un boton en la pestaña Conceptos.
+        InvestigadorSimplificaGrafo(grafo)
+            -- Con confirmacion, sin numero. Con menos de tres nodos se
+            -- rechaza con error (grafo.allium, SimplificarGrafo).
         InvestigadorComparteTexto(investigador, slug, email)
             -- Pide solo el email; sin eleccion de rol.
             -- multiusuario.allium, CompartirTexto.
@@ -704,6 +708,18 @@ surface PanelBiblioteca {
         -- El conteo de tokens se actualiza en cada token generado,
         -- sin esperar al fin de la extracción. El porcentaje nunca
         -- supera el 90% hasta que la extracción completa.
+
+    @guarantee ModalComunDeIA
+        -- Procesar (incluida la seleccion dirigida), reprocesar, fusionar,
+        -- reconectar y simplificar usan el mismo modal emergente: titulo,
+        -- estado, tokens y registro completo en vivo, sin recortar la salida.
+        -- No cierra por Escape, fondo ni boton mientras la tarea esta activa.
+        -- Detener solicita cancelacion y espera la respuesta del servidor en
+        -- los flujos que lo admiten; simplificar no ofrece ese boton.
+        -- El registro sigue visible al finalizar, tambien si hay un error.
+        -- Una desconexion sin confirmacion nunca se presenta como exito.
+        -- Tras fusionar o reconectar, "Revisar propuestas" abre el texto y su
+        -- panel de revision antes de aplicar cambios al grafo comun.
 
     @guarantee CancelacionResponsiva
         -- Tras CancelarExtraccion, el proceso se detiene en el próximo token

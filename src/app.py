@@ -541,8 +541,8 @@ def _tarea_extraer(slug: str, ruta: Path) -> None:
         t = _TAREAS.get(slug)
         if isinstance(t, dict):
             buf = t.get("texto_llm", "")
-            # Ventana deslizante: últimos 4000 chars del output crudo
-            t["texto_llm"] = (buf + fragmento)[-4000:]
+            # El stream conserva el registro completo hasta terminar la tarea.
+            t["texto_llm"] = buf + fragmento
 
     def _should_cancel() -> bool:
         t = _TAREAS.get(slug)
@@ -597,16 +597,16 @@ def _tarea_extraer(slug: str, ruta: Path) -> None:
         )
 
         if not resultado.conceptos:
-            _TAREAS[slug] = {"estado": "error:extraccion_vacia", "inicio": inicio, "fase": ""}
+            _TAREAS.setdefault(slug, {}).update({"estado": "error:extraccion_vacia", "inicio": inicio, "fase": ""})
             return
 
         _fase("guardando")
         _merge_y_guardar(slug, resultado, inicio, mp_previos)
-        _TAREAS[slug] = {"estado": "listo", "inicio": inicio, "fase": "listo"}
+        _TAREAS.setdefault(slug, {}).update({"estado": "listo", "inicio": inicio, "fase": "listo"})
     except (_ExtraccionCancelada, InterruptedError):
-        _TAREAS[slug] = {"estado": "cancelado", "inicio": inicio, "fase": ""}
+        _TAREAS.setdefault(slug, {}).update({"estado": "cancelado", "inicio": inicio, "fase": ""})
     except Exception as exc:
-        _TAREAS[slug] = {"estado": f"error:{exc}", "inicio": inicio, "fase": "error"}
+        _TAREAS.setdefault(slug, {}).update({"estado": f"error:{exc}", "inicio": inicio, "fase": "error"})
 
 
 def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
@@ -694,12 +694,22 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
             texto_lote     = "\n\n".join(p.texto for p in lote)
             system_prompt  = prompt_fragmento.replace("{tesauro_context}", tesauro_context)
 
+            tokens_previos = _TAREAS.get(slug, {}).get("tokens", 0)
+
+            def _on_texto_lote(texto: str) -> None:
+                tarea = _TAREAS.get(slug)
+                if isinstance(tarea, dict):
+                    tarea["texto_llm"] = tarea.get("texto_llm", "") + texto
+
+            _on_texto_lote(f"\n── Lote {i+1}/{total_lotes} ──\n")
+
             def _on_tok(count: int, slug=slug) -> None:
                 t = _TAREAS.get(slug)
                 if isinstance(t, dict):
-                    t["tokens"] = t.get("tokens", 0) + count
+                    t["tokens"] = tokens_previos + count
 
-            raw = llm.invocar(system_prompt, texto_lote, on_token=_on_tok)
+            raw = llm.invocar(system_prompt, texto_lote, on_token=_on_tok,
+                              on_texto=_on_texto_lote, should_cancel=_should_cancel)
             resultado_lote = llm.parsear_respuesta(raw)
 
             # Deduplicar conceptos del lote contra globales y construir id_remap
@@ -744,7 +754,7 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
             _TAREAS[slug]["lotes_procesados"] = total_lotes
 
         if not conceptos_globales:
-            _TAREAS[slug] = {"estado": "error:extraccion_vacia", "inicio": inicio, "fase": ""}
+            _TAREAS.setdefault(slug, {}).update({"estado": "error:extraccion_vacia", "inicio": inicio, "fase": ""})
             return
 
         resultado = ResultadoExtraccion(
@@ -754,12 +764,12 @@ def _tarea_extraer_incremental(slug: str, ruta: Path) -> None:
 
         _fase("guardando")
         _merge_y_guardar(slug, resultado, inicio, mp_previos)
-        _TAREAS[slug] = {"estado": "listo", "inicio": inicio, "fase": "listo"}
+        _TAREAS.setdefault(slug, {}).update({"estado": "listo", "inicio": inicio, "fase": "listo"})
 
     except (_ExtraccionCancelada, InterruptedError):
-        _TAREAS[slug] = {"estado": "cancelado", "inicio": inicio, "fase": ""}
+        _TAREAS.setdefault(slug, {}).update({"estado": "cancelado", "inicio": inicio, "fase": ""})
     except Exception as exc:
-        _TAREAS[slug] = {"estado": f"error:{exc}", "inicio": inicio, "fase": "error"}
+        _TAREAS.setdefault(slug, {}).update({"estado": f"error:{exc}", "inicio": inicio, "fase": "error"})
 
 
 class ImportarTranscriptPayload(BaseModel):
@@ -982,6 +992,10 @@ def simplificar_grafo(slug: str):
     """Sintetiza el grafo a los conceptos seguros de conservar: el LLM decide
     cuáles (no se le pide una cantidad) y oculta el resto (reversible con
     DELETE, que limpia conceptos_ocultos)."""
+    return _simplificar_grafo(slug)
+
+
+def _simplificar_grafo(slug: str, on_token=None, on_texto=None, should_cancel=None):
     from src.llm import get_llm
     from src.pipeline.simplificacion import simplificar
 
@@ -990,13 +1004,62 @@ def simplificar_grafo(slug: str):
     if len(grafo.nodos) < 3:
         raise HTTPException(400, "Este grafo ya es demasiado chico para simplificar")
 
-    conservar = simplificar(grafo, get_llm())
+    conservar = simplificar(grafo, get_llm(), on_token=on_token,
+                           on_texto=on_texto, should_cancel=should_cancel)
+    if should_cancel and should_cancel():
+        raise InterruptedError("Simplificación cancelada")
+    # Recargar para conservar las glosas o ediciones hechas durante la llamada.
+    estado, ruta_val = _cargar_o_crear(slug)
     ocultos = [n.id for n in grafo.nodos if n.id not in conservar]
     estado.conceptos_ocultos = list(dict.fromkeys(estado.conceptos_ocultos + ocultos))
     guardar(estado, ruta_val)
 
     grafo_simplificado = materializar_desde_validacion(estado)
     return serializar_para_d3(grafo_simplificado)
+
+
+@app.post("/api/grafo/{slug}/simplificar/stream")
+async def stream_simplificacion(slug: str):
+    from threading import Event
+
+    async def eventos():
+        loop = asyncio.get_running_loop()
+        cola = asyncio.Queue()
+        cancelado = Event()
+
+        def emitir(**datos):
+            if not cancelado.is_set():
+                loop.call_soon_threadsafe(cola.put_nowait, datos)
+
+        def ejecutar():
+            try:
+                emitir(chunk="Identificando los conceptos seguros de conservar…\n")
+                resultado = _simplificar_grafo(
+                    slug, on_token=lambda n: emitir(tokens=n),
+                    on_texto=lambda texto: emitir(chunk=texto),
+                    should_cancel=cancelado.is_set,
+                )
+                emitir(done=True, resultado=resultado)
+            except Exception as exc:
+                emitir(done=True, error=str(exc))
+
+        tarea = asyncio.create_task(asyncio.to_thread(ejecutar))
+        try:
+            while True:
+                try:
+                    datos = await asyncio.wait_for(cola.get(), timeout=10)
+                except asyncio.TimeoutError:
+                    yield ": esperando\n\n"
+                    continue
+                yield f"data: {json.dumps(datos, ensure_ascii=False)}\n\n"
+                if datos.get("done"):
+                    await tarea
+                    break
+        finally:
+            cancelado.set()
+
+    return StreamingResponse(eventos(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
 @app.delete("/api/grafo/{slug}/simplificar")
@@ -1355,7 +1418,7 @@ async def iniciar_consolidacion(slug: str, background_tasks: BackgroundTasks):
         _CONSOLIDACION_TOKENS[slug] = total
 
     def _on_log_cons(msg: str) -> None:
-        _CONSOLIDACION_LOG[slug] = (_CONSOLIDACION_LOG.get(slug, "") + msg)[-16000:]
+        _CONSOLIDACION_LOG[slug] = _CONSOLIDACION_LOG.get(slug, "") + msg
 
     def _tarea():
         from src.pipeline.consolidacion import ejecutar_consolidacion
@@ -1368,7 +1431,7 @@ async def iniciar_consolidacion(slug: str, background_tasks: BackgroundTasks):
                 grafos_dir=GRAFOS,
                 max_chars_transcripcion=settings.max_chars_prompt,
                 on_token=_on_token_cons,
-                on_texto=None,
+                on_texto=_on_log_cons,
                 on_log=_on_log_cons,
                 should_cancel=lambda: _CONSOLIDACION_CANCEL.get(slug, False),
             )

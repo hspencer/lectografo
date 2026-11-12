@@ -66,6 +66,14 @@ Las preguntas abiertas (`open question`) son decisiones explicitamente diferidas
   No hay edición ni borrado individual de glosas en la aplicación actual.
 - El menú de los textos recibidos ofrece las mismas acciones que el de los
   propios. La ficha muestra las personas con quienes se ha compartido.
+- Las tarjetas muestran un ícono de personas que despliega el listado completo
+  de acceso, incluida la persona de la biblioteca original, sin duplicados.
+- El menú ⋮ agrupa las acciones de IA después de un separador, bajo
+  «Operaciones en el grafo»: procesar, reprocesar, fusionar y simplificar.
+  Se retiran los botones de fusión del mapa y de simplificación de Conceptos.
+- Todas las tareas con IA muestran su progreso y registro completo en un mismo
+  modal, que permanece abierto durante la ejecución y conserva el log al terminar.
+  La fusión pasa a revisión de propuestas antes de modificar el grafo.
 - La reextracción conserva las glosas con su autoría, las relaciones ocultas
   y el resto del trabajo humano. Un fallo de fusión se informa como error,
   sin sustituir el estado anterior por una extracción nueva.
