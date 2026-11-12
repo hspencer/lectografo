@@ -1018,7 +1018,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
   flex: none;
   background: color-mix(in oklab, var(--sn-paper) 60%, var(--sn-sunk));
   border-radius: var(--sn-radius-l) var(--sn-radius-l) 0 0;
-  overflow: hidden;
+  overflow: visible;  /* el menú ⋮ (abajo) cuelga del minimapa y puede salirse */
   position: relative;
 }
 .bib-mini-mapa svg { width: 100%; height: 100%; display: block; }
@@ -1042,15 +1042,21 @@ tbody tr:hover td { background: var(--sn-sunk); }
   font-size: var(--sn-fs-xs); color: var(--sn-ok); margin-bottom: var(--sn-s-1);
 }
 
-/* ── Menú de acciones (⋮) de la tarjeta de biblioteca ────────────── */
-.menu-acciones { position: relative; margin-left: auto; }
+/* ── Menú de acciones (⋮) de la tarjeta de biblioteca: flota sobre la
+   esquina superior derecha del minimapa, no en una franja aparte ──── */
+.menu-acciones { position: absolute; top: var(--sn-s-2); right: var(--sn-s-2); z-index: 10; }
+.menu-acciones .bib-btn-menu {
+  background: color-mix(in srgb, var(--sn-paper) 85%, transparent);
+  box-shadow: var(--sn-lift-paper);
+  backdrop-filter: blur(2px);
+}
 .menu-acciones-drop {
-  position: absolute; bottom: 100%; right: 0;
+  position: absolute; top: 100%; right: 0;
   z-index: 50;
   display: flex; flex-direction: column;
   background: var(--sn-paper); border: var(--sn-hair);
   border-radius: var(--sn-radius); box-shadow: var(--sn-lift);
-  padding: var(--sn-s-1); margin-bottom: 4px;
+  padding: var(--sn-s-1); margin-top: 4px;
   min-width: 160px;
 }
 .menu-acciones-item {

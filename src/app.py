@@ -1821,53 +1821,16 @@ def _leer_key_env(nombre: str) -> str | None:
 
 @app.get("/api/settings")
 async def obtener_settings():
-    """Configuración actual + modelos disponibles y estado por proveedor."""
+    """Configuración actual + modelos disponibles y estado por proveedor.
+    Por ahora solo Google (Vertex AI o API key directa) -- los demás
+    proveedores quedan implementados pero fuera de uso hasta que se retomen."""
     exigir_admin()
-    modelos: list[str] = []
-    ollama_ok = False
-    lmstudio_ok = False
-
-    import httpx as _httpx
-
-    if settings.provider == "ollama":
-        try:
-            r = _httpx.get(f"{settings.ollama_endpoint}/api/tags", timeout=4.0)
-            if r.status_code == 200:
-                modelos = [m["name"] for m in r.json().get("models", [])]
-                ollama_ok = True
-        except Exception:
-            pass
-    elif settings.provider == "lmstudio":
-        try:
-            r = _httpx.get(f"{settings.lmstudio_endpoint.rstrip('/')}/models", timeout=4.0)
-            if r.status_code == 200:
-                modelos = [m["id"] for m in r.json().get("data", [])]
-                lmstudio_ok = True
-        except Exception:
-            pass
-
     modelo_actual = getattr(settings, f"{settings.provider}_model", None)
     return {
         "provider":         settings.provider,
         "model":            modelo_actual,
-        "available_models": modelos,
+        "available_models": [],
         "providers_status": {
-            "ollama": {
-                "model":     settings.ollama_model or "",
-                "connected": ollama_ok,
-            },
-            "lmstudio": {
-                "model":     settings.lmstudio_model or "",
-                "connected": lmstudio_ok,
-            },
-            "anthropic": {
-                "model":   settings.anthropic_model,
-                "has_key": bool(_leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key),
-            },
-            "openai": {
-                "model":   settings.openai_model,
-                "has_key": bool(_leer_key_env("OPENAI_API_KEY") or settings.openai_api_key),
-            },
             "gemini": {
                 "model":   settings.gemini_model,
                 "has_key": bool(_leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key),
@@ -1889,34 +1852,14 @@ class SettingsPayload(BaseModel):
 async def actualizar_settings(payload: SettingsPayload):
     """Cambia el proveedor y/o modelo en uso. Escribe .env y actualiza en memoria."""
     exigir_admin()
-    valid_providers = {"ollama", "lmstudio", "anthropic", "openai", "gemini", "vertexai"}
+    valid_providers = {"gemini", "vertexai"}
     new_provider = (payload.provider or "").strip() or None
     if new_provider and new_provider not in valid_providers:
         raise HTTPException(400, f"Proveedor no reconocido: '{new_provider}'")
 
     target = new_provider or settings.provider
 
-    if target == "ollama":
-        new_model = (payload.model or "").strip() or settings.ollama_model or ""
-        if not new_model:
-            raise HTTPException(400, "OLLAMA_MODEL debe estar configurado")
-    elif target == "lmstudio":
-        new_model = (payload.model or "").strip() or settings.lmstudio_model or ""
-        if not new_model:
-            raise HTTPException(400, "LMSTUDIO_MODEL debe estar configurado")
-    elif target == "anthropic":
-        key = _leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key
-        if not key:
-            raise HTTPException(400, "ANTHROPIC_API_KEY no está configurada en .env")
-        object.__setattr__(settings, "anthropic_api_key", key)
-        new_model = (payload.model or "").strip() or settings.anthropic_model
-    elif target == "openai":
-        key = _leer_key_env("OPENAI_API_KEY") or settings.openai_api_key
-        if not key:
-            raise HTTPException(400, "OPENAI_API_KEY no está configurada en .env")
-        object.__setattr__(settings, "openai_api_key", key)
-        new_model = (payload.model or "").strip() or settings.openai_model
-    elif target == "gemini":
+    if target == "gemini":
         key = _leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key
         if not key:
             raise HTTPException(400, "GEMINI_API_KEY no está configurada en .env")
@@ -1945,12 +1888,8 @@ async def actualizar_settings(payload: SettingsPayload):
         object.__setattr__(settings, "provider", new_provider)
 
     if new_model:
-        if target == "ollama":
-            _actualizar_env("OLLAMA_MODEL", new_model)
-            object.__setattr__(settings, "ollama_model", new_model)
-        else:
-            _actualizar_env(f"{target.upper()}_MODEL", new_model)
-            object.__setattr__(settings, f"{target}_model", new_model)
+        _actualizar_env(f"{target.upper()}_MODEL", new_model)
+        object.__setattr__(settings, f"{target}_model", new_model)
 
     return {"ok": True, "provider": settings.provider, "model": new_model}
 

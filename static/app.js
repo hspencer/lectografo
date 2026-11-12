@@ -342,15 +342,7 @@ function renderBiblioteca(exts) {
     const citaCard = e.metadatos ? buildCita(e.metadatos) : "";
 
     return `<div class="bib-card" data-slug="${esc(e.slug)}">
-      <div class="bib-mini-mapa bib-card-click" data-slug="${esc(e.slug)}"></div>
-      <div class="bib-card-click bib-card-body">
-        <div class="bib-card-titulo">${esc(e.titulo)}</div>
-        ${e.compartido ? `<div class="bib-card-compartido muted">${ico("users",11)} Compartido por ${esc(e.compartido_por||"otra persona")}</div>` : ""}
-        ${citaCard
-          ? `<div class="bib-card-cita muted">${esc(citaCard)}</div>`
-          : `<div class="bib-card-cita muted bib-sin-ficha">Sin ficha bibliográfica</div>`}
-      </div>
-      <div class="bib-card-footer">
+      <div class="bib-mini-mapa bib-card-click" data-slug="${esc(e.slug)}">
         <div class="menu-acciones">
           <button class="btn-inline bib-btn-menu" data-slug="${esc(e.slug)}" title="Acciones">${ico("more-vertical")}</button>
           <div class="menu-acciones-drop" hidden>
@@ -360,6 +352,13 @@ function renderBiblioteca(exts) {
             <button class="menu-acciones-item danger bib-btn-repro" data-slug="${esc(e.slug)}">${ico("refresh-cw")} Re-procesar</button>`}
           </div>
         </div>
+      </div>
+      <div class="bib-card-click bib-card-body">
+        <div class="bib-card-titulo">${esc(e.titulo)}</div>
+        ${e.compartido ? `<div class="bib-card-compartido muted">${ico("users",11)} Compartido por ${esc(e.compartido_por||"otra persona")}</div>` : ""}
+        ${citaCard
+          ? `<div class="bib-card-cita muted">${esc(citaCard)}</div>`
+          : `<div class="bib-card-cita muted bib-sin-ficha">Sin ficha bibliográfica</div>`}
       </div>
     </div>`;
   }).join("");
@@ -397,6 +396,7 @@ function renderBiblioteca(exts) {
   // Menú de acciones (⋮): abrir/cerrar, y cerrar al elegir una acción
   grid.querySelectorAll(".bib-btn-menu").forEach(btn => {
     const drop = btn.nextElementSibling;
+    drop.addEventListener("click", e => e.stopPropagation());  // menú vive sobre el minimapa clicable
     btn.addEventListener("click", e => {
       e.stopPropagation();
       const abrir = drop.hidden;
@@ -2487,6 +2487,33 @@ function _reproMostrarFin(msg, exito) {
 
 function reprocesarDesdeLibreria(slug) {
   _reproAbrirModal(slug);
+}
+
+async function publicarDocumento(slug, titulo, btn) {
+  if (btn.dataset.publicado === "1") {
+    if (!confirm(`¿Despublicar «${titulo}»? El link dejará de funcionar.`)) return;
+    try {
+      await apiFetch(`/api/publicar/${encodeURIComponent(slug)}`, { method: "DELETE" });
+      btn.dataset.publicado = "0";
+      btn.innerHTML = `${ico("link")} Publicar`;
+    } catch(e) { alert("Error al despublicar: " + e.message); }
+    return;
+  }
+  try {
+    const r = await apiFetch("/api/publicar", { method: "POST", body: JSON.stringify({ slug }) });
+    btn.dataset.publicado = "1";
+    btn.innerHTML = `${ico("link")} Despublicar`;
+    prompt(`"${titulo}" ya es público -- cualquiera puede leerlo (sin editar) con este link:`, location.origin + r.url);
+  } catch(e) { alert("Error al publicar: " + e.message); }
+}
+
+async function compartirDocumento(slug, titulo) {
+  const email = prompt(`Compartir «${titulo}» -- email de la persona:`);
+  if (!email || !email.trim()) return;
+  try {
+    await apiFetch("/api/compartir", { method: "POST", body: JSON.stringify({ slug, email: email.trim() }) });
+    alert(`Compartido con ${email.trim()}.`);
+  } catch (e) { alert("Error al compartir: " + e.message); }
 }
 
 function _initReproModal() {
