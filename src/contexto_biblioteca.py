@@ -73,11 +73,15 @@ def otorgar_permiso(biblioteca_origen: str, slug: str, beneficiaria_uid: str,
         "otorgadoPor": otorgado_por,
         "otorgadoEn": datetime.now(timezone.utc),
     }
-    permisos = firestore.client().collection("permisos")
-    if permiso_id:
-        permisos.document(permiso_id).set(datos)
-    else:
-        permisos.add(datos)
+    from src.acceso_texto import operacion_texto
+    with operacion_texto(biblioteca_origen, slug) as op:
+        permisos = firestore.client().collection("permisos")
+        if permiso_id:
+            permisos.document(permiso_id).set(datos)
+        else:
+            permisos.add(datos)
+        op["datos"]["personas"][beneficiaria_uid] = beneficiaria_email
+        op["ref"].update({"personas": op["datos"]["personas"]})
 
 
 def permisos_compartidos_conmigo(uid: str) -> list[dict]:
@@ -87,6 +91,10 @@ def permisos_compartidos_conmigo(uid: str) -> list[dict]:
 
 def emails_con_acceso(biblioteca_origen: str, slug: str) -> list[str]:
     """Todas las personas con acceso, incluida la biblioteca de origen."""
+    from src.acceso_texto import datos_acceso
+    acceso = datos_acceso(biblioteca_origen, slug)
+    if acceso is not None:
+        return list(dict.fromkeys(acceso["personas"].values())) if acceso["estado"] == "activo" else []
     db = firestore.client()
     biblioteca = db.collection("bibliotecas").document(biblioteca_origen).get().to_dict() or {}
     uid = biblioteca.get("creadoPor")
@@ -117,16 +125,18 @@ def _doc_publicacion(biblioteca_origen: str, slug: str):
 
 def publicar_texto(biblioteca_origen: str, slug: str, publicado_por: str) -> str:
     """Id público del texto (crea uno si no existía ya)."""
-    existente = _doc_publicacion(biblioteca_origen, slug)
-    if existente:
-        return existente.id
-    from datetime import datetime, timezone
-    ref = firestore.client().collection("publicaciones").document()
-    ref.set({
-        "bibliotecaOrigen": biblioteca_origen, "slug": slug,
-        "publicadoPor": publicado_por, "publicadoEn": datetime.now(timezone.utc),
-    })
-    return ref.id
+    from src.acceso_texto import operacion_texto
+    with operacion_texto(biblioteca_origen, slug, publicado_por):
+        existente = _doc_publicacion(biblioteca_origen, slug)
+        if existente:
+            return existente.id
+        from datetime import datetime, timezone
+        ref = firestore.client().collection("publicaciones").document()
+        ref.set({
+            "bibliotecaOrigen": biblioteca_origen, "slug": slug,
+            "publicadoPor": publicado_por, "publicadoEn": datetime.now(timezone.utc),
+        })
+        return ref.id
 
 
 def despublicar_texto(biblioteca_origen: str, slug: str) -> bool:
@@ -142,11 +152,22 @@ def estado_publicacion(biblioteca_origen: str, slug: str) -> str | None:
     return doc.id if doc else None
 
 
+def listar_publicaciones() -> list[dict]:
+    """Todas las publicaciones vivas: biblioteca de la vista pública
+    (sin sesión) cuando no hay login -- ver GET /api/publico en app.py."""
+    docs = firestore.client().collection("publicaciones").stream()
+    return [{"pubId": d.id, **d.to_dict()} for d in docs]
+
+
 def resolver_publicacion(pub_id: str) -> tuple[str, str]:
     doc = firestore.client().collection("publicaciones").document(pub_id).get()
     if not doc.exists:
         raise HTTPException(404, "Esta publicación no existe o fue retirada")
     d = doc.to_dict()
+    from src.acceso_texto import datos_acceso
+    acceso = datos_acceso(d["bibliotecaOrigen"], d["slug"])
+    if acceso is not None and acceso["estado"] != "activo":
+        raise HTTPException(404, "Esta publicación fue retirada")
     return d["bibliotecaOrigen"], d["slug"]
 
 
@@ -171,9 +192,11 @@ async def middleware_biblioteca(request, call_next):
         if _EN_CLOUD_RUN:
             return JSONResponse({"detail": "Autenticación no disponible"}, status_code=503)
         return await call_next(request)
-    if request.url.path.startswith(_PREFIJO_PUBLICO):
+    if request.url.path.startswith(_PREFIJO_PUBLICO) or request.url.path == "/api/publico":
         # Lectura pública: el propio endpoint resuelve su biblioteca a partir
         # del id de publicación (ver resolver_publicacion), sin exigir sesión.
+        # "/api/publico" (sin slug) lista las publicaciones vivas -- biblioteca
+        # pública que se ve sin sesión (ver GET /api/publico en app.py).
         return await call_next(request)
     header = request.headers.get("authorization", "")
     # EventSource no permite headers custom; las 3 rutas /stream mandan el

@@ -14,6 +14,7 @@ from firebase_admin import firestore
 
 from src.config import settings
 from src.contexto_biblioteca import otorgar_permiso
+from src.acceso_texto import operacion_texto, datos_acceso
 
 VIGENCIA = timedelta(days=14)
 
@@ -127,6 +128,9 @@ def cargar_invitacion(token: str) -> tuple:
     datos = ref.get().to_dict()
     if not datos or datos.get("estado") not in ("preparada", "enviada", "aceptada"):
         raise HTTPException(404, "La invitación no existe o no pudo enviarse.")
+    acceso = datos_acceso(datos["bibliotecaOrigen"], datos["slug"])
+    if acceso is not None and (acceso["estado"] != "activo" or (datos["estado"] == "aceptada" and datos.get("aceptadaPor") not in acceso["personas"])):
+        raise HTTPException(410, "Esta invitación ya no concede acceso. Pide una nueva invitación.")
     if datos["estado"] != "aceptada" and datos["venceEn"] <= datetime.now(timezone.utc):
         raise HTTPException(410, "Esta invitación venció. Pide que te envíen una nueva.")
     return ref, datos
@@ -138,9 +142,11 @@ def aceptar_invitacion(token: str, uid: str, correo_verificado: str | None) -> d
         raise HTTPException(403, "Inicia sesión con el correo que recibió la invitación.")
     if datos.get("aceptadaPor") not in (None, uid):
         raise HTTPException(403, "Esta invitación ya fue aceptada por otra cuenta.")
-    if datos["estado"] != "aceptada":
-        # La misma invitación siempre escribe el mismo permiso, también ante reintentos.
-        otorgar_permiso(datos["bibliotecaOrigen"], datos["slug"], uid,
-                        datos["destinatariaEmail"], datos["invitadoPor"], permiso_id=f"inv_{token}")
-        ref.update({"estado": "aceptada", "aceptadaPor": uid, "aceptadaEn": datetime.now(timezone.utc)})
+    with operacion_texto(datos["bibliotecaOrigen"], datos["slug"]):
+        ref, datos = cargar_invitacion(token)
+        if datos["estado"] != "aceptada":
+            # La misma invitación siempre escribe el mismo permiso.
+            otorgar_permiso(datos["bibliotecaOrigen"], datos["slug"], uid,
+                            datos["destinatariaEmail"], datos["invitadoPor"], permiso_id=f"inv_{token}")
+            ref.update({"estado": "aceptada", "aceptadaPor": uid, "aceptadaEn": datetime.now(timezone.utc)})
     return {"slug": datos["slug"], "titulo": datos["titulo"]}

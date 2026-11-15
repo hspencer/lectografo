@@ -7,31 +7,13 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from fake_firestore import FirestoreFalso
 
 from src import app as api
 from src import contexto_biblioteca as contexto
 from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import AnotacionInvestigador, EstadoValidacion
 from src.persistencia.estado import cargar, guardar
-
-
-class Consulta:
-    def __init__(self, rows, filtros=(), limite=None):
-        self.rows, self.filtros, self.limite = rows, filtros, limite
-
-    def where(self, campo, operador, valor):
-        assert operador == "=="
-        return Consulta(self.rows, (*self.filtros, (campo, valor)), self.limite)
-
-    def limit(self, cantidad):
-        return Consulta(self.rows, self.filtros, cantidad)
-
-    def get(self):
-        return [SimpleNamespace(to_dict=lambda r=r: r) for r in self.rows
-                if all(r.get(k) == v for k, v in self.filtros)][:self.limite]
-
-    def add(self, datos):
-        self.rows.append(datos)
 
 
 class ColaboracionTest(unittest.TestCase):
@@ -48,24 +30,18 @@ class ColaboracionTest(unittest.TestCase):
                                 decisiones=[], anotaciones=[AnotacionInvestigador(
                                     id="antigua", objeto_anotado="c_1", nota="Nota antigua")]), self.ruta)
         self.ruta.with_name("lectura_extraccion.json").write_text(self.ext.model_dump_json())
-        self.permisos = []
-        self.consulta = Consulta(self.permisos)
-        documentos = {
+        self.documentos = {
             "bibliotecas": {"bib_a": {"creadoPor": "a", "nombre": "Persona a"}},
             "personas": {"a": {"email": "a@example.org"}},
+            "permisos": {},
         }
-
-        def collection(nombre):
-            if nombre == "permisos":
-                return self.consulta
-            return SimpleNamespace(document=lambda uid: SimpleNamespace(get=lambda:
-                SimpleNamespace(to_dict=lambda: documentos.get(nombre, {}).get(uid))))
-
-        self.db = SimpleNamespace(collection=collection)
+        self.db = FirestoreFalso(self.documentos)
+        self.enterContext(patch.object(contexto.firestore, "transactional", self.db.transactional))
         for objeto, nombre, valor in [
             (api, "GRAFOS", contexto._DirectorioPorBiblioteca(grafos)),
             (api, "TRANSCRIPTS", contexto._DirectorioPorBiblioteca(textos)),
             (api.settings, "grafos_dir", grafos),
+            (api.settings, "transcripts_dir", textos),
             (api, "nombre_de_biblioteca", lambda bib: bib),
             (contexto, "_FIREBASE_OK", True),
             (contexto, "_EN_CLOUD_RUN", True),
@@ -93,8 +69,8 @@ class ColaboracionTest(unittest.TestCase):
         self.assertIsNone(contexto._biblioteca_compartida("c", "lectura"))
         self.compartir("b", "c")
         self.compartir("c", "d")
-        self.assertEqual([p["bibliotecaOrigen"] for p in self.permisos], ["bib_a"] * 3)
-        self.assertEqual([p["otorgadoPor"] for p in self.permisos], ["a", "b", "c"])
+        self.assertEqual([p["bibliotecaOrigen"] for p in self.documentos["permisos"].values()], ["bib_a"] * 3)
+        self.assertEqual([p["otorgadoPor"] for p in self.documentos["permisos"].values()], ["a", "b", "c"])
         for uid in "bcd":
             listado = self.request(uid, "GET", "/api/extracciones").json()
             self.assertTrue(any(t["slug"] == "lectura" and t["compartido"] for t in listado))

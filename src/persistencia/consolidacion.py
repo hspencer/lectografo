@@ -16,6 +16,8 @@ def existe(slug: str, grafos_dir: Path) -> bool:
 
 
 def guardar(sesion: SesionConsolidacion, slug: str, grafos_dir: Path) -> None:
+    from src.acceso_texto import verificar_operacion
+    verificar_operacion()
     ruta = ruta_sesion(slug, grafos_dir)
     ruta.parent.mkdir(parents=True, exist_ok=True)
     ruta.write_text(sesion.model_dump_json(indent=2), encoding="utf-8")

@@ -84,6 +84,7 @@ Las preguntas abiertas (`open question`) son decisiones explicitamente diferidas
 .venv/bin/python -m unittest discover -s tests -v
 node tests/test_frontend.cjs
 node tests/test_invitaciones.cjs
+node tests/test_salida.cjs
 node --check static/app.js
 allium check specs
 allium analyse specs
@@ -112,10 +113,28 @@ Persisten estas divergencias, documentadas en los módulos correspondientes:
   inmutables siguen como objetivos.
 - Las sesiones de extracción, reconexión y consolidación en memoria se
   identifican solo por `slug`; no aíslan bibliotecas con identificadores iguales.
-- Resetear un grafo borra también su sesión de validación y sus glosas;
-  eliminar el texto no retira los permisos ni la publicación.
+- Resetear un grafo borra también su sesión de validación y sus glosas.
 
 Estas limitaciones no se han convertido en funciones nuevas durante esta revisión.
+
+## Eliminar de mi biblioteca
+
+La acción aparece en el menú de cada texto y en su editor, tanto para quien
+lo subió como para quienes lo recibieron. Si queda alguien con acceso, solo
+sale quien actúa; se conservan el texto, el grafo, las glosas y su autoría.
+La última persona confirma el borrado definitivo. Se limpian todos los archivos
+asociados, los permisos y las publicaciones, y se invalidan las invitaciones.
+Un enlace aceptado antes de salir no restituye el acceso: hace falta compartir
+de nuevo. Las invitaciones pendientes y las visitas públicas no cuentan como
+personas que tienen el texto en su biblioteca.
+
+Los textos existentes conservan sus accesos; se registra su lista explícita
+al operar sobre ellos. Las operaciones se excluyen entre instancias mediante
+una reserva transaccional: durante una tarea se pide esperar antes de borrar.
+Si una instancia se interrumpe, su reserva vence en una hora; una tarea vencida
+no puede guardar. Una limpieza incompleta se puede reintentar y no se presenta
+como terminada. Las pruebas usan Firestore simulado; no sustituyen una prueba
+con varias instancias reales.
 
 ## Invitaciones por correo
 

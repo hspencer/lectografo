@@ -21,7 +21,11 @@ from src.contexto_biblioteca import (
     _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
     biblioteca_actual, persona_actual, persona_nombre_actual, correo_verificado_actual, otorgar_permiso,
     permisos_compartidos_conmigo, nombre_de_biblioteca, emails_con_acceso,
-    publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion,
+    publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion, listar_publicaciones,
+)
+from src.acceso_texto import (
+    OperacionesTextoMiddleware, datos_acceso, exigir_acceso, tiene_acceso,
+    operacion_texto, operacion_actual, liberar_operacion, verificar_operacion,
 )
 from src.models.extraccion import ResultadoExtraccion
 from src.models.validacion import (
@@ -52,6 +56,7 @@ from src.pipeline.consolidacion import detectar_candidatos, fusionar_conceptos
 from src.models.consolidacion import SesionConsolidacion
 
 app = FastAPI(title="Lectógrafo", docs_url="/api/docs")
+app.add_middleware(OperacionesTextoMiddleware)
 app.middleware("http")(middleware_biblioteca)
 
 STATIC      = Path(__file__).parent.parent / "static"
@@ -70,6 +75,7 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
     """
     import copy as _copy
     from src.persistencia.estado import guardar as _guardar, ruta_validacion as _rv
+    verificar_operacion()
 
     salida = GRAFOS / f"{slug}_extraccion.json"
     GRAFOS.mkdir(parents=True, exist_ok=True)
@@ -132,6 +138,7 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
             estado_fusionado = estado_previo.model_copy(update={
                 "extraccion": ext_fusionada, "metadatos": meta, "completado": True,
             })
+            verificar_operacion()
             salida.write_text(
                 json.dumps(ext_fusionada.model_dump(), ensure_ascii=False, indent=2),
                 encoding="utf-8",
@@ -146,6 +153,7 @@ def _merge_y_guardar(slug: str, resultado: ResultadoExtraccion, inicio: float, m
             raise RuntimeError("No se pudo fusionar la extracción; se conserva el estado previo") from exc
 
     # Sin validación previa: guardar extracción nueva
+    verificar_operacion()
     salida.write_text(
         json.dumps(resultado.model_dump(), ensure_ascii=False, indent=2),
         encoding="utf-8",
@@ -230,9 +238,7 @@ def _cargar_o_crear(slug: str) -> tuple[EstadoValidacion, Path]:
         completado=True,
         metadatos=meta_standalone,
     )
-    guardar(estado, ruta_val)
-    # Eliminar el archivo standalone ya que quedó integrado en la validación
-    ruta_meta.unlink(missing_ok=True)
+    # Las lecturas no escriben: el primer cambio persiste bajo la reserva del texto.
     return estado, ruta_val
 
 
@@ -247,6 +253,8 @@ def listar_extracciones():
     # ── Textos ya extraídos ────────────────────────────────────────────────────
     for f in sorted(GRAFOS.glob("*_extraccion.json")):
         slug = f.stem.replace("_extraccion", "")
+        if persona_actual.get() and not tiene_acceso(biblioteca_actual.get(), slug, persona_actual.get()):
+            continue
         slugs_procesados.add(slug)
         ruta_val = ruta_validacion(slug, GRAFOS)
 
@@ -288,6 +296,8 @@ def listar_extracciones():
     for ext in _EXTS_TRANSCRIPT:
         for f in sorted(TRANSCRIPTS.glob(f"*.{ext}")):
             slug = _slug_de_archivo(f)
+            if persona_actual.get() and not tiene_acceso(biblioteca_actual.get(), slug, persona_actual.get()):
+                continue
             if slug in slugs_procesados:
                 continue
             tarea = _TAREAS.get(slug, {})
@@ -348,8 +358,13 @@ def listar_extracciones():
             slug, bib_origen = permiso.get("slug"), permiso.get("bibliotecaOrigen")
             if not slug or not bib_origen or slug in slugs_procesados:
                 continue
+            if not tiene_acceso(bib_origen, slug, uid):
+                continue
             ruta_ext = settings.grafos_dir / bib_origen / f"{slug}_extraccion.json"
-            if not ruta_ext.exists():
+            procesado = ruta_ext.exists()
+            fuentes = [f for f in (settings.transcripts_dir / bib_origen).glob("*")
+                       if f.suffix.lstrip(".") in _EXTS_TRANSCRIPT and _slug_de_archivo(f) == slug]
+            if not procesado and not fuentes:
                 continue
             ruta_val = settings.grafos_dir / bib_origen / f"{slug}_validacion.json"
             titulo, metadatos = slug.replace("_", " ").title(), None
@@ -360,7 +375,7 @@ def listar_extracciones():
                 except Exception:
                     pass
             resultado.append({
-                "slug": slug, "titulo": titulo, "procesado": True, "procesando": False,
+                "slug": slug, "titulo": titulo, "procesado": procesado, "procesando": False,
                 "fase_extraccion": "", "elapsed": 0, "tokens": 0, "tokens_total": 0,
                 "porcentaje": 0, "estado": "listo", "error": None,
                 "metadatos": metadatos,
@@ -378,12 +393,14 @@ def _resolver_biblioteca_de_slug(uid: str, slug: str) -> str:
     que me compartieron es válido, la colaboración es plana. 404 si no hay
     acceso de ninguna forma."""
     if biblioteca_actual.get() and _ruta_transcript(slug) is not None:
+        exigir_acceso(biblioteca_actual.get(), slug, uid)
         return biblioteca_actual.get()
     from src.contexto_biblioteca import _biblioteca_compartida
     bib_compartida = _biblioteca_compartida(uid, slug)
     if not bib_compartida:
         raise HTTPException(404, f"No tienes un texto '{slug}' para compartir")
     biblioteca_actual.set(bib_compartida)
+    exigir_acceso(bib_compartida, slug, uid)
     return bib_compartida
 
 
@@ -411,8 +428,9 @@ def invitar_a_documento(payload: InvitacionesPayload):
         raise HTTPException(401, "No autenticado")
     bib = _resolver_biblioteca_de_slug(uid, payload.slug)
     estado, _ = _cargar_o_crear(payload.slug)
-    resultados = enviar_invitaciones(bib, payload.slug, estado.titulo, payload.emails,
-                                     uid, persona_nombre_actual.get() or "Una persona")
+    with operacion_texto(bib, payload.slug, uid):
+        resultados = enviar_invitaciones(bib, payload.slug, estado.titulo, payload.emails,
+                                         uid, persona_nombre_actual.get() or "Una persona")
     return {"resultados": resultados}
 
 
@@ -456,7 +474,8 @@ def compartir_documento(payload: CompartirPayload):
     if beneficiaria.uid == uid:
         raise HTTPException(400, "No puedes compartir un documento contigo misma")
 
-    otorgar_permiso(bib, payload.slug, beneficiaria.uid, payload.email.strip(), uid)
+    with operacion_texto(bib, payload.slug, uid):
+        otorgar_permiso(bib, payload.slug, beneficiaria.uid, payload.email.strip(), uid)
     return {"ok": True}
 
 
@@ -510,11 +529,30 @@ def _leer_como_publico(pub_id: str, fn, *args):
     ContextVar puesto en esa biblioteca por la duración de esta sola lectura
     -- reusa la lógica de los endpoints normales sin tocarla."""
     bib, slug = resolver_publicacion(pub_id)
-    token = biblioteca_actual.set(bib)
+    with operacion_texto(bib, slug):
+        token = biblioteca_actual.set(bib)
+        try:
+            return fn(slug, *args)
+        finally:
+            biblioteca_actual.reset(token)
+
+
+@app.get("/api/publico")
+def listar_publico():
+    """Biblioteca pública: lo que ve cualquier visitante sin sesión (ver
+    static/app.js mostrarBibliotecaPublica) -- un texto por publicación viva."""
     try:
-        return fn(slug, *args)
-    finally:
-        biblioteca_actual.reset(token)
+        publicaciones = listar_publicaciones()
+    except Exception:
+        return []  # sin credenciales Firebase (desarrollo local) -- biblioteca pública vacía
+    resultado = []
+    for pub in publicaciones:
+        try:
+            titulo = _leer_como_publico(pub["pubId"], lambda slug: _cargar_o_crear(slug)[0].titulo)
+        except HTTPException:
+            continue  # publicación retirada o colgante -- se omite, no se rompe el listado
+        resultado.append({"pubId": pub["pubId"], "slug": pub["slug"], "titulo": titulo})
+    return resultado
 
 
 @app.get("/api/publico/{pub_id}")
@@ -828,7 +866,11 @@ async def importar_transcript(payload: ImportarTranscriptPayload):
     ruta = TRANSCRIPTS / nombre
     if ruta.exists():
         raise HTTPException(409, f"Ya existe un texto con ese nombre: '{nombre}'")
-    ruta.write_text(payload.contenido, encoding="utf-8")
+    if persona_actual.get() and biblioteca_actual.get():
+        with operacion_texto(biblioteca_actual.get(), _slug_de_archivo(ruta), persona_actual.get(), nuevo=True):
+            ruta.write_text(payload.contenido, encoding="utf-8")
+    else:
+        ruta.write_text(payload.contenido, encoding="utf-8")
     return {"ok": True, "slug": _slug_de_archivo(ruta)}
 
 
@@ -895,7 +937,21 @@ async def procesar_extraccion(slug: str, payload: ProcesarPayload = ProcesarPayl
     # BackgroundTasks); sin esto, GRAFOS resolvería a la carpeta raíz dentro
     # de la extracción en vez de a la biblioteca de quien la pidió.
     ctx = contextvars.copy_context()
-    loop.run_in_executor(_executor, ctx.run, tarea_fn, slug, ruta)
+    operacion = operacion_actual.get()
+    def ejecutar():
+        try:
+            tarea_fn(slug, ruta)
+        finally:
+            if operacion:
+                liberar_operacion(operacion)
+    if operacion:
+        operacion["transferida"] = True
+    try:
+        loop.run_in_executor(_executor, ctx.run, ejecutar)
+    except Exception:
+        if operacion:
+            operacion["transferida"] = False
+        raise
     return {"ok": True, "estado": "procesando", "modo": modo}
 
 
@@ -1816,6 +1872,7 @@ def _leer_metadatos(slug: str) -> MetadatosTexto:
 
 def _guardar_metadatos(slug: str, m: MetadatosTexto) -> str:
     """Guarda metadatos donde corresponda y retorna la cita generada."""
+    verificar_operacion()
     ruta_val = ruta_validacion(slug, GRAFOS)
     if ruta_val.exists():
         try:
@@ -1825,6 +1882,8 @@ def _guardar_metadatos(slug: str, m: MetadatosTexto) -> str:
                 estado.titulo = m.titulo
             guardar(estado, ruta_val)
             return m.cita()
+        except HTTPException:
+            raise
         except Exception:
             pass
     # Sin validación: guardar en archivo standalone
@@ -2069,24 +2128,46 @@ def resetear_extraccion(slug: str):
     return {"ok": True, "eliminados": eliminados}
 
 
+@app.get("/api/transcripts/{slug}/salida")
+def consultar_salida_texto(slug: str):
+    uid, bib = persona_actual.get(), biblioteca_actual.get()
+    if uid and bib:
+        from src.acceso_texto import personas_legacy
+        acceso = datos_acceso(bib, slug)
+        personas = acceso["personas"] if acceso else personas_legacy(bib, slug)
+        return {"ultima_persona": len(personas) == 1}
+    return {"ultima_persona": True}
+
+
 @app.delete("/api/transcripts/{slug}")
-def eliminar_texto_completo(slug: str):
-    """Elimina completamente un texto: grafo + transcript.
-    Irreversible: borra el archivo fuente de disco."""
-    # Primero resetear el grafo
-    _TAREAS.pop(slug, None)
-    sufijos = ["_extraccion.json", "_validacion.json", "_reconexion.json",
-               "_consolidacion.json", "_metadatos.json"]
-    for suf in sufijos:
-        p = GRAFOS / f"{slug}{suf}"
-        if p.exists():
-            p.unlink()
-    # Luego borrar el transcript
-    ruta = _ruta_transcript(slug)
-    if ruta is None:
-        raise HTTPException(404, f"No se encontró transcript para '{slug}'")
-    ruta.unlink()
-    return {"ok": True, "eliminado": ruta.name}
+def eliminar_texto_completo(slug: str, confirmar_borrado: bool = False):
+    """Sale solo quien actúa; la última persona confirma el borrado global."""
+    uid, bib = persona_actual.get(), biblioteca_actual.get()
+    op = operacion_actual.get()
+    personas = dict(op["datos"]["personas"]) if op else {"local": "local"}
+    ultima = len(personas) == 1
+    if ultima and not confirmar_borrado:
+        raise HTTPException(409, "Ahora eres la última persona. Confirma el borrado definitivo del texto, grafo y glosas.")
+    if op:
+        from src.acceso_texto import retirar_acceso
+        retirar_acceso(op, uid, ultima)
+    if ultima:
+        # Todos los escritores comparten la reserva; no puede haber una tarea guardando.
+        _TAREAS.pop(slug, None)
+        for suf in ("_extraccion.json", "_validacion.json", "_reconexion.json",
+                    "_consolidacion.json", "_metadatos.json", "_grafo.json"):
+            (GRAFOS / f"{slug}{suf}").unlink(missing_ok=True)
+        for ext in _EXTS_TRANSCRIPT:
+            for ruta in TRANSCRIPTS.glob(f"*.{ext}"):
+                if _slug_de_archivo(ruta) == slug:
+                    ruta.unlink()
+        for datos in (_RECONEXION_LOG, _RECONEXION_TOKENS, _RECONEXION_DONE,
+                      _RECONEXION_CANCEL, _CONSOLIDACION_LOG, _CONSOLIDACION_TOKENS,
+                      _CONSOLIDACION_DONE, _CONSOLIDACION_CANCEL):
+            datos.pop(slug, None)
+        if op:
+            op["ref"].update({"estado": "eliminado", "personas": {}})
+    return {"ok": True, "eliminado_definitivamente": ultima}
 
 
 # ── Transcripts (lectura y edición del texto fuente) ─────────────────────────

@@ -139,6 +139,13 @@ async function init() {
     initMapaArrows();
     return;
   }
+  if (!window.lectografoAuth?.uid) {
+    // Sin sesión y sin nada que la imponga: solo se ven los textos públicos
+    // (ver GET /api/publico). Iniciar sesión queda en el menú de la cuenta.
+    await mostrarBibliotecaPublica();
+    initMapaArrows();
+    return;
+  }
   const exts = await apiFetch("/api/extracciones");
   initSettingsPanel();
   if (h === "config") {
@@ -176,8 +183,6 @@ async function abrirInvitacion(token) {
 let _sesionIniciada = null;
 async function iniciarConSesion() {
   const uid = window.lectografoAuth?.uid || "sin-sesion";
-  const especial = /^#(?:publico|invitacion):/.test(location.hash);
-  if (!window.lectografoAuth?.uid && !especial) { _sesionIniciada = null; return; }
   if (_sesionIniciada === uid) return;
   _sesionIniciada = uid;
   try { await init(); }
@@ -187,6 +192,15 @@ async function iniciarConSesion() {
   }
 }
 window.addEventListener("lectografo:auth-listo", iniciarConSesion);
+
+// Biblioteca pública: sus textos van por JS (window.lectografoT), no por
+// [data-i18n] -- re-renderiza al cambiar de idioma. La biblioteca privada no
+// lo necesita: sus cadenas quedan en español por ahora (ver i18n.js).
+window.addEventListener("lectografo:idioma-cambiado", () => {
+  if (!window.lectografoAuth?.uid && !document.getElementById("vista-biblioteca").hidden) {
+    mostrarBibliotecaPublica();
+  }
+});
 
 // Navegación del mapa con flechas del teclado
 function initMapaArrows() {
@@ -241,6 +255,9 @@ async function mostrarBiblioteca(extData) {
   state.grafoCenter = null;
   state.grafoPan = null;
   state.tabActivo = null;
+  state.soloLectura = false;
+  state.pubId = null;
+  document.body.classList.remove("solo-lectura");
   state.mapaCards?.closeAll();
   state.mapaCards = null;
   tabsInit.clear();
@@ -258,6 +275,7 @@ function _menuBiblioteca(e) {
       ${e.procesado ? `
         <button class="menu-acciones-item bib-btn-compartir" data-slug="${slug}" data-titulo="${titulo}">${ico("users")} Compartir</button>
         <button class="menu-acciones-item bib-btn-publicar" data-slug="${slug}" data-titulo="${titulo}" data-publicado="0">${ico("link")} Publicar</button>` : ""}
+      <button class="menu-acciones-item bib-btn-eliminar" data-slug="${slug}" data-titulo="${titulo}">${ico("trash-2")} Eliminar de mi biblioteca</button>
       <hr class="menu-acciones-separador">
       <span class="menu-acciones-rotulo">Operaciones en el grafo</span>
       ${e.procesando
@@ -351,6 +369,13 @@ function renderBiblioteca(exts) {
   );
 
   // Re-procesar
+  grid.querySelectorAll(".bib-btn-eliminar").forEach(btn =>
+    btn.addEventListener("click", e => {
+      e.stopPropagation(); eliminarDeMiBiblioteca(btn.dataset.slug, btn.dataset.titulo);
+    })
+  );
+
+  // Re-procesar
   grid.querySelectorAll(".bib-btn-repro").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); reprocesarDesdeLibreria(btn.dataset.slug); })
   );
@@ -421,6 +446,76 @@ function renderBiblioteca(exts) {
   // Mini-mapas para textos ya procesados que aún no tienen SVG
   const slugsProcesados = exts.filter(x => x.procesado && !x.procesando).map(x => x.slug);
   if (slugsProcesados.length) requestAnimationFrame(() => _renderMiniGrafos(slugsProcesados));
+}
+
+// Biblioteca pública (sin sesión): solo los textos publicados en vivo
+// (GET /api/publico), de solo lectura -- clic en una tarjeta abre
+// #publico:ID (ver abrirTextoPublico), igual que cualquier enlace publicado.
+async function mostrarBibliotecaPublica() {
+  const t = window.lectografoT || (k => k);
+  const items = await fetch("/api/publico").then(r => r.ok ? r.json() : []).catch(() => []);
+
+  _aplicarFaviconDefault();
+  document.getElementById("btn-biblioteca").hidden = true;
+  document.getElementById("tabs").hidden = true;
+  document.getElementById("topbar-chevron").hidden = true;
+  document.getElementById("mapa-buscar-wrap").hidden = true;
+  document.getElementById("transcripcion-titulo").textContent = "";
+  document.querySelectorAll(".tab-panel").forEach(p => { p.hidden = true; });
+  document.getElementById("vista-biblioteca").hidden = false;
+
+  state.grafoDestroy?.();
+  state.grafoDestroy = null;
+  state.slug = null;
+  state.validacion = null;
+  state.grafo = null;
+  state.tabActivo = null;
+  state.soloLectura = false;
+  state.pubId = null;
+  document.body.classList.remove("solo-lectura");
+  state.mapaCards?.closeAll();
+  state.mapaCards = null;
+  tabsInit.clear();
+
+  history.replaceState(null, "", location.pathname);
+
+  const grid = document.getElementById("biblioteca-grid");
+  if (!items.length) {
+    grid.innerHTML = `<div class="bib-vacia">
+      <div class="bib-vacia-icono">☁</div>
+      <p>${esc(t("biblioteca.publica.vacia"))}</p>
+      <p class="muted">${esc(t("biblioteca.publica.ayuda"))}</p>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = items.map(it => `
+    <div class="bib-card" data-pub="${esc(it.pubId)}">
+      <div class="bib-card-click bib-card-body">
+        <div class="bib-card-titulo">${esc(it.titulo)}</div>
+      </div>
+    </div>
+  `).join("");
+  grid.querySelectorAll(".bib-card[data-pub]").forEach(el =>
+    el.addEventListener("click", () => {
+      history.replaceState(null, "", `${location.pathname}#publico:${el.dataset.pub}`);
+      init();
+    })
+  );
+}
+
+async function eliminarDeMiBiblioteca(slug, titulo) {
+  try {
+    const { ultima_persona } = await apiFetch(`/api/transcripts/${encodeURIComponent(slug)}/salida`);
+    const detalle = ultima_persona
+      ? "Eres la última persona con acceso. Se borrarán definitivamente el texto, su grafo, las glosas y el historial. Esta acción no tiene vuelta atrás."
+      : "Perderás tu acceso. Las demás personas conservarán el texto, el grafo y todas las glosas con su autoría.";
+    if (!confirm(`¿Eliminar «${titulo}» de tu biblioteca?\n\n${detalle}`)) return;
+    await apiFetch(`/api/transcripts/${encodeURIComponent(slug)}?confirmar_borrado=${ultima_persona}`, { method: "DELETE" });
+    delete _miniGrafoCache[slug];
+    await mostrarBiblioteca();
+  } catch (error) {
+    alert("No se pudo eliminar de tu biblioteca: " + error.message);
+  }
 }
 
 let _pollingBiblioteca = null;
@@ -657,8 +752,9 @@ async function abrirTextoPublico(pubId) {
 
   document.getElementById("vista-biblioteca").hidden = true;
   document.getElementById("vista-config").hidden = true;
-  document.getElementById("topbar-right").hidden = true;
-  document.getElementById("btn-biblioteca").hidden = true;
+  // El menú de cuenta sigue visible -- "volver" lleva a la biblioteca pública
+  // (sin sesión) o a la propia (con sesión), ver volverBiblioteca().
+  document.getElementById("btn-biblioteca").hidden = false;
   document.getElementById("tabs").hidden = false;
   document.getElementById("topbar-chevron").hidden = true;
   document.getElementById("mapa-buscar-wrap").hidden = false;
@@ -719,6 +815,9 @@ function volverBiblioteca() {
   }
   // Invalidar caché del mini-mapa del texto activo para que se recargue con cambios
   if (state.slug) delete _miniGrafoCache[state.slug];
+  // Sin sesión (p.ej. tras ver un #publico:ID compartido) "volver" lleva a
+  // la biblioteca pública, no a /api/extracciones (exigiría sesión).
+  if (!window.lectografoAuth?.uid) { mostrarBibliotecaPublica(); return; }
   mostrarBiblioteca();
 }
 
@@ -2562,14 +2661,8 @@ async function initTexto() {
     } catch(e) { alert("Error: " + e.message); }
   };
 
-  document.getElementById("btn-texto-borrar").onclick = async () => {
-    const titulo = state.validacion?.titulo || state.slug;
-    if (!confirm(`¿Eliminar completamente "${titulo}"?\nSe borrará el texto y su grafo de forma permanente. Esta acción no tiene vuelta atrás.`)) return;
-    try {
-      await apiFetch(`/api/transcripts/${encodeURIComponent(state.slug)}`, { method: "DELETE" });
-      await mostrarBiblioteca();
-    } catch(e) { alert("Error: " + e.message); }
-  };
+  document.getElementById("btn-texto-borrar").onclick = () =>
+    eliminarDeMiBiblioteca(state.slug, state.validacion?.titulo || state.slug);
 
   function _renderTextoLectura() {
     // Renderizar MD → HTML usando marked si está disponible, texto plano en caso contrario

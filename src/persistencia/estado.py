@@ -11,6 +11,8 @@ def ruta_validacion(slug: str, grafos_dir: Path) -> Path:
 
 
 def guardar(estado: EstadoValidacion, ruta: Path) -> None:
+    from src.acceso_texto import verificar_operacion
+    verificar_operacion()
     from datetime import datetime
     estado.actualizado_en = datetime.utcnow()
     ruta.parent.mkdir(parents=True, exist_ok=True)

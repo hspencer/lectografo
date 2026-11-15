@@ -130,23 +130,18 @@ html, body {
   display: flex; align-items: center; gap: var(--sn-s-2);
 }
 
-/* ── Settings button ─────────────────────────────────────────────── */
-#btn-settings {
-  display: flex; align-items: center; justify-content: center;
-  width: var(--sn-ctl); height: var(--sn-ctl);
-  background: none; border: none; cursor: pointer;
-  border-radius: var(--sn-radius);
-  color: var(--sn-icon);
-  flex-shrink: 0;
-  transition: background var(--sn-dur-1) var(--sn-ease),
-              color      var(--sn-dur-1) var(--sn-ease);
+/* ── Menú de cuenta (avatar + desplegable, reusa .menu-acciones-drop) ── */
+#auth-menu-wrap { position: relative; }
+#auth-menu-drop { min-width: 180px; }
+#auth-user-nombre { overflow: hidden; text-overflow: ellipsis; }
+#btn-settings svg { flex-shrink: 0; }
+.menu-idioma { display: flex; gap: var(--sn-s-1); padding: 0 var(--sn-s-2) var(--sn-s-1); }
+.idioma-btn {
+  flex: 1; padding: 2px 0; font-size: var(--sn-fs-xs);
+  border: var(--sn-hair); border-radius: var(--sn-radius-s); background: none;
+  color: var(--sn-ink-soft); cursor: pointer;
 }
-#btn-settings svg { display: block; }
-#btn-settings:hover,
-#btn-settings.active {
-  background: var(--sn-sunk);
-  color: var(--sn-ink);
-}
+.idioma-btn.active { background: var(--sn-ink); color: var(--sn-paper); border-color: var(--sn-ink); }
 
 /* ── Avatar de cuenta (esquina superior derecha, reservado siempre) ── */
 #auth-avatar {

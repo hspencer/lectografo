@@ -25,6 +25,8 @@ def existe(slug: str, grafos_dir: Path) -> bool:
 # ── Guardar / Cargar ──────────────────────────────────────────────────────────
 
 def guardar(grafo: Grafo, slug: str, grafos_dir: Path) -> None:
+    from src.acceso_texto import verificar_operacion
+    verificar_operacion()
     grafo.actualizado_en = datetime.utcnow()
     ruta = ruta_grafo(slug, grafos_dir)
     ruta.parent.mkdir(parents=True, exist_ok=True)

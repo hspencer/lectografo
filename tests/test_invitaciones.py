@@ -1,4 +1,3 @@
-import copy
 from datetime import datetime, timedelta, timezone
 import smtplib
 import unittest
@@ -7,6 +6,7 @@ from unittest.mock import MagicMock, patch
 
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
+from fake_firestore import FirestoreFalso
 from pydantic import SecretStr
 
 from src import app as api, contexto_biblioteca as contexto, invitaciones
@@ -14,26 +14,13 @@ from src import app as api, contexto_biblioteca as contexto, invitaciones
 CORREO_SMTP_REAL = invitaciones.correo_smtp
 
 
-class Documento:
-    def __init__(self, datos, clave):
-        self.datos, self.id = datos, clave
-
-    def get(self):
-        valor = copy.deepcopy(self.datos.get(self.id))
-        return SimpleNamespace(to_dict=lambda: valor)
-
-    def set(self, datos):
-        self.datos[self.id] = copy.deepcopy(datos)
-
-    def update(self, datos):
-        self.datos[self.id].update(copy.deepcopy(datos))
-
-
 class InvitacionesTest(unittest.TestCase):
     def setUp(self):
-        self.datos = {"invitaciones": {}, "permisos": {}}
-        self.db = SimpleNamespace(collection=lambda nombre: SimpleNamespace(
-            document=lambda clave: Documento(self.datos[nombre], clave)))
+        self.datos = {"invitaciones": {}, "permisos": {},
+                      "bibliotecas": {"origen": {"creadoPor": "herbert"}},
+                      "personas": {"herbert": {"email": "herbert@example.org"}}}
+        self.db = FirestoreFalso(self.datos)
+        self.enterContext(patch.object(contexto.firestore, "transactional", self.db.transactional))
         self.smtp = MagicMock()
         self.enterContext(patch.object(invitaciones.firestore, "client", return_value=self.db))
         self.correo = self.enterContext(patch.object(invitaciones, "correo_smtp"))

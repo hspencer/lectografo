@@ -20,13 +20,14 @@
     }
   }
   </script>
+  <script type="module" src="/i18n.js"></script>
 </head>
 <body>
 
   <!-- ── Topbar ──────────────────────────────────────────────────── -->
   <header id="topbar">
     <div id="topbar-left">
-      <button id="btn-biblioteca" class="btn-back" hidden title="Volver a la biblioteca" aria-label="Volver a la biblioteca">
+      <button id="btn-biblioteca" class="btn-back" hidden data-i18n-title="topbar.volver" title="Volver a la biblioteca" aria-label="Volver a la biblioteca">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       </button>
       <span id="app-name">Lectógrafo</span>
@@ -35,42 +36,54 @@
       </span>
       <span id="transcripcion-titulo" class="muted"></span>
       <div id="mapa-buscar-wrap" hidden>
-        <input id="mapa-buscar" class="buscar-input" type="text"
+        <input id="mapa-buscar" class="buscar-input" type="text" data-i18n-placeholder="topbar.buscar"
                placeholder="Buscar concepto…" autocomplete="off" aria-label="Buscar concepto en el mapa">
         <ul id="mapa-buscar-dropdown" class="mapa-buscar-dropdown" role="listbox" hidden></ul>
       </div>
     </div>
 
     <nav id="tabs" hidden>
-      <button class="tab-btn" data-tab="mapa">Mapa</button>
-      <button class="tab-btn" data-tab="conceptos">Conceptos</button>
-      <button class="tab-btn" data-tab="relaciones">Relaciones</button>
-      <button class="tab-btn" data-tab="texto">Texto</button>
+      <button class="tab-btn" data-tab="mapa" data-i18n="tab.mapa">Mapa</button>
+      <button class="tab-btn" data-tab="conceptos" data-i18n="tab.conceptos">Conceptos</button>
+      <button class="tab-btn" data-tab="relaciones" data-i18n="tab.relaciones">Relaciones</button>
+      <button class="tab-btn" data-tab="texto" data-i18n="tab.texto">Texto</button>
     </nav>
 
     <div id="topbar-right">
       <input id="import-file-input" type="file" accept=".md,.markdown,.txt" hidden>
-      <button id="btn-importar" class="btn btn-neutro small" hidden title="Importar texto (Markdown o TXT)" aria-label="Importar texto">Importar</button>
-      <button id="btn-admin" class="btn btn-neutro small" hidden title="Consola de administración" aria-label="Consola de administración">Admin</button>
-      <span id="auth-user-nombre" class="muted" style="font-size:var(--sn-fs-xs)"></span>
-      <button id="auth-btn-signout" class="btn btn-neutro small" title="Cerrar sesión" aria-label="Cerrar sesión">Salir</button>
-      <button id="btn-settings" hidden title="Configuración" aria-label="Configuración">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15"
-             fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-      </button>
-      <button id="auth-avatar" title="Cuenta" aria-label="Cuenta">
-        <img id="auth-avatar-img" alt="" hidden>
-        <svg id="auth-avatar-generic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"
-             fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="8" r="4"/>
-          <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/>
-        </svg>
-      </button>
+      <button id="btn-importar" class="btn btn-neutro small" hidden data-i18n="topbar.importar" title="Importar texto (Markdown o TXT)" aria-label="Importar texto">Importar</button>
+      <div id="auth-menu-wrap">
+        <button id="auth-avatar" data-i18n-title="auth.cuenta" title="Cuenta" aria-label="Cuenta" aria-haspopup="true" aria-expanded="false">
+          <img id="auth-avatar-img" alt="" hidden>
+          <svg id="auth-avatar-generic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"
+               fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/>
+          </svg>
+        </button>
+        <div id="auth-menu-drop" class="menu-acciones-drop" hidden>
+          <span id="auth-user-nombre" class="menu-acciones-rotulo" hidden></span>
+          <button id="auth-btn-google-menu" class="menu-acciones-item" hidden data-i18n="auth.google">Continuar con Google</button>
+          <button id="btn-admin" class="menu-acciones-item" hidden data-i18n="auth.lectores" title="Personas registradas" aria-label="Personas registradas">Lectores</button>
+          <button id="btn-settings" class="menu-acciones-item" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span data-i18n="auth.config">Configuración</span>
+          </button>
+          <button id="auth-btn-signout" class="menu-acciones-item" hidden data-i18n="auth.salir">Salir</button>
+          <hr class="menu-acciones-separador">
+          <span class="menu-acciones-rotulo" data-i18n="auth.idioma">Idioma</span>
+          <div class="menu-idioma">
+            <button type="button" class="idioma-btn" data-lang="es">ES</button>
+            <button type="button" class="idioma-btn" data-lang="en">EN</button>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -271,8 +284,8 @@
           </div>
           <div class="texto-accion-peligro">
             <div>
-              <strong>Eliminar texto</strong>
-              <p class="muted">Elimina el archivo de texto y su grafo de forma permanente. Esta acción no tiene vuelta atrás.</p>
+              <strong>Eliminar de mi biblioteca</strong>
+              <p class="muted">Si queda alguien con acceso, conservará el texto y el grafo. Si eres la última persona, se borrará todo definitivamente.</p>
             </div>
             <button id="btn-texto-borrar" class="btn btn-rechazar small">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -425,8 +438,8 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="admin-panel" hidden>
     <div id="admin-panel-header">
-      <span class="campo-etiq">Personas registradas</span>
-      <button id="admin-panel-cerrar" title="Cerrar" aria-label="Cerrar consola de administración">×</button>
+      <span class="campo-etiq" data-i18n="auth.lectores.titulo">Personas registradas</span>
+      <button id="admin-panel-cerrar" data-i18n-title="config.cerrar" title="Cerrar" aria-label="Cerrar">×</button>
     </div>
     <div id="admin-panel-body">
       <p class="muted" style="font-size:var(--sn-fs-xs)">Cargando…</p>
@@ -452,7 +465,7 @@
 
   <!-- Portón de acceso (Firebase Auth, specs/multiusuario.allium)      -->
   <!-- ══════════════════════════════════════════════════════════════ -->
-  <div id="auth-gate">
+  <div id="auth-gate" hidden>
     <div id="auth-gate-card">
       <span id="auth-gate-nombre">Lectógrafo</span>
       <p id="auth-gate-mensaje" class="muted">Ingresa con tu cuenta de Google para ver tu biblioteca.</p>

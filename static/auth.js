@@ -31,12 +31,9 @@ window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: nu
 let _resolverAuthListo;
 window.lectografoAuthReady = new Promise(res => { _resolverAuthListo = res; });
 
-// Vista pública (#publico:ID): nadie necesita cuenta para leer un grafo
-// publicado -- el portón de acceso no debe aparecer nunca acá.
-const _modoPublico = location.hash.startsWith("#publico:");
-
 const gate = document.getElementById("auth-gate");
 const btnGoogle = document.getElementById("auth-btn-google");
+const btnGoogleMenu = document.getElementById("auth-btn-google-menu");
 const userBadge = document.getElementById("auth-user-nombre");
 const btnSignOut = document.getElementById("auth-btn-signout");
 const btnImportar = document.getElementById("btn-importar");
@@ -49,8 +46,9 @@ const adminPanelCerrar = document.getElementById("admin-panel-cerrar");
 const avatarBtn = document.getElementById("auth-avatar");
 const avatarImg = document.getElementById("auth-avatar-img");
 const avatarGenerico = document.getElementById("auth-avatar-generic");
+const menuDrop = document.getElementById("auth-menu-drop");
 
-btnGoogle?.addEventListener("click", () => {
+function iniciarSesionGoogle() {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account", ...(window.lectografoInvitacion?.email
     ? { login_hint: window.lectografoInvitacion.email } : {}) });
@@ -58,16 +56,29 @@ btnGoogle?.addEventListener("click", () => {
     console.error("Error de acceso con Google:", err);
     alert("No se pudo iniciar sesión: " + err.message);
   });
-});
+}
+btnGoogle?.addEventListener("click", iniciarSesionGoogle);
+btnGoogleMenu?.addEventListener("click", iniciarSesionGoogle);
 
 btnSignOut?.addEventListener("click", () => signOut(auth));
 
-// Avatar en la esquina: foto real de Google cuando hay sesión, ícono
-// genérico cuando no -- clic en el genérico ofrece el mismo sign-in que
-// el portón de acceso.
-avatarBtn?.addEventListener("click", () => {
-  if (!window.lectografoAuth?.uid) btnGoogle?.click();
+// Avatar en la esquina: solo abre/cierra el desplegable -- sin sesión, el
+// desplegable trae el botón de Google en vez de imponer un portón modal.
+function cerrarMenuCuenta() {
+  if (menuDrop) menuDrop.hidden = true;
+  avatarBtn?.setAttribute("aria-expanded", "false");
+}
+avatarBtn?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (!menuDrop) return;
+  const abrir = menuDrop.hidden;
+  menuDrop.hidden = !abrir;
+  avatarBtn.setAttribute("aria-expanded", String(abrir));
 });
+menuDrop?.addEventListener("click", (e) => e.stopPropagation());
+menuDrop?.querySelectorAll("button").forEach(b => b.addEventListener("click", cerrarMenuCuenta));
+document.addEventListener("click", cerrarMenuCuenta);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarMenuCuenta(); });
 
 // RegistrarPersona (multiusuario.allium): crea Persona y, si todavia no es
 // propietaria de ninguna Biblioteca, crea la suya con una Membresia propietaria.
@@ -191,14 +202,17 @@ adminPanelCerrar?.addEventListener("click", () => { adminPanel.hidden = true; })
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.lectografoAuth = { uid: null, nombre: null, email: null, bibliotecaId: null, esAdmin: false, getIdToken: async () => null };
-    if (gate) gate.hidden = _modoPublico || false;
-    if (!location.hash.startsWith("#invitacion:")) {
-      document.getElementById("auth-gate-mensaje").textContent = "Ingresa con tu cuenta de Google para ver tu biblioteca.";
-    }
-    if (userBadge) userBadge.textContent = "";
+    // Sin sesión: no se impone ningún portón -- solo se ven los textos
+    // públicos (ver mostrarBibliotecaPublica en app.js). El portón modal
+    // queda reservado para el flujo de invitación (abrirInvitacion lo abre
+    // explícitamente con su propio mensaje).
+    if (gate) gate.hidden = true;
+    if (userBadge) { userBadge.textContent = ""; userBadge.hidden = true; }
+    if (btnGoogleMenu) btnGoogleMenu.hidden = false;
     if (btnImportar) btnImportar.hidden = true;
     if (btnAdmin) btnAdmin.hidden = true;
     if (btnSettings) btnSettings.hidden = true;
+    if (btnSignOut) btnSignOut.hidden = true;
     if (adminPanel) adminPanel.hidden = true;
     if (avatarImg) avatarImg.hidden = true;
     if (avatarGenerico) avatarGenerico.hidden = false;
@@ -228,10 +242,12 @@ onAuthStateChanged(auth, async (user) => {
     getIdToken: () => user.getIdToken(),
   };
   if (gate) gate.hidden = true;
-  if (userBadge) userBadge.textContent = user.displayName || user.email;
+  if (userBadge) { userBadge.textContent = user.displayName || user.email; userBadge.hidden = false; }
+  if (btnGoogleMenu) btnGoogleMenu.hidden = true;
   if (btnImportar) btnImportar.hidden = false;
   if (btnAdmin) btnAdmin.hidden = !esAdmin;
   if (btnSettings) btnSettings.hidden = !esAdmin;
+  if (btnSignOut) btnSignOut.hidden = false;
   if (user.photoURL && avatarImg) {
     avatarImg.src = user.photoURL;
     avatarImg.hidden = false;

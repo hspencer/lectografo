@@ -4,6 +4,7 @@
 
 use "./multiusuario.allium" as multiusuario
 use "./surfaces.allium" as surfaces
+use "./transcripcion.allium" as transcripcion
 
 external entity ServicioCorreo {
     configurado: Boolean
@@ -38,15 +39,22 @@ entity Invitacion {
     invitada_por: multiusuario/Persona
     creada_en: Timestamp
     vence_en: Timestamp
-    estado: preparada | enviada | error_envio | aceptada
-    aceptada_por: multiusuario/Persona? when estado = aceptada
+    estado: preparada | enviada | error_envio | aceptada | retirada | invalidada
+    aceptada_por: multiusuario/Persona? when estado = aceptada | retirada
 
     transitions estado {
         preparada -> enviada
         preparada -> error_envio
         preparada -> aceptada
         enviada -> aceptada
-        terminal: error_envio, aceptada
+        aceptada -> retirada
+        preparada -> invalidada
+        enviada -> invalidada
+        error_envio -> invalidada
+        aceptada -> invalidada
+        retirada -> invalidada
+        terminal: invalidada
+        -- retirada e invalidada impiden que un enlace antiguo restaure el acceso.
     }
 }
 
@@ -88,9 +96,12 @@ rule AceptarInvitacion {
     requires: correo_verificado != null
     requires: normalizar_email(correo_verificado) = invitacion.destinataria_email
     requires: invitacion.aceptada_por = null or invitacion.aceptada_por = persona
+    let texto = transcripcion/Transcripcion{biblioteca: invitacion.biblioteca_origen, id: invitacion.slug}
+    requires: exists texto
     ensures:
         invitacion.estado = aceptada
         invitacion.aceptada_por = persona
+        texto.personas_con_acceso = texto.personas_con_acceso + {persona}
         AccesoConcedidoUnaVez(persona, invitacion)
         AbrirTextoInvitado(persona, invitacion.biblioteca_origen, invitacion.slug)
 
@@ -101,6 +112,10 @@ rule AceptarInvitacion {
         -- enlace con la cuenta que lo acepto no duplica el permiso.
         -- La invitacion apunta al original; sus derechos son los mismos que
         -- los de cualquier colaboradora, incluido volver a invitar.
+        -- La invitacion aceptada pasa a retirada si la persona sale
+        -- del texto; reabrir ese enlace ya no concede ni restaura su acceso.
+        -- Si se borra el texto al salir la ultima persona, todas sus
+        -- invitaciones quedan invalidadas, tambien las pendientes.
 }
 
 rule RegistrarEnvio {

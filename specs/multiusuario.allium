@@ -54,6 +54,11 @@
 --     - InvitarMiembro, RetirarMembresia (el backend ignora Membresia).
 --     - RevocarPermiso, ExportarBiblioteca, PublicarVersionDeGrafo.
 --
+--   IMPLEMENTADO: SALIDA INDIVIDUAL
+--     - RetirarTextoDeMiBiblioteca: se conserva el original para quienes
+--       permanecen; la ultima persona confirma el borrado global y su limpieza.
+--       La autorizacion por texto prevalece sobre la biblioteca de origen.
+--
 --   IMPLEMENTADO, CON GMAIL SMTP
 --     - Invitaciones por correo a multiples personas sin cuenta previa;
 --       aceptacion con el correo verificado y enlace al texto original.
@@ -218,6 +223,10 @@ contract ControlDeAcceso {
         -- reduce a que la biblioteca sea personas/{uid}.bibliotecaIds[0]
         -- (ver ResolucionDeBibliotecaPorRequest). Una Membresia en una
         -- segunda biblioteca no da acceso a sus datos.
+        -- personas_con_acceso del texto es la autoridad
+        -- para el acceso autenticado. Salir excluye tambien a la persona de
+        -- la biblioteca original; ni Membresia ni un permiso residual pueden
+        -- eludir esa salida. La lectura publica sigue siendo anonima.
 
     @invariant EscrituraRequiereRolEditor
         -- Crear, editar, extraer, validar o eliminar dentro de una biblioteca
@@ -233,8 +242,8 @@ contract ControlDeAcceso {
         -- quien lo tenia puede: anotar, crear/editar/eliminar conceptos y
         -- relaciones, simplificar, reprocesar con el LLM (a costo del
         -- operador), editar el texto fuente, RESETEAR el grafo completo
-        -- (ResetearGrafo), ELIMINAR el texto de la biblioteca de origen
-        -- (EliminarTextoCompleto), volver a compartirlo (CompartirTexto) y
+        -- (ResetearGrafo), RETIRARLO DE SU PROPIA biblioteca
+        -- (RetirarTextoDeMiBiblioteca), volver a compartirlo (CompartirTexto) y
         -- publicarlo o despublicarlo (PublicarTexto, DespublicarTexto).
         -- Ninguna escritura queda reservada a la biblioteca de origen.
         -- Los conceptos y relaciones de cada colaboradora se incorporan al
@@ -244,6 +253,15 @@ contract ControlDeAcceso {
         -- Las reglas de escritura de validacion.allium, grafo.allium y
         -- edicion-texto.allium no mencionan el permiso: valen igual para
         -- cualquier persona con acceso al texto.
+
+    @invariant SalirNoDestruyeElTrabajoCompartido
+        -- Eliminar un texto de
+        -- la biblioteca retira solo a quien actua, sin afectar el acceso ni
+        -- el trabajo de las demas personas. Si no queda ninguna persona con
+        -- acceso, se borra el texto y todo su contenido asociado. Se cuentan
+        -- personas distintas, no registros de permiso, invitaciones pendientes
+        -- ni visitantes publicos. Quien subio el archivo sigue la misma regla.
+        -- Si quedan personas, conservan tambien la publicacion en vivo.
 
     @invariant ResolucionDeBibliotecaPorRequest
         -- Como se decide, en cada request, sobre que biblioteca se trabaja:
@@ -588,6 +606,9 @@ rule CompartirTexto {
     -- que la persona entre una vez antes. No se manda invitacion por correo.
     requires: beneficiaria != null
     requires: beneficiaria != investigador
+    let texto = transcripcion/Transcripcion{biblioteca: origen, id: slug}
+    requires: exists texto
+    ensures: texto.personas_con_acceso = texto.personas_con_acceso + {beneficiaria}
     ensures: PermisoCompartido.created(
         biblioteca_origen: origen,
         slug: slug,
@@ -624,8 +645,9 @@ rule ListarConQuienEstaCompartido {
     @guidance
         -- Solo informativo (la colaboracion es plana): la ficha del texto lo
         -- muestra como "Compartido con: ...", y nada si la lista es vacia.
-        -- Lista a quien creo la biblioteca original y los beneficiaria_email
-        -- de todos los permisos sobre ese texto, sin duplicados. La tarjeta
+        -- Lista solo las personas_con_acceso actuales del texto,
+        -- sin duplicados y sin incluir a quien ya salio, aunque lo subiera.
+        -- La tarjeta
         -- muestra solo un icono que abre este listado, nunca "Compartido por".
 }
 
@@ -658,9 +680,10 @@ rule RevocarPermiso {
 
     @guidance
         -- NO IMPLEMENTADO: no hay forma de revocar un permiso desde la app.
-        -- Tampoco se borran permisos al resetear el grafo o eliminar el
-        -- texto: el permiso sobrevive y vuelve a dar acceso si en la
-        -- biblioteca de origen reaparece un texto con ese slug.
+        -- Retirar el acceso de OTRA persona sigue siendo una decision abierta.
+        -- Salir por voluntad propia se especifica en RetirarTextoDeMiBiblioteca;
+        -- borra todos los permisos propios sobre el texto. El borrado final
+        -- retira los permisos de todas (EliminarTextoCompleto).
 }
 
 -- ════ Publicacion en vivo (IMPLEMENTADO) ════════════════
@@ -686,8 +709,9 @@ rule PublicarTexto {
         -- persona con acceso al texto puede publicarlo, tambien una
         -- beneficiaria (colaboracion plana). La interfaz muestra la URL
         -- para copiarla.
-        -- No se borra al resetear el grafo ni al eliminar el texto: la URL
-        -- sigue existiendo y vuelve a mostrar un texto si reaparece ese slug.
+        -- Salir de un texto compartido conserva la publicacion si
+        -- queda alguien. Al salir la ultima persona se elimina tambien la
+        -- publicacion; su enlace no puede revivir si se reutiliza el slug.
 }
 
 rule DespublicarTexto {
@@ -1094,10 +1118,13 @@ deferred biblioteca_de_slug    -- see: src/app.py: _resolver_biblioteca_de_slug
     -- La biblioteca principal de la persona si el texto esta ahi; si no, la
     -- biblioteca_origen de un PermisoCompartido de esa persona sobre ese
     -- slug; null si no tiene acceso de ninguna forma.
+    -- Solo resuelve si la persona pertenece a personas_con_acceso
+    -- del texto; la ubicacion en su biblioteca original no basta tras salir.
 
 deferred emails_con_acceso    -- see: src/contexto_biblioteca.py: emails_con_acceso
     -- (biblioteca: Biblioteca, slug: String) -> List<String>
-    -- beneficiaria_email de cada PermisoCompartido sobre (biblioteca, slug).
+    -- Emails de personas_con_acceso del texto (biblioteca, slug),
+    -- sin duplicados y sin incluir a quienes salieron.
 
 ------------------------------------------------------------
 -- Open Questions
@@ -1141,7 +1168,10 @@ open question "DIVERGENCIA ACTIVA -- gasto sin tope: hoy toda la inferencia la p
 
 open question "RiesgoSlugNoUnico (riesgo ACEPTADO, no resuelto): el slug sale del nombre de archivo y no es unico entre bibliotecas. Si una beneficiaria tiene un texto propio con el mismo slug que uno compartido con ella, su biblioteca lista el propio (o ambos, si el propio no esta procesado), pero todo request sobre ese slug se dirige a la biblioteca de origen del permiso: pierde acceso a su propio texto y trabaja sin saberlo sobre el ajeno. Aceptado para el caso de uso real (compartir el texto propio con pocas personas). ¿Se pasa a identificar el texto por (biblioteca, slug) en el permiso y en la ruta?"
 
-open question "Revocar: no hay RevocarPermiso. Con colaboracion plana, ¿puede revocar cualquiera con acceso (incluida otra beneficiaria), solo quien otorgo, o solo la biblioteca de origen? ¿Puede la beneficiaria renunciar? ¿Se borran los permisos y la Publicacion al eliminar el texto?"
+-- DECISION RESUELTA: cualquiera puede retirar un texto de SU biblioteca.
+-- Solo se borra globalmente cuando sale la ultima persona con acceso.
+-- Ver transcripcion.allium, RetirarTextoDeMiBiblioteca y EliminarTextoCompleto.
+open question "Revocar el acceso de OTRA persona: ¿puede hacerlo cualquiera con acceso, solo quien lo otorgo, o solo la biblioteca de origen? La salida voluntaria y el borrado final ya estan resueltos; esta pregunta no los bloquea."
 
 open question "Edicion concurrente de un texto compartido: cada escritura reescribe el estado completo (gana la ultima). ¿Se acepta mientras compartir sea raro, o se necesita deteccion de conflicto?"
 

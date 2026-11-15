@@ -16,6 +16,7 @@
 use "./lectografo.allium" as lectografo
 use "./edicion-texto.allium" as edicion
 use "./multiusuario.allium" as multiusuario
+use "./invitaciones.allium" as invitaciones
 
 ------------------------------------------------------------
 -- Tipos auxiliares
@@ -71,6 +72,9 @@ entity Transcripcion {
                                                  -- NO entre bibliotecas (ver multiusuario.allium,
                                                  -- RiesgoSlugNoUnico).
     biblioteca: multiusuario/Biblioteca          -- unica; Grafo y PuntoDecision la heredan
+    -- Acceso explicito por texto, independiente de su ubicacion y de quien
+    -- lo subio. Los textos anteriores se incorporan al operar sobre ellos.
+    personas_con_acceso: Set<multiusuario/Persona>
     titulo: String
     fuente_origen: FuenteOrigen
     url_fuente: String?
@@ -121,6 +125,7 @@ rule IngestarTextoPegado {
     ensures: Transcripcion.created(
         id: slugify(titulo),
         biblioteca: biblioteca,
+        personas_con_acceso: personas_iniciales(biblioteca),
         titulo: titulo,
         fuente_origen: texto_pegado,
         autor_contenido: autor_contenido,
@@ -144,6 +149,7 @@ rule IngestarArchivoLocal {
     ensures: Transcripcion.created(
         id: slugify(titulo),
         biblioteca: biblioteca,
+        personas_con_acceso: personas_iniciales(biblioteca),
         titulo: titulo,
         fuente_origen: archivo_local,
         url_fuente: ruta,
@@ -168,6 +174,7 @@ rule IngestarYoutube {
         Transcripcion.created(
             id: slugify(titulo),
             biblioteca: biblioteca,
+            personas_con_acceso: personas_iniciales(biblioteca),
             titulo: titulo,
             fuente_origen: youtube,
             url_fuente: url,
@@ -213,17 +220,57 @@ rule NormalizarTranscripcion {
 -- Eliminacion
 ------------------------------------------------------------
 
-rule EliminarTextoCompleto {
-    when: InvestigadorEliminaTexto(transcripcion)
-    ensures: not exists transcripcion
+-- Implementado: sustituye el borrado global directo.
+rule RetirarTextoDeMiBiblioteca {
+    when: InvestigadorEliminaTexto(persona, transcripcion)
+    requires: persona in transcripcion.personas_con_acceso
+    let restantes = transcripcion.personas_con_acceso - {persona}
+    ensures:
+        transcripcion.personas_con_acceso = restantes
+        for p in multiusuario/PermisoCompartido where biblioteca_origen = transcripcion.biblioteca and slug = transcripcion.id and beneficiaria = persona:
+            not exists p
+        for i in invitaciones/Invitacion where biblioteca_origen = transcripcion.biblioteca and slug = transcripcion.id and aceptada_por = persona:
+            i.estado = retirada
+        if restantes.count = 0:
+            TextoSinPersonasConAcceso(transcripcion)
 
     @guidance
-        -- Irreversible: borra el grafo completo (como ResetearGrafo en
-        -- grafo.allium) y ademas el archivo del texto fuente. Se ofrece en la
-        -- "zona de peligro" del editor de texto, con confirmacion, y la puede
-        -- invocar cualquier persona con acceso, tambien una beneficiaria de
-        -- un texto compartido (colaboracion plana, multiusuario.allium). No
-        -- borra los PermisoCompartido ni la Publicacion del texto.
+        -- Eliminar significa salir del texto: desaparece de MI biblioteca y
+        -- pierdo acceso de lectura y escritura autenticadas de inmediato.
+        -- Vale igual para quien lo subio y para quienes lo recibieron.
+        -- La biblioteca de origen solo ubica el texto: no restaura el acceso
+        -- de quien salio ni obliga a transferirlo o copiarlo a otra biblioteca.
+        -- Si queda alguien, conserva el texto, grafo, revisiones y TODAS las
+        -- glosas con su autoria, incluidas las de quien sale. Tambien conserva
+        -- los permisos de terceros, aunque los haya otorgado quien sale.
+        -- Ni un permiso duplicado ni una invitacion aceptada antigua vuelven
+        -- a conceder acceso; volver requiere una nueva accion de compartir.
+}
+
+rule EliminarTextoCompleto {
+    when: TextoSinPersonasConAcceso(transcripcion)
+    requires: transcripcion.personas_con_acceso.count = 0
+    ensures:
+        for p in multiusuario/PermisoCompartido where biblioteca_origen = transcripcion.biblioteca and slug = transcripcion.id:
+            not exists p
+        for p in multiusuario/Publicacion where biblioteca_origen = transcripcion.biblioteca and slug = transcripcion.id:
+            not exists p
+        for i in invitaciones/Invitacion where biblioteca_origen = transcripcion.biblioteca and slug = transcripcion.id:
+            i.estado = invalidada
+        not exists transcripcion
+
+    @guidance
+        -- Borrado irreversible del texto fuente y de TODO su contenido
+        -- asociado: grafo, conceptos, relaciones, glosas, revisiones y sesiones.
+        -- No deja enlaces activos ni accesos que resurjan si se reutiliza el
+        -- slug. Invitaciones pendientes y lectores anonimos no cuentan como
+        -- personas con acceso en su biblioteca; no impiden este borrado.
+        -- La salida y la comprobacion de la ultima persona forman una sola
+        -- operacion coherente frente a salidas o aceptaciones concurrentes.
+        -- Mientras una operacion o tarea trabaja sobre el texto, la salida se
+        -- rechaza con una indicacion para reintentar al terminar.
+        -- Ante un fallo no se informa exito ni se pierde el trabajo de otra
+        -- persona. Una tarea iniciada antes no puede resucitar el texto borrado.
 }
 
 ------------------------------------------------------------
@@ -240,6 +287,15 @@ invariant IdiomaCoincideConIdiomaSoportado {
     for t in Transcripcion:
         t.idioma in {es, en, pt, fr, otro}
 }
+
+------------------------------------------------------------
+-- Deferred Specifications
+------------------------------------------------------------
+
+deferred personas_iniciales    -- see: src/acceso_texto.py: personas_legacy
+    -- (biblioteca: multiusuario/Biblioteca) -> Set<multiusuario/Persona>
+    -- Personas con acceso al texto al crearlo. En el modelo actual es la
+    -- persona fundadora de la biblioteca; nunca incluye invitaciones pendientes.
 
 ------------------------------------------------------------
 -- Preguntas abiertas

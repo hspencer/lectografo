@@ -612,8 +612,10 @@ surface EditorTexto {
         -- "Zona de peligro", ambas con confirmacion:
         InvestigadorReseteaGrafo(transcripcion)
             -- "Des-procesar". grafo.allium, ResetearGrafo.
-        InvestigadorEliminaTexto(transcripcion)
-            -- Borra texto y grafo. transcripcion.allium, EliminarTextoCompleto.
+        InvestigadorEliminaTexto(investigador, transcripcion)
+            when investigador in transcripcion.personas_con_acceso
+            -- "Eliminar de mi biblioteca". Misma accion que en PanelBiblioteca;
+            -- transcripcion.allium, RetirarTextoDeMiBiblioteca.
 
     @guarantee TextoSiempreEditable
         -- InvestigadorEditaTexto está disponible independientemente del
@@ -626,6 +628,8 @@ surface EditorTexto {
         -- El historial sólo crece; nunca se trunca.
         -- Excepcion real: "Des-procesar" (ResetearGrafo) borra el historial.
         -- La re-extraccion ya lo conserva (edicion-texto.allium).
+        -- El borrado final al salir la ultima persona elimina tambien el
+        -- historial; salir mientras queda alguien lo conserva integro.
 
     @guarantee DesincronizacionVisible
         -- Si texto_desincronizado_desde != null, la surface lo señala
@@ -658,7 +662,7 @@ surface PanelBiblioteca {
             for p in multiusuario/PermisoCompartido where slug = t.id:
                 p.beneficiaria_email
         -- Un icono abre el listado completo de personas con acceso,
-        -- incluida la de la biblioteca original, sin duplicados.
+        -- sin duplicados; la persona de origen solo si conserva acceso.
         -- No aparece la leyenda "Compartido por" en la tarjeta.
         -- Textos de otras bibliotecas compartidos conmigo
         -- (multiusuario.allium, TextoCompartidoApareceEnBibliotecaDeLaBeneficiaria).
@@ -674,6 +678,15 @@ surface PanelBiblioteca {
             e.elapsed                -- segundos desde iniciada_en
 
     provides:
+        InvestigadorEliminaTexto(investigador, transcripcion)
+            when investigador in transcripcion.personas_con_acceso
+            -- "Eliminar de mi biblioteca", en cada texto propio o
+            -- compartido, procesado o no. Requiere confirmacion antes de actuar.
+            -- Si queda alguien: explica que solo pierdo mi acceso y el resto
+            -- conserva su trabajo. Si soy la ultima persona: advierte que se
+            -- borraran definitivamente el texto, grafo, glosas y revisiones.
+            -- Si la situacion cambia antes de confirmar, no se convierte una
+            -- salida en borrado irreversible sin una nueva confirmacion.
         InvestigadorSolicitaExtraccion(transcripcion, proveedor, prompt)
             when transcripcion.estado = normalizada
         CancelarExtraccion(ejecucion)
@@ -708,6 +721,12 @@ surface PanelBiblioteca {
         -- El conteo de tokens se actualiza en cada token generado,
         -- sin esperar al fin de la extracción. El porcentaje nunca
         -- supera el 90% hasta que la extracción completa.
+
+    @guarantee BibliotecaSinTextosAbandonados
+        -- Solo se muestran textos donde investigador pertenece a
+        -- personas_con_acceso. No reaparecen tras recargar, iniciar sesion o
+        -- resolver la biblioteca original. La salida actualiza tambien la
+        -- lista de personas con acceso que ven quienes permanecen.
 
     @guarantee ModalComunDeIA
         -- Procesar (incluida la seleccion dirigida), reprocesar, fusionar,
