@@ -296,6 +296,7 @@ function _menuBiblioteca(e) {
           <button class="menu-acciones-item bib-btn-repro" data-slug="${slug}">Reprocesar texto</button>
           <button class="menu-acciones-item bib-btn-fusionar" data-slug="${slug}">Fusionar conceptos</button>
           <button class="menu-acciones-item bib-btn-simplificar" data-slug="${slug}">Simplificar grafo</button>
+          <button class="menu-acciones-item bib-btn-miniatura" data-slug="${slug}">${ico("refresh-cw")} Regenerar miniatura</button>
           <button class="menu-acciones-item bib-btn-exportar" data-slug="${slug}">${ico("download")} Exportar grafo</button>
           <button class="menu-acciones-item danger bib-btn-resetear" data-slug="${slug}" data-titulo="${titulo}">${ico("trash-2")} Eliminar grafo</button>`
         : `<button class="menu-acciones-item btn-procesar" data-slug="${slug}">Procesar texto</button>`}
@@ -403,6 +404,9 @@ function renderBiblioteca(exts) {
   );
   grid.querySelectorAll(".bib-btn-exportar").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); exportarGrafo(btn.dataset.slug); })
+  );
+  grid.querySelectorAll(".bib-btn-miniatura").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); regenerarMiniatura(btn.dataset.slug); })
   );
   grid.querySelectorAll(".bib-btn-resetear").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); eliminarGrafo(btn.dataset.slug, btn.dataset.titulo); })
@@ -685,6 +689,16 @@ async function _construirMallaSVG(rawNodes, rawLinks, S, { maxNodes = 150, porGr
   });
 
   return svg;
+}
+
+// Fuerza recalcular la miniatura ignorando el caché (localStorage + memoria),
+// por si el usuario no está contento con el layout que le tocó al azar.
+function regenerarMiniatura(slug) {
+  localStorage.removeItem(_miniSvgCacheKey(slug));
+  delete _miniGrafoCache[slug];
+  const el = document.querySelector(`.bib-mini-mapa[data-slug="${CSS.escape(slug)}"]`);
+  if (el) el.innerHTML = "";
+  _renderMiniGrafo(slug);
 }
 
 const _miniGrafoEnProgreso = new Set();  // slugs cuya construcción async ya está en vuelo
