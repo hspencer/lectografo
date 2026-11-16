@@ -815,7 +815,6 @@ tbody tr:hover td { background: var(--sn-sunk); }
   background: var(--sn-field);
 }
 
-#biblioteca-header { margin-bottom: var(--sn-s-4); }
 .bib-titulo    { font-size: var(--sn-fs-xl); font-weight: 700; margin-bottom: var(--sn-s-1); }
 .bib-subtitulo { font-size: var(--sn-fs-sm); color: var(--sn-ink-soft); }
 

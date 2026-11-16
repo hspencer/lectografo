@@ -64,8 +64,25 @@
         </button>
         <div id="auth-menu-drop" class="menu-acciones-drop" hidden>
           <span id="auth-user-nombre" class="menu-acciones-rotulo" hidden></span>
-          <button id="auth-btn-google-menu" class="menu-acciones-item" hidden data-i18n="auth.google">Continuar con Google</button>
-          <button id="btn-admin" class="menu-acciones-item" hidden data-i18n="auth.lectores" title="Personas registradas" aria-label="Personas registradas">Lectores</button>
+          <button id="auth-btn-google-menu" class="menu-acciones-item" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <span data-i18n="auth.google">Continuar con Google</span>
+          </button>
+          <button id="btn-admin" class="menu-acciones-item" hidden title="Personas registradas" aria-label="Personas registradas">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span data-i18n="auth.lectores">Lectores</span>
+          </button>
           <button id="btn-settings" class="menu-acciones-item" hidden>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"
                  fill="none" stroke="currentColor" stroke-width="2"
@@ -75,7 +92,16 @@
             </svg>
             <span data-i18n="auth.config">Configuración</span>
           </button>
-          <button id="auth-btn-signout" class="menu-acciones-item" hidden data-i18n="auth.salir">Salir</button>
+          <button id="auth-btn-signout" class="menu-acciones-item" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span data-i18n="auth.salir">Salir</span>
+          </button>
           <hr class="menu-acciones-separador">
           <span class="menu-acciones-rotulo" data-i18n="auth.idioma">Idioma</span>
           <div class="menu-idioma">
@@ -91,11 +117,7 @@
   <!-- VISTA: Biblioteca                                              -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div id="vista-biblioteca" hidden>
-    <div id="biblioteca-header">
-      <h1 class="bib-titulo">Textos</h1>
-    </div>
     <div id="biblioteca-grid"></div>
-
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
