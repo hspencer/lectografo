@@ -17,6 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 
 from src.config import settings
+from src import config_llm
 from src.contexto_biblioteca import (
     _DirectorioPorBiblioteca, exigir_admin, middleware_biblioteca,
     biblioteca_actual, persona_actual, persona_nombre_actual, correo_verificado_actual, otorgar_permiso,
@@ -24,7 +25,7 @@ from src.contexto_biblioteca import (
     publicar_texto, despublicar_texto, estado_publicacion, resolver_publicacion, listar_publicaciones,
 )
 from src.acceso_texto import (
-    OperacionesTextoMiddleware, datos_acceso, exigir_acceso, tiene_acceso,
+    OperacionesTextoMiddleware, accesos, datos_acceso, exigir_acceso, tiene_acceso,
     operacion_texto, operacion_actual, liberar_operacion, verificar_operacion,
 )
 from src.models.extraccion import ResultadoExtraccion
@@ -58,6 +59,13 @@ from src.models.consolidacion import SesionConsolidacion
 app = FastAPI(title="Lectógrafo", docs_url="/api/docs")
 app.add_middleware(OperacionesTextoMiddleware)
 app.middleware("http")(middleware_biblioteca)
+
+
+@app.middleware("http")
+async def _sincronizar_config_llm(request, call_next):
+    if request.url.path.startswith("/api/"):
+        await asyncio.to_thread(config_llm.sincronizar)
+    return await call_next(request)
 
 STATIC      = Path(__file__).parent.parent / "static"
 GRAFOS      = _DirectorioPorBiblioteca(settings.grafos_dir)
@@ -244,16 +252,40 @@ def _cargar_o_crear(slug: str) -> tuple[EstadoValidacion, Path]:
 
 # ── API ───────────────────────────────────────────────────────────────────────
 
+_RESUMENES_VALIDACION: dict[str, tuple[float, str, dict]] = {}
+
+
+def _resumen_validacion(ruta: Path) -> tuple[str, dict] | None:
+    """Título y metadatos de una validación. La validación completa pesa y vive
+    en el bucket; se relee solo si cambió su mtime."""
+    try:
+        mtime = ruta.stat().st_mtime
+    except FileNotFoundError:
+        return None
+    previo = _RESUMENES_VALIDACION.get(str(ruta))
+    if previo and previo[0] == mtime:
+        return previo[1], previo[2]
+    val = cargar(ruta)
+    _RESUMENES_VALIDACION[str(ruta)] = (mtime, val.titulo, val.metadatos.model_dump())
+    return val.titulo, val.metadatos.model_dump()
+
+
 @app.get("/api/extracciones")
 def listar_extracciones():
     """Lista todos los textos: extraídos (con o sin validación) y aún sin procesar."""
     resultado = []
     slugs_procesados: set[str] = set()
+    uid, bib = persona_actual.get(), biblioteca_actual.get()
+    extraidos = sorted(GRAFOS.glob("*_extraccion.json"))
+    transcripts = [f for ext in _EXTS_TRANSCRIPT for f in sorted(TRANSCRIPTS.glob(f"*.{ext}"))]
+    acceso = (accesos(bib, {f.stem.replace("_extraccion", "") for f in extraidos}
+                      | {_slug_de_archivo(f) for f in transcripts}, uid)
+              if uid else {})
 
     # ── Textos ya extraídos ────────────────────────────────────────────────────
-    for f in sorted(GRAFOS.glob("*_extraccion.json")):
+    for f in extraidos:
         slug = f.stem.replace("_extraccion", "")
-        if persona_actual.get() and not tiene_acceso(biblioteca_actual.get(), slug, persona_actual.get()):
+        if uid and not acceso.get(slug, True):
             continue
         slugs_procesados.add(slug)
         ruta_val = ruta_validacion(slug, GRAFOS)
@@ -284,75 +316,70 @@ def listar_extracciones():
             "error":           (estado_tarea if estado_tarea.startswith("error")
                                 else ("cancelado" if estado_tarea == "cancelado" else None)),
         }
-        if ruta_val.exists():
-            val = cargar(ruta_val)
-            info.update({
-                "titulo":    val.titulo,
-                "metadatos": val.metadatos.model_dump(),
-            })
+        resumen = _resumen_validacion(ruta_val)
+        if resumen:
+            info.update({"titulo": resumen[0], "metadatos": resumen[1]})
         resultado.append(info)
 
     # ── Transcripts sin extracción ─────────────────────────────────────────────
-    for ext in _EXTS_TRANSCRIPT:
-        for f in sorted(TRANSCRIPTS.glob(f"*.{ext}")):
-            slug = _slug_de_archivo(f)
-            if persona_actual.get() and not tiene_acceso(biblioteca_actual.get(), slug, persona_actual.get()):
-                continue
-            if slug in slugs_procesados:
-                continue
-            tarea = _TAREAS.get(slug, {})
-            estado_tarea = tarea.get("estado", "pendiente") if isinstance(tarea, dict) else "pendiente"
-            procesando   = estado_tarea == "procesando"
-            tokens       = tarea.get("tokens", 0)            if isinstance(tarea, dict) else 0
-            tok_total    = tarea.get("tokens_total", 0)      if isinstance(tarea, dict) else 0
-            total_lotes  = tarea.get("total_lotes", 0)       if isinstance(tarea, dict) else 0
-            lotes_proc   = tarea.get("lotes_procesados", 0)  if isinstance(tarea, dict) else 0
-            elapsed      = int(time.time() - tarea["inicio"]) if procesando and isinstance(tarea, dict) else 0
-            if total_lotes > 0 and lotes_proc > 0:
-                porcentaje = int(min(lotes_proc / total_lotes * 90, 90))
-            elif tok_total > 0 and tokens > 0:
-                porcentaje = int(min(tokens / tok_total * 90, 90))
-            else:
-                porcentaje = 0
-            # Incluir metadatos standalone si existen
-            meta_standalone: dict | None = None
-            ruta_meta_s = GRAFOS / f"{slug}_metadatos.json"
-            if ruta_meta_s.exists():
-                try:
-                    meta_standalone = MetadatosTexto.model_validate_json(
-                        ruta_meta_s.read_text("utf-8")
-                    ).model_dump()
-                except Exception:
-                    pass
-            titulo_mostrar = (
-                (meta_standalone or {}).get("titulo") or _titulo_de_archivo(f)
-            )
-            resultado.append({
-                "slug":            slug,
-                "titulo":          titulo_mostrar,
-                "procesado":       False,
-                "procesando":      procesando,
-                "fase_extraccion": tarea.get("fase", "") if isinstance(tarea, dict) else "",
-                "elapsed":         elapsed,
-                "tokens":          tokens,
-                "tokens_total":    tok_total,
-                "porcentaje":      porcentaje,
-                "texto_llm":            tarea.get("texto_llm", "")             if procesando and isinstance(tarea, dict) else "",
-                "modelo_en_ram":        tarea.get("modelo_en_ram")             if procesando and isinstance(tarea, dict) else None,
-                "modo_extraccion":      tarea.get("modo", "rapido")            if isinstance(tarea, dict) else "rapido",
-                "total_lotes":          total_lotes,
-                "lotes_procesados":     lotes_proc,
-                "conceptos_parciales":  tarea.get("conceptos_parciales", [])   if procesando and isinstance(tarea, dict) else [],
-                "relaciones_parciales": tarea.get("relaciones_parciales", [])  if procesando and isinstance(tarea, dict) else [],
-                "metadatos":       meta_standalone,
-                "error":           (estado_tarea if estado_tarea.startswith("error")
-                                    else ("cancelado" if estado_tarea == "cancelado" else None)),
-                "total":           None, "resueltas": 0,
-                "pendientes":      None, "diferidas": 0, "completado": False,
-            })
+    for f in transcripts:
+        slug = _slug_de_archivo(f)
+        if uid and not acceso.get(slug, True):
+            continue
+        if slug in slugs_procesados:
+            continue
+        tarea = _TAREAS.get(slug, {})
+        estado_tarea = tarea.get("estado", "pendiente") if isinstance(tarea, dict) else "pendiente"
+        procesando   = estado_tarea == "procesando"
+        tokens       = tarea.get("tokens", 0)            if isinstance(tarea, dict) else 0
+        tok_total    = tarea.get("tokens_total", 0)      if isinstance(tarea, dict) else 0
+        total_lotes  = tarea.get("total_lotes", 0)       if isinstance(tarea, dict) else 0
+        lotes_proc   = tarea.get("lotes_procesados", 0)  if isinstance(tarea, dict) else 0
+        elapsed      = int(time.time() - tarea["inicio"]) if procesando and isinstance(tarea, dict) else 0
+        if total_lotes > 0 and lotes_proc > 0:
+            porcentaje = int(min(lotes_proc / total_lotes * 90, 90))
+        elif tok_total > 0 and tokens > 0:
+            porcentaje = int(min(tokens / tok_total * 90, 90))
+        else:
+            porcentaje = 0
+        # Incluir metadatos standalone si existen
+        meta_standalone: dict | None = None
+        ruta_meta_s = GRAFOS / f"{slug}_metadatos.json"
+        if ruta_meta_s.exists():
+            try:
+                meta_standalone = MetadatosTexto.model_validate_json(
+                    ruta_meta_s.read_text("utf-8")
+                ).model_dump()
+            except Exception:
+                pass
+        titulo_mostrar = (
+            (meta_standalone or {}).get("titulo") or _titulo_de_archivo(f)
+        )
+        resultado.append({
+            "slug":            slug,
+            "titulo":          titulo_mostrar,
+            "procesado":       False,
+            "procesando":      procesando,
+            "fase_extraccion": tarea.get("fase", "") if isinstance(tarea, dict) else "",
+            "elapsed":         elapsed,
+            "tokens":          tokens,
+            "tokens_total":    tok_total,
+            "porcentaje":      porcentaje,
+            "texto_llm":            tarea.get("texto_llm", "")             if procesando and isinstance(tarea, dict) else "",
+            "modelo_en_ram":        tarea.get("modelo_en_ram")             if procesando and isinstance(tarea, dict) else None,
+            "modo_extraccion":      tarea.get("modo", "rapido")            if isinstance(tarea, dict) else "rapido",
+            "total_lotes":          total_lotes,
+            "lotes_procesados":     lotes_proc,
+            "conceptos_parciales":  tarea.get("conceptos_parciales", [])   if procesando and isinstance(tarea, dict) else [],
+            "relaciones_parciales": tarea.get("relaciones_parciales", [])  if procesando and isinstance(tarea, dict) else [],
+            "metadatos":       meta_standalone,
+            "error":           (estado_tarea if estado_tarea.startswith("error")
+                                else ("cancelado" if estado_tarea == "cancelado" else None)),
+            "total":           None, "resueltas": 0,
+            "pendientes":      None, "diferidas": 0, "completado": False,
+        })
 
     # ── Textos compartidos conmigo (de otras bibliotecas) ──────────────────────
-    uid = persona_actual.get()
     if uid:
         for permiso in permisos_compartidos_conmigo(uid):
             slug, bib_origen = permiso.get("slug"), permiso.get("bibliotecaOrigen")
@@ -368,12 +395,10 @@ def listar_extracciones():
                 continue
             ruta_val = settings.grafos_dir / bib_origen / f"{slug}_validacion.json"
             titulo, metadatos = slug.replace("_", " ").title(), None
-            if ruta_val.exists():
-                try:
-                    val = cargar(ruta_val)
-                    titulo, metadatos = val.titulo, val.metadatos.model_dump()
-                except Exception:
-                    pass
+            try:
+                titulo, metadatos = _resumen_validacion(ruta_val) or (titulo, metadatos)
+            except Exception:
+                pass
             resultado.append({
                 "slug": slug, "titulo": titulo, "procesado": procesado, "procesando": False,
                 "fase_extraccion": "", "elapsed": 0, "tokens": 0, "tokens_total": 0,
@@ -1957,21 +1982,6 @@ def agregar_anotacion(slug: str, payload: AnotarPayload):
 
 # ── Settings (modelo Ollama) ──────────────────────────────────────────────────
 
-def _actualizar_env(key: str, value: str) -> None:
-    env_path = Path(".env")
-    lines = env_path.read_text("utf-8").splitlines() if env_path.exists() else []
-    nuevas, encontrada = [], False
-    for linea in lines:
-        if linea.startswith(f"{key}="):
-            nuevas.append(f"{key}={value}")
-            encontrada = True
-        else:
-            nuevas.append(linea)
-    if not encontrada:
-        nuevas.append(f"{key}={value}")
-    env_path.write_text("\n".join(nuevas) + "\n", encoding="utf-8")
-
-
 def _leer_key_env(nombre: str) -> str | None:
     """Lee un valor del .env en disco (fresco, no del proceso en memoria)."""
     env_path = Path(".env")
@@ -1987,44 +1997,33 @@ def _leer_key_env(nombre: str) -> str | None:
     return None
 
 
-def _modelos_lmstudio() -> list[str]:
-    """Modelos cargados ahora mismo en LM Studio (API compatible con OpenAI,
-    local -- sin key). Best-effort: lista vacía si no está corriendo."""
-    import httpx
-    try:
-        r = httpx.get(f"{settings.lmstudio_endpoint.rstrip('/')}/models", timeout=2.0)
-        r.raise_for_status()
-        return [m["id"] for m in r.json().get("data", [])]
-    except Exception:
-        return []
+def _claves_llm() -> dict[str, str | None]:
+    """API keys: del .env en disco (fresco) o de las variables de entorno
+    (Secret Manager en Cloud Run)."""
+    return {
+        p: _leer_key_env(f"{p.upper()}_API_KEY") or getattr(settings, f"{p}_api_key")
+        for p in ("gemini", "anthropic", "openai")
+    }
 
 
 @app.get("/api/settings")
 async def obtener_settings():
-    """Configuración actual + modelos disponibles y estado por proveedor."""
+    """Configuración actual + modelos disponibles en vivo por proveedor."""
     exigir_admin()
-    modelo_actual = getattr(settings, f"{settings.provider}_model", None)
+    config_llm.sincronizar(forzar=True)
+    claves = _claves_llm()
+    modelos = await asyncio.to_thread(config_llm.modelos_disponibles, claves)
     return {
-        "provider":         settings.provider,
-        "model":            modelo_actual,
-        "available_models": _modelos_lmstudio(),
+        "provider": settings.provider,
+        "model":    getattr(settings, f"{settings.provider}_model", None),
         "providers_status": {
-            "gemini": {
-                "model":   settings.gemini_model,
-                "has_key": bool(_leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key),
-            },
-            "vertexai": {
-                "model":   settings.vertexai_model,
-                "has_key": True,  # ADC de la cuenta de servicio, no requiere key
-            },
-            "anthropic": {
-                "model":   settings.anthropic_model,
-                "has_key": bool(_leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key),
-            },
-            "lmstudio": {
-                "model":   settings.lmstudio_model,
-                "has_key": True,  # local, sin key
-            },
+            p: {
+                "model":   getattr(settings, f"{p}_model", None),
+                # Vertex usa la cuenta de servicio; LM Studio es local.
+                "has_key": bool(claves[p]) if p in claves else True,
+                "models":  modelos.get(p, []),
+            }
+            for p in config_llm.PROVEEDORES
         },
     }
 
@@ -2036,55 +2035,25 @@ class SettingsPayload(BaseModel):
 
 @app.patch("/api/settings")
 async def actualizar_settings(payload: SettingsPayload):
-    """Cambia el proveedor y/o modelo en uso. Escribe .env y actualiza en memoria."""
+    """Cambia el proveedor y/o modelo en uso. Persiste en Firestore (o en
+    data/config_llm.json sin Firebase); el .env queda solo con credenciales."""
     exigir_admin()
-    valid_providers = {"gemini", "vertexai", "anthropic", "lmstudio"}
     new_provider = (payload.provider or "").strip() or None
-    if new_provider and new_provider not in valid_providers:
+    if new_provider and new_provider not in config_llm.PROVEEDORES:
         raise HTTPException(400, f"Proveedor no reconocido: '{new_provider}'")
-
     target = new_provider or settings.provider
 
-    if target == "gemini":
-        key = _leer_key_env("GEMINI_API_KEY") or settings.gemini_api_key
-        if not key:
-            raise HTTPException(400, "GEMINI_API_KEY no está configurada en .env")
-        object.__setattr__(settings, "gemini_api_key", key)
-        _GEMINI_DEFAULT = "gemini-flash-latest"
-        # gemini-2.x quedó deprecado para cuentas nuevas en nov-2026
-        _GEMINI_DEPRECATED = {
-            "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro",
-            "gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash",
-        }
-        env_model = _leer_key_env("GEMINI_MODEL") or ""
-        requested = (payload.model or "").strip()
-        if requested:
-            new_model = requested
-        elif env_model and env_model not in _GEMINI_DEPRECATED:
-            new_model = env_model
-        else:
-            new_model = _GEMINI_DEFAULT
-    elif target == "vertexai":
-        # Sin API key: ADC de la cuenta de servicio de Cloud Run factura al
-        # proyecto. Ver src/llm/vertexai.py.
-        new_model = (payload.model or "").strip() or settings.vertexai_model
-    elif target == "anthropic":
-        key = _leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key
-        if not key:
-            raise HTTPException(400, "ANTHROPIC_API_KEY no está configurada en .env")
-        object.__setattr__(settings, "anthropic_api_key", key)
-        new_model = (payload.model or "").strip() or settings.anthropic_model
-    else:  # lmstudio -- local, sin key
-        new_model = (payload.model or "").strip() or settings.lmstudio_model
+    clave = _claves_llm().get(target)
+    if target in ("gemini", "anthropic", "openai"):
+        if not clave:
+            raise HTTPException(400, f"{target.upper()}_API_KEY no está configurada")
+        object.__setattr__(settings, f"{target}_api_key", clave)
 
-    if new_provider and new_provider != settings.provider:
-        _actualizar_env("PROVIDER", new_provider)
-        object.__setattr__(settings, "provider", new_provider)
-
-    if new_model:
-        _actualizar_env(f"{target.upper()}_MODEL", new_model)
-        object.__setattr__(settings, f"{target}_model", new_model)
-
+    new_model = (payload.model or "").strip() or getattr(settings, f"{target}_model", None)
+    try:
+        config_llm.guardar(target, new_model)
+    except Exception as err:
+        raise HTTPException(503, f"No se pudo guardar la configuración: {err}")
     return {"ok": True, "provider": settings.provider, "model": new_model}
 
 

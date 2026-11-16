@@ -49,6 +49,7 @@ function ico(name, size=14) {
     "refresh-cw":     `<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>`,
     "skip-forward":   `<polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/>`,
     "terminal":       `<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>`,
+    "download":       `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>`,
     "trash-2":        `<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>`,
     "users":          `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
     "x":              `<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>`,
@@ -87,15 +88,26 @@ function _rutaPublica(path) {
   return m ? `/api/publico/${state.pubId}/${m[1]}` : path;
 }
 
+// Barra superior de actividad: visible mientras haya alguna llamada en vuelo.
+let _enVuelo = 0;
+function _cargando(delta) {
+  _enVuelo = Math.max(0, _enVuelo + delta);
+  document.getElementById("carga-global")?.classList.toggle("activa", _enVuelo > 0);
+}
+
 async function apiFetch(path, opts={}, raw=false) {
   if (state.soloLectura) {
     if (opts.method && opts.method !== "GET") throw new Error("Vista de solo lectura");
     path = _rutaPublica(path);
   }
   const headers = { "Content-Type":"application/json", ...(opts.headers||{}) };
-  const token = await window.lectografoAuth?.getIdToken?.();
-  if (token) headers.Authorization = `Bearer ${token}`;
-  const r = await fetch(path, { ...opts, headers });
+  _cargando(+1);
+  let r;
+  try {
+    const token = await window.lectografoAuth?.getIdToken?.();
+    if (token) headers.Authorization = `Bearer ${token}`;
+    r = await fetch(path, { ...opts, headers });
+  } finally { _cargando(-1); }
   if (!r.ok) {
     const texto = await r.text();
     let detalle = texto;
@@ -226,8 +238,6 @@ function initMapaArrows() {
 // Biblioteca (vista primaria)
 // ════════════════════════════════════════════════════════════════════════
 async function mostrarBiblioteca(extData) {
-  const exts = extData ?? await apiFetch("/api/extracciones");
-
   _aplicarFaviconDefault();
 
   // Topbar: modo biblioteca
@@ -240,9 +250,6 @@ async function mostrarBiblioteca(extData) {
   // Ocultar paneles de texto, mostrar biblioteca
   document.querySelectorAll(".tab-panel").forEach(p => { p.hidden = true; });
   document.getElementById("vista-biblioteca").hidden = false;
-
-  // Arrancar polling si hay algo procesando
-  if (exts.some(e => e.procesando)) _arrancarPolling();
 
   // Reset estado de texto
   state.grafoDestroy?.();
@@ -263,6 +270,11 @@ async function mostrarBiblioteca(extData) {
   tabsInit.clear();
 
   history.replaceState(null, "", location.pathname);
+  // La vista ya está a la vista con las tarjetas del último render; la lista
+  // fresca (lenta: recorre el bucket) las reemplaza cuando llega.
+  const exts = extData ?? await apiFetch("/api/extracciones");
+  if (state.slug) return;  // se abrió otro texto mientras cargaba
+  if (exts.some(e => e.procesando)) _arrancarPolling();
   renderBiblioteca(exts);
 }
 
@@ -283,7 +295,9 @@ function _menuBiblioteca(e) {
         : e.procesado ? `
           <button class="menu-acciones-item bib-btn-repro" data-slug="${slug}">Reprocesar texto</button>
           <button class="menu-acciones-item bib-btn-fusionar" data-slug="${slug}">Fusionar conceptos</button>
-          <button class="menu-acciones-item bib-btn-simplificar" data-slug="${slug}">Simplificar grafo</button>`
+          <button class="menu-acciones-item bib-btn-simplificar" data-slug="${slug}">Simplificar grafo</button>
+          <button class="menu-acciones-item bib-btn-exportar" data-slug="${slug}">${ico("download")} Exportar grafo</button>
+          <button class="menu-acciones-item danger bib-btn-resetear" data-slug="${slug}" data-titulo="${titulo}">${ico("trash-2")} Eliminar grafo</button>`
         : `<button class="menu-acciones-item btn-procesar" data-slug="${slug}">Procesar texto</button>`}
     </div>
   </div>`;
@@ -337,7 +351,8 @@ function renderBiblioteca(exts) {
     // Transcript ya extraído — card clicable con footer de acciones
     const citaCard = e.metadatos ? buildCita(e.metadatos) : "";
 
-    return `<div class="bib-card" data-slug="${esc(e.slug)}">
+    const trabajando = _iaTarea?.activa && _iaTarea.slug === e.slug ? " bib-card-trabajando" : "";
+    return `<div class="bib-card${trabajando}" data-slug="${esc(e.slug)}">
       <div class="bib-mini-mapa bib-card-click" data-slug="${esc(e.slug)}"></div>
       ${_menuBiblioteca(e)}
       <div class="bib-card-click bib-card-body">
@@ -385,6 +400,12 @@ function renderBiblioteca(exts) {
   );
   grid.querySelectorAll(".bib-btn-simplificar").forEach(btn =>
     btn.addEventListener("click", e => { e.stopPropagation(); _simplificarConModal(btn.dataset.slug); })
+  );
+  grid.querySelectorAll(".bib-btn-exportar").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); exportarGrafo(btn.dataset.slug); })
+  );
+  grid.querySelectorAll(".bib-btn-resetear").forEach(btn =>
+    btn.addEventListener("click", e => { e.stopPropagation(); eliminarGrafo(btn.dataset.slug, btn.dataset.titulo); })
   );
 
   // Listado de personas con acceso
@@ -504,17 +525,52 @@ async function mostrarBibliotecaPublica() {
 }
 
 async function eliminarDeMiBiblioteca(slug, titulo) {
+  let card = null;
   try {
     const { ultima_persona } = await apiFetch(`/api/transcripts/${encodeURIComponent(slug)}/salida`);
     const detalle = ultima_persona
       ? "Eres la última persona con acceso. Se borrarán definitivamente el texto, su grafo, las glosas y el historial. Esta acción no tiene vuelta atrás."
       : "Perderás tu acceso. Las demás personas conservarán el texto, el grafo y todas las glosas con su autoría.";
     if (!confirm(`¿Eliminar «${titulo}» de tu biblioteca?\n\n${detalle}`)) return;
+    card = document.querySelector(`.bib-btn-eliminar[data-slug="${CSS.escape(slug)}"]`)?.closest(".bib-card");
+    card?.classList.add("bib-card-trabajando");
     await apiFetch(`/api/transcripts/${encodeURIComponent(slug)}?confirmar_borrado=${ultima_persona}`, { method: "DELETE" });
     delete _miniGrafoCache[slug];
+    if (card) {
+      card.classList.replace("bib-card-trabajando", "bib-card-saliendo");
+      await new Promise(ok => setTimeout(ok, 320));
+    }
     await mostrarBiblioteca();
   } catch (error) {
+    card?.classList.remove("bib-card-trabajando");
     alert("No se pudo eliminar de tu biblioteca: " + error.message);
+  }
+}
+
+async function exportarGrafo(slug) {
+  try {
+    const grafo = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}`);
+    const url = URL.createObjectURL(new Blob([JSON.stringify(grafo, null, 2)], { type: "application/json" }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: `${slug}-grafo.json` });
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("No se pudo exportar el grafo: " + error.message);
+  }
+}
+
+async function eliminarGrafo(slug, titulo) {
+  if (!confirm(`¿Eliminar el grafo de «${titulo}»?\n\nSe borrarán conceptos, relaciones, glosas e historial para todas las personas con acceso. El texto se conserva y podrás procesarlo de nuevo.`)) return;
+  const card = document.querySelector(`.bib-card[data-slug="${CSS.escape(slug)}"]`);
+  card?.classList.add("bib-card-trabajando");
+  try {
+    await apiFetch(`/api/extracciones/${encodeURIComponent(slug)}`, { method: "DELETE" });
+    delete _miniGrafoCache[slug];
+    try { localStorage.removeItem(_miniSvgCacheKey(slug)); } catch { /* sin almacenamiento */ }
+    renderBiblioteca(await apiFetch("/api/extracciones"));
+  } catch (error) {
+    card?.classList.remove("bib-card-trabajando");
+    alert("No se pudo eliminar el grafo: " + error.message);
   }
 }
 
@@ -634,39 +690,43 @@ async function _construirMallaSVG(rawNodes, rawLinks, S, { maxNodes = 150, porGr
 const _miniGrafoEnProgreso = new Set();  // slugs cuya construcción async ya está en vuelo
 
 async function _renderMiniGrafos(slugs) {
-  for (const slug of slugs) {
-    const container = document.querySelector(`.bib-mini-mapa[data-slug="${CSS.escape(slug)}"]`);
-    if (!container || container.childElementCount > 0) continue;
-    // El polling llama a esto cada 1200ms; en un grafo denso la construcción
-    // (fetch + simulación d3) puede tardar más que eso. Sin esta guardia
-    // sincrónica, dos llamadas superpuestas pasan ambas el check de arriba
-    // -- cada una de novo-sheets, luego ambas appendChild sobre el mismo
-    // contenedor final cuando el polling se detiene: el grafo queda duplicado.
-    if (_miniGrafoEnProgreso.has(slug)) continue;
-    _miniGrafoEnProgreso.add(slug);
+  await Promise.all(slugs.map(_renderMiniGrafo));
+}
 
-    try {
-      if (!_miniGrafoCache[slug]) {
-        _miniGrafoCache[slug] = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}`);
-      }
-      const { nodes: rawNodes, links: rawLinks } = _miniGrafoCache[slug];
-      const fp = _topoFingerprint(rawNodes, rawLinks);
-      const cached = _cargarMiniSvgCache(slug);
-      if (cached && cached.fp === fp) {
-        // Misma topología que la última vez: reusar el SVG ya armado, sin
-        // volver a correr la simulación D3 (cara) ni reimportarla.
-        container.innerHTML = cached.html;
-        continue;
-      }
-      // Cuadrado: el contenedor tiene aspect-ratio:1, pero leemos el ancho real
-      const S = container.clientWidth || 260;
-      const svg = await _construirMallaSVG(rawNodes, rawLinks, S);
-      // replaceChildren, no appendChild: si algo más ya dejó contenido acá
-      // (restoreSvgs, otra pasada), no se apila -- un contenedor, un grafo.
-      if (svg) { container.replaceChildren(svg); _guardarMiniSvgCache(slug, fp, svg); }
-    } catch(_) { /* ignorar errores por tarjeta */ }
-    finally { _miniGrafoEnProgreso.delete(slug); }
-  }
+async function _renderMiniGrafo(slug) {
+  const container = document.querySelector(`.bib-mini-mapa[data-slug="${CSS.escape(slug)}"]`);
+  if (!container || container.childElementCount > 0) return;
+  // El polling llama a esto cada 1200ms; en un grafo denso la construcción
+  // (fetch + simulación d3) puede tardar más que eso. Sin esta guardia
+  // sincrónica, dos llamadas superpuestas pasan ambas el check de arriba
+  // -- cada una de novo-sheets, luego ambas appendChild sobre el mismo
+  // contenedor final cuando el polling se detiene: el grafo queda duplicado.
+  if (_miniGrafoEnProgreso.has(slug)) return;
+  _miniGrafoEnProgreso.add(slug);
+
+  try {
+    const previo = _cargarMiniSvgCache(slug);
+    if (previo && !container.childElementCount) container.innerHTML = previo.html;
+    if (!_miniGrafoCache[slug]) {
+      _miniGrafoCache[slug] = await apiFetch(`/api/grafo/${encodeURIComponent(slug)}`);
+    }
+    const { nodes: rawNodes, links: rawLinks } = _miniGrafoCache[slug];
+    const fp = _topoFingerprint(rawNodes, rawLinks);
+    const cached = _cargarMiniSvgCache(slug);
+    if (cached && cached.fp === fp) {
+      // Misma topología que la última vez: reusar el SVG ya armado, sin
+      // volver a correr la simulación D3 (cara) ni reimportarla.
+      if (container.innerHTML !== cached.html) container.innerHTML = cached.html;
+      return;
+    }
+    // Cuadrado: el contenedor tiene aspect-ratio:1, pero leemos el ancho real
+    const S = container.clientWidth || 260;
+    const svg = await _construirMallaSVG(rawNodes, rawLinks, S);
+    // replaceChildren, no appendChild: si algo más ya dejó contenido acá
+    // (restoreSvgs, otra pasada), no se apila -- un contenedor, un grafo.
+    if (svg) { container.replaceChildren(svg); _guardarMiniSvgCache(slug, fp, svg); }
+  } catch(_) { /* ignorar errores por tarjeta */ }
+  finally { _miniGrafoEnProgreso.delete(slug); }
 }
 
 // ── Favicon dinámico: minimapa del texto abierto ────────────────────────
@@ -1518,6 +1578,7 @@ function _sesionConModal(cfg, iniciar, slug = state.slug) {
   const api = cfg.api(slug);
   abrirTareaIA({
     titulo: cfg === SESION_CONSOLIDACION ? "Fusionar conceptos" : "Reconectar conceptos",
+    slug,
     detener: () => apiFetch(`${api}/sesion`, { method: "DELETE" }),
     ejecutar: async ui => {
       if (iniciar) await apiFetch(`${api}/iniciar`, { method: "POST", body: "{}" });
@@ -1953,20 +2014,6 @@ function initSettingsPanel() {
   const status    = document.getElementById("settings-model-status");
   const guardar   = document.getElementById("settings-guardar");
 
-  // Modelos conocidos por proveedor (preset + opción personalizada)
-  const MODELOS = {
-    ollama:    [],   // se pueblan desde la API
-    lmstudio:  [],   // se pueblan desde la API
-    anthropic: ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-2"],
-    openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
-    // Catálogos verificados a mano -- Vertex AI y AI Studio NO comparten
-    // modelos ni nombres (nov-2026). gemini-2.x quedó deprecado para cuentas
-    // nuevas en AI Studio ("no longer available to new users"); en Vertex,
-    // en cambio, 2.5 es lo único que responde hoy -- todo lo demás 404.
-    gemini:    ["gemini-flash-latest", "gemini-pro-latest", "gemini-flash-lite-latest", "gemini-3.8-flash", "gemini-4-argon", "gemini-4-carbon"],
-    vertexai:  ["gemini-2.5-flash", "gemini-2.5-pro"],
-  };
-
   let _cfg = null;       // última config recibida del servidor
   let _loading = false;  // evitar cargas simultáneas
 
@@ -1982,16 +2029,13 @@ function initSettingsPanel() {
     });
 
     // Indicadores ✓/✗ de API keys
-    ["anthropic", "openai", "gemini", "vertexai"].forEach(p => {
+    ["anthropic", "openai", "gemini"].forEach(p => {
       const ind = document.getElementById(`settings-key-${p}`);
       if (!ind) return;
       const ok = (ps[p] || {}).has_key;
       ind.textContent = ok ? "✓" : "✗";
       ind.style.color = ok ? "var(--sn-ok)" : "var(--sn-danger)";
     });
-
-    // Modelos cargados ahora mismo en LM Studio (local, vía su API)
-    if (_cfg.available_models?.length) MODELOS.lmstudio = _cfg.available_models;
 
     // Poblar selector con el proveedor activo
     _poblarModelos(provider, _cfg.model);
@@ -2000,16 +2044,14 @@ function initSettingsPanel() {
   // ── Poblar el selector de modelos para un proveedor ─────────────
   function _poblarModelos(provider, modelActual) {
     const ps = (_cfg?.providers_status || {})[provider] || {};
-    const isLocal = provider === "ollama" || provider === "lmstudio";
-    const modelos = isLocal
-      ? (MODELOS[provider].length ? MODELOS[provider] : (modelActual ? [modelActual] : []))
-      : MODELOS[provider] || [];
+    const isLocal = provider === "lmstudio";
+    // Lista consultada en vivo al proveedor por el servidor.
+    const modelos = ps.models || [];
 
     modelSel.innerHTML = "";
 
     if (isLocal && !modelos.length) {
-      const label = provider === "lmstudio" ? "LM Studio" : "Ollama";
-      modelSel.innerHTML = `<option value="">${label} no responde</option>`;
+      modelSel.innerHTML = `<option value="">LM Studio no responde</option>`;
       modelSel.disabled = true;
       keyStatus.textContent = "";
     } else {
@@ -2048,7 +2090,7 @@ function initSettingsPanel() {
       const ok = ps.has_key;
       keyStatus.innerHTML = ok
         ? ico("check", 10) + " API key configurada"
-        : "⚠ API key no configurada en .env";
+        : "⚠ API key no configurada";
       keyStatus.style.color = ok ? "var(--sn-ok)" : "var(--sn-warn)";
     }
   }
@@ -2064,6 +2106,7 @@ function initSettingsPanel() {
     if (_loading) return;
     _loading = true;
     try {
+      status.textContent = "Consultando modelos disponibles…";
       _cfg = await apiFetch("/api/settings");
       _render();
       status.textContent = "";
@@ -2231,7 +2274,6 @@ function abrirTareaIA(tarea) {
   const log = el("repro-log");
   const barra = el("repro-progress-inner");
   el("repro-modal-titulo").textContent = tarea.titulo;
-  el("repro-confirm-titulo").textContent = tarea.titulo;
   el("repro-confirm-aviso").textContent = tarea.aviso || "";
   el("repro-estado-confirm").hidden = !tarea.aviso;
   el("repro-estado-proc").hidden = true;
@@ -2254,6 +2296,9 @@ function abrirTareaIA(tarea) {
     el("repro-estado-proc").hidden = false;
     el("repro-btn-ok").hidden = true;
     el("repro-btn-cancelar").hidden = true;
+    el("repro-btn-cerrar").hidden = false;
+    el("repro-btn-cerrar").textContent = "Seguir en segundo plano";
+    _marcarCard(tarea.slug, true);
     el("repro-modal-cerrar").title = "Minimizar (la tarea sigue en curso)";
     el("repro-modal-cerrar").setAttribute("aria-label", "Minimizar: la tarea sigue en curso en segundo plano");
     const detener = el("repro-btn-detener");
@@ -2262,6 +2307,10 @@ function abrirTareaIA(tarea) {
     detener.textContent = "Detener";
     el("repro-fase").textContent = "Iniciando…";
     el("repro-tokens").textContent = "";
+    el("repro-modelo").textContent = "";
+    apiFetch("/api/llm/actual").then(m => {
+      if (tarea.activa && m?.model) el("repro-modelo").textContent = `${m.model} · ${m.provider}`;
+    }).catch(() => {});
     barra.className = "repro-progress-indeterminate";
     barra.style.width = "";
     log.classList.add("rec-log-pre--active");
@@ -2301,6 +2350,7 @@ function abrirTareaIA(tarea) {
       ui.append(`\n[error] ${err.message}\n`);
     } finally {
       tarea.activa = false;
+      _marcarCard(tarea.slug, false);
       log.classList.remove("rec-log-pre--active");
       barra.className = "repro-progress-determinate";
       barra.style.width = exito ? "100%" : "0%";
@@ -2315,6 +2365,11 @@ function abrirTareaIA(tarea) {
     }
   }
   if (!tarea.aviso) iniciar();
+}
+
+function _marcarCard(slug, activa) {
+  if (!slug) return;
+  document.querySelector(`.bib-card[data-slug="${CSS.escape(slug)}"]`)?.classList.toggle("bib-card-trabajando", activa);
 }
 
 // Mientras la tarea sigue activa, "cerrar" en realidad minimiza: el trabajo
@@ -2407,6 +2462,7 @@ function _procesarConModal(slug, payload, aviso) {
   const api = `/api/extracciones/${encodeURIComponent(slug)}`;
   abrirTareaIA({
     titulo: payload?.force ? "Reprocesar texto" : "Procesar texto",
+    slug,
     aviso,
     detener: () => apiFetch(`${api}/procesar`, { method: "DELETE" }),
     ejecutar: async ui => {
@@ -2430,6 +2486,7 @@ function _procesarConModal(slug, payload, aviso) {
 function _simplificarConModal(slug) {
   abrirTareaIA({
     titulo: "Simplificar grafo",
+    slug,
     aviso: "Se ocultarán los conceptos menos seguros. Los datos se conservan.",
     ejecutar: async ui => {
       await _streamSimplificacion(slug, ui);

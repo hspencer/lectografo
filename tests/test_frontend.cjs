@@ -8,7 +8,7 @@ const grid = { innerHTML: '', querySelectorAll: () => [] };
 const context = vm.createContext({
   document: { getElementById: () => grid },
   requestAnimationFrame: () => {},
-  buildCita: () => '', ico: () => '',
+  buildCita: () => '', ico: () => '', _iaTarea: null,
   esc: text => String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;'),
   state: { validacion: { anotaciones: [
     { objeto_anotado: 'c_1', nota: 'Glosa', autor_nombre: '<script>autor</script>', creada_en: '2026-11-12' },
@@ -44,7 +44,7 @@ async function probarModal() {
   function element(id) {
     if (!elements.has(id)) elements.set(id, {
       hidden: true, textContent: '', disabled: false, style: {},
-      classList: { add() {}, remove() {} }, focus() {},
+      classList: { add() {}, remove() {} }, focus() {}, setAttribute() {}, querySelector: () => ({ style: {} }),
       scrollHeight: 0, scrollTop: 0, clientHeight: 0,
     });
     return elements.get(id);
@@ -53,8 +53,9 @@ async function probarModal() {
   const pendiente = new Promise(resolve => { completar = resolve; });
   let detener = 0, continuar = 0;
   const uiContext = vm.createContext({
-    document: { getElementById: element, activeElement: { focus() {} } },
-    state: {}, TextDecoder, window: {},
+    document: { getElementById: element, querySelector: () => null, activeElement: { focus() {} } },
+    CSS: { escape: s => s },
+    state: {}, TextDecoder, window: {}, apiFetch: async () => ({}),
   });
   vm.runInContext(source.slice(source.indexOf('let _iaTarea ='), source.indexOf('async function publicarDocumento(')), uiContext);
   uiContext.abrirTareaIA({
@@ -63,12 +64,14 @@ async function probarModal() {
     ejecutar: async ui => { ui.append('detalle '.repeat(5000)); await pendiente; return 'Completado'; },
   });
   assert.equal(element('repro-modal').hidden, false);
-  assert.equal(element('repro-modal-cerrar').disabled, true);
+  assert.equal(element('repro-btn-cerrar').hidden, false, 'Hay un botón visible para seguir en segundo plano');
   uiContext._reproCerrar();
-  assert.equal(element('repro-modal').hidden, false, 'No se cierra una tarea activa');
+  assert.equal(element('repro-modal').hidden, true, 'Cerrar una tarea activa la minimiza');
+  assert.equal(element('tarea-ia-indicador').hidden, false, 'Queda el indicador para reabrirla');
+  element('repro-modal').hidden = false;
   await element('repro-btn-detener').onclick();
   assert.equal(detener, 1);
-  assert.equal(element('repro-btn-cerrar').hidden, true, 'Cancelar espera confirmación del servidor');
+  assert.equal(element('repro-btn-detener').disabled, true, 'Cancelar espera confirmación del servidor');
   completar();
   await new Promise(resolve => setImmediate(resolve));
   assert.match(element('repro-log').textContent, /detalle /);
@@ -128,7 +131,7 @@ async function probarModal() {
   vm.runInContext(source.slice(source.indexOf('async function abrirPanelSesion('), source.indexOf('function renderPanelSesion(')), uiContext);
   await uiContext.abrirPanelSesion(cfg, 'recibido');
   await new Promise(resolve => setImmediate(resolve));
-  assert.ok(rutas.every(path => path.includes('/recibido/')), 'La operación usa el texto de la tarjeta');
+  assert.ok(rutas.filter(path => path !== '/api/llm/actual').every(path => path.includes('/recibido/')), 'La operación usa el texto de la tarjeta');
   await uiContext._reproCerrar();
   assert.equal(abierto, 'recibido');
   assert.equal(revisado, true, 'La fusión pasa del modal al grafo para revisión');

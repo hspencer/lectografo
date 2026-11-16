@@ -47,6 +47,20 @@ def tiene_acceso(biblioteca, slug, uid):
     return datos["estado"] == "activo" and uid in datos["personas"]
 
 
+def accesos(biblioteca, slugs, uid):
+    """tiene_acceso para muchos textos en una sola ida a Firestore."""
+    slugs = list(slugs)
+    db = firestore.client()
+    refs = [referencia(biblioteca, slug) for slug in slugs]
+    if hasattr(db, "get_all"):
+        por_id = {snap.id: snap.to_dict() for snap in db.get_all(refs)}
+        datos = [por_id.get(ref.id) for ref in refs]
+    else:
+        datos = [ref.get().to_dict() for ref in refs]
+    return {slug: d is None or (d["estado"] == "activo" and uid in d["personas"])
+            for slug, d in zip(slugs, datos)}
+
+
 def exigir_acceso(biblioteca, slug, uid):
     if not tiene_acceso(biblioteca, slug, uid):
         raise HTTPException(404, "Este texto ya no está en tu biblioteca.")

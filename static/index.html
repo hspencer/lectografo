@@ -23,6 +23,7 @@
   <script type="module" src="/i18n.js"></script>
 </head>
 <body>
+  <div id="carga-global" aria-hidden="true"></div>
 
   <!-- ── Topbar ──────────────────────────────────────────────────── -->
   <header id="topbar">
@@ -56,8 +57,8 @@
              fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
       </button>
       <button id="tarea-ia-indicador" class="btn btn-neutro small" hidden title="Ver progreso de la tarea en curso">
@@ -393,7 +394,6 @@
       <div id="repro-modal-body">
         <!-- Estado: confirmar -->
         <div id="repro-estado-confirm">
-          <p id="repro-confirm-titulo" class="repro-confirm-titulo"></p>
           <p id="repro-confirm-aviso" class="repro-confirm-aviso"></p>
         </div>
         <!-- Estado: procesando -->
@@ -404,6 +404,7 @@
           <div class="repro-status-row">
             <span class="rec-log-dot"></span>
             <span id="repro-fase" role="status">Iniciando…</span>
+            <span id="repro-modelo" class="repro-modelo"></span>
             <span id="repro-tokens" class="rec-token-count"></span>
             <button id="repro-btn-copiar" class="btn btn-neutro small" title="Copiar el registro completo, incluidos los errores">Copiar registro</button>
             <button id="repro-btn-detener" class="btn btn-neutro small rec-detener-btn">Detener</button>
@@ -453,6 +454,11 @@
                 <input type="radio" name="settings-provider" value="anthropic">
                 <span>Anthropic (Claude)</span>
                 <span id="settings-key-anthropic" class="settings-key-ind"></span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="openai">
+                <span>OpenAI (GPT)</span>
+                <span id="settings-key-openai" class="settings-key-ind"></span>
               </label>
               <label class="settings-provider-opt">
                 <input type="radio" name="settings-provider" value="lmstudio">

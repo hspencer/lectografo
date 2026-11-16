@@ -39,3 +39,6 @@ transcripts/*.mp4
 # Logs del CLI de Firebase
 firebase-debug.log
 firestore-debug.log
+
+# Elección local de proveedor/modelo LLM (ver src/config_llm.py)
+data/config_llm.json

@@ -17,6 +17,7 @@ async function probar(ultima, confirma, conflicto = false) {
     alert: texto => avisos.push(texto),
     mostrarBiblioteca: async () => { biblioteca++; },
     _miniGrafoCache: { timeo: 'previo' },
+    document: { querySelector: () => null }, CSS: { escape: s => s },
   });
   vm.runInContext(source.slice(source.indexOf('async function eliminarDeMiBiblioteca('),
                               source.indexOf('let _pollingBiblioteca')), context);

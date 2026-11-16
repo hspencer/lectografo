@@ -5,7 +5,9 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    provider: str
+    # Proveedor y modelos se eligen en Configuración y se guardan fuera del
+    # .env (ver src/config_llm.py); estos son solo los valores de arranque.
+    provider: str = "vertexai"
 
     # Claves remotas
     anthropic_api_key: Optional[str] = None
@@ -13,7 +15,7 @@ class Settings(BaseSettings):
     gemini_api_key: Optional[str] = None
 
     # Modelos remotos (defaults razonables)
-    anthropic_model: str = "claude-opus-4-6"
+    anthropic_model: str = "claude-sonnet-5-5"
     openai_model: str = "gpt-4o"
     gemini_model: str = "gemini-flash-latest"
 
@@ -58,7 +60,7 @@ class Settings(BaseSettings):
         # anthropic: hay API key en .env/secretos. lmstudio: local, sin key.
         # openai y ollama quedan implementados pero sin credenciales/servidor
         # disponibles hoy -- fuera de uso hasta que se retomen.
-        validos = {"gemini", "vertexai", "anthropic", "lmstudio"}
+        validos = {"gemini", "vertexai", "anthropic", "openai", "lmstudio"}
         if self.provider not in validos:
             raise ValueError(f"PROVIDER='{self.provider}' no reconocido. Opciones: {validos}")
         # Las API keys se validan al momento de usar el LLM, no al arrancar,

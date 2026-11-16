@@ -539,7 +539,7 @@ kbd {
   position: absolute; width: 280px; min-width: 220px; min-height: 96px;
   pointer-events: auto;
   background: var(--sn-paper); border: var(--sn-hair);
-  border-radius: var(--sn-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,.14);
+  border-radius: var(--sn-radius-l); box-shadow: 0 4px 20px rgba(0,0,0,.14);
   display: flex; flex-direction: column; overflow: hidden;
   resize: both;
 }
@@ -1045,7 +1045,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
   width: max-content; max-width: min(280px, calc(100vw - 5rem));
   padding: var(--sn-s-3); background: var(--sn-paper);
   border: var(--sn-hair); border-radius: var(--sn-radius);
-  box-shadow: var(--sn-shadow-float); cursor: default;
+  box-shadow: var(--sn-lift); cursor: default;
   font-size: var(--sn-fs-xs); color: var(--sn-ink-soft);
   overflow-wrap: anywhere;
 }
@@ -1082,7 +1082,11 @@ tbody tr:hover td { background: var(--sn-sunk); }
 }
 .menu-acciones-item:hover { background: var(--sn-nova-wash); color: var(--sn-nova); }
 .menu-acciones-separador { width: 100%; border: 0; border-top: var(--sn-hair); margin: var(--sn-s-1) 0; }
-.menu-acciones-rotulo { padding: var(--sn-s-2); font-size: var(--sn-fs-xs); color: var(--sn-ink-faint); white-space: nowrap; }
+.menu-acciones-rotulo {
+  padding: var(--sn-s-2) var(--sn-s-2) var(--sn-s-1); white-space: nowrap;
+  font-family: var(--sn-font-mono); font-size: .62rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--sn-ink-faint);
+}
 .bib-card-sin-procesar .bib-card-titulo,
 .bib-card-procesando .bib-card-titulo { padding-right: var(--sn-s-5); }
 .menu-acciones-item.danger:hover { background: var(--sn-danger-wash); color: var(--sn-danger); }
@@ -1140,7 +1144,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
   width: min(520px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem);
   margin: auto; padding: var(--sn-s-6); overflow-y: auto;
   background: var(--sn-paper); color: var(--sn-ink); border: var(--sn-hair);
-  border-radius: var(--sn-radius-lg); box-shadow: var(--sn-shadow-float);
+  border-radius: var(--sn-radius-l); box-shadow: var(--sn-lift);
 }
 #compartir-modal::backdrop { background: rgba(34,31,26,.45); backdrop-filter: blur(2px); }
 #compartir-form { display: flex; flex-direction: column; gap: var(--sn-s-3); }
@@ -1163,7 +1167,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 #repro-modal-box {
   position: relative; z-index: 1;
   background: var(--sn-paper); border: var(--sn-hair);
-  border-radius: var(--sn-radius-lg); box-shadow: var(--sn-shadow-float);
+  border-radius: var(--sn-radius-l); box-shadow: var(--sn-lift);
   width: min(560px, calc(100vw - 2rem));
   max-height: calc(100vh - 4rem);
   display: flex; flex-direction: column; overflow: hidden;
@@ -1171,8 +1175,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 
 #repro-modal-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: var(--sn-s-5) var(--sn-s-6) var(--sn-s-3);
-  border-bottom: var(--sn-hair); flex-shrink: 0;
+  padding: var(--sn-s-5) var(--sn-s-6) 0; flex-shrink: 0;
 }
 #repro-modal-header h3 {
   font-size: var(--sn-fs-md); font-weight: 700; color: var(--sn-ink);
@@ -1191,19 +1194,15 @@ tbody tr:hover td { background: var(--sn-sunk); }
   min-height: 0;
 }
 
-.repro-confirm-titulo {
-  font-size: var(--sn-fs-md); font-weight: 600; color: var(--sn-ink);
-  margin: 0 0 var(--sn-s-2);
-}
 .repro-confirm-aviso {
   font-size: var(--sn-fs-sm); color: var(--sn-ink-soft);
   line-height: 1.55; margin: 0;
 }
 
+#repro-estado-proc:not([hidden]) { display: flex; flex-direction: column; gap: var(--sn-s-3); min-height: 0; }
 .repro-progress-wrap {
-  height: 3px; background: var(--sn-sunk);
+  height: 3px; background: var(--sn-sunk); flex-shrink: 0;
   border-radius: var(--sn-radius-pill); overflow: hidden;
-  margin-bottom: var(--sn-s-3);
 }
 .repro-progress-indeterminate {
   height: 100%; background: var(--sn-sunk); position: relative;
@@ -1212,7 +1211,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
   content: "";
   position: absolute; top: 0; left: -60%; width: 60%; height: 100%;
   background: var(--sn-nova);
-  animation: bib-indeterminate 1.4s linear infinite;
+  animation: indeterminate 1.4s ease-in-out infinite;
 }
 .repro-progress-determinate {
   height: 100%; background: var(--sn-nova);
@@ -1223,16 +1222,17 @@ tbody tr:hover td { background: var(--sn-sunk); }
   font-size: var(--sn-fs-xs);
 }
 #repro-fase { flex: 1; min-width: 80px; color: var(--sn-ink-soft); }
+.repro-modelo {
+  font-family: var(--sn-font-mono); font-size: var(--sn-fs-xs); color: var(--sn-ink-faint);
+  max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 
 #repro-modal-footer {
-  display: flex; gap: var(--sn-s-3);
-  padding: var(--sn-s-4) var(--sn-s-6) var(--sn-s-5);
-  border-top: var(--sn-hair); flex-shrink: 0;
+  display: flex; gap: var(--sn-s-3); justify-content: flex-end;
+  padding: 0 var(--sn-s-6) var(--sn-s-5); flex-shrink: 0;
 }
 
-#repro-estado-proc #repro-log {
-  max-height: 240px; margin-top: var(--sn-s-2);
-}
+#repro-estado-proc #repro-log { max-height: 240px; }
 
 /* ── Tab: Texto original ─────────────────────────────────────────── */
 #tab-texto {
@@ -1789,4 +1789,39 @@ hr.divider  { border: none; border-top: 1px solid var(--sn-hairline-soft); margi
 .solo-lectura #btn-nuevo-gp,
 .solo-lectura .btn-procesar {
   display: none !important;
+}
+
+/* ── Actividad y movimiento ───────────────────────────────────────── */
+/* Barra superior: aparece en cuanto hay una llamada al servidor en vuelo. */
+#carga-global {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 1000;
+  overflow: hidden; pointer-events: none; opacity: 0; transition: opacity .15s;
+}
+#carga-global.activa { opacity: 1; }
+#carga-global::after {
+  content: ""; position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
+  background: var(--sn-nova); animation: indeterminate 1.1s ease-in-out infinite;
+}
+/* Tarjeta con trabajo en curso (eliminar, procesar, simplificar, fusionar). */
+@keyframes trabajando-glow {
+  0%, 100% { box-shadow: var(--sn-lift-paper), 0 0 0 0 transparent; }
+  50%      { box-shadow: var(--sn-lift-paper), 0 0 0 3px var(--sn-nova-wash), 0 0 18px var(--sn-nova-wash); }
+}
+.bib-card-trabajando { animation: trabajando-glow 1.6s ease-in-out infinite; border-color: var(--sn-nova) !important; }
+.bib-card-trabajando .bib-card-click { cursor: progress; }
+.bib-card-saliendo {
+  pointer-events: none;
+  animation: card-salir .32s ease-in forwards;
+}
+@keyframes card-salir { to { opacity: 0; transform: scale(.94); filter: blur(2px); } }
+/* Aparición suave de vistas y pestañas (se reproduce al dejar de estar hidden). */
+@keyframes aparecer { from { opacity: 0; transform: translateY(4px); } }
+.tab-panel:not([hidden]), #vista-biblioteca:not([hidden]) { animation: aparecer .22s ease-out; }
+#repro-modal:not([hidden]) #repro-modal-box { animation: aparecer .18s ease-out; }
+.menu-acciones-drop:not([hidden]) { animation: aparecer .12s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  #carga-global.activa::after, .bib-card-trabajando { animation: none; }
+  #carga-global.activa { background: var(--sn-nova); }
 }
