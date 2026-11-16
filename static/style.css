@@ -136,6 +136,9 @@ html, body {
 #auth-user-nombre { overflow: hidden; text-overflow: ellipsis; }
 #btn-settings svg { flex-shrink: 0; }
 .menu-idioma { display: flex; gap: var(--sn-s-1); padding: 0 var(--sn-s-2) var(--sn-s-1); }
+
+/* ── Indicador de tarea IA en curso (minimizada) ─────────────────────── */
+#tarea-ia-indicador { display: flex; align-items: center; gap: var(--sn-s-2); }
 .idioma-btn {
   flex: 1; padding: 2px 0; font-size: var(--sn-fs-xs);
   border: var(--sn-hair); border-radius: var(--sn-radius-s); background: none;
@@ -795,6 +798,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 .btn-inline:hover { background: var(--sn-nova-wash); color: var(--sn-nova); border-color: var(--sn-nova); }
 .btn-inline.danger:hover { background: var(--sn-danger-wash); color: var(--sn-danger); border-color: var(--sn-danger); }
 .btn-inline.btn-icon { padding: 3px; }
+.btn.btn-icon { display: inline-flex; align-items: center; justify-content: center; padding: var(--sn-s-1); }
 
 .cell-editando { min-width: 120px; }
 
@@ -1199,6 +1203,7 @@ tbody tr:hover td { background: var(--sn-sunk); }
 .repro-progress-wrap {
   height: 3px; background: var(--sn-sunk);
   border-radius: var(--sn-radius-pill); overflow: hidden;
+  margin-bottom: var(--sn-s-3);
 }
 .repro-progress-indeterminate {
   height: 100%; background: var(--sn-sunk); position: relative;
@@ -1214,10 +1219,10 @@ tbody tr:hover td { background: var(--sn-sunk); }
   border-radius: var(--sn-radius-pill); transition: width 0.4s ease;
 }
 .repro-status-row {
-  display: flex; align-items: center; gap: var(--sn-s-2);
+  display: flex; align-items: center; flex-wrap: wrap; gap: var(--sn-s-2);
   font-size: var(--sn-fs-xs);
 }
-#repro-fase { flex: 1; color: var(--sn-ink-soft); }
+#repro-fase { flex: 1; min-width: 80px; color: var(--sn-ink-soft); }
 
 #repro-modal-footer {
   display: flex; gap: var(--sn-s-3);

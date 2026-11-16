@@ -51,7 +51,19 @@
 
     <div id="topbar-right">
       <input id="import-file-input" type="file" accept=".md,.markdown,.txt" hidden>
-      <button id="btn-importar" class="btn btn-neutro small" hidden data-i18n="topbar.importar" title="Importar texto (Markdown o TXT)" aria-label="Importar texto">Importar</button>
+      <button id="btn-importar" class="btn btn-neutro small btn-icon" hidden title="Importar texto (Markdown o TXT)" aria-label="Importar texto">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </button>
+      <button id="tarea-ia-indicador" class="btn btn-neutro small" hidden title="Ver progreso de la tarea en curso">
+        <span class="rec-log-dot"></span>
+        <span id="tarea-ia-indicador-texto">Procesando…</span>
+      </button>
       <div id="auth-menu-wrap">
         <button id="auth-avatar" data-i18n-title="auth.cuenta" title="Cuenta" aria-label="Cuenta" aria-haspopup="true" aria-expanded="false">
           <img id="auth-avatar-img" alt="" hidden>
@@ -393,6 +405,7 @@
             <span class="rec-log-dot"></span>
             <span id="repro-fase" role="status">Iniciando…</span>
             <span id="repro-tokens" class="rec-token-count"></span>
+            <button id="repro-btn-copiar" class="btn btn-neutro small" title="Copiar el registro completo, incluidos los errores">Copiar registro</button>
             <button id="repro-btn-detener" class="btn btn-neutro small rec-detener-btn">Detener</button>
           </div>
           <pre class="rec-log-pre rec-log-pre--active" id="repro-log" tabindex="0" aria-label="Registro de la tarea"></pre>
@@ -435,6 +448,16 @@
                 <input type="radio" name="settings-provider" value="gemini">
                 <span>Gemini (API key, mientras Vertex termina de aprovisionarse)</span>
                 <span id="settings-key-gemini" class="settings-key-ind"></span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="anthropic">
+                <span>Anthropic (Claude)</span>
+                <span id="settings-key-anthropic" class="settings-key-ind"></span>
+              </label>
+              <label class="settings-provider-opt">
+                <input type="radio" name="settings-provider" value="lmstudio">
+                <span>LM Studio</span>
+                <span class="settings-badge-local">local, sin key</span>
               </label>
             </div>
           </div>

@@ -55,9 +55,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validar_proveedor(self):
-        # Por ahora solo Google (Vertex AI o API key directa) -- los demás
-        # quedan implementados pero fuera de uso hasta que se retomen.
-        validos = {"gemini", "vertexai"}
+        # anthropic: hay API key en .env/secretos. lmstudio: local, sin key.
+        # openai y ollama quedan implementados pero sin credenciales/servidor
+        # disponibles hoy -- fuera de uso hasta que se retomen.
+        validos = {"gemini", "vertexai", "anthropic", "lmstudio"}
         if self.provider not in validos:
             raise ValueError(f"PROVIDER='{self.provider}' no reconocido. Opciones: {validos}")
         # Las API keys se validan al momento de usar el LLM, no al arrancar,

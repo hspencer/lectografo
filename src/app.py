@@ -1987,17 +1987,27 @@ def _leer_key_env(nombre: str) -> str | None:
     return None
 
 
+def _modelos_lmstudio() -> list[str]:
+    """Modelos cargados ahora mismo en LM Studio (API compatible con OpenAI,
+    local -- sin key). Best-effort: lista vacía si no está corriendo."""
+    import httpx
+    try:
+        r = httpx.get(f"{settings.lmstudio_endpoint.rstrip('/')}/models", timeout=2.0)
+        r.raise_for_status()
+        return [m["id"] for m in r.json().get("data", [])]
+    except Exception:
+        return []
+
+
 @app.get("/api/settings")
 async def obtener_settings():
-    """Configuración actual + modelos disponibles y estado por proveedor.
-    Por ahora solo Google (Vertex AI o API key directa) -- los demás
-    proveedores quedan implementados pero fuera de uso hasta que se retomen."""
+    """Configuración actual + modelos disponibles y estado por proveedor."""
     exigir_admin()
     modelo_actual = getattr(settings, f"{settings.provider}_model", None)
     return {
         "provider":         settings.provider,
         "model":            modelo_actual,
-        "available_models": [],
+        "available_models": _modelos_lmstudio(),
         "providers_status": {
             "gemini": {
                 "model":   settings.gemini_model,
@@ -2006,6 +2016,14 @@ async def obtener_settings():
             "vertexai": {
                 "model":   settings.vertexai_model,
                 "has_key": True,  # ADC de la cuenta de servicio, no requiere key
+            },
+            "anthropic": {
+                "model":   settings.anthropic_model,
+                "has_key": bool(_leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key),
+            },
+            "lmstudio": {
+                "model":   settings.lmstudio_model,
+                "has_key": True,  # local, sin key
             },
         },
     }
@@ -2020,7 +2038,7 @@ class SettingsPayload(BaseModel):
 async def actualizar_settings(payload: SettingsPayload):
     """Cambia el proveedor y/o modelo en uso. Escribe .env y actualiza en memoria."""
     exigir_admin()
-    valid_providers = {"gemini", "vertexai"}
+    valid_providers = {"gemini", "vertexai", "anthropic", "lmstudio"}
     new_provider = (payload.provider or "").strip() or None
     if new_provider and new_provider not in valid_providers:
         raise HTTPException(400, f"Proveedor no reconocido: '{new_provider}'")
@@ -2050,6 +2068,14 @@ async def actualizar_settings(payload: SettingsPayload):
         # Sin API key: ADC de la cuenta de servicio de Cloud Run factura al
         # proyecto. Ver src/llm/vertexai.py.
         new_model = (payload.model or "").strip() or settings.vertexai_model
+    elif target == "anthropic":
+        key = _leer_key_env("ANTHROPIC_API_KEY") or settings.anthropic_api_key
+        if not key:
+            raise HTTPException(400, "ANTHROPIC_API_KEY no está configurada en .env")
+        object.__setattr__(settings, "anthropic_api_key", key)
+        new_model = (payload.model or "").strip() or settings.anthropic_model
+    else:  # lmstudio -- local, sin key
+        new_model = (payload.model or "").strip() or settings.lmstudio_model
 
     if new_provider and new_provider != settings.provider:
         _actualizar_env("PROVIDER", new_provider)

@@ -1957,7 +1957,7 @@ function initSettingsPanel() {
   const MODELOS = {
     ollama:    [],   // se pueblan desde la API
     lmstudio:  [],   // se pueblan desde la API
-    anthropic: ["claude-opus-4-6", "claude-sonnet-4-5", "claude-haiku-4-5-20251001"],
+    anthropic: ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-2"],
     openai:    ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini"],
     // Catálogos verificados a mano -- Vertex AI y AI Studio NO comparten
     // modelos ni nombres (nov-2026). gemini-2.x quedó deprecado para cuentas
@@ -1990,11 +1990,8 @@ function initSettingsPanel() {
       ind.style.color = ok ? "var(--sn-ok)" : "var(--sn-danger)";
     });
 
-    // Actualizar lista de modelos locales si la tenemos
-    if (_cfg.available_models?.length) {
-      if (_cfg.provider === "lmstudio") MODELOS.lmstudio = _cfg.available_models;
-      else MODELOS.ollama = _cfg.available_models;
-    }
+    // Modelos cargados ahora mismo en LM Studio (local, vía su API)
+    if (_cfg.available_models?.length) MODELOS.lmstudio = _cfg.available_models;
 
     // Poblar selector con el proveedor activo
     _poblarModelos(provider, _cfg.model);
@@ -2221,7 +2218,13 @@ function initFichaModal() {
 let _iaTarea = null;
 
 function abrirTareaIA(tarea) {
-  if (_iaTarea || state.soloLectura) return;
+  if (state.soloLectura) return;
+  if (_iaTarea) {
+    if (_iaTarea.activa) {
+      alert(`Ya hay una tarea en curso: "${_iaTarea.titulo}". Ábrela desde el indicador de la barra superior para verla o cancelarla antes de iniciar otra.`);
+    }
+    return;
+  }
   _iaTarea = tarea;
   tarea.focoAnterior = document.activeElement;
   const el = id => document.getElementById(id);
@@ -2237,8 +2240,9 @@ function abrirTareaIA(tarea) {
   el("repro-btn-ok").textContent = "Comenzar";
   el("repro-btn-cancelar").hidden = !tarea.aviso;
   el("repro-btn-cerrar").hidden = true;
-  el("repro-modal-cerrar").disabled = false;
+  el("repro-modal-cerrar").title = "Cerrar";
   el("repro-modal").hidden = false;
+  _actualizarIndicadorTarea();
   log.textContent = "";
   el("repro-btn-ok").onclick = iniciar;
   el("repro-btn-ok").focus();
@@ -2250,7 +2254,8 @@ function abrirTareaIA(tarea) {
     el("repro-estado-proc").hidden = false;
     el("repro-btn-ok").hidden = true;
     el("repro-btn-cancelar").hidden = true;
-    el("repro-modal-cerrar").disabled = true;
+    el("repro-modal-cerrar").title = "Minimizar (la tarea sigue en curso)";
+    el("repro-modal-cerrar").setAttribute("aria-label", "Minimizar: la tarea sigue en curso en segundo plano");
     const detener = el("repro-btn-detener");
     detener.hidden = !tarea.detener;
     detener.disabled = false;
@@ -2293,6 +2298,7 @@ function abrirTareaIA(tarea) {
     } catch (err) {
       el("repro-fin-msg").textContent = err.message;
       el("repro-fase").textContent = "Tarea interrumpida";
+      ui.append(`\n[error] ${err.message}\n`);
     } finally {
       tarea.activa = false;
       log.classList.remove("rec-log-pre--active");
@@ -2300,22 +2306,42 @@ function abrirTareaIA(tarea) {
       barra.style.width = exito ? "100%" : "0%";
       detener.hidden = true;
       el("repro-estado-fin").hidden = false;
-      el("repro-modal-cerrar").disabled = false;
+      el("repro-modal-cerrar").title = "Cerrar";
+      el("repro-modal-cerrar").setAttribute("aria-label", "Cerrar diálogo de tarea con IA");
       el("repro-btn-cerrar").hidden = false;
       el("repro-btn-cerrar").textContent = tarea.textoContinuar || "Cerrar";
       el("repro-btn-cerrar").focus();
+      _actualizarIndicadorTarea();
     }
   }
   if (!tarea.aviso) iniciar();
 }
 
+// Mientras la tarea sigue activa, "cerrar" en realidad minimiza: el trabajo
+// sigue en el servidor y en el stream ya abierto, y queda un indicador en la
+// barra superior para reabrir el diálogo y leer el resultado o cancelarla.
 async function _reproCerrar() {
-  if (_iaTarea?.activa) return;
+  if (_iaTarea?.activa) {
+    document.getElementById("repro-modal").hidden = true;
+    _actualizarIndicadorTarea();
+    return;
+  }
   const tarea = _iaTarea;
   _iaTarea = null;
   document.getElementById("repro-modal").hidden = true;
+  _actualizarIndicadorTarea();
   tarea?.focoAnterior?.focus();
   try { await tarea?.continuar?.(); } catch (err) { alert(`No se pudo abrir el resultado: ${err.message}`); }
+}
+
+function _actualizarIndicadorTarea() {
+  const indicador = document.getElementById("tarea-ia-indicador");
+  const modalVisible = !document.getElementById("repro-modal").hidden;
+  if (!_iaTarea || modalVisible) { indicador.hidden = true; return; }
+  indicador.hidden = false;
+  indicador.querySelector(".rec-log-dot").style.visibility = _iaTarea.activa ? "visible" : "hidden";
+  document.getElementById("tarea-ia-indicador-texto").textContent =
+    _iaTarea.activa ? _iaTarea.titulo : `${_iaTarea.titulo} — listo`;
 }
 
 async function _streamTareaIA(path, ui) {
@@ -2490,6 +2516,27 @@ function _initReproModal() {
   ["repro-modal-cerrar", "repro-modal-bg", "repro-btn-cancelar", "repro-btn-cerrar"].forEach(id =>
     document.getElementById(id).addEventListener("click", _reproCerrar)
   );
+  document.getElementById("tarea-ia-indicador").addEventListener("click", () => {
+    if (!_iaTarea) return;
+    document.getElementById("repro-modal").hidden = false;
+    _actualizarIndicadorTarea();
+  });
+  document.getElementById("repro-btn-copiar").addEventListener("click", async e => {
+    const btn = e.currentTarget;
+    const titulo = document.getElementById("repro-modal-titulo").textContent;
+    const fase = document.getElementById("repro-fase").textContent;
+    const finMsg = document.getElementById("repro-fin-msg").textContent;
+    const log = document.getElementById("repro-log").textContent;
+    const texto = [`# ${titulo}`, `Estado: ${fase}`, finMsg, "", log].filter(Boolean).join("\n");
+    try {
+      await navigator.clipboard.writeText(texto);
+      const original = btn.textContent;
+      btn.textContent = "¡Copiado!";
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    } catch (err) {
+      alert("No se pudo copiar: " + err.message);
+    }
+  });
   document.addEventListener("keydown", e => {
     const modal = document.getElementById("repro-modal");
     if (modal.hidden) return;

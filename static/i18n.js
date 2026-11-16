@@ -6,7 +6,6 @@
 const DICCIONARIO = {
   es: {
     "topbar.volver":        "Volver a la biblioteca",
-    "topbar.importar":      "Importar",
     "topbar.buscar":        "Buscar concepto…",
     "tab.mapa":              "Mapa",
     "tab.conceptos":         "Conceptos",
@@ -27,7 +26,6 @@ const DICCIONARIO = {
   },
   en: {
     "topbar.volver":        "Back to library",
-    "topbar.importar":      "Import",
     "topbar.buscar":        "Search concept…",
     "tab.mapa":              "Map",
     "tab.conceptos":         "Concepts",
